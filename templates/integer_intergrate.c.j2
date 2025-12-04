@@ -1,0 +1,113 @@
+/*****************************************/
+/*           {{metadata.field_name}}                */
+/*****************************************/
+//interger intergrate
+ //metadata.parsed.primitive_id == {{metadata.parsed.primitive_id}}
+{% if metadata.parsed.primitive_id == 6 %}
+// mau integer size(a...b) mau la timestayincell xn
+//typedef OSUINT{{metadata.parsed.max | stdbit}} e2ap_{{parent_name}}_{{metadata.field_name}};
+EXTERN int asn1PE_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, e2ap_{{parent_name}}_{{metadata.field_name}} value){
+    int stat =0;
+
+    if(value<={{metadata.parsed.max}} && value>= {{metadata.parsed.min}}){
+        stat = pe_ConsUnsigned (pctxt, value, {{metadata.parsed.min}}, {{metadata.parsed.max}});
+        if(stat != 0) return LOG_RTERR (pctxt, stat);
+    }else{
+        rtxErrAddElemNameParm(pctxt);
+        rtxErrAddUIntParm(pctxt, value);
+        return LOG_RTERR(pctxt, RTERR_CONSVIO);
+    }
+    return stat;
+
+}
+EXTERN int asn1PD_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
+    int stat =0;
+    if(pctxt->buffer.aligned){
+        int stat2 = PD_BYTE_ALIGN(pctxt);
+        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
+    }
+
+    stat = rtxDecBitsToUInt16(pctxt, pvalue, pctxt->buffer.aligned ? 16:12);
+    if(stat !=0) return LOG_RTERR (pctxt, stat);
+    if(*pvalue > {{metadata.parsed.max}} || *pvalue < {{metadata.parsed.min}}){
+        rtxErrAddElemNameParm(pctxt);
+        rtxErrAddUIntParm(pctxt, {{metadata.parsed.max}});
+        return LOG_RTERR(pctxt, RTERR_CONSVIO);
+    }
+}
+//EXTERN int asn1Print_e2ap_{{parent_name}}_{{metadata.field_name}} (const char* name, const e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue);
+EXTERN int asn1PrtToStr_e2ap_{{parent_name}}_{{metadata.field_name}} (const char* name, e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringUnsigned(name, *pvalue, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, const char* name, const e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue);
+EXTERN int asn1Init_e2ap_{{parent_name}}_{{metadata.field_name}} (e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+
+{% endif %}
+
+{% if metadata.parsed.primitive_id == 5 %}
+//mau 5 integer size(a .. b..) mau la footprinttimeperiodicity xn
+//typedef OSUINT{{metadata.parsed.max | stdbit}} e2ap_{{parent_name}}_{{metadata.field_name}};
+EXTERN int asn1PE_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, e2ap_{{parent_name}}_{{metadata.field_name}} value){
+    int stat =0;
+    OSBOOL extbit = FALSE;
+    if(value >={{metadata.parsed.min}} && value <= {{metadata.parsed.max}}){
+        extbit = 0;
+    }else{
+        extbit = 1;
+    }
+
+    /*extention bit*/
+    stat = rtxEncBit(pctxt, extbit);
+    if(stat !=0) return LOG_RTERR(pctxt, stat);
+    if(extbit){
+        stat = pe_UnconsUnsigned(pctxt, value);
+        if(stat !=0) return LOG_RTERR(pctxt, stat);
+    }else{
+        stat = pe_ConsUnsigned(pctxt, value, {{metadata.parsed.min}}, {{metadata.parsed.max}});
+        if(stat !=0) return LOG_RTERR(pctxt, stat);
+    }
+    return stat;
+}
+EXTERN int asn1PD_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
+    int stat =0;
+    OSBOOL extbit = FALSE;
+    stat = DEC_BIT(pctxt, &extbit);
+    if(stat !=0) return LOG_RTERR(pctxt, stat);
+    if(extbit==0){
+        stat = pd_ConsUnsigned(pctxt, pvalue, {{metadata.parsed.min}}, {{metadata.parsed.max}});
+        if(stat !=0) return LOG_RTERR(pctxt, stat);
+    }else{
+        stat = pd_UnconsUnsigned(pctxt, pvalue);
+        if(stat !=0) return LOG_RTERR(pctxt, stat);
+    }
+
+    return stat;
+}
+//EXTERN int asn1Print_e2ap_{{parent_name}}_{{metadata.field_name}} (const char* name, const e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue);
+EXTERN int asn1PrtToStr_e2ap_{{parent_name}}_{{metadata.field_name}} (const char* name, e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringUnsigned(name, *pvalue, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, const char* name, const e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue);
+
+EXTERN int asn1Init_e2ap_{{parent_name}}_{{metadata.field_name}} (e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+{% endif %}

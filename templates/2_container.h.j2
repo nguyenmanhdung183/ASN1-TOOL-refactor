@@ -1,0 +1,29 @@
+/*****************************************/
+/*           {{container_name}}                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_{{container_name}}_ProtocolIE;
+EXTERN int asn1PE_e2ap_{{container_name}}_protocolIEs (OSCTXT* pctxt, e2ap_{{container_name}}_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_{{container_name}}_protocolIEs (OSCTXT* pctxt, e2ap_{{container_name}}_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_{{container_name}}_protocolIEs (e2ap_{{container_name}}_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_{{container_name}}_protocolIEs (OSCTXT* pctxt, e2ap_{{container_name}}_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_{{container_name}}_protocolIEs (OSCTXT* pctxt, e2ap_{{container_name}}_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap{{container_name}}_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_{{container_name}}_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_{{container_name}}_protocolIEs (const char* name, e2ap_{{container_name}}_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . {{container_name}} -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_{{container_name}} {
+    e2ap_{{container_name}}_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_{{container_name}};
+
+EXTERN int asn1PE_e2ap_{{container_name}} (OSCTXT* pctxt, e2ap_{{container_name}}* pvalue);
+EXTERN int asn1PD_e2ap_{{container_name}} (OSCTXT* pctxt, e2ap_{{container_name}}* pvalue);
+EXTERN int asn1Init_e2ap_{{container_name}} (e2ap_{{container_name}}* pvalue);
+EXTERN void asn1Free_e2ap_{{container_name}} (OSCTXT* pctxt, e2ap_{{container_name}}* pvalue);
+EXTERN void asn1Print_e2ap_{{container_name}} (const char* name, const e2ap_{{container_name}}* pvalue);
+EXTERN int asn1PrtToStr_e2ap_{{container_name}} (const char* name, e2ap_{{container_name}}* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_{{container_name}} (OSCTXT* pctxt, const char* name, const e2ap_{{container_name}}* pvalue);
+EXTERN int asn1Copy_e2ap_{{container_name}} (OSCTXT* pctxt, const e2ap_{{container_name}}* pSrcValue, e2ap_{{container_name}}* pDstValue);

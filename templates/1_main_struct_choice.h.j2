@@ -1,0 +1,15 @@
+/* main struct for choice -*/
+typedef struct{
+/*define for choice*/
+{% for d in choices %}
+#define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.item_type | replace('-', '_') | camel_to_upper_snake }} {{loop.index0}}
+{% endfor %}
+#define E2AP_{{name|camel_to_upper_snake}}_e2ap_INVALID 0xFF
+
+UInt32 choice_type;
+
+{% for d in choices %}
+e2ap_{{d.item_type|replace('-', '_')}}  {{d.item_type|replace('-', '_')}};
+{% endfor %}
+
+}e2ap_{{name}}_t;// choice

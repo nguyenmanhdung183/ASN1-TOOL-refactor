@@ -1,0 +1,7 @@
+/* COMPOSE INTEGER */
+xnap_return_et e2ap_compose_{{name}} (OSCTXT* asn1_ctx, e2ap_{{name}}* pvalue){
+    gnb_return_t retVal = NR_FAILURE;
+    *pvalue = 183; //--------->dungnm23 sửa giá trị integer ở đây
+    XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Compose e2ap_{{name}} success with value %d",__FUNCTION__,*pvalue);
+    return retVal;
+}

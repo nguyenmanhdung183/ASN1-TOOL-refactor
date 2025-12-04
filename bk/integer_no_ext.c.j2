@@ -1,0 +1,35 @@
+/*****************************************/
+/*         {{name|replace("_", "-")}}     */
+/*****************************************/
+//interger no ext
+
+EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}} value)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace("_", "-")}}");
+   stat = pe_ConsUnsigned (pctxt, value, {{min|int}}, {{max|int}});
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PD_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace("_", "-")}}");
+   if (pctxt->buffer.aligned) {
+      int stat2 = PD_BYTE_ALIGN (pctxt);
+      if (stat2 != 0) return LOG_RTERR (pctxt, stat2);
+   }
+   stat = rtxDecBitsToByte (pctxt, pvalue, {{bits}});
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PrtToStr_e2ap_{{name}} (const char* name, e2ap_{{name}}* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if (rtPrintToStringIndent (buffer, bufSize) < 0) return -1;
+   if (rtPrintToStringUnsigned (name, *pvalue, buffer, bufSize) < 0) return -1;
+   return 0;
+}

@@ -1,0 +1,24 @@
+/* COMPOSE SEQUENCE */
+xnap_return_et e2ap_compose_{{name}} (OSCTXT* asn1_ctx, e2ap_{{name}}* pvalue){
+    gnb_return_t retVal = NR_FAILURE;
+
+    *pvalue = rtxMemAllocType(&asn1_ctx, e2ap_{{name}});
+    if(XNAP_P_NULL==*pvalue){
+        XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{name}}",__FUNCTION__);
+        return retVal;
+    }
+
+    asn1Init_e2ap_{{name}}(*pvalue);
+    // Compose each field
+{% for f in fields %}
+    {% if not f.primitive_meta.is %}
+    if(XNAP_FAILURE == e2ap_compose_{{f.field}}(asn1_ctx, &(*pvalue)->{{f.field|replace('-','_')}})){
+        XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Compose failed for field {{f.field}}",__FUNCTION__);
+        return retVal;
+    }
+    {% endif %}
+{% endfor %}
+
+    XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Compose e2ap_{{name}} success with value %d",__FUNCTION__,*pvalue);
+    return retVal;
+}

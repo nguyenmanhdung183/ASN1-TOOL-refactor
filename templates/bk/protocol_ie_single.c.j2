@@ -1,0 +1,34 @@
+#include "e2ap_{{item_ies}}.h"
+//protocol ie single
+
+/*****************************************/
+/*           {{item_ies}}                */
+/*****************************************/
+//->protocol_ie_single.
+
+int asn1PE_e2ap_{{item_ies}} (OSCTXT* pctxt, e2ap_{{item_ies}}* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME(pctxt, "{{item_ies|replace('_', '-')}}");
+
+   stat = asn1PE_e2ap_ProtocolIE_ID (pctxt, &pvalue->id);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   stat = asn1PE_e2ap_Criticality (pctxt, &pvalue->criticality);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   stat = asn1PE_e2ap_{{item_type}} (pctxt, &pvalue->value);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return 0;
+}
+
+void asn1Init_e2ap_{{item_ies}} (e2ap_{{item_ies}}* pvalue)
+{
+   pvalue->id = ID_{{item_type}};
+   pvalue->criticality = CRIT_{{item_type}};
+   {% if not (primitive_info.isprimitive and item_ies !="BIT STRING") %}
+   asn1Init_e2ap_{{item_type}} (&pvalue->value);
+   {% endif %}
+}

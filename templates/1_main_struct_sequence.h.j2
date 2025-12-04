@@ -1,0 +1,76 @@
+
+/* primitive in scope sequence*/{#start primitive=====#}
+{% for f in fields %}
+    {# integer primitive #}
+    {% if f.primitive_meta.primitive_id == 5 or  f.primitive_meta.primitive_id ==6 %}
+typedef UInt{{f.primitive.max|stdbit}} _e2ap_{{name}}_{{f.field}};
+    {% endif %}
+    {# BIT STRING 2-3-4 primitive #}
+    {% if f.primitive_meta.primitive_id == 2 %} {# A..B,...#}
+typedef struct{
+    Uint{{f.primitive.max|stdbit}} numbits;
+    UInt8* data;
+} _e2ap_{{name}}_{{f.field}}_t;//BIT STRING SIZE (A..B,...)
+    {% endif %}
+    {% if f.primitive_meta.primitive_id == 4 %} {# A..B#}
+typedef struct{
+    unsigned int numbits;
+    unsigned char data[{{ (f.primitive.max +7)//8 }}];
+}_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (A..B)
+    {% endif %}    
+    {% if f.primitive_meta.primitive_id == 3 %} {# A#}
+typedef struct{
+    unsigned int numbits;
+    unsigned char data[{{ (f.primitive.max +7)//8 }}];
+}_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (N)
+    {% endif %}        
+    {# ENUMERATED primitive #}
+    {% if f.primitive_meta.primitive_id == 13 %}
+typedef enum{
+    {% for enum in f.primitive_meta.enum_items %}    
+    E2AP_{{enum.name|camel_to_upper_snake}} = {{enum.value}}{% if not loop.last %},{% endif %}
+    {% endfor %}
+
+}_e2ap_{{name}}_{{f.field}}_et;
+
+    {% endif %}
+    {# OCTET STRING primitive #}
+    {% if f.primitive_meta.primitive_id == 9 %}
+typedef struct{
+    unsigned int numocts;
+    const char* data;
+}_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING
+    {% endif %}
+{% endfor %}
+/* end primitive in scope sequence*/{#=========end primitive=====#}
+
+typedef struct{
+{# optional bit mask #}
+{% set has_optional = false %}
+{% set bitmask_value = 0%}
+{% for f in fields %}
+    {% if f.presence == "optional" %}
+    {% set bitmask_value = bitmask_value + 1 %}
+    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{f.field|camel_to_upper_snake}}_PRESENT 0x{{ '%02X' % (2 ** (bitmask_value -1)) }}
+    {% set has_optional = true %}
+    {% endif %}
+    {# bit mask #}
+    {% if has_optional ==true and loop.index0 == fields|length -1 %}
+    
+    rrc_bitmask_t bitmask; /* BITMASK ^*/
+    {% endif %}
+{% endfor %}
+
+{# data #}
+{% for f in fields %}
+    {% if f.primitive_meta.is == False %}
+    _e2ap_{{f.ie_type}} {{f.field}}; //e2ap_{type} {field}
+    {% else %}
+        {% if f.primitive_meta.primitive_id == 13 %} {# ENUMERATED #}
+    _e2ap_{{name}}_{{f.field}}_et {{f.field}}; //enum
+        {% else %}
+    _e2ap_{{name}}_{{f.field}}_t {{f.field}}; //{{f.primitive.primitive_name}}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+}_e2ap_{{name|replace('-', '_')}}_t;
