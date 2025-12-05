@@ -19,6 +19,8 @@ with open('./msg.config', 'r') as file:
     line1 = file.readline().strip()  # đọc dòng 1
     line2 = file.readline().strip()  # đọc dòng 2 
     PDF_FILE = "./" + line2
+
+
     
 # ==================== ĐỌC PDF ====================-
 # full_text = ""
@@ -108,7 +110,7 @@ for m in re.finditer(r"([A-Za-z0-9\-]+)\s*::=\s*OCTET\s+STRING\b", full_text):
 wb = Workbook()
 ws = wb.active
 ws.title = "Primitives"
-headers = ["IE_Name", "ASN1_Type", "Min", "Max", "Enum_Items", "Ext.Bit", "Contain_size"]
+headers = ["IE_Name", "ASN1_Type", "Min", "Max", "Enum_Items", "Ext.Bit", "Contain_size", "Primitive_ID"]
 ws.append(headers)
 
 # Lấy tất cả IE từ bottomup.txt

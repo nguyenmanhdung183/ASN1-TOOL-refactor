@@ -33,6 +33,230 @@ with open('./msg.config', 'r') as file:
     line1 = file.readline().strip()
     line2 = file.readline().strip()
     PDF_FILE = "./" + line2
+    
+    
+#============= Parse IE Type Primitive ============    
+def extract_base_type(s: str):
+    """Lấy primitive type trước dấu '(' nếu có."""
+    return s.split("(")[0].strip()
+
+
+def parse_ie_type_primitive(type_str):
+    """
+    Trả về metadata primitive chuẩn hoá từ chuỗi IE_Type trong sheet Types.
+
+    Các nhóm bạn yêu cầu:
+        bit string  1
+        bit string (size(a..b..)) 2
+        bit string (size(n)) 3
+        bit string (size(a..b)) 4
+
+        integer (a..b,...) 5 -> hình như ko có intergrate
+        integer (a..b) 6
+        integer (size(n)) 7
+
+        octet string (size(n)) 8
+        octet string 9
+
+        printable string (size(a..b,...)) 10
+        
+        enum 13
+    """
+
+    out = {
+        "is": False,
+        "type": None,
+        "min": -1,
+        "max": -1,
+        "fix_size": -1,
+        "primitive_id": -1
+    }
+
+    if not isinstance(type_str, str):
+        return out
+
+    s = type_str.strip()
+    s = re.sub(r"\s+", " ", s)
+
+    # ============================================================
+    # INTEGER
+    # ============================================================
+    # INTEGER(a..b..) -> INTEGER(a..b,...)
+    #m = re.match(r"INTEGER\s*\(\s*([+-]?\d+)\s*\.\.\s*([+-]?\d+)\s*\.\.\s*\d+\s*\)", s, re.IGNORECASE)
+    #m = re.match(r"INTEGER\s*\(\s*([+-]?\d+)\s*\.\.\s*([+-]?\d+)\s*(?:\.\.\.\s*\d+)*\s*\)", s, re.IGNORECASE)
+    m = re.match(r"INTEGER\s*\(\s*(\d+)\s*\.\.\s*(\d+)\s*,\s*\.\.\.\s*\)", s, re.IGNORECASE)
+
+    if m:
+        out.update({"is": True, "type": "INTEGER",
+                    "min": int(m.group(1)), "max": int(m.group(2)),
+                    "primitive_id": 5})
+        return out
+
+    # INTEGER(a..b)
+    m = re.match(r"INTEGER\s*\(\s*([+-]?\d+)\s*\.\.\s*([+-]?\d+)\s*\)", s, re.IGNORECASE)
+    if m:
+        out.update({"is": True, "type": "INTEGER",
+                    "min": int(m.group(1)), "max": int(m.group(2)),
+                    "primitive_id": 6})
+        return out
+
+    # INTEGER(n)
+    m = re.match(r"INTEGER\s*\(\s*SIZE\s*\(\s*(\d+)\s*\)\s*\)", s, re.IGNORECASE)
+    #m = re.match(r"INTEGER\s*\(\s*SIZE\s*\(\s*(\d+))", s, re.IGNORECASE)
+    if m:
+        n = int(m.group(1))
+        out.update({"is": True, "type": "INTEGER",
+                    "min": n, "max": n, "fix_size": n,
+                    "primitive_id": 12})
+        return out
+
+    # INTEGER no constraint
+    if re.match(r"^INTEGER\b", s, re.IGNORECASE):
+        out.update({"is": True, "type": "INTEGER", "primitive_id": 6})
+        return out
+
+    # ============================================================
+    # OCTET STRING
+    # ============================================================
+    #m = re.match(r"OCTET STRING\s*\(\s*SIZE\s*\(\s*(\d+))", s, re.IGNORECASE)
+    m = re.match(r"OCTET STRING\s*\(\s*SIZE\s*\(\s*(\d+)\s*\)\s*\)", s, re.IGNORECASE)
+    if m:
+        n = int(m.group(1))
+        out.update({"is": True, "type": "OCTET STRING",
+                    "min": n, "max": n, "fix_size": n,
+                    "primitive_id": 8})
+        return out
+
+    if re.match(r"^OCTET STRING\b", s, re.IGNORECASE):
+        out.update({"is": True, "type": "OCTET STRING", "primitive_id": 9})
+        return out
+
+    # ============================================================
+    # ENUMERATED
+    # ============================================================
+    #m = re.match(r"OCTET STRING\s*\(\s*SIZE\s*\(\s*(\d+))", s, re.IGNORECASE)
+    m = re.match(r"ENUMERATED", s, re.IGNORECASE)
+    if m:
+      #  n = int(m.group(1))
+        out.update({"is": True, "type": "ENUMERATED",
+                    "min": -1, "max": -1, "fix_size": -1,
+                    "primitive_id": 13})
+        return out
+
+
+
+    
+    # ============================================================
+    # BIT STRING
+    # ============================================================
+    # trước input là BIT STRING(size(a..b..)) -> giờ input sửa thành BIT STRING (SIZE(a..b,...))
+    
+    #m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\s*\.\.\s*(\d+)\s*\.\.\s*\d+", s, re.IGNORECASE)
+    #m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\s*\.\.\s*(\d+)\s*\.\.\s*\d+\s*\)\s*\)", s, re.IGNORECASE)
+    #m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\s*\.\.\s*(\d+)\s*(?:,\s*\.\.\.\s*)?\s*\)\s*\)", s, re.IGNORECASE)
+    m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\s*\.\.\s*(\d+)\s*,\s*\.\.\.\s*\)\s*\)",s, re.IGNORECASE)
+
+    if m:
+        out.update({"is": True, "type": "BIT STRING",
+                    "min": int(m.group(1)), "max": int(m.group(2)),
+                    "primitive_id": 2})
+        return out
+
+    # BIT STRING(size(n))
+    m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\s*\)\s*\)", s, re.IGNORECASE)
+    #m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)", s, re.IGNORECASE)
+    if m:
+        n = int(m.group(1))
+        out.update({"is": True, "type": "BIT STRING",
+                    "min": n, "max": n, "fix_size": n,
+                    "primitive_id": 3})
+        return out
+
+    # BIT STRING(size(a..b))
+    m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\.\.(\d+)\s*\)\s*\)", s, re.IGNORECASE)   #m = re.match(r"BIT STRING\s*\(\s*SIZE\s*\(\s*(\d+)\.\.(\d+)", s, re.IGNORECASE)
+    if m:
+        out.update({"is": True, "type": "BIT STRING",
+                    "min": int(m.group(1)), "max": int(m.group(2)),
+                    "primitive_id": 4})
+        return out
+
+    # BIT STRING no constraint
+    if re.match(r"^BIT STRING\b", s, re.IGNORECASE):
+        out.update({"is": True, "type": "BIT STRING", "primitive_id": 1})
+        return out
+
+    # ============================================================
+    # PrintableString – FULL SUPPORT
+    # ============================================================
+
+    # PrintableString(SIZE(a..b,..) – hỗ trợ nhiều cặp range -> PrintableString (SIZE(a..b,...))
+    # Lấy toàn bộ bên trong SIZE(...)
+    #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\((.*?)\)\s*\)", s, re.IGNORECASE)
+    #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*?)\s*\)\s*\)", s, re.IGNORECASE)
+    m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*?)\s*\)\s*\)", s, re.IGNORECASE)
+    #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*)", s, re.IGNORECASE)
+    if m:
+        size_expr = m.group(1).strip()
+
+        # Trường hợp SIZE gồm nhiều tham số: "1..10, 20..30, 40"
+        parts = [p.strip() for p in size_expr.split(",")]
+
+        mins, maxs = [], []
+
+        for p in parts:
+            # dạng a..b
+            mm = re.match(r"(\d+)\s*\.\.\s*(\d+)", p)
+            if mm:
+                mins.append(int(mm.group(1)))
+                maxs.append(int(mm.group(2)))
+                continue
+
+            # dạng a (single)
+            mm = re.match(r"(\d+)", p)
+            if mm:
+                val = int(mm.group(1))
+                mins.append(val)
+                maxs.append(val)
+                continue
+
+        if mins and maxs:
+            out.update({
+                "is": True,
+                "type": "PrintableString",
+                "min": min(mins),
+                "max": max(maxs),
+                "fix_size": min(mins) if min(mins) == max(maxs) else -1,
+                "primitive_id": 10
+            })
+            return out
+
+    # PrintableString (no constraint)
+    if re.match(r"^PrintableString\b", s, re.IGNORECASE):
+        out.update({"is": True, "type": "PrintableString",
+                    "primitive_id": 11})
+        return out
+
+    # ============================================================
+    # Other simple primitives
+    # ============================================================
+    simple_prims = [
+        "BOOLEAN", "NULL", "ENUMERATED",
+        "UTF8String", "IA5String", "VisibleString"
+    ]
+
+    for p in simple_prims:
+        if re.match(rf"^{p}\b", s, re.IGNORECASE):
+            out.update({"is": True, "type": p, "primitive_id": 0})
+            return out
+
+    # ============================================================
+    # Clean base type
+    # ============================================================
+    if out["is"]:
+        out["type"] = extract_base_type(out["type"])
+
+    return out
+
 
 #=============Parse Elementary Procedures========= 
     
@@ -696,13 +920,40 @@ def main():
     # ======================
     # Add Alias based on Primitives
     # ======================
+    # if "Primitives" in wb.sheetnames:
+    #     ws_pri = wb["Primitives"]
+    #     primitive_ie_names = {row[0].value.strip() for row in ws_pri.iter_rows(min_row=2) if row[0].value}
+    #     for r in rows:
+    #         r[13].value =-1  # Default no alias
+    #         ie_type = r[5].value
+    #         if ie_type in primitive_ie_names:
+    #             r[13].value = 1  # Alias column  dungnm23
+    
+    # ======================
+    # Add Alias based on Primitives
+    # ======================
     if "Primitives" in wb.sheetnames:
         ws_pri = wb["Primitives"]
-        primitive_ie_names = {row[0].value.strip() for row in ws_pri.iter_rows(min_row=2) if row[0].value}
+
+        # Tạo map: IE_Name -> ASN1_Type
+        primitive_map = {}
+        for row in ws_pri.iter_rows(min_row=2):
+            name = row[0].value
+            asn1 = row[1].value
+            if name:
+                primitive_map[str(name).strip()] = asn1
+
+        # Gán vào sheet Types
         for r in rows:
+            r[13].value = -1  # Default no alias
             ie_type = r[5].value
-            if ie_type in primitive_ie_names:
-                r[13].value = 1  # Alias column
+
+            key = str(ie_type).strip() if ie_type else None
+
+            if key in primitive_map:
+                #r[13].value = primitive_map[key] 
+                r[13].value = parse_ie_type_primitive(primitive_map[key])["primitive_id"]  # Alias column dungnm23
+        
     # ======================
     # Add Message info to Types
     # ======================

@@ -409,7 +409,6 @@ def gen_primitives_outputs():
             continue
         name = str(name_raw).replace('-', '_')
         asn_type = str(row.get("ASN1_Type", ""))
-
         primitive_info = check_if_primitive(asn_type)
 
         # Define templates based on ASN.1 type
@@ -493,9 +492,12 @@ def gen_primitives_outputs():
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.h"), h_tmpl.render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.c"), c_tmpl.render(data))
             safe_write(os.path.join(COMPOSE_DIR, f"compose_{name}_en.c"), compose_tmpl.render(data))
+            safe_write(f"main_struct_output/e2ap_{name.replace('-', '_')}.h", env.get_template("1_main_struct_primitive.h.j2").render(data))
+            print(f"primitive data:\n{json.dumps(data, indent=4)}\n\n")
+
         except Exception as e:
             print(f"[WARN] template gen failed for {name}: {e}")
-
+        
 
 # -------------------------
 # 5) Generate CHOICE
@@ -534,6 +536,8 @@ def gen_choice_outputs():
                 "tag": tag,
                 "field": field.replace("-", "_"),
                 "type": (ie_type_str or "").replace("-", "_"),
+                "ie_type": (ie_type_str or "").replace("-", "_"),
+                "alias": row.get("Alias"),
                 "name": field.replace("-", "_"),
                 "primitive": primitive_sheet,
                 "primitive_meta": {
@@ -778,7 +782,7 @@ def gen_sequence_outputs():
                 "field": field_name,
                 "ie_type": ie_type_str.replace("-", "_"),
                 "presence": presence,
-
+                "alias": row.get("Alias"),
                 "primitive": primitive_sheet,
                 "primitive_meta": {
                     "is": parsed["is"],

@@ -1,15 +1,75 @@
+/* primitive in scope choice*/{#start primitive=====#} 
+{% for f in choices %}
+    {# integer primitive #}
+    {% if f.primitive_meta.primitive_id == 5 or  f.primitive_meta.primitive_id ==6 %}
+typedef UInt{{f.primitive.max|stdbit}} _e2ap_{{name}}_{{f.field}};
+    {% endif %}
+    {# BIT STRING 2-3-4 primitive #}
+    {% if f.primitive_meta.primitive_id == 2 %} {# A..B,...#} 
+typedef struct{
+    Uint{{f.primitive.max|stdbit}} numbits;
+    UInt8* data;
+} _e2ap_{{name}}_{{f.field}}_t;//BIT STRING SIZE (A..B,...) 
+
+    {% endif %}
+    {% if f.primitive_meta.primitive_id == 4 %} {# A..B#}
+typedef struct{
+    unsigned int numbits;
+    unsigned char data[{{ (f.primitive.max +7)//8 }}];
+}_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (A..B) 
+
+    {% endif %}
+    {% if f.primitive_meta.primitive_id == 3 %} {# A#}
+typedef struct{
+    unsigned int numbits;
+    unsigned char data[{{ (f.primitive.max +7)//8 }}];
+}_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (N)  
+
+    {% endif %}
+    {# ENUMERATED primitive #}
+    {% if f.primitive_meta.primitive_id == 13 %}
+typedef enum{
+    {% for enum in f.primitive_meta.enum_items %}    
+    E2AP_{{enum.name|camel_to_upper_snake}} = {{enum.value}}{% if not loop.last %},{% endif %}
+    {% endfor %}
+
+}_e2ap_{{name}}_{{f.field}}_et;
+    {% endif %}
+    {# OCTET STRING primitive #}
+    {% if f.primitive_meta.primitive_id == 9 %}
+typedef struct{
+    unsigned int numocts;
+    const char* data;
+}_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING 
+    {% endif %}
+{% endfor %} 
 /* main struct for choice -*/
 typedef struct{
-/*define for choice*/
+{# /*define for choice*/#}
 {% for d in choices %}
-#define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.item_type | replace('-', '_') | camel_to_upper_snake }} {{loop.index0}}
+    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.field | replace('-', '_') | camel_to_upper_snake }} {{loop.index0}} //NAME + field_name
 {% endfor %}
-#define E2AP_{{name|camel_to_upper_snake}}_e2ap_INVALID 0xFF
+    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_INVALID 0xFF
 
-UInt32 choice_type;
+    UInt32 choice_type;
 
-{% for d in choices %}
-e2ap_{{d.item_type|replace('-', '_')}}  {{d.item_type|replace('-', '_')}};
+{# data #}
+{% for f in choices %}
+    {% if f.primitive_meta.is == False %} {# ko phai primitive #}
+        {% if f.alias == 13%} {# check alias enum #}
+    _e2ap_{{f.ie_type}}_et {{f.field}}; //e2ap_{ie_type} {field_name} {# enum #} 
+         {% endif %}
+        {% if f.alias == -1%} {# check not alias #}
+    _e2ap_{{f.ie_type}}_t {{f.field}}; //e2ap_{ie_type} {field_name}
+        {% endif %}{# end check alias #}
+    {% else %}
+        {% if f.primitive_meta.primitive_id == 13 %} {# ENUMERATED #}
+    _e2ap_{{name}}_{{f.field}}_et {{f.field}}; //enum
+        {% else %}
+    _e2ap_{{name}}_{{f.field}}_t {{f.field}}; //{{f.primitive.primitive_name}} name + field: field
+        {% endif %}
+    {% endif %}
 {% endfor %}
 
-}e2ap_{{name}}_t;// choice
+}_e2ap_{{name}}_t;// choice 
+

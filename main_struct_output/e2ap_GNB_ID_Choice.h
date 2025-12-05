@@ -1,11 +1,17 @@
+/* primitive in scope choice*/ 
+ typedef struct{
+    unsigned int numbits;
+    unsigned char data[4];
+}_e2ap_GNB_ID_Choice_gnb_ID_t; //BIT STRING SIZE (A..B) 
+
+ 
 /* main struct for choice -*/
 typedef struct{
-/*define for choice*/
-#define E2AP_GNB_ID_CHOICE_e2ap_ 0
-#define E2AP_GNB_ID_CHOICE_e2ap_INVALID 0xFF
+    #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 0 //NAME + field_name
+    #define E2AP_GNB_ID_CHOICE_e2ap_INVALID 0xFF
 
-UInt32 choice_type;
+    UInt32 choice_type;
 
-e2ap_  ;
+    _e2ap_GNB_ID_Choice_gnb_ID_t gnb_ID; //BIT STRING (SIZE(22..32)) name + field: field
 
-}e2ap_GNB_ID_Choice_t;// choice
+}_e2ap_GNB_ID_Choice_t;// choice 

@@ -4,6 +4,7 @@ import glob
 OUTPUT_DIR = "output"
 MERGED_DIR = "merged_output"
 MAIN_STRUCT_DIR = "main_struct_output"
+MAIN_STRUCT_FILE = "MAIN_STRUCT.h"
 MAIN_C_FILE = "output_main.c"
 MAIN_H_FILE = "output_main.h"
 PREFIX = "e2ap_"
@@ -46,7 +47,7 @@ def read_existed_list():
             for line in f:
                 existed_parts.add(line.strip())
     return existed_parts
-
+#===============================================================
 def add_protocol_files_to_main(c_out, h_out):
     """
     Hàm nối các file có đuôi protocolIEs.h, protocolIEs.c, protocolIEs_element.h, và protocolIEs_element.c vào cuối
@@ -79,7 +80,7 @@ def add_protocol_files_to_main(c_out, h_out):
                 h_out.write(hf.read())  # Nối nội dung của file .h
                 h_out.write(f"\n// --- End of {file_base} ---\n\n")
 
-
+#===============================================================
 
 def rectangular_comment(text):
     lines = text.split("\n")
@@ -91,6 +92,46 @@ def rectangular_comment(text):
     comment_lines.append(border)
     return "\n".join(comment_lines) + "\n\n"
 
+#===============================================================
+def merge_main_struct_headers_by_parts(parts, existed_parts):
+    """
+    Merge các file .h trong MAIN_STRUCT_DIR theo cùng logic xử lý part như chương trình main:
+    - Dựa theo thứ tự trong parts
+    - Bỏ qua part đã tồn tại trong existed_parts
+    - Tên file: PREFIX + part.replace('-', '_') + '.h'
+    - Merge theo thứ tự
+    """
+    MAIN_STRUCT_DIR = "main_struct_output"
+    MAIN_STRUCT_FILE = "MAIN_STRUCT.h"
+    PREFIX = "e2ap_"
+
+    os.makedirs(MAIN_STRUCT_DIR, exist_ok=True)
+
+    output_path = os.path.join(MAIN_STRUCT_DIR, MAIN_STRUCT_FILE)
+
+    with open(output_path, "w", encoding="utf-8") as out:
+        out.write("/* Auto-generated MAIN_STRUCT.h */\n\n")
+
+        for part in parts:
+            if part in existed_parts:
+                continue  # bỏ qua part đã tồn tại
+
+            file_base = PREFIX + part.replace("-", "_") + ".h"
+            header_path = os.path.join(MAIN_STRUCT_DIR, file_base)
+
+            if os.path.isfile(header_path):
+               # out.write(f"// --- Begin of {file_base} ---\n")
+                with open(header_path, "r", encoding="utf-8") as hfile:
+                    out.write(hfile.read())
+                #out.write(f"\n// --- End of {file_base} ---\n\n")
+            else:
+                # Tương tự logic rectangular_comment() trong code bạn
+                missing = f"File .h missing: {file_base}"
+                out.write(rectangular_comment(missing))
+
+    print(f" Đã tạo file merged: {output_path}")
+
+#===============================================
 def main():
     os.makedirs(MERGED_DIR, exist_ok=True)
 
@@ -176,6 +217,10 @@ def main():
         h_out.write(text_to_insert_h_foter + "\n")
         
     print(f"Đã tạo file {c_out_path} và {h_out_path} trong thư mục {MERGED_DIR}")
+
+    # Merge MAIN_STRUCT.h 
+    merge_main_struct_headers_by_parts(all_parts, existed_parts)
+
 
 if __name__ == "__main__":
     main()

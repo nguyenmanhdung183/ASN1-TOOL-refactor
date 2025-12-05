@@ -42,8 +42,7 @@ typedef struct{
 }_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING
     {% endif %}
 {% endfor %}
-/* end primitive in scope sequence*/{#=========end primitive=====#}
-
+/* main struct for sequence -*/
 typedef struct{
 {# optional bit mask #}
 {% set has_optional = false %}
@@ -64,7 +63,12 @@ typedef struct{
 {# data #}
 {% for f in fields %}
     {% if f.primitive_meta.is == False %}
-    _e2ap_{{f.ie_type}} {{f.field}}; //e2ap_{type} {field}
+        {% if f.alias == 13%} {# check alias enum #}
+    _e2ap_{{f.ie_type}}_et {{f.field}}; //e2ap_{ie_type} {field_name} {# enum #} 
+         {% endif %}
+        {% if f.alias == -1%} {# check not alias #}
+    _e2ap_{{f.ie_type}}_t {{f.field}}; //e2ap_{ie_type} {field_name}
+        {% endif %}{# end check alias #}
     {% else %}
         {% if f.primitive_meta.primitive_id == 13 %} {# ENUMERATED #}
     _e2ap_{{name}}_{{f.field}}_et {{f.field}}; //enum
