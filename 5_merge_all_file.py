@@ -16,6 +16,16 @@ text_to_insert_h_header ="""
 """
 text_to_insert_h_foter ="#endif"
 
+#=================================================================
+def read_skip_parts():
+    """Đọc danh sách các phần cần skip từ file skip_in_scope.txt."""
+    skip_parts = set()
+    if os.path.isfile("skip_in_scope.txt"):
+        with open("skip_in_scope.txt", "r", encoding="utf-8") as f:
+            for line in f:
+                skip_parts.add(line.strip())
+    return skip_parts
+
 
 # ================================================================
 #cập nhật existed.txt sau khi tạo file
@@ -93,7 +103,7 @@ def rectangular_comment(text):
     return "\n".join(comment_lines) + "\n\n"
 
 #===============================================================
-def merge_main_struct_headers_by_parts(parts, existed_parts):
+def merge_main_struct_headers_by_parts(parts, existed_parts, skip_parts=None):
     """
     Merge các file .h trong MAIN_STRUCT_DIR theo cùng logic xử lý part như chương trình main:
     - Dựa theo thứ tự trong parts
@@ -113,7 +123,7 @@ def merge_main_struct_headers_by_parts(parts, existed_parts):
         out.write("/* Auto-generated MAIN_STRUCT.h */\n\n")
 
         for part in parts:
-            if part in existed_parts:
+            if part in existed_parts or part in skip_parts:
                 continue  # bỏ qua part đã tồn tại
 
             file_base = PREFIX + part.replace("-", "_") + ".h"
@@ -142,11 +152,13 @@ def main():
 
     all_parts = []
     existed_parts = read_existed_list() # dungnm23 add existed list
+    skip_parts = read_skip_parts()      # đọc các phần cần skip từ skip_in_scope.txt
+
     for leaf_file in leaf_files:
         with open(leaf_file, "r", encoding="utf-8") as f:
             for line in f:
                 part = line.strip()
-                if part and part not in all_parts and part not in existed_parts: # dungnm23 add existed list
+                if part and part not in all_parts and part not in existed_parts and part not in skip_parts: # dungnm23 add existed list
                     all_parts.append(part)
 
     c_out_path = os.path.join(MERGED_DIR, MAIN_C_FILE)
@@ -219,7 +231,7 @@ def main():
     print(f"Đã tạo file {c_out_path} và {h_out_path} trong thư mục {MERGED_DIR}")
 
     # Merge MAIN_STRUCT.h 
-    merge_main_struct_headers_by_parts(all_parts, existed_parts)
+    merge_main_struct_headers_by_parts(all_parts, existed_parts,skip_parts)
 
 
 if __name__ == "__main__":

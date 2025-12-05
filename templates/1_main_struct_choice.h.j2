@@ -1,3 +1,7 @@
+/************************************************/
+/*           CHOICE - {{name}}               */
+/************************************************/
+
 /* primitive in scope choice*/{#start primitive=====#} 
 {% for f in choices %}
     {# integer primitive #}
@@ -59,17 +63,18 @@ typedef struct{
         {% if f.alias == 13%} {# check alias enum #}
     _e2ap_{{f.ie_type}}_et {{f.field}}; //e2ap_{ie_type} {field_name} {# enum #} 
          {% endif %}
-        {% if f.alias == -1%} {# check not alias #}
-    _e2ap_{{f.ie_type}}_t {{f.field}}; //e2ap_{ie_type} {field_name}
+        {% if f.alias != 13%} {# check not alias #}
+    _e2ap_{{f.ie_type}}_t {{f.field}}; //e2ap_{ie_type} {field_name} alias = {{f.alias}} 
         {% endif %}{# end check alias #}
     {% else %}
         {% if f.primitive_meta.primitive_id == 13 %} {# ENUMERATED #}
-    _e2ap_{{name}}_{{f.field}}_et {{f.field}}; //enum
+    _e2ap_{{name}}_{{f.field}}_et {{f.field}}; //enum {{f.primitive.primitive_name}} 
         {% else %}
     _e2ap_{{name}}_{{f.field}}_t {{f.field}}; //{{f.primitive.primitive_name}} name + field: field
         {% endif %}
     {% endif %}
 {% endfor %}
 
-}_e2ap_{{name}}_t;// choice 
+}_e2ap_{{name}}_t;// CHOICE   
+
 

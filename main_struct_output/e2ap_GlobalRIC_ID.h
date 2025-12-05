@@ -1,4 +1,6 @@
-
+/************************************************/
+/*       SEQUENCE - GlobalRIC_ID               */
+/************************************************/
 /* primitive in scope sequence*/    
         
     
@@ -9,6 +11,10 @@
         
 /* main struct for sequence -*/
 typedef struct{
-
+  
+     _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
+  
     _e2ap_GlobalRIC_ID_ric_ID_t ric_ID; //BIT STRING (SIZE (20))
-}_e2ap_GlobalRIC_ID_t;
+ 
+}_e2ap_GlobalRIC_ID_t;  //SEQUENCE
+

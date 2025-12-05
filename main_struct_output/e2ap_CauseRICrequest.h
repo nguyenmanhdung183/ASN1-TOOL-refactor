@@ -1,5 +1,9 @@
+/************************************************/
+/*        PRIMITIVE - CauseRICrequest               */
+/************************************************/
  
-  typedef enum{
+  
+typedef enum{
     
     E2AP_RAN_FUNCTION_ID_INVALID = 0,    
     E2AP_ACTION_NOT_SUPPORTED = 1,    
@@ -22,4 +26,4 @@
     E2AP_REQUESTED_INFORMATION_UNAVAILABLE = 18,    
     E2AP_INVALID_INFORMATION_REQUEST = 19  
 
-}_e2ap_CauseRICrequest_et;// ENUMERATED
+}_e2ap_CauseRICrequest_et;// ENUMERATED - P

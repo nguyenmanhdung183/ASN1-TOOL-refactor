@@ -1,3 +1,7 @@
+/************************************************/
+/*           CHOICE - GlobalNG_RANNode_ID               */
+/************************************************/
+
 /* primitive in scope choice*/ 
  
 /* main struct for choice -*/
@@ -8,7 +12,8 @@ typedef struct{
 
     UInt32 choice_type;
 
-      _e2ap_GlobalgNB_ID_t gNB; //e2ap_{ie_type} {field_name}
-      _e2ap_GlobalngeNB_ID_t ng_eNB; //e2ap_{ie_type} {field_name}
+      _e2ap_GlobalgNB_ID_t gNB; //e2ap_{ie_type} {field_name} alias = -1 
+      _e2ap_GlobalngeNB_ID_t ng_eNB; //e2ap_{ie_type} {field_name} alias = -1 
 
-}_e2ap_GlobalNG_RANNode_ID_t;// choice 
+}_e2ap_GlobalNG_RANNode_ID_t;// CHOICE   
+

@@ -104,10 +104,6 @@ void asn1Free_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue){
 
 // --- End of e2ap_PLMN_Identity.c ---
 
-/**********************************/
-/* File .c missing: e2ap_ric_ID.c */
-/**********************************/
-
 // --- Begin of e2ap_GlobalRIC_ID.c ---
 
 /*****************************************/
@@ -3125,10 +3121,6 @@ int asn1PrtToStr_e2ap_E2nodeComponentInterfaceNG (const char* name, e2ap_E2nodeC
 }
 // --- End of e2ap_E2nodeComponentInterfaceNG.c ---
 
-/**********************************/
-/* File .c missing: e2ap_gnb_ID.c */
-/**********************************/
-
 // --- Begin of e2ap_GNB_ID_Choice.c ---
 /* e2ap_GNB_ID_Choice.c */
 
@@ -3482,18 +3474,6 @@ int asn1PrtToStr_e2ap_GlobalgNB_ID (const char* name, e2ap_GlobalgNB_ID* pvalue,
    return 0;
 }
 // --- End of e2ap_GlobalgNB_ID.c ---
-
-/****************************************/
-/* File .c missing: e2ap_enb_ID_macro.c */
-/****************************************/
-
-/*********************************************/
-/* File .c missing: e2ap_enb_ID_shortmacro.c */
-/*********************************************/
-
-/********************************************/
-/* File .c missing: e2ap_enb_ID_longmacro.c */
-/********************************************/
 
 // --- Begin of e2ap_ENB_ID_Choice.c ---
 /* e2ap_ENB_ID_Choice.c */
@@ -5159,22 +5139,6 @@ int asn1PrtToStr_e2ap_E2nodeComponentInterfaceS1 (const char* name, e2ap_E2nodeC
 }
 // --- End of e2ap_E2nodeComponentInterfaceS1.c ---
 
-/****************************************/
-/* File .c missing: e2ap_macro_eNB_ID.c */
-/****************************************/
-
-/***************************************/
-/* File .c missing: e2ap_home_eNB_ID.c */
-/***************************************/
-
-/**********************************************/
-/* File .c missing: e2ap_short_Macro_eNB_ID.c */
-/**********************************************/
-
-/*********************************************/
-/* File .c missing: e2ap_long_Macro_eNB_ID.c */
-/*********************************************/
-
 // --- Begin of e2ap_ENB_ID.c ---
 /* e2ap_ENB_ID.c */
 
@@ -5742,10 +5706,6 @@ int asn1PrtToStr_e2ap_GlobalENB_ID (const char* name, e2ap_GlobalENB_ID* pvalue,
    return 0;
 }
 // --- End of e2ap_GlobalENB_ID.c ---
-
-/**********************************/
-/* File .c missing: e2ap_gNB_ID.c */
-/**********************************/
 
 // --- Begin of e2ap_ENGNB_ID.c ---
 /* e2ap_ENGNB_ID.c */
@@ -6590,10 +6550,6 @@ void asn1Free_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pva
 
 
 // --- End of e2ap_E2nodeComponentID.c ---
-
-/*****************************************/
-/* File .c missing: e2ap_updateOutcome.c */
-/*****************************************/
 
 // --- Begin of e2ap_E2nodeComponentConfigurationAck.c ---
 

@@ -45,10 +45,6 @@ EXTERN void asn1Free_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pval
 
 // --- End of e2ap_PLMN_Identity.h ---
 
-/**********************************/
-/* File .h missing: e2ap_ric_ID.h */
-/**********************************/
-
 // --- Begin of e2ap_GlobalRIC_ID.h ---
 /*****************************************/
 /*           GlobalRIC_ID                */
@@ -727,10 +723,6 @@ EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, const c
 EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceNG* pSrcValue, e2ap_E2nodeComponentInterfaceNG* pDstValue);
 // --- End of e2ap_E2nodeComponentInterfaceNG.h ---
 
-/**********************************/
-/* File .h missing: e2ap_gnb_ID.h */
-/**********************************/
-
 // --- Begin of e2ap_GNB_ID_Choice.h ---
 
 
@@ -808,18 +800,6 @@ EXTERN int asn1PrtToStr_e2ap_GlobalgNB_ID (const char* name, e2ap_GlobalgNB_ID* 
 EXTERN int asn1PrtToStrm_e2ap_GlobalgNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalgNB_ID* pvalue);
 EXTERN int asn1Copy_e2ap_GlobalgNB_ID (OSCTXT* pctxt, const e2ap_GlobalgNB_ID* pSrcValue, e2ap_GlobalgNB_ID* pDstValue);
 // --- End of e2ap_GlobalgNB_ID.h ---
-
-/****************************************/
-/* File .h missing: e2ap_enb_ID_macro.h */
-/****************************************/
-
-/*********************************************/
-/* File .h missing: e2ap_enb_ID_shortmacro.h */
-/*********************************************/
-
-/********************************************/
-/* File .h missing: e2ap_enb_ID_longmacro.h */
-/********************************************/
 
 // --- Begin of e2ap_ENB_ID_Choice.h ---
 
@@ -1158,22 +1138,6 @@ EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, const c
 EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceS1* pSrcValue, e2ap_E2nodeComponentInterfaceS1* pDstValue);
 // --- End of e2ap_E2nodeComponentInterfaceS1.h ---
 
-/****************************************/
-/* File .h missing: e2ap_macro_eNB_ID.h */
-/****************************************/
-
-/***************************************/
-/* File .h missing: e2ap_home_eNB_ID.h */
-/***************************************/
-
-/**********************************************/
-/* File .h missing: e2ap_short_Macro_eNB_ID.h */
-/**********************************************/
-
-/*********************************************/
-/* File .h missing: e2ap_long_Macro_eNB_ID.h */
-/*********************************************/
-
 // --- Begin of e2ap_ENB_ID.h ---
 
 
@@ -1312,10 +1276,6 @@ EXTERN int asn1PrtToStr_e2ap_GlobalENB_ID (const char* name, e2ap_GlobalENB_ID* 
 EXTERN int asn1PrtToStrm_e2ap_GlobalENB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalENB_ID* pvalue);
 EXTERN int asn1Copy_e2ap_GlobalENB_ID (OSCTXT* pctxt, const e2ap_GlobalENB_ID* pSrcValue, e2ap_GlobalENB_ID* pDstValue);
 // --- End of e2ap_GlobalENB_ID.h ---
-
-/**********************************/
-/* File .h missing: e2ap_gNB_ID.h */
-/**********************************/
 
 // --- Begin of e2ap_ENGNB_ID.h ---
 
@@ -1474,10 +1434,6 @@ EXTERN int asn1Init_e2ap_E2nodeComponentID (e2ap_E2nodeComponentID* pvalue);
 EXTERN void asn1Free_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue);
 
 // --- End of e2ap_E2nodeComponentID.h ---
-
-/*****************************************/
-/* File .h missing: e2ap_updateOutcome.h */
-/*****************************************/
 
 // --- Begin of e2ap_E2nodeComponentConfigurationAck.h ---
 /*****************************************/

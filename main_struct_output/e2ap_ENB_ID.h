@@ -1,3 +1,7 @@
+/************************************************/
+/*           CHOICE - ENB_ID               */
+/************************************************/
+
 /* primitive in scope choice*/ 
  typedef struct{
     unsigned int numbits;
@@ -35,4 +39,5 @@ typedef struct{
     _e2ap_ENB_ID_short_Macro_eNB_ID_t short_Macro_eNB_ID; //BIT STRING (SIZE(18)) name + field: field
     _e2ap_ENB_ID_long_Macro_eNB_ID_t long_Macro_eNB_ID; //BIT STRING (SIZE(21)) name + field: field
 
-}_e2ap_ENB_ID_t;// choice 
+}_e2ap_ENB_ID_t;// CHOICE   
+

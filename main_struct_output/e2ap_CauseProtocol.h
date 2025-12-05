@@ -1,5 +1,9 @@
+/************************************************/
+/*        PRIMITIVE - CauseProtocol               */
+/************************************************/
  
-  typedef enum{
+  
+typedef enum{
     
     E2AP_TRANSFER_SYNTAX_ERROR = 0,    
     E2AP_ABSTRACT_SYNTAX_ERROR_REJECT = 1,    
@@ -9,4 +13,4 @@
     E2AP_ABSTRACT_SYNTAX_ERROR_FALSELY_CONSTRUCTED_MESSAGE = 5,    
     E2AP_UNSPECIFIED = 6  
 
-}_e2ap_CauseProtocol_et;// ENUMERATED
+}_e2ap_CauseProtocol_et;// ENUMERATED - P

@@ -257,6 +257,24 @@ def parse_ie_type_primitive(type_str):
 
     return out
 
+# ======================
+# Tạo file skip_in_scope.txt
+# ======================
+
+def write_skip_primitives(rows):
+    skip_file =  "skip_in_scope.txt"
+    with open(skip_file, "w", encoding="utf-8") as f:
+        for r in rows:
+            ie_type = r[5].value  # cột IE_Type
+            field_name = r[4].value  # cột Field_Name
+            if not ie_type or not field_name:
+                continue
+            # Kiểm tra primitive
+            primitive_info = parse_ie_type_primitive(str(ie_type))
+            if primitive_info["is"]:
+                f.write(str(field_name).strip() + "\n")
+    print(f"Saved skip_in_scope.txt with primitive fields: {skip_file}")
+
 
 #=============Parse Elementary Procedures========= 
     
@@ -900,6 +918,7 @@ def main():
 
     ws = wb["Types"]
     rows = list(ws.iter_rows(min_row=2, values_only=False))
+    write_skip_primitives(rows)
 
     container_children = set()
     for r in rows:

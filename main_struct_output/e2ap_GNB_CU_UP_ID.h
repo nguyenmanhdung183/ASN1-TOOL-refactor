@@ -1,3 +1,6 @@
+/************************************************/
+/*        PRIMITIVE - GNB_CU_UP_ID               */
+/************************************************/
    
-typedef UInt64 _e2ap_GNB_CU_UP_ID_t;// INTEGER (A..B)
+typedef UInt64 _e2ap_GNB_CU_UP_ID_t;// INTEGER (A..B) - P
  

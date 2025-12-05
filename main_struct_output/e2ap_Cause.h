@@ -1,3 +1,7 @@
+/************************************************/
+/*           CHOICE - Cause               */
+/************************************************/
+
 /* primitive in scope choice*/ 
  
 /* main struct for choice -*/
@@ -19,6 +23,7 @@ typedef struct{
       _e2ap_CauseTransport_et transport; //e2ap_{ie_type} {field_name}  
       _e2ap_CauseProtocol_et protocol; //e2ap_{ie_type} {field_name}  
       _e2ap_CauseMisc_et misc; //e2ap_{ie_type} {field_name}  
-      _e2ap_CauseServiceLayer_t serviceLayer; //e2ap_{ie_type} {field_name}
+      _e2ap_CauseServiceLayer_t serviceLayer; //e2ap_{ie_type} {field_name} alias = -1 
 
-}_e2ap_Cause_t;// choice 
+}_e2ap_Cause_t;// CHOICE   
+
