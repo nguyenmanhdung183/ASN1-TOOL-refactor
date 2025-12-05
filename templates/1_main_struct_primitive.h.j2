@@ -5,55 +5,54 @@
 typedef struct{
     Uint{{metadata.max|stdbit}} numbits;
     UInt8* data;
-} _e2ap_{{name}}_t;// BIT STRING SIZE (A..B,...) - P
+} _e2ap_{{name}}_t;// BIT STRING SIZE (A..B,...) - P  ?
 {% endif %}
-{% if metadata.primitive_id ==  3%} {# BIT STRING N#}  
+{% if metadata.primitive_id ==  3%} {# BIT STRING N  ?#}  
 typedef struct{
     unsigned int numbits;
     unsigned char data[{{ (metadata.max +7)//8 }}];
-}_e2ap_{{name}}_t;// BIT STRING SIZE (N) - P
+}_e2ap_{{name}}_t;// BIT STRING SIZE (N) - P  ?
 {% endif %}
-{% if metadata.primitive_id ==  4%} {# BIT STRING A..B#}  
+{% if metadata.primitive_id ==  4%} {# BIT STRING A..B  ?#}  
 typedef struct{
     unsigned int numbits;
     unsigned char data[{{ (metadata.max +7)//8 }}];
-}_e2ap_{{name}}_t;// BIT STRING SIZE (A..B) - P
+}_e2ap_{{name}}_t;// BIT STRING SIZE (A..B) - P  ?
 {% endif %}
-{% if metadata.primitive_id == 5 %} {# INTERGER A..B,...#}  
-typedef UInt{{metadata.max|stdbit}} _e2ap_{{name}}_t; // INTEGER (A..B,...) - P
+{% if metadata.primitive_id == 5 %} {# INTERGER A..B,... ?#}  
+typedef UInt{{metadata.max|stdbit}} _e2ap_{{name}}_t; // INTEGER (A..B,...) - P  ?
 {% endif %}
 {% if metadata.primitive_id ==6 %} {# INTERGER A..B#}  
-typedef UInt{{metadata.max|stdbit}} _e2ap_{{name}}_t;// INTEGER (A..B) - P
+typedef UInt{{metadata.max|stdbit}} _e2ap_{{name}}_t;// INTEGER (A..B) - P  ?
 {% endif %}
-{% if metadata.primitive_id ==  8%} {# OCTET STRING SIZE N#}  
+{% if metadata.primitive_id ==  8%} {# OCTET STRING SIZE N ? #}  
+typedef struct{
+    UInt8 {{name}}[{{size}}];
+}_e2ap_{{name}}_t; //OCTET STRING SIZE N - P  ?
+{% endif %}
+{% if metadata.primitive_id ==  9%} {# OCTET STRING ?#} 
 typedef struct{
     unsigned int numocts;
     const char* data;
-}_e2ap_{{name}}_t; //OCTET STRING - P
+}_e2ap_{{name}}_t; //OCTET STRING - P  ?
 {% endif %}
-{% if metadata.primitive_id ==  9%} {# OCTET STRING#} 
-typedef struct{
-    unsigned int numocts;
-    const char* data;
-}_e2ap_{{name}}_t; //OCTET STRING - P
-{% endif %}
-{% if metadata.primitive_id == 10 %} {# Printable String A..B,...#} 
+{% if metadata.primitive_id == 10 %} {# Printable String A..B,...  ?#} 
 typedef struct{
     unsigned int numchars;
     const char* data;
-}_e2ap_{{name}}_t; //Printable STRING SIZE (A..B,...) - P
+}_e2ap_{{name}}_t; //Printable STRING SIZE (A..B,...) - P  ?
 {% endif %} 
-{% if metadata.primitive_id == 11 %} {# Printable String#} 
+{% if metadata.primitive_id == 11 %} {# Printable String  ?#} 
 typedef struct{
     unsigned int numchars;
     const char* data;
-}_e2ap_{{name}}_t; //Printable STRING - P
+}_e2ap_{{name}}_t; //Printable STRING - P  ?
 {% endif %}
-{% if metadata.primitive_id ==  13%} {# ENUMERATED#} 
+{% if metadata.primitive_id ==  13%} {# ENUMERATED  ?#} 
 typedef enum{
     {% for enum in items %}    
     E2AP_{{enum.name|camel_to_upper_snake | replace("-", "_")}} = {{enum.value}}{% if not loop.last %},{% endif %}
     {% endfor %}  
 
-}_e2ap_{{name}}_et;// ENUMERATED - P
+}_e2ap_{{name}}_et;// ENUMERATED - P  ?
 {% endif %}

@@ -1,11 +1,9 @@
 /************************************************/
-/*           CHOICE - GlobalNG_RANNode_ID               */
+/*        CHOICE - GlobalNG_RANNode_ID           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB 0 //NAME + field_name
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB 1 //NAME + field_name
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_INVALID 0xFF

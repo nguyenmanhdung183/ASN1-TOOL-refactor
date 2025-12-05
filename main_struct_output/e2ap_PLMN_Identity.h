@@ -3,7 +3,6 @@
 /************************************************/
    
 typedef struct{
-    unsigned int numocts;
-    const char* data;
-}_e2ap_PLMN_Identity_t; //OCTET STRING - P
+    UInt8 PLMN_Identity[3];
+}_e2ap_PLMN_Identity_t; //OCTET STRING SIZE N - P  ?
  

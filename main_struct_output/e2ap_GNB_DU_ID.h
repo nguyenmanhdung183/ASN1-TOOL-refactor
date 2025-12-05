@@ -2,5 +2,5 @@
 /*        PRIMITIVE - GNB_DU_ID               */
 /************************************************/
    
-typedef UInt64 _e2ap_GNB_DU_ID_t;// INTEGER (A..B) - P
+typedef UInt64 _e2ap_GNB_DU_ID_t;// INTEGER (A..B) - P  ?
  

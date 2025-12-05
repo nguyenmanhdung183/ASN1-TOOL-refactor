@@ -1,11 +1,9 @@
 /************************************************/
-/*           CHOICE - E2nodeComponentID               */
+/*        CHOICE - E2nodeComponentID           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG 0 //NAME + field_name
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN 1 //NAME + field_name
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1 2 //NAME + field_name

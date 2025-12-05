@@ -1,11 +1,7 @@
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceXn               */
+/*       SEQUENCE - E2nodeComponentInterfaceXn        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_GlobalNG_RANNode_ID_t global_NG_RAN_Node_ID; //e2ap_{ie_type} {field_name} alias = -1
  
 }_e2ap_E2nodeComponentInterfaceXn_t;  //SEQUENCE

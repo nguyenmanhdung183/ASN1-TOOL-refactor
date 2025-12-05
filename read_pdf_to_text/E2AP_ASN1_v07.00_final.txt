@@ -2914,7 +2914,7 @@ LoadMeasurementID ::= INTEGER(1..4095,...)
 -- ************************************************************** 
 -- [New for E2AP v02.00] copied from 3GPP 36.413 (S1AP) IEs 
 -- ************************************************************** 
-MMEname ::= PrintableString (SIZE (1..150,...)) 
+MMEname ::= PrintableString (SIZE(1..150, ...)) 
 
 -- N 
 
@@ -2940,7 +2940,7 @@ RANfunctionDefinition ::= OCTET STRING
 
 RANfunctionID ::= INTEGER (0..4095) 
 
-RANfunctionOID ::= PrintableString(SIZE(1..1000,...)) 
+RANfunctionOID ::= PrintableString (SIZE(1..1000, ...)) 
 
 RANfunctionRevision ::= INTEGER (0..4095) 
 

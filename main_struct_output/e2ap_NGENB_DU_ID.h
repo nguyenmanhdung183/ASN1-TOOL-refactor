@@ -2,5 +2,5 @@
 /*        PRIMITIVE - NGENB_DU_ID               */
 /************************************************/
    
-typedef UInt64 _e2ap_NGENB_DU_ID_t;// INTEGER (A..B) - P
+typedef UInt64 _e2ap_NGENB_DU_ID_t;// INTEGER (A..B) - P  ?
  

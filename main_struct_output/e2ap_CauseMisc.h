@@ -10,4 +10,4 @@ typedef enum{
     E2AP_OM_INTERVENTION = 2,    
     E2AP_UNSPECIFIED = 3  
 
-}_e2ap_CauseMisc_et;// ENUMERATED - P
+}_e2ap_CauseMisc_et;// ENUMERATED - P  ?

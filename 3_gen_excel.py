@@ -125,7 +125,7 @@ for f in INPUT_DIR.glob("*bottomup.txt"):
                     if leaf and not leaf.startswith("----------"):
                         all_leaves.add(leaf)
     except: pass
-
+print(all_leaves)
 # Xuất dữ liệu
 for leaf in sorted(all_leaves):
     if leaf not in primitive_db:

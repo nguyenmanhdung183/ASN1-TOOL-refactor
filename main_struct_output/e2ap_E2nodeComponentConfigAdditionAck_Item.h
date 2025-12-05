@@ -1,15 +1,7 @@
 /************************************************/
-/*       SEQUENCE - E2nodeComponentConfigAdditionAck_Item               */
+/*       SEQUENCE - E2nodeComponentConfigAdditionAck_Item        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_E2nodeComponentInterfaceType_et e2nodeComponentInterfaceType; //e2ap_{ie_type} {field_name}   
      _e2ap_E2nodeComponentID_t e2nodeComponentID; //e2ap_{ie_type} {field_name} alias = -1
   

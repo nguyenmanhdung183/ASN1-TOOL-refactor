@@ -2933,13 +2933,76 @@ EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceType (e2ap_E2nodeComponentInter
 }
 // --- End of e2ap_E2nodeComponentInterfaceType.c ---
 
-/*******************************************/
-/* File .c missing: e2ap_PrintableString.c */
-/*******************************************/
+// --- Begin of e2ap_AMFName.c ---
+/* e2ap_AMFName.c */
 
-/***********************************/
-/* File .c missing: e2ap_AMFName.c */
-/***********************************/
+//printable string
+/*****************************************/
+/*           AMFName                */
+/*****************************************/
+
+/* Constrained PrintableString */
+EXTERN int asn1PE_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName value)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "AMFName");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   char c = (char) rtValidateStr (19, value);  /* 19 = PrintableString */
+   if (c != 0) {
+      char lbuf[2];
+      lbuf[0] = c;
+      lbuf[1] = 0;
+
+      rtxErrAddEleNameParm(pctxt);
+      rtxErrAddStrParm (pctxt, lbuf);
+      return LOG_RTERR (pctxt, RTERR_CONSVIO);
+   }
+
+   stat = pe_ConstrainedStringEx (pctxt, value, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PD_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName* ppvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "AMFName");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   stat = pd_ConstrainedStringEx (pctxt, ppvalue, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+
+void asn1Free_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName pvalue)
+{
+   if(0==pvalue) return;
+   rtxMemFreePtr (pctxt, (void*)pvalue);
+   pvalue = 0;
+}
+
+/* Print to string */
+int asn1PrtToStr_e2ap_AMFName (const char* name, e2ap_AMFName pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringIndent (buffer, bufSize) < 0) return -1;
+   if (rtPrintToStringCharStr (name, pvalue, buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+EXTERN int asn1Init_e2ap_AMFName (e2ap_AMFName* pvalue){
+   //if(0==pvalue) return RTERR_NULLPTR;
+   //pvalue = 0;
+   return 0;
+}
+// --- End of e2ap_AMFName.c ---
 
 // --- Begin of e2ap_E2nodeComponentInterfaceNG.c ---
 
@@ -4955,9 +5018,76 @@ int asn1PrtToStr_e2ap_E2nodeComponentInterfaceW1 (const char* name, e2ap_E2nodeC
 }
 // --- End of e2ap_E2nodeComponentInterfaceW1.c ---
 
-/***********************************/
-/* File .c missing: e2ap_MMEname.c */
-/***********************************/
+// --- Begin of e2ap_MMEname.c ---
+/* e2ap_MMEname.c */
+
+//printable string
+/*****************************************/
+/*           MMEname                */
+/*****************************************/
+
+/* Constrained PrintableString */
+EXTERN int asn1PE_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname value)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "MMEname");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   char c = (char) rtValidateStr (19, value);  /* 19 = PrintableString */
+   if (c != 0) {
+      char lbuf[2];
+      lbuf[0] = c;
+      lbuf[1] = 0;
+
+      rtxErrAddEleNameParm(pctxt);
+      rtxErrAddStrParm (pctxt, lbuf);
+      return LOG_RTERR (pctxt, RTERR_CONSVIO);
+   }
+
+   stat = pe_ConstrainedStringEx (pctxt, value, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PD_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname* ppvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "MMEname");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   stat = pd_ConstrainedStringEx (pctxt, ppvalue, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+
+void asn1Free_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname pvalue)
+{
+   if(0==pvalue) return;
+   rtxMemFreePtr (pctxt, (void*)pvalue);
+   pvalue = 0;
+}
+
+/* Print to string */
+int asn1PrtToStr_e2ap_MMEname (const char* name, e2ap_MMEname pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringIndent (buffer, bufSize) < 0) return -1;
+   if (rtPrintToStringCharStr (name, pvalue, buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+EXTERN int asn1Init_e2ap_MMEname (e2ap_MMEname* pvalue){
+   //if(0==pvalue) return RTERR_NULLPTR;
+   //pvalue = 0;
+   return 0;
+}
+// --- End of e2ap_MMEname.c ---
 
 // --- Begin of e2ap_E2nodeComponentInterfaceS1.c ---
 

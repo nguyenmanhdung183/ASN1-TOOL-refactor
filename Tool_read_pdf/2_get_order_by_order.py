@@ -55,6 +55,8 @@ for yf in yaml_files:
     with open(leaf_file, "w", encoding="utf-8") as f:
         unique_count = 0
         for leaf in leaf_lines:
+            if leaf == "PrintableString":
+                continue
             if leaf not in written_leaves:
                 f.write(leaf + "\n")
                 written_leaves.add(leaf)

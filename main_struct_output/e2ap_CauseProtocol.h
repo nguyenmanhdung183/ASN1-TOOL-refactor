@@ -13,4 +13,4 @@ typedef enum{
     E2AP_ABSTRACT_SYNTAX_ERROR_FALSELY_CONSTRUCTED_MESSAGE = 5,    
     E2AP_UNSPECIFIED = 6  
 
-}_e2ap_CauseProtocol_et;// ENUMERATED - P
+}_e2ap_CauseProtocol_et;// ENUMERATED - P  ?

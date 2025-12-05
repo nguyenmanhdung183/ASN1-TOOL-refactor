@@ -13,4 +13,4 @@ typedef enum{
     E2AP_S1 = 5,    
     E2AP_X2 = 6  
 
-}_e2ap_E2nodeComponentInterfaceType_et;// ENUMERATED - P
+}_e2ap_E2nodeComponentInterfaceType_et;// ENUMERATED - P  ?

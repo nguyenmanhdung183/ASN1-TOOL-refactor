@@ -690,13 +690,26 @@ EXTERN int e2ap_E2nodeComponentInterfaceType_ToEnum2 (OSCTXT* pctxt, const OSUTF
 EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceType (e2ap_E2nodeComponentInterfaceType* pvalue);
 // --- End of e2ap_E2nodeComponentInterfaceType.h ---
 
-/*******************************************/
-/* File .h missing: e2ap_PrintableString.h */
-/*******************************************/
+// --- Begin of e2ap_AMFName.h ---
+/* e2ap_AMFName.h */
 
-/***********************************/
-/* File .h missing: e2ap_AMFName.h */
-/***********************************/
+//printable string
+/*****************************************/
+/*           AMFName                */
+/*****************************************/
+
+
+typedef const char* e2ap_AMFName;
+
+EXTERN int asn1PE_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName value);
+EXTERN int asn1PD_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName* ppvalue);
+EXTERN void asn1Print_e2ap_AMFName (const char* name, e2ap_AMFName pvalue);
+EXTERN int asn1PrtToStr_e2ap_AMFName (const char* name, e2ap_AMFName pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_AMFName (OSCTXT* pctxt, const char* name, e2ap_AMFName pvalue);
+EXTERN int asn1Copy_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName pSrcValue, e2ap_AMFName* pDstValue);
+EXTERN void asn1Free_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName pvalue);
+EXTERN int asn1Init_e2ap_AMFName (e2ap_AMFName* pvalue);
+// --- End of e2ap_AMFName.h ---
 
 // --- Begin of e2ap_E2nodeComponentInterfaceNG.h ---
 /*****************************************/
@@ -1109,9 +1122,26 @@ EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, const c
 EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceW1* pSrcValue, e2ap_E2nodeComponentInterfaceW1* pDstValue);
 // --- End of e2ap_E2nodeComponentInterfaceW1.h ---
 
-/***********************************/
-/* File .h missing: e2ap_MMEname.h */
-/***********************************/
+// --- Begin of e2ap_MMEname.h ---
+/* e2ap_MMEname.h */
+
+//printable string
+/*****************************************/
+/*           MMEname                */
+/*****************************************/
+
+
+typedef const char* e2ap_MMEname;
+
+EXTERN int asn1PE_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname value);
+EXTERN int asn1PD_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname* ppvalue);
+EXTERN void asn1Print_e2ap_MMEname (const char* name, e2ap_MMEname pvalue);
+EXTERN int asn1PrtToStr_e2ap_MMEname (const char* name, e2ap_MMEname pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_MMEname (OSCTXT* pctxt, const char* name, e2ap_MMEname pvalue);
+EXTERN int asn1Copy_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname pSrcValue, e2ap_MMEname* pDstValue);
+EXTERN void asn1Free_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname pvalue);
+EXTERN int asn1Init_e2ap_MMEname (e2ap_MMEname* pvalue);
+// --- End of e2ap_MMEname.h ---
 
 // --- Begin of e2ap_E2nodeComponentInterfaceS1.h ---
 /*****************************************/
@@ -1615,25 +1645,25 @@ typedef enum {
         */
          e2ap_TransactionID * _e2apE2setupResponseIEs_id_TransactionID;
         /*
-        *id: id-GlobalRIC-ID
+        *id: id-GlobalRIC_ID
         *criticality: reject
         *presence: mandatory
         */
          e2ap_GlobalRIC_ID * _e2apE2setupResponseIEs_id_GlobalRIC_ID;
         /*
-        *id: id-RANfunctionsID-List
+        *id: id-RANfunctionsID_List
         *criticality: reject
         *presence: optional
         */
          e2ap_RANfunctionsID_List * _e2apE2setupResponseIEs_id_RANfunctionsAccepted;
         /*
-        *id: id-RANfunctionsIDcause-List
+        *id: id-RANfunctionsIDcause_List
         *criticality: reject
         *presence: optional
         */
          e2ap_RANfunctionsIDcause_List * _e2apE2setupResponseIEs_id_RANfunctionsRejected;
         /*
-        *id: id-E2nodeComponentConfigAdditionAck-List
+        *id: id-E2nodeComponentConfigAdditionAck_List
         *criticality: reject
         *presence: mandatory
         */

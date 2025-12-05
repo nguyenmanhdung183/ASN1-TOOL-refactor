@@ -9,4 +9,4 @@ typedef enum{
     E2AP_EXCESSIVE_FUNCTIONS = 1,    
     E2AP_RIC_RESOURCE_LIMIT = 2  
 
-}_e2ap_CauseRICservice_et;// ENUMERATED - P
+}_e2ap_CauseRICservice_et;// ENUMERATED - P  ?

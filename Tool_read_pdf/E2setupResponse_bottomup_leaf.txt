@@ -20,7 +20,6 @@ RANfunctionIDcause-Item
 RANfunctionIDcause-ItemIEs
 RANfunctionsIDcause-List
 E2nodeComponentInterfaceType
-PrintableString
 AMFName
 E2nodeComponentInterfaceNG
 gnb-ID

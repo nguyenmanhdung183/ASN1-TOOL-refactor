@@ -26,4 +26,4 @@ typedef enum{
     E2AP_REQUESTED_INFORMATION_UNAVAILABLE = 18,    
     E2AP_INVALID_INFORMATION_REQUEST = 19  
 
-}_e2ap_CauseRICrequest_et;// ENUMERATED - P
+}_e2ap_CauseRICrequest_et;// ENUMERATED - P  ?

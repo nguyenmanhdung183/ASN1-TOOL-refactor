@@ -1,7 +1,6 @@
 /************************************************/
-/*       SEQUENCE - {{name}}               */
+/*       SEQUENCE - {{name}}        */
 /************************************************/
-/* primitive in scope sequence*/{#start primitive=====#}
 {% for f in fields %}
     {# integer primitive #}
     {% if f.primitive_meta.primitive_id == 5 or  f.primitive_meta.primitive_id ==6 %}
@@ -19,13 +18,13 @@ typedef struct{
     unsigned int numbits;
     unsigned char data[{{ (f.primitive.max +7)//8 }}];
 }_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (A..B)
-    {% endif %}    
+    {% endif %}
     {% if f.primitive_meta.primitive_id == 3 %} {# A#}
 typedef struct{
     unsigned int numbits;
     unsigned char data[{{ (f.primitive.max +7)//8 }}];
 }_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (N)
-    {% endif %}        
+    {% endif %}
     {# ENUMERATED primitive #}
     {% if f.primitive_meta.primitive_id == 13 %}
 typedef enum{
@@ -44,8 +43,7 @@ typedef struct{
 }_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING
     {% endif %}
 {% endfor %}
-/* main struct for sequence -*/
-typedef struct{
+typedef struct{ {#/* main struct for sequence -*/#}
 {# optional bit mask #}
 {% set has_optional = false %}
 {% set bitmask_value = 0%}

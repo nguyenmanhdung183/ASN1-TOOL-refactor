@@ -32,25 +32,25 @@ typedef enum {
         */
          e2ap_TransactionID * _e2apE2setupResponseIEs_id_TransactionID;
         /*
-        *id: id-GlobalRIC-ID
+        *id: id-GlobalRIC_ID
         *criticality: reject
         *presence: mandatory
         */
          e2ap_GlobalRIC_ID * _e2apE2setupResponseIEs_id_GlobalRIC_ID;
         /*
-        *id: id-RANfunctionsID-List
+        *id: id-RANfunctionsID_List
         *criticality: reject
         *presence: optional
         */
          e2ap_RANfunctionsID_List * _e2apE2setupResponseIEs_id_RANfunctionsAccepted;
         /*
-        *id: id-RANfunctionsIDcause-List
+        *id: id-RANfunctionsIDcause_List
         *criticality: reject
         *presence: optional
         */
          e2ap_RANfunctionsIDcause_List * _e2apE2setupResponseIEs_id_RANfunctionsRejected;
         /*
-        *id: id-E2nodeComponentConfigAdditionAck-List
+        *id: id-E2nodeComponentConfigAdditionAck_List
         *criticality: reject
         *presence: mandatory
         */

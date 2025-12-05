@@ -249,56 +249,68 @@ def parse_ie_type_primitive(type_str):
         out.update({"is": True, "type": "BIT STRING", "primitive_id": 1})
         return out
 
-    # ============================================================
-    # PrintableString – FULL SUPPORT
-    # ============================================================
 
-    # PrintableString(SIZE(a..b,..) – hỗ trợ nhiều cặp range -> PrintableString (SIZE(a..b,...))
-    # Lấy toàn bộ bên trong SIZE(...)
-    #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\((.*?)\)\s*\)", s, re.IGNORECASE)
-    #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*?)\s*\)\s*\)", s, re.IGNORECASE)
-    m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*?)\s*\)\s*\)", s, re.IGNORECASE)
-    #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*)", s, re.IGNORECASE)
+
+    # ============================================================
+    # PrintableString (a..b,...)
+    # ============================================================
+    m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(\d+)\s*\.\.\s*(\d+)\s*,\s*\.\.\.\s*\)\s*\)",s, re.IGNORECASE)
+
     if m:
-        size_expr = m.group(1).strip()
-
-        # Trường hợp SIZE gồm nhiều tham số: "1..10, 20..30, 40"
-        parts = [p.strip() for p in size_expr.split(",")]
-
-        mins, maxs = [], []
-
-        for p in parts:
-            # dạng a..b
-            mm = re.match(r"(\d+)\s*\.\.\s*(\d+)", p)
-            if mm:
-                mins.append(int(mm.group(1)))
-                maxs.append(int(mm.group(2)))
-                continue
-
-            # dạng a (single)
-            mm = re.match(r"(\d+)", p)
-            if mm:
-                val = int(mm.group(1))
-                mins.append(val)
-                maxs.append(val)
-                continue
-
-        if mins and maxs:
-            out.update({
-                "is": True,
-                "type": "PrintableString",
-                "min": min(mins),
-                "max": max(maxs),
-                "fix_size": min(mins) if min(mins) == max(maxs) else -1,
-                "primitive_id": 10
-            })
-            return out
-
-    # PrintableString (no constraint)
-    if re.match(r"^PrintableString\b", s, re.IGNORECASE):
         out.update({"is": True, "type": "PrintableString",
-                    "primitive_id": 11})
+                    "min": int(m.group(1)), "max": int(m.group(2)),
+                    "primitive_id": 10})
         return out
+    # # ============================================================
+    # # PrintableString
+    # # ============================================================
+
+    # # PrintableString(SIZE(a..b,..) – hỗ trợ nhiều cặp range -> PrintableString (SIZE(a..b,...))
+    # # Lấy toàn bộ bên trong SIZE(...)
+    # #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\((.*?)\)\s*\)", s, re.IGNORECASE)
+    # #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*?)\s*\)\s*\)", s, re.IGNORECASE)
+    # m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*?)\s*\)\s*\)", s, re.IGNORECASE)
+    # #m = re.match(r"PrintableString\s*\(\s*SIZE\s*\(\s*(.*)", s, re.IGNORECASE)
+    # if m:
+    #     size_expr = m.group(1).strip()
+
+    #     # Trường hợp SIZE gồm nhiều tham số: "1..10, 20..30, 40"
+    #     parts = [p.strip() for p in size_expr.split(",")]
+
+    #     mins, maxs = [], []
+
+    #     for p in parts:
+    #         # dạng a..b
+    #         mm = re.match(r"(\d+)\s*\.\.\s*(\d+)", p)
+    #         if mm:
+    #             mins.append(int(mm.group(1)))
+    #             maxs.append(int(mm.group(2)))
+    #             continue
+
+    #         # dạng a (single)
+    #         mm = re.match(r"(\d+)", p)
+    #         if mm:
+    #             val = int(mm.group(1))
+    #             mins.append(val)
+    #             maxs.append(val)
+    #             continue
+
+    #     if mins and maxs:
+    #         out.update({
+    #             "is": True,
+    #             "type": "PrintableString",
+    #             "min": min(mins),
+    #             "max": max(maxs),
+    #             "fix_size": min(mins) if min(mins) == max(maxs) else -1,
+    #             "primitive_id": 10
+    #         })
+    #         return out
+
+    # # PrintableString (no constraint)
+    # if re.match(r"^PrintableString\b", s, re.IGNORECASE):
+    #     out.update({"is": True, "type": "PrintableString",
+    #                 "primitive_id": 11})
+    #     return out
 
     # ============================================================
     # Other simple primitives
@@ -320,8 +332,24 @@ def parse_ie_type_primitive(type_str):
         out["type"] = extract_base_type(out["type"])
 
     return out
-
-
+#=================================================
+def get_field_name_and_ie_type_from_types(ie_type):
+    """
+    Helper function to search the 'Types' sheet for matching Type_Name
+    and return corresponding Field_Name and IE_Type.
+    """
+    # Lọc các dòng trong df 'Types' có Type_Name trùng với IE_Type
+    match_rows = types_df[types_df["Type_Name"] == ie_type]
+    
+    # Nếu có kết quả tìm thấy, trả về các giá trị Field_Name và IE_Type
+    if not match_rows.empty:
+        field_name = match_rows.iloc[0].get("Field_Name")  # Lấy cột 'Field_Name'
+        ie_type2 = match_rows.iloc[0].get("IE_Type")      # Lấy cột 'IE_Type'
+        return field_name.replace('-', '_'), ie_type2.replace('-', '_')  # Trả về tên trường và IE_Type
+    
+    # Nếu không có kết quả nào, trả về None
+    return None, None
+#=============================================
 def check_if_primitive(asn1_type):
     """
     Nhận vào ASN1_Type (vd: 'OCTET STRING (SIZE(3))')
@@ -413,27 +441,6 @@ def gen_primitives_outputs():
 
         # Define templates based on ASN.1 type
         try:
-            # if "INTEGER" in asn_type and "..." in asn_type:
-            #     h_tmpl = env.get_template("integer_with_ext.h.j2")
-            #     c_tmpl = env.get_template("integer_with_ext.c.j2")
-            #     data = {
-            #         "name": name,
-            #         "min_root": row.get("Min"),
-            #         "max_root": row.get("Max"),
-            #         "type": "OSUINT32",
-            #         "metadata": primitive_info  # Add metadata
-            #     }
-            # elif "INTEGER" in asn_type:
-            #     h_tmpl = env.get_template("integer_no_ext.h.j2")
-            #     c_tmpl = env.get_template("integer_no_ext.c.j2")
-            #     data = {
-            #         "name": name,
-            #         "min": row.get("Min"),
-            #         "max": row.get("Max"),
-            #         "bits": 32,
-            #         "type": "OSUINT32",
-            #         "metadata": primitive_info  # Add metadata
-            #     }
             if "INTEGER" in asn_type:
                 h_tmpl = env.get_template("integer.h.j2")
                 c_tmpl = env.get_template("integer.c.j2")
@@ -469,7 +476,7 @@ def gen_primitives_outputs():
             elif "PrintableString" in asn_type:
                 h_tmpl = env.get_template("printable_string.h.j2")
                 c_tmpl = env.get_template("printable_string.c.j2")
-                compose_tmpl = env.get_template("compose_printablestring_en.c.j2")
+                #compose_tmpl = env.get_template("compose_printablestring_en.c.j2")
                 m = re.search(r"SIZE\((\d+)\.\.(\d+)", asn_type)
                 if m:
                     data = {"name": name, "has_constraint": True, "min_size": int(m.group(1)), "max_size": int(m.group(2)), "metadata": primitive_info}
@@ -491,7 +498,7 @@ def gen_primitives_outputs():
 
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.h"), h_tmpl.render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.c"), c_tmpl.render(data))
-            safe_write(os.path.join(COMPOSE_DIR, f"compose_{name}_en.c"), compose_tmpl.render(data))
+            #safe_write(os.path.join(COMPOSE_DIR, f"compose_{name}_en.c"), compose_tmpl.render(data))
             safe_write(f"main_struct_output/e2ap_{name.replace('-', '_')}.h", env.get_template("1_main_struct_primitive.h.j2").render(data))
             print(f"primitive data:\n{json.dumps(data, indent=4)}\n\n")
 
@@ -638,6 +645,9 @@ def gen_single_container_outputs():
 
         primitive_sheet = check_if_primitive(item_type_str)
         parsed = parse_ie_type_primitive(item_type_str)
+        
+        
+        ie_field_name_from_types, ie_type_from_types = get_field_name_and_ie_type_from_types(item_type_str)
 
         data = {
             "list_name": list_name,
@@ -655,6 +665,10 @@ def gen_single_container_outputs():
                 "max": parsed["max"],
                 "fix_size": parsed["fix_size"],
                 "primitive_id": parsed["primitive_id"]
+            },
+            "ie_from_type":{
+                "field_name": ie_field_name_from_types,
+                "ie_type": ie_type_from_types
             }
         }
 
@@ -662,6 +676,7 @@ def gen_single_container_outputs():
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}.h"), env.get_template("2_single_container.h.j2").render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}.c"), env.get_template("2_single_container.c.j2").render(data))
             #safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}_helper.h"), env.get_template("seq_of_single_container_helper.h.j2").render(data))
+            safe_write(os.path.join(STRUCT_DIR, f"e2ap_{list_name}.h"), env.get_template("1_main_struct_single_container.h.j2").render(data))
         except Exception as e:
             print(f"[WARN] single container template failed for {list_name}: {e}")
        # print(f"SingleContainer → {list_name} (uses {item_ies})")
@@ -691,6 +706,7 @@ def gen_ie_outputs():
             criticality = row.get("Criticality")
             optional_val = row.get("Optional")
             dad_type_name = row.get("Dad_Name")
+            alias = row.get("Alias")
             note = row.get("Note")
             presence = "optional" if (pd.notna(optional_val) and str(optional_val).strip() != "") else "mandatory"
             field_name_clean = str(field_name).replace("-", "_")
@@ -699,10 +715,11 @@ def gen_ie_outputs():
             primitive_sheet = check_if_primitive(item_type)
 
             choices.append({
-                "item_type": item_type,
+                "item_type": item_type.replace("-", "_"),
                 "dad_type_name": dad_type_name,
                 "field_name": field_name_clean,
                 "presence": presence,
+                "alias": alias,
                 "critical": criticality,
                 "note": note,
                 "primitive": primitive_sheet,

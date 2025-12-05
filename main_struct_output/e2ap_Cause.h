@@ -1,11 +1,9 @@
 /************************************************/
-/*           CHOICE - Cause               */
+/*        CHOICE - Cause           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_CAUSE_e2ap_RIC_REQUEST 0 //NAME + field_name
     #define E2AP_CAUSE_e2ap_RIC_SERVICE 1 //NAME + field_name
     #define E2AP_CAUSE_e2ap_E2NODE 2 //NAME + field_name

@@ -1,0 +1,10 @@
+{% if choices[0].note == "child_of_msg"%}
+/*******************************************/
+/*       IE - {{choices[0].dad_type_name}} - (IEs)               */
+/******************************************/
+typedef struct{
+    {% for d in choices %}
+    _e2ap_{{d.item_type}}_t {{d.field_name}}; //e2ap_{item_type} {field_name} alias = {{d.alias}}
+    {% endfor %}
+}e2ap_{{choices[0].dad_type_name}}_t;
+{% endif %}

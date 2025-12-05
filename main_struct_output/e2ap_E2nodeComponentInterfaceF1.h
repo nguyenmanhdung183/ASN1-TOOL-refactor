@@ -1,11 +1,7 @@
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceF1               */
+/*       SEQUENCE - E2nodeComponentInterfaceF1        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_GNB_DU_ID_t gNB_DU_ID; //e2ap_{ie_type} {field_name} alias = 6
  
 }_e2ap_E2nodeComponentInterfaceF1_t;  //SEQUENCE

@@ -1,13 +1,7 @@
 /************************************************/
-/*       SEQUENCE - RANfunctionID_Item               */
+/*       SEQUENCE - RANfunctionID_Item        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_RANfunctionID_t ranFunctionID; //e2ap_{ie_type} {field_name} alias = 6
   
      _e2ap_RANfunctionRevision_t ranFunctionRevision; //e2ap_{ie_type} {field_name} alias = 6

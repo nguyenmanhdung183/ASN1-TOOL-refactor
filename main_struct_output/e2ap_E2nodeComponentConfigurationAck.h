@@ -1,19 +1,13 @@
 /************************************************/
-/*       SEQUENCE - E2nodeComponentConfigurationAck               */
+/*       SEQUENCE - E2nodeComponentConfigurationAck        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
 typedef enum{
     
     E2AP_SUCCESS = 0,    
     E2AP_FAILURE = 1
 }_e2ap_E2nodeComponentConfigurationAck_updateOutcome_et;
 
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-    #define E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_e2ap_FAILURE_CAUSE_PRESENT 0x01
+typedef struct{     #define E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_e2ap_FAILURE_CAUSE_PRESENT 0x01
     
     rrc_bitmask_t bitmask; /* BITMASK ^*/
   

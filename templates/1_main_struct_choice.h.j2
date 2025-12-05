@@ -1,8 +1,7 @@
 /************************************************/
-/*           CHOICE - {{name}}               */
+/*        CHOICE - {{name}}           */
 /************************************************/
 
-/* primitive in scope choice*/{#start primitive=====#} 
 {% for f in choices %}
     {# integer primitive #}
     {% if f.primitive_meta.primitive_id == 5 or  f.primitive_meta.primitive_id ==6 %}
@@ -47,9 +46,7 @@ typedef struct{
 }_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING 
     {% endif %}
 {% endfor %} 
-/* main struct for choice -*/
-typedef struct{
-{# /*define for choice*/#}
+typedef struct{ {# /*define for choice*/#} 
 {% for d in choices %}
     #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.field | replace('-', '_') | camel_to_upper_snake }} {{loop.index0}} //NAME + field_name
 {% endfor %}

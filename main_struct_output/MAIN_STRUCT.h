@@ -4,31 +4,24 @@
 /*        PRIMITIVE - TransactionID               */
 /************************************************/
    
-typedef UInt8 _e2ap_TransactionID_t; // INTEGER (A..B,...) - P
+typedef UInt8 _e2ap_TransactionID_t; // INTEGER (A..B,...) - P  ?
  
 /************************************************/
 /*        PRIMITIVE - PLMN_Identity               */
 /************************************************/
    
 typedef struct{
-    unsigned int numocts;
-    const char* data;
-}_e2ap_PLMN_Identity_t; //OCTET STRING - P
+    UInt8 PLMN_Identity[3];
+}_e2ap_PLMN_Identity_t; //OCTET STRING SIZE N - P  ?
  
 /************************************************/
-/*       SEQUENCE - GlobalRIC_ID               */
+/*       SEQUENCE - GlobalRIC_ID        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
  typedef struct{
     unsigned int numbits;
     unsigned char data[3];
 }_e2ap_GlobalRIC_ID_ric_ID_t; //BIT STRING SIZE (N)
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
   
     _e2ap_GlobalRIC_ID_ric_ID_t ric_ID; //BIT STRING (SIZE (20))
@@ -39,33 +32,35 @@ typedef struct{
 /*        PRIMITIVE - RANfunctionID               */
 /************************************************/
    
-typedef UInt16 _e2ap_RANfunctionID_t;// INTEGER (A..B) - P
+typedef UInt16 _e2ap_RANfunctionID_t;// INTEGER (A..B) - P  ?
  
 /************************************************/
 /*        PRIMITIVE - RANfunctionRevision               */
 /************************************************/
    
-typedef UInt16 _e2ap_RANfunctionRevision_t;// INTEGER (A..B) - P
+typedef UInt16 _e2ap_RANfunctionRevision_t;// INTEGER (A..B) - P  ?
  
 /************************************************/
-/*       SEQUENCE - RANfunctionID_Item               */
+/*       SEQUENCE - RANfunctionID_Item        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_RANfunctionID_t ranFunctionID; //e2ap_{ie_type} {field_name} alias = 6
   
      _e2ap_RANfunctionRevision_t ranFunctionRevision; //e2ap_{ie_type} {field_name} alias = 6
  
 }_e2ap_RANfunctionID_Item_t;  //SEQUENCE
 
-/***********************************************/
-/* File .h missing: e2ap_RANfunctionsID_List.h */
-/***********************************************/
+/*********************************************************/
+/*        SINGLE CONTAINER - RANfunctionsID_List     */
+/*********************************************************/
+
+typedef struct{
+#define MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT 256 // dungnm23 change to 1 if needed
+  
+    UInt16 id_RANfunctionID_Item_count;
+    _e2ap_RANfunctionID_Item_t id_RANfunctionID_Item[MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT];
+
+}_e2ap_RANfunctionsID_List_t;  //SINGLE CONTAINER   
 
 /************************************************/
 /*        PRIMITIVE - CauseRICrequest               */
@@ -95,7 +90,7 @@ typedef enum{
     E2AP_REQUESTED_INFORMATION_UNAVAILABLE = 18,    
     E2AP_INVALID_INFORMATION_REQUEST = 19  
 
-}_e2ap_CauseRICrequest_et;// ENUMERATED - P
+}_e2ap_CauseRICrequest_et;// ENUMERATED - P  ?
 /************************************************/
 /*        PRIMITIVE - CauseRICservice               */
 /************************************************/
@@ -107,7 +102,7 @@ typedef enum{
     E2AP_EXCESSIVE_FUNCTIONS = 1,    
     E2AP_RIC_RESOURCE_LIMIT = 2  
 
-}_e2ap_CauseRICservice_et;// ENUMERATED - P
+}_e2ap_CauseRICservice_et;// ENUMERATED - P  ?
 /************************************************/
 /*        PRIMITIVE - CauseE2node               */
 /************************************************/
@@ -117,7 +112,7 @@ typedef enum{
     
     E2AP_E2NODE_COMPONENT_UNKNOWN = 0  
 
-}_e2ap_CauseE2node_et;// ENUMERATED - P
+}_e2ap_CauseE2node_et;// ENUMERATED - P  ?
 /************************************************/
 /*        PRIMITIVE - CauseTransport               */
 /************************************************/
@@ -128,7 +123,7 @@ typedef enum{
     E2AP_UNSPECIFIED = 0,    
     E2AP_TRANSPORT_RESOURCE_UNAVAILABLE = 1  
 
-}_e2ap_CauseTransport_et;// ENUMERATED - P
+}_e2ap_CauseTransport_et;// ENUMERATED - P  ?
 /************************************************/
 /*        PRIMITIVE - CauseProtocol               */
 /************************************************/
@@ -144,7 +139,7 @@ typedef enum{
     E2AP_ABSTRACT_SYNTAX_ERROR_FALSELY_CONSTRUCTED_MESSAGE = 5,    
     E2AP_UNSPECIFIED = 6  
 
-}_e2ap_CauseProtocol_et;// ENUMERATED - P
+}_e2ap_CauseProtocol_et;// ENUMERATED - P  ?
 /************************************************/
 /*        PRIMITIVE - CauseMisc               */
 /************************************************/
@@ -157,7 +152,7 @@ typedef enum{
     E2AP_OM_INTERVENTION = 2,    
     E2AP_UNSPECIFIED = 3  
 
-}_e2ap_CauseMisc_et;// ENUMERATED - P
+}_e2ap_CauseMisc_et;// ENUMERATED - P  ?
 /************************************************/
 /*        PRIMITIVE - ServiceLayerCause               */
 /************************************************/
@@ -165,28 +160,22 @@ typedef enum{
 typedef struct{
     unsigned int numocts;
     const char* data;
-}_e2ap_ServiceLayerCause_t; //OCTET STRING - P
+}_e2ap_ServiceLayerCause_t; //OCTET STRING - P  ?
  
 /************************************************/
-/*       SEQUENCE - CauseServiceLayer               */
+/*       SEQUENCE - CauseServiceLayer        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_ServiceLayerCause_t serviceLayerCause; //e2ap_{ie_type} {field_name} alias = 9
  
 }_e2ap_CauseServiceLayer_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - Cause               */
+/*        CHOICE - Cause           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_CAUSE_e2ap_RIC_REQUEST 0 //NAME + field_name
     #define E2AP_CAUSE_e2ap_RIC_SERVICE 1 //NAME + field_name
     #define E2AP_CAUSE_e2ap_E2NODE 2 //NAME + field_name
@@ -209,24 +198,26 @@ typedef struct{
 }_e2ap_Cause_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - RANfunctionIDcause_Item               */
+/*       SEQUENCE - RANfunctionIDcause_Item        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_RANfunctionID_t ranFunctionID; //e2ap_{ie_type} {field_name} alias = 6
   
      _e2ap_Cause_t cause; //e2ap_{ie_type} {field_name} alias = -1
  
 }_e2ap_RANfunctionIDcause_Item_t;  //SEQUENCE
 
-/****************************************************/
-/* File .h missing: e2ap_RANfunctionsIDcause_List.h */
-/****************************************************/
+/*********************************************************/
+/*        SINGLE CONTAINER - RANfunctionsIDcause_List     */
+/*********************************************************/
+
+typedef struct{
+#define MAX_NO_ID_RANFUNCTION_IECAUSE_ITEM_COUNT 256 // dungnm23 change to 1 if needed
+  
+    UInt16 id_RANfunctionIEcause_Item_count;
+    _e2ap_RANfunctionIDcause_Item_t id_RANfunctionIEcause_Item[MAX_NO_ID_RANFUNCTION_IECAUSE_ITEM_COUNT];
+
+}_e2ap_RANfunctionsIDcause_List_t;  //SINGLE CONTAINER   
 
 /************************************************/
 /*        PRIMITIVE - E2nodeComponentInterfaceType               */
@@ -243,40 +234,35 @@ typedef enum{
     E2AP_S1 = 5,    
     E2AP_X2 = 6  
 
-}_e2ap_E2nodeComponentInterfaceType_et;// ENUMERATED - P
-/*******************************************/
-/* File .h missing: e2ap_PrintableString.h */
-/*******************************************/
-
-/***********************************/
-/* File .h missing: e2ap_AMFName.h */
-/***********************************/
-
+}_e2ap_E2nodeComponentInterfaceType_et;// ENUMERATED - P  ?
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceNG               */
+/*        PRIMITIVE - AMFName               */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
   
+typedef struct{
+    unsigned int numchars;
+    const char* data;
+}_e2ap_AMFName_t; //Printable STRING SIZE (A..B,...) - P  ?
+ 
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceNG        */
+/************************************************/
+typedef struct{   
      _e2ap_AMFName_t amf_name; //e2ap_{ie_type} {field_name} alias = 10
  
 }_e2ap_E2nodeComponentInterfaceNG_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - GNB_ID_Choice               */
+/*        CHOICE - GNB_ID_Choice           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  typedef struct{
     unsigned int numbits;
     unsigned char data[4];
 }_e2ap_GNB_ID_Choice_gnb_ID_t; //BIT STRING SIZE (A..B) 
 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 0 //NAME + field_name
     #define E2AP_GNB_ID_CHOICE_e2ap_INVALID 0xFF
 
@@ -287,15 +273,9 @@ typedef struct{
 }_e2ap_GNB_ID_Choice_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - GlobalgNB_ID               */
+/*       SEQUENCE - GlobalgNB_ID        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_PLMN_Identity_t plmn_id; //e2ap_{ie_type} {field_name} alias = 8
   
      _e2ap_GNB_ID_Choice_t gnb_id; //e2ap_{ie_type} {field_name} alias = -1
@@ -303,10 +283,9 @@ typedef struct{
 }_e2ap_GlobalgNB_ID_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - ENB_ID_Choice               */
+/*        CHOICE - ENB_ID_Choice           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  typedef struct{
     unsigned int numbits;
     unsigned char data[3];
@@ -323,8 +302,7 @@ typedef struct{
 }_e2ap_ENB_ID_Choice_enb_ID_longmacro_t; //BIT STRING SIZE (N)  
 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_MACRO 0 //NAME + field_name
     #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_SHORTMACRO 1 //NAME + field_name
     #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_LONGMACRO 2 //NAME + field_name
@@ -339,15 +317,9 @@ typedef struct{
 }_e2ap_ENB_ID_Choice_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - GlobalngeNB_ID               */
+/*       SEQUENCE - GlobalngeNB_ID        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_PLMN_Identity_t plmn_id; //e2ap_{ie_type} {field_name} alias = 8
   
      _e2ap_ENB_ID_Choice_t enb_id; //e2ap_{ie_type} {field_name} alias = -1
@@ -355,13 +327,11 @@ typedef struct{
 }_e2ap_GlobalngeNB_ID_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - GlobalNG_RANNode_ID               */
+/*        CHOICE - GlobalNG_RANNode_ID           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB 0 //NAME + field_name
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB 1 //NAME + field_name
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_INVALID 0xFF
@@ -374,13 +344,9 @@ typedef struct{
 }_e2ap_GlobalNG_RANNode_ID_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceXn               */
+/*       SEQUENCE - E2nodeComponentInterfaceXn        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_GlobalNG_RANNode_ID_t global_NG_RAN_Node_ID; //e2ap_{ie_type} {field_name} alias = -1
  
 }_e2ap_E2nodeComponentInterfaceXn_t;  //SEQUENCE
@@ -389,16 +355,12 @@ typedef struct{
 /*        PRIMITIVE - GNB_CU_UP_ID               */
 /************************************************/
    
-typedef UInt64 _e2ap_GNB_CU_UP_ID_t;// INTEGER (A..B) - P
+typedef UInt64 _e2ap_GNB_CU_UP_ID_t;// INTEGER (A..B) - P  ?
  
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceE1               */
+/*       SEQUENCE - E2nodeComponentInterfaceE1        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_GNB_CU_UP_ID_t gNB_CU_UP_ID; //e2ap_{ie_type} {field_name} alias = 6
  
 }_e2ap_E2nodeComponentInterfaceE1_t;  //SEQUENCE
@@ -407,16 +369,12 @@ typedef struct{
 /*        PRIMITIVE - GNB_DU_ID               */
 /************************************************/
    
-typedef UInt64 _e2ap_GNB_DU_ID_t;// INTEGER (A..B) - P
+typedef UInt64 _e2ap_GNB_DU_ID_t;// INTEGER (A..B) - P  ?
  
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceF1               */
+/*       SEQUENCE - E2nodeComponentInterfaceF1        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_GNB_DU_ID_t gNB_DU_ID; //e2ap_{ie_type} {field_name} alias = 6
  
 }_e2ap_E2nodeComponentInterfaceF1_t;  //SEQUENCE
@@ -425,41 +383,37 @@ typedef struct{
 /*        PRIMITIVE - NGENB_DU_ID               */
 /************************************************/
    
-typedef UInt64 _e2ap_NGENB_DU_ID_t;// INTEGER (A..B) - P
+typedef UInt64 _e2ap_NGENB_DU_ID_t;// INTEGER (A..B) - P  ?
  
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceW1               */
+/*       SEQUENCE - E2nodeComponentInterfaceW1        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_NGENB_DU_ID_t ng_eNB_DU_ID; //e2ap_{ie_type} {field_name} alias = 6
  
 }_e2ap_E2nodeComponentInterfaceW1_t;  //SEQUENCE
 
-/***********************************/
-/* File .h missing: e2ap_MMEname.h */
-/***********************************/
-
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceS1               */
+/*        PRIMITIVE - MMEname               */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-/* main struct for sequence -*/
-typedef struct{
   
-     _e2ap_MMEname_t mme_name; //e2ap_{ie_type} {field_name} alias = -1
+typedef struct{
+    unsigned int numchars;
+    const char* data;
+}_e2ap_MMEname_t; //Printable STRING SIZE (A..B,...) - P  ?
+ 
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceS1        */
+/************************************************/
+typedef struct{   
+     _e2ap_MMEname_t mme_name; //e2ap_{ie_type} {field_name} alias = 10
  
 }_e2ap_E2nodeComponentInterfaceS1_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - ENB_ID               */
+/*        CHOICE - ENB_ID           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  typedef struct{
     unsigned int numbits;
     unsigned char data[3];
@@ -481,8 +435,7 @@ typedef struct{
 }_e2ap_ENB_ID_long_Macro_eNB_ID_t; //BIT STRING SIZE (N)  
 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_ENB_ID_e2ap_MACRO_E_NB_ID 0 //NAME + field_name
     #define E2AP_ENB_ID_e2ap_HOME_E_NB_ID 1 //NAME + field_name
     #define E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID 2 //NAME + field_name
@@ -499,15 +452,9 @@ typedef struct{
 }_e2ap_ENB_ID_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - GlobalENB_ID               */
+/*       SEQUENCE - GlobalENB_ID        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
   
      _e2ap_ENB_ID_t eNB_ID; //e2ap_{ie_type} {field_name} alias = -1
@@ -515,18 +462,16 @@ typedef struct{
 }_e2ap_GlobalENB_ID_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - ENGNB_ID               */
+/*        CHOICE - ENGNB_ID           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  typedef struct{
     unsigned int numbits;
     unsigned char data[4];
 }_e2ap_ENGNB_ID_gNB_ID_t; //BIT STRING SIZE (A..B) 
 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_ENGNB_ID_e2ap_G_NB_ID 0 //NAME + field_name
     #define E2AP_ENGNB_ID_e2ap_INVALID 0xFF
 
@@ -537,15 +482,9 @@ typedef struct{
 }_e2ap_ENGNB_ID_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - GlobalenGNB_ID               */
+/*       SEQUENCE - GlobalenGNB_ID        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
   
      _e2ap_ENGNB_ID_t gNB_ID; //e2ap_{ie_type} {field_name} alias = -1
@@ -553,15 +492,9 @@ typedef struct{
 }_e2ap_GlobalenGNB_ID_t;  //SEQUENCE
 
 /************************************************/
-/*       SEQUENCE - E2nodeComponentInterfaceX2               */
+/*       SEQUENCE - E2nodeComponentInterfaceX2        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-    #define E2AP_E2NODE_COMPONENT_INTERFACE_X2_e2ap_GLOBAL_E_NB_ID_PRESENT 0x01
+typedef struct{     #define E2AP_E2NODE_COMPONENT_INTERFACE_X2_e2ap_GLOBAL_E_NB_ID_PRESENT 0x01
     #define E2AP_E2NODE_COMPONENT_INTERFACE_X2_e2ap_GLOBAL_EN_G_NB_ID_PRESENT 0x01
     
     rrc_bitmask_t bitmask; /* BITMASK ^*/
@@ -573,13 +506,11 @@ typedef struct{
 }_e2ap_E2nodeComponentInterfaceX2_t;  //SEQUENCE
 
 /************************************************/
-/*           CHOICE - E2nodeComponentID               */
+/*        CHOICE - E2nodeComponentID           */
 /************************************************/
 
-/* primitive in scope choice*/ 
  
-/* main struct for choice -*/
-typedef struct{
+typedef struct{  
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG 0 //NAME + field_name
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN 1 //NAME + field_name
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1 2 //NAME + field_name
@@ -602,21 +533,15 @@ typedef struct{
 }_e2ap_E2nodeComponentID_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - E2nodeComponentConfigurationAck               */
+/*       SEQUENCE - E2nodeComponentConfigurationAck        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
 typedef enum{
     
     E2AP_SUCCESS = 0,    
     E2AP_FAILURE = 1
 }_e2ap_E2nodeComponentConfigurationAck_updateOutcome_et;
 
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-    #define E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_e2ap_FAILURE_CAUSE_PRESENT 0x01
+typedef struct{     #define E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_e2ap_FAILURE_CAUSE_PRESENT 0x01
     
     rrc_bitmask_t bitmask; /* BITMASK ^*/
   
@@ -627,17 +552,9 @@ typedef struct{
 }_e2ap_E2nodeComponentConfigurationAck_t;  //SEQUENCE
 
 /************************************************/
-/*       SEQUENCE - E2nodeComponentConfigAdditionAck_Item               */
+/*       SEQUENCE - E2nodeComponentConfigAdditionAck_Item        */
 /************************************************/
-/* primitive in scope sequence*/    
-        
-    
-        
-    
-        
-/* main struct for sequence -*/
-typedef struct{
-  
+typedef struct{   
      _e2ap_E2nodeComponentInterfaceType_et e2nodeComponentInterfaceType; //e2ap_{ie_type} {field_name}   
      _e2ap_E2nodeComponentID_t e2nodeComponentID; //e2ap_{ie_type} {field_name} alias = -1
   
@@ -645,10 +562,28 @@ typedef struct{
  
 }_e2ap_E2nodeComponentConfigAdditionAck_Item_t;  //SEQUENCE
 
-/*****************************************************************/
-/* File .h missing: e2ap_E2nodeComponentConfigAdditionAck_List.h */
-/*****************************************************************/
+/*********************************************************/
+/*        SINGLE CONTAINER - E2nodeComponentConfigAdditionAck_List     */
+/*********************************************************/
 
+typedef struct{
+#define MAX_NO_ID_E2NODE_COMPONENT_CONFIG_ADDITION_ACK_ITEM_COUNT 1024 // dungnm23 change to 1 if needed
+  
+    UInt16 id_E2nodeComponentConfigAdditionAck_Item_count;
+    _e2ap_E2nodeComponentConfigAdditionAck_Item_t id_E2nodeComponentConfigAdditionAck_Item[MAX_NO_ID_E2NODE_COMPONENT_CONFIG_ADDITION_ACK_ITEM_COUNT];
+
+}_e2ap_E2nodeComponentConfigAdditionAck_List_t;  //SINGLE CONTAINER   
+
+/*******************************************/
+/*       IE - E2setupResponse - (IEs)               */
+/******************************************/
+typedef struct{
+    _e2ap_TransactionID_t id_TransactionID; //e2ap_{item_type} {field_name} alias = 5
+    _e2ap_GlobalRIC_ID_t id_GlobalRIC_ID; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_RANfunctionsID_List_t id_RANfunctionsAccepted; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_RANfunctionsIDcause_List_t id_RANfunctionsRejected; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_E2nodeComponentConfigAdditionAck_List_t id_E2nodeComponentConfigAdditionAck; //e2ap_{item_type} {field_name} alias = -1
+}e2ap_E2setupResponse_t;
 /*******************************************/
 /* File .h missing: e2ap_E2setupResponse.h */
 /*******************************************/
