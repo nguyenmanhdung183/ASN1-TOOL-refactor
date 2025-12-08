@@ -1,39 +1,40 @@
 /*****************************************************/
 /*    PRIMITIVE {{name}}            */
 /*****************************************************/
-
-// compose primitive
+// cpmpose primitive - id = {{metadata.primitive_id}} - {{metadata.primitive_name}} - {{name}}
 {% if metadata.primitive_id == 4 or metadata.primitive_id == 3 %} {# BIT STRING 3+4#}
 xnap_return_et e2ap_compose_{{name}}(
+                        OSCTXT                        *p_asn1_ctx,
                         e2ap_{{name}}  *p_dest,//dest
                         _e2ap_{{name}}_t  *p_src//src
-                        )
+)
 {
     memcpy(p_dest->data, p_src->data, sizeof(p_src->data));
     p_dest->numbits = p_src->numbits;
     return XNAP_SUCCESS;
 }
 {% endif %} {# end BIT STRING 3+4#}
-
 {% if metadata.primitive_id == 5 or metadata.primitive_id == 6 %} {# INTEGER #}
 xnap_return_et e2ap_compose_{{name}}(
+                        OSCTXT                        *p_asn1_ctx,
                         e2ap_{{name}}  *p_dest,//dest
                         _e2ap_{{name}}_t  *p_src//src
-                        )
+)
 {
     *p_dest = (e2ap_{{name}})*p_src;
     return XNAP_SUCCESS;
 }
 {% endif %} {# end INTEGER #}
-
 {% if metadata.primitive_id == 13 %} {# ENUM #}
 xnap_return_et e2ap_compose_{{name}}( // compose primitive enum
+                        OSCTXT                        *p_asn1_ctx,
                         e2ap_{{name}}  *p_dest,//dest
                         _e2ap_{{name}}_et  *p_src//src
-                        )
+)
 {
     *p_dest = (e2ap_{{name}})*p_src;
     return XNAP_SUCCESS;
 }
 {% endif %} {# end ENUM #}
+
 

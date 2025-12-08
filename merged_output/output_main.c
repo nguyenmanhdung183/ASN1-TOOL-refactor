@@ -3,121 +3,153 @@
 //======================E2AP.c========================//
 // --- End of doc/header.c ---
 
-// --- Begin of e2ap_RICrequestID.c ---
+// --- Begin of e2ap_TransactionID.c ---
+/*****************************************/
+/*           TransactionID                */
+/*****************************************/
+//5 mau integer
+//mau 5 integer size(a .. b..) mau la nrfreqencyband
+EXTERN int asn1PE_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID value){
+    int stat =0;
+    OSBOOL extbit = FALSE;
+    RTXCTCXTPUSHTYPENAME (pctxt, "TransactionID");
+    if(value>0 && value<=255){
+        extbit = 0;
+    }
+    else extbit =1;
+    stat = rtxEncBit (pctxt, extbit);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    if(extbit){
+        stat = pe_UnconsUnsigned (pctxt, value);
+        if(stat != 0) return LOG_RTERR (pctxt, stat);
+    }
+    else{
+        stat = pe_ConsUnsigned (pctxt, value, 0, 255);
+        if (stat != 0) return LOG_RTERR (pctxt, stat);
+    }
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID* pvalue){
+    int stat =0;
+    OSBOOL extbit = FALSE;
+    RTXCTCXTPUSHTYPENAME (pctxt, "TransactionID");
+    /*extensiobit*/
+    stat = DECBIT (pctxt, &extbit);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    if(extbit==0){
+        stat = pd_ConsUnsigned (pctxt, pvalue, 0, 255);
+        if (stat != 0) return LOG_RTERR (pctxt, stat);
+    }else{
+        stat = pd_UnconsUnsigned (pctxt, pvalue);
+        if (stat != 0) return LOG_RTERR (pctxt, stat);
+    }
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+//EXTERN int asn1Print_e2ap_TransactionID (const char* name, const e2ap_TransactionID* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_TransactionID (const char* name, e2ap_TransactionID* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_TransactionID (OSCTXT* pctxt, const char* name, const e2ap_TransactionID* pvalue);
+EXTERN int asn1Init_e2ap_TransactionID (e2ap_TransactionID* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+
+// --- End of e2ap_TransactionID.c ---
+
+// --- Begin of e2ap_PLMN_Identity.c ---
+/*****************************************/
+/*           PLMN_Identity                */
+/*****************************************/
+//8 mau octet string
+//type 8  mau la octet string size(n) mau la plmn_identity
+EXTERN int asn1PE_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue){
+   int stat = 0;
+   RTXCTCXTPUSHTYPENAME (pctxt, "PLMN-Identity");
+   PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(), OSUINTCONST(), 0, 0);
+
+   stat = pe_OctetString(pctxt, pvalue->numocts, pvalue->data);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+EXTERN int asn1PD_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue){
+   int stat = 0;
+   RTXCTCXTPUSHTYPENAME (pctxt, "PLMN-Identity");
+   PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(), OSUINTCONST(), 0, 0);
+
+   stat = pd_OctetString(pctxt, &pvalue->numocts, pvalue->data, sizeof(pvalue->data));
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+//EXTERN int asn1PrtToStr_e2ap_PLMN_Identity (const char* name, e2ap_PLMN_Identity* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_PLMN_Identity (OSCTXT* pctxt, const char* name, const e2ap_PLMN_Identity* pvalue);
+//EXTERN int asn1Copy_e2ap_PLMN_Identity (OSCTXT* pctxt, const e2ap_PLMN_Identity* pSrcValue, e2ap_PLMN_Identity* pDstValue);
+
+int asn1Init_e2ap_PLMN_Identity (e2ap_PLMN_Identity* pvalue){
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->numocts = 0;
+   return 0;
+}
+void asn1Free_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue){
+   // No dynamic memory to free for fixed-size OCTET STRING
+   return;
+}
+
+// --- End of e2ap_PLMN_Identity.c ---
+
+// --- Begin of e2ap_GlobalRIC_ID.c ---
 
 /*****************************************/
-/*           RICrequestID                */
+/*           GlobalRIC-ID                */
 /*****************************************/
 //sequence normal
 // Các nội dung cần thiết cho template seq_normal.c.j2
-    // Nội dung của file .c cho primitive INTEGER (0..65535)
-    /*****************************************/
-/*           ricRequestorID                */
-/*****************************************/
-//interger intergrate
- //metadata.parsed.primitive_id == 6
-// mau integer size(a...b) mau la timestayincell xn
-//typedef OSUINT16 e2ap_RICrequestID_ricRequestorID;
-EXTERN int asn1PE_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, e2ap_RICrequestID_ricRequestorID value){
-    int stat =0;
+    // Nội dung của file .c cho primitive BIT STRING (SIZE (20))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
 
-    if(value<=65535 && value>= 0){
-        stat = pe_ConsUnsigned (pctxt, value, 0, 65535);
-        if(stat != 0) return LOG_RTERR (pctxt, stat);
-    }else{
-        rtxErrAddElemNameParm(pctxt);
-        rtxErrAddUIntParm(pctxt, value);
-        return LOG_RTERR(pctxt, RTERR_CONSVIO);
-    }
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt, e2ap_GlobalRIC_ID_ric_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "ric-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(20), OSUINTCONST(20), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 20), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
     return stat;
-
 }
-EXTERN int asn1PD_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, e2ap_RICrequestID_ricRequestorID* pvalue){
+EXTERN int asn1PD_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt, e2ap_GlobalRIC_ID_ric_ID* pvalue){
     int stat =0;
-    if(pctxt->buffer.aligned){
-        int stat2 = PD_BYTE_ALIGN(pctxt);
-        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
-    }
-
-    stat = rtxDecBitsToUInt16(pctxt, pvalue, pctxt->buffer.aligned ? 16:12);
-    if(stat !=0) return LOG_RTERR (pctxt, stat);
-    if(*pvalue > 65535 || *pvalue < 0){
-        rtxErrAddElemNameParm(pctxt);
-        rtxErrAddUIntParm(pctxt, 65535);
-        return LOG_RTERR(pctxt, RTERR_CONSVIO);
-    }
-}
-//EXTERN int asn1Print_e2ap_RICrequestID_ricRequestorID (const char* name, const e2ap_RICrequestID_ricRequestorID* pvalue);
-EXTERN int asn1PrtToStr_e2ap_RICrequestID_ricRequestorID (const char* name, e2ap_RICrequestID_ricRequestorID* pvalue, char* buffer, OSSIZE bufSize){
-    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
-    if(rtPrintToStringUnsigned(name, *pvalue, buffer, bufSize) < 0) return -1;
-    return 0;
-}
-//EXTERN int asn1PrtToStrm_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, const char* name, const e2ap_RICrequestID_ricRequestorID* pvalue);
-EXTERN int asn1Init_e2ap_RICrequestID_ricRequestorID (e2ap_RICrequestID_ricRequestorID* pvalue){
-    //if (pvalue == 0) return RTERR_NULLPTR;
-    //*pvalue = 0;
-    return 0;
-}
-EXTERN int asn1Free_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, e2ap_RICrequestID_ricRequestorID* pvalue){
-    // No dynamic memory to free for integer
-    return 0;
-}
-
-
-
-    // Nội dung của file .c cho primitive INTEGER (0..65535)
-    /*****************************************/
-/*           ricInstanceID                */
-/*****************************************/
-//interger intergrate
- //metadata.parsed.primitive_id == 6
-// mau integer size(a...b) mau la timestayincell xn
-//typedef OSUINT16 e2ap_RICrequestID_ricInstanceID;
-EXTERN int asn1PE_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequestID_ricInstanceID value){
-    int stat =0;
-
-    if(value<=65535 && value>= 0){
-        stat = pe_ConsUnsigned (pctxt, value, 0, 65535);
-        if(stat != 0) return LOG_RTERR (pctxt, stat);
-    }else{
-        rtxErrAddElemNameParm(pctxt);
-        rtxErrAddUIntParm(pctxt, value);
-        return LOG_RTERR(pctxt, RTERR_CONSVIO);
-    }
+    //RTXCTXTPUSHTYPENAME(pctxt, "ric-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(20), OSUINTCONST(20), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
     return stat;
-
 }
-EXTERN int asn1PD_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequestID_ricInstanceID* pvalue){
-    int stat =0;
-    if(pctxt->buffer.aligned){
-        int stat2 = PD_BYTE_ALIGN(pctxt);
-        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
-    }
-
-    stat = rtxDecBitsToUInt16(pctxt, pvalue, pctxt->buffer.aligned ? 16:12);
-    if(stat !=0) return LOG_RTERR (pctxt, stat);
-    if(*pvalue > 65535 || *pvalue < 0){
-        rtxErrAddElemNameParm(pctxt);
-        rtxErrAddUIntParm(pctxt, 65535);
-        return LOG_RTERR(pctxt, RTERR_CONSVIO);
-    }
-}
-//EXTERN int asn1Print_e2ap_RICrequestID_ricInstanceID (const char* name, const e2ap_RICrequestID_ricInstanceID* pvalue);
-EXTERN int asn1PrtToStr_e2ap_RICrequestID_ricInstanceID (const char* name, e2ap_RICrequestID_ricInstanceID* pvalue, char* buffer, OSSIZE bufSize){
+EXTERN int asn1PrtToStr_e2ap_GlobalRIC_ID_ric_ID (const char* name, e2ap_GlobalRIC_ID_ric_ID* pvalue, char* buffer, OSSIZE bufSize){
     if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
-    if(rtPrintToStringUnsigned(name, *pvalue, buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 20), pvalue->data, buffer, bufSize) < 0) return -1;
     return 0;
 }
-//EXTERN int asn1PrtToStrm_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, const char* name, const e2ap_RICrequestID_ricInstanceID* pvalue);
-EXTERN int asn1Init_e2ap_RICrequestID_ricInstanceID (e2ap_RICrequestID_ricInstanceID* pvalue){
-    //if (pvalue == 0) return RTERR_NULLPTR;
-    //*pvalue = 0;
+//EXTERN int asn1PrtToStrm_e2ap_GlobalRIC_ID_ric_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalRIC_ID_ric_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt,const e2ap_GlobalRIC_ID_ric_ID* pSrcValue,  e2ap_GlobalRIC_ID_ric_ID* pDstValue);
+EXTERN int asn1Init_e2ap_GlobalRIC_ID_ric_ID(e2ap_GlobalRIC_ID_ric_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
     return 0;
 }
-EXTERN int asn1Free_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequestID_ricInstanceID* pvalue){
-    // No dynamic memory to free for integer
-    return 0;
+EXTERN void asn1Free_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt, e2ap_GlobalRIC_ID_ric_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
 }
 
 
@@ -125,11 +157,11 @@ EXTERN int asn1Free_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequ
 
 // Các phần còn lại của template seq_normal.c.j2
 //contain extensition bit -> theo mau cua GlobalgNB-ID
-int asn1PE_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
+int asn1PE_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue)
 {
    int stat = 0;
    OSBOOL extbit = FALSE;
-   RTXCTXTPUSHTYPENAME(pctxt, "RICrequestID");
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalRIC-ID");
 
    /*extension bit*/
    extbit = (OSBOOL)(pvalue->extElem1.count > 0);
@@ -138,18 +170,16 @@ int asn1PE_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
 
 
    /*encode root elements*/   
-   /* encode field ricRequestorID - id = 6*/  
-   RTXCTXTPUSHELEMNAME(pctxt, "ricRequestorID");
-   stat = asn1PE_e2ap_RICrequestID_ricRequestorID(pctxt, pvalue->ricRequestorID); //intger mau 6 (a..b)
-  
-  
+   /* encode field pLMN_Identity - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->pLMN_Identity);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
 
-   /* encode field ricInstanceID - id = 6*/  
-   RTXCTXTPUSHELEMNAME(pctxt, "ricInstanceID");
-   stat = asn1PE_e2ap_RICrequestID_ricInstanceID(pctxt, pvalue->ricInstanceID); //intger mau 6 (a..b)
+   /* encode field ric_ID - id = 3*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "ric-ID");
+   stat = asn1PE_e2ap_GlobalRIC_ID_ric_ID(pctxt, &pvalue->ric_ID); //primitive
   
   
    if (stat != 0) return LOG_RTERR(pctxt, stat);
@@ -185,7 +215,7 @@ int asn1PE_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
    return (stat);
 }
 
-int asn1PD_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
+int asn1PD_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue)
 {
    int stat =0;
    ASN1OpenType openType;
@@ -195,7 +225,7 @@ int asn1PD_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
    OSBOOL extbit = FALSE;
    OSBOOL optbits[2];
 
-   RTXCTXTPUSHTYPENAME(pctxt, "RICrequestID");
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalRIC-ID");
 
    /*extension bit*/
    stat = DEC_BIT(pctxt, &extbit);
@@ -209,15 +239,15 @@ int asn1PD_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
    }
 
    /*decode root elements*/
-   /* decode field ricRequestorID */
-   RTXCTXTPUSHELEMNAME(pctxt, "ricRequestorID");
-      stat = asn1PD_e2ap_RICrequestID_ricRequestorID (pctxt, &pvalue->ricRequestorID); //primitive
+   /* decode field pLMN_Identity */
+   RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
+      stat = asn1PD_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
       if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
-   /* decode field ricInstanceID */
-   RTXCTXTPUSHELEMNAME(pctxt, "ricInstanceID");
-      stat = asn1PD_e2ap_RICrequestID_ricInstanceID (pctxt, &pvalue->ricInstanceID); //primitive
+   /* decode field ric_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "ric-ID");
+      stat = asn1PD_e2ap_GlobalRIC_ID_ric_ID (pctxt, &pvalue->ric_ID); //primitive
       if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
@@ -274,35 +304,36 @@ int asn1PD_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
 
 }
 
-int asn1Init_e2ap_RICrequestID (e2ap_RICrequestID* pvalue)
+int asn1Init_e2ap_GlobalRIC_ID (e2ap_GlobalRIC_ID* pvalue)
 {
    if(0==pvalue) return RTERR_NULLPTR;
-   asn1Init_e2ap_RICrequestID_ricRequestorID (&pvalue->ricRequestorID); //primitive delete &
-   asn1Init_e2ap_RICrequestID_ricInstanceID (&pvalue->ricInstanceID); //primitive delete &
+   asn1Init_e2ap_PLMN_Identity (&pvalue->pLMN_Identity);
+   asn1Init_e2ap_GlobalRIC_ID_ric_ID (&pvalue->ric_ID); //primitive delete &
    rtxDListFastInit(&pvalue->extElem1);
    return 0;
 }
 
-void asn1Free_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue)
+void asn1Free_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue)
 {
    if(0==pvalue) return;
+   asn1Free_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
    rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
 }
 
-int asn1PrtToStr_e2ap_RICrequestID (const char* name, e2ap_RICrequestID* pvalue, char* buffer, OSSIZE bufSize)
+int asn1PrtToStr_e2ap_GlobalRIC_ID (const char* name, e2ap_GlobalRIC_ID* pvalue, char* buffer, OSSIZE bufSize)
 {
    if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
    {
       return -1;
    }
-
-   if(asn1PrtToStr_e2ap_RICrequestID_ricRequestorID ("ricRequestorID", &pvalue->ricRequestorID, buffer, bufSize) < 0)
+   if(asn1PrtToStr_e2ap_PLMN_Identity ("pLMN_Identity", &pvalue->pLMN_Identity, buffer, bufSize) < 0)
    {
       return -1;
    }
 
 
-   if(asn1PrtToStr_e2ap_RICrequestID_ricInstanceID ("ricInstanceID", &pvalue->ricInstanceID, buffer, bufSize) < 0)
+
+   if(asn1PrtToStr_e2ap_GlobalRIC_ID_ric_ID ("ric_ID", &pvalue->ric_ID, buffer, bufSize) < 0)
    {
       return -1;
    }
@@ -316,7 +347,7 @@ int asn1PrtToStr_e2ap_RICrequestID (const char* name, e2ap_RICrequestID* pvalue,
    if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
    return 0;
 }
-// --- End of e2ap_RICrequestID.c ---
+// --- End of e2ap_GlobalRIC_ID.c ---
 
 // --- Begin of e2ap_RANfunctionID.c ---
 /*****************************************/
@@ -358,6 +389,623 @@ EXTERN int asn1Free_e2ap_RANfunctionID (OSCTXT* pctxt, e2ap_RANfunctionID* pvalu
 }
 
 // --- End of e2ap_RANfunctionID.c ---
+
+// --- Begin of e2ap_RANfunctionRevision.c ---
+/*****************************************/
+/*           RANfunctionRevision                */
+/*****************************************/
+//6 mau integer
+// mau integer size(a...b) mau la procedurecode
+EXTERN int asn1PE_e2ap_RANfunctionRevision (OSCTXT* pctxt, e2ap_RANfunctionRevision value){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "RANfunctionRevision");
+    stat = pe_ConsUnsigned (pctxt, value, 0, 4095);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_RANfunctionRevision (OSCTXT* pctxt, e2ap_RANfunctionRevision* pvalue){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "RANfunctionRevision");
+    if(pctxt->buffer.aligned){
+        int stat2 = PD_BYTE_ALIGN(pctxt);
+        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
+    }
+    stat = rtxDecBitsToByte(pctxt, pvalue, 0);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+//EXTERN int asn1Print_e2ap_RANfunctionRevision (const char* name, const e2ap_RANfunctionRevision* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RANfunctionRevision (const char* name, e2ap_RANfunctionRevision* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_RANfunctionRevision (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionRevision* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionRevision (e2ap_RANfunctionRevision* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_RANfunctionRevision (OSCTXT* pctxt, e2ap_RANfunctionRevision* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+
+// --- End of e2ap_RANfunctionRevision.c ---
+
+// --- Begin of e2ap_RANfunctionID_Item.c ---
+
+/*****************************************/
+/*           RANfunctionID-Item                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_RANfunctionID_Item (OSCTXT* pctxt, e2ap_RANfunctionID_Item* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "RANfunctionID-Item");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field ranFunctionID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "ranFunctionID");
+   stat = asn1PE_e2ap_RANfunctionID (pctxt, pvalue->ranFunctionID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field ranFunctionRevision - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "ranFunctionRevision");
+   stat = asn1PE_e2ap_RANfunctionRevision (pctxt, pvalue->ranFunctionRevision);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_RANfunctionID_Item (OSCTXT* pctxt, e2ap_RANfunctionID_Item* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "RANfunctionID-Item");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field ranFunctionID */
+   RTXCTXTPUSHELEMNAME(pctxt, "ranFunctionID");
+      stat = asn1PD_e2ap_RANfunctionID (pctxt, &pvalue->ranFunctionID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field ranFunctionRevision */
+   RTXCTXTPUSHELEMNAME(pctxt, "ranFunctionRevision");
+      stat = asn1PD_e2ap_RANfunctionRevision (pctxt, &pvalue->ranFunctionRevision);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_RANfunctionID_Item (e2ap_RANfunctionID_Item* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_RANfunctionID (&pvalue->ranFunctionID);
+   asn1Init_e2ap_RANfunctionRevision (&pvalue->ranFunctionRevision);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_RANfunctionID_Item (OSCTXT* pctxt, e2ap_RANfunctionID_Item* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_RANfunctionID (pctxt, &pvalue->ranFunctionID);
+   asn1Free_e2ap_RANfunctionRevision (pctxt, &pvalue->ranFunctionRevision);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_RANfunctionID_Item (const char* name, e2ap_RANfunctionID_Item* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_RANfunctionID ("ranFunctionID", &pvalue->ranFunctionID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_RANfunctionRevision ("ranFunctionRevision", &pvalue->ranFunctionRevision, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_RANfunctionID_Item.c ---
+
+// --- Begin of e2ap_RANfunctionID_ItemIEs.c ---
+/*****************************************/
+/*           RANfunctionID_ItemIEs                */
+/*****************************************/
+/* ie.c.j2 */
+/*ie thường*/
+int asn1PE_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue)
+{
+   int stat = 0;
+   //RTXCTXTPUSHTYPENAME (pctxt, "RANfunctionID-ItemIEs");
+
+   /* encode id */
+   RTXCTXTPUSHELEMNAME (pctxt, "id");
+   stat = asn1PE_e2ap_ProtocolIE_ID (pctxt, pvalue->id);//xoa con tro
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   /* encode criticality */
+   RTXCTXTPUSHELEMNAME (pctxt, "criticality");
+   stat = asn1PE_e2ap_Criticality (pctxt, pvalue->criticality);//xoa con tro
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   /* encode value */
+   RTXCTXTPUSHELEMNAME (pctxt, "value");
+
+   {
+      OSCTXT ictxt;
+      OSOCTET* pDynamicEncodeBuffer;
+      ASN1OpenType openType;
+      OSBOOL  encoded = TRUE;
+
+      openType.numocts = 0;
+      openType.data = 0;
+
+      rtxCopyContext (&ictxt, pctxt);
+      pctxt->pStream = 0;
+
+      stat = rtxInitContextBuffer (pctxt, 0, 0);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+      switch (pvalue->value.t) {
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
+         
+        // RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionID_ItemIEs_id_RANfunctionID_Item");
+         RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionID-Item");
+         stat = asn1PE_e2ap_RANfunctionID_Item (pctxt, pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+         RTXCTXTPOPELEMNAME (pctxt);
+      
+         break;
+
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_UNDEF_:
+      {
+          if(0!=pvalue->value.u.extElem1){
+              openType.numocts = pvalue->value.u.extElem1->numocts;
+              openType.data = pvalue->value.u.extElem1->data;
+          } else {
+              /* No extension element to encode */
+          }
+          encoded = FALSE;
+          break;
+      }
+      default:
+         encoded = FALSE;
+         stat = RTERR_INVOPT;
+      }
+
+      if (encoded) {
+         openType.numocts = (OSUINT32) pe_GetMsgLen (pctxt);
+         openType.data = pDynamicEncodeBuffer = pctxt->buffer.data;
+      }
+      rtxCopyContext (pctxt, &ictxt);
+      if(stat ==0) stat = pe_OpenType(pctxt, openType.numocts, openType.data);
+      /*free dynamic encode buffer*/
+      if(encoded){
+          rtxMemFreePtr(pctxt, pDynamicEncodeBuffer);
+      }
+   }
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+   //RTXCTXTPOPTYPENAME (pctxt);
+   return 0;
+}
+
+int asn1PD_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue)
+{
+   int stat =0;
+   /*deode root element id*/
+   RTXCTXTPUSHELEMNAME(pctxt, "id");
+   stat = asn1PD_e2ap_ProtocolIE_ID (pctxt, &pvalue->id);
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /*decode root element criticality*/
+   RTXCTXTPUSHELEMNAME(pctxt, "criticality");
+   stat = asn1PD_e2ap_Criticality (pctxt, &pvalue->criticality);
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+   /*decode root element value*/
+   RTXCTXTPUSHELEMNAME(pctxt, "value");
+   {
+      OSUINT32 openTypeLen;
+      size_t bitStartOffset, bitLength;
+      stat = pd_UnconsLength(pctxt, &openTypeLen);
+      if(stat <0) return LOG_RTERR(pctxt, stat);
+      else if(stat == RT_OK_FRAG){
+         rtxErrAddStrParm(pctxt, "open type with fragmented length use - perindef");
+         return LOG_RTERRNEW(pctxt, RTERR_NOTSUPP);
+      }
+      bitStartOffset = PU_GETCTXTBITOFFSET(pctxt);
+      bitLength = openTypeLen * 8;
+      switch (pvalue->id){
+         case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item;
+            RTXCTXTPUSHELEMNAME(pctxt, "RANfunctionID-Item");
+            //pvalue->value.u._e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item 
+             pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item = rtxMemAllocType(pctxt, e2ap_RANfunctionID_Item);
+            //asn1Init_e2ap_RANfunctionID_Item(pvalue->value.u._e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item);
+            asn1Init_e2ap_RANfunctionID_Item(pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+            stat = asn1PD_e2ap_RANfunctionID_Item (pctxt,
+                    (e2ap_RANfunctionID_Item*)pvalue->value.
+                    u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+            if(stat!=0) return LOG_RTERR(pctxt, stat);
+            RTXCTXTPOPELEMNAME(pctxt);
+            break;
+
+        default:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_UNDEF_;
+            pvalue->value.u.extElem1 = rtxMemAllocType(pctxt, ASN1OpenType);
+            if(0==pvalue->value.u.extElem1){
+                return LOG_RTERR(pctxt, RTERR_NOMEM);
+            }
+
+            {
+                OSOCTET *pdata =(OSOCTET*)rtxMemAlloc(pctxt, openTypeLen);
+                if(0==pdata){
+                    return LOG_RTERR(pctxt, RTERR_NOMEM);
+                }
+                stat = rtxDecBitsToByteArray(pctxt, pdata, openTypeLen, openTypeLen*8);
+                if(stat!=0){
+                    rtxMemFreePtr(pctxt, pdata);
+                    rtxMemFreePtr(pctxt, pvalue->value.u.extElem1);
+                    return LOG_RTERR(pctxt, stat);
+                }
+
+                pvalue->value.u.extElem1->numocts = openTypeLen;
+                pvalue->value.u.extElem1->data = pdata;
+            }
+            break;
+      }
+      {
+      size_t bitEndOffset = PU_GETCTXTBITOFFSET(pctxt);
+      size_t bitsConsumed = bitEndOffset - bitStartOffset;
+      if(bitsConsumed < bitLength){
+         stat = pd_moveBitCursor(pctxt, (int)(bitLength - bitsConsumed));
+      } else {
+         stat = (bitsConsumed > bitLength) ? ASN_E_INVLEN : 0;
+      }
+      }
+   }
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+   return stat;
+}
+
+void asn1Init_e2ap_RANfunctionID_ItemIEs (e2ap_RANfunctionID_ItemIEs* pvalue)
+{
+   if (!pvalue) return;
+   OSCRTLMEMSET (pvalue, 0, sizeof(e2ap_RANfunctionID_ItemIEs));
+}
+
+#if 0
+void asn1Free_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue)
+{
+   if (!pvalue) return;
+   if (pvalue->extElem1) {
+      rtxMemFreeArray (pctxt, pvalue->extElem1);
+      pvalue->extElem1 = 0;
+      pvalue->extElem1_n = 0;
+   }
+}
+#endif
+void asn1Free_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue)
+{
+   if(0==pvalue) return;
+   switch(pvalue->value.t){
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
+         asn1Free_e2ap_RANfunctionID_Item (pctxt, pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+         pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item = 0;
+         break;
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_UNDEF_:
+         if(0!=pvalue->value.u.extElem1){
+             rtxMemFreePtr(pctxt, pvalue->value.u.extElem1->data);
+             rtxMemFreePtr(pctxt, pvalue->value.u.extElem1);
+             pvalue->value.u.extElem1 =0;
+         }
+         break;
+         default:;
+   }
+}
+
+int  asn1PrtToStr_e2ap_RANfunctionID_ItemIEs (const char * name, e2ap_RANfunctionID_ItemIEs* pvalue, char * buffer, OSSIZE bufSize){
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize)<0)
+       return -1;
+
+      if(asn1PrtToStr_e2ap_ProtocolIE_ID("id", &pvalue->id, buffer, bufSize)<0)
+         return -1;
+
+      if(asn1PrtToStr_e2ap_Criticality("criticality", &pvalue->criticality, buffer, bufSize)<0)
+         return -1;
+      if(rtPrintToStringOpenBrace("value", buffer, bufSize)<0)
+         return -1;
+      switch (pvalue->value.t) {
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
+         if(asn1PrtToStr_e2ap_RANfunctionID_Item("RANfunctionID-Item",
+                pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item, buffer, bufSize)<0)
+            return -1;
+         break;
+      default:
+         if(0!=pvalue -> value.u.extElem1){
+             rtPrintToStringIndent(buffer, bufSize);
+             rtPrintToStringHexStr("extElem1", pvalue->value.u.extElem1->numocts, pvalue->value.u.extElem1->data, buffer, bufSize);
+
+         }
+      }
+      if(rtPrintToStringCloseBrace( buffer, bufSize)<0) return -1;
+      if(rtPrintToStringCloseBrace( buffer, bufSize)<0) return -1;
+
+      return 0;
+
+}
+ 
+
+
+// --- End of e2ap_RANfunctionID_ItemIEs.c ---
+
+// --- Begin of e2ap_RANfunctionsID_List.c ---
+/*****************************************/
+/*           RANfunctionsID_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+int asn1PE_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* pvalue)
+{
+   int stat = 0;
+   OSRTDListNode* pnode;
+   OSSIZE xx1 = 0;
+   OSSIZE count = 0;
+
+   e2ap_RANfunctionID_ItemIEs* pdata;
+
+   RTXCTXTPUSHTYPENAME (pctxt, "RANfunctionsID-List");
+
+   /* encode length determinant */
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(256), 0, 0);
+
+   stat = pe_Length (pctxt, pvalue->count);
+   if (stat < 0) return LOG_RTERR (pctxt, stat);
+
+   /* encode elements */
+   pnode = pvalue->head;
+   for (xx1 = 0; pnode != 0 && xx1 < pvalue->count; pnode = pnode->next, xx1++) {
+      pdata = (e2ap_RANfunctionID_ItemIEs*) pnode->data;
+      RTXCTXTPUSHARRAYELEMNAME (pctxt, "SEQUENCE", xx1);
+
+      stat = asn1PE_e2ap_RANfunctionID_ItemIEs (pctxt, pdata);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+      //xx1++;
+      RTXCTXTPOPARRAYELEMNAME (pctxt);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+int asn1PD_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* ppvalue)
+{
+   int stat = 0;
+   OSSIZE xx1 = 0;
+   OSSIZE count = 0;
+
+   e2ap_RANfunctionID_ItemIEs* pdata;
+
+   RTXCTXTPUSHTYPENAME (pctxt, "RANfunctionsID-List");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(256), 0, 0);
+
+   stat = pd_Length64 (pctxt, &count);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   rtxDListInit (ppvalue);
+
+   for (xx1 = 0; xx1 < count; xx1++) {
+      RTXCTXTPUSHARRAYELEMNAME (pctxt, "SEQUENCE", xx1);
+
+      pdata = rtxMemAllocType (pctxt, e2ap_RANfunctionID_ItemIEs);
+      if (!pdata) return LOG_RTERR (pctxt, RTERR_NOMEM);
+      asn1Init_e2ap_RANfunctionID_ItemIEs (pdata);
+      stat = asn1PD_e2ap_RANfunctionID_ItemIEs (pctxt, pdata);
+      if (stat != 0) {
+         rtxMemFreePtr (pctxt, pdata);
+         return LOG_RTERR (pctxt, stat);
+      }
+
+      rtxDListAppendNode (ppvalue, pdata);
+
+      RTXCTXTPOPARRAYELEMNAME (pctxt);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return 0;
+}
+
+void asn1Init_e2ap_RANfunctionsID_List (e2ap_RANfunctionsID_List* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   rtxDListFastInit (pvalue);
+}
+
+void asn1Free_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* pvalue)
+{
+   if(pvalue==0) return;
+   OSRTDListNode* pnode = pvalue->head;
+   while (pnode) {
+      e2ap_RANfunctionID_ItemIEs* pdata = (e2ap_RANfunctionID_ItemIEs*) pnode->data;
+      if (pdata) {
+         asn1Free_e2ap_RANfunctionID_ItemIEs (pctxt, pdata);
+         rtxMemFreePtr (pctxt, pdata);
+      }
+      pnode = pnode->next;
+   }
+      rtxDListFreeAll(pctxt, pvalue);
+}
+
+#if 0
+void asn1Free_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* pvalue){
+   if(0==pvalue ) return;
+   {
+      e2ap_RANfunctionID_ItemIEs * pdata;
+      OSRTDListNode *pnode = pvalue->head;
+      while(0!=pnode){
+         pdata = (e2ap_RANfunctionID_ItemIEs*)pnode->data;
+         asn1Free_e2ap_RANfunctionID_ItemIEs(pctxt, pdata);
+         pnode = pnode->next;
+      }
+      rtxDListFreeAll(pctxt, pvalue);
+   }
+}
+#endif
+
+
+int asn1PrtToStr_e2ap_RANfunctionsID_List(const char* name, e2ap_RANfunctionsID_List* pvalue, char* buffer, OSSIZE bufSize)
+{
+    e2ap_RANfunctionID_ItemIEs* pdata;
+    OSRTDListNode* pnode;
+    char nameBuf[256];
+    char numBuf[32];
+    OSUINT32 xx1=0;
+    for(pnode = pvalue->head;  xx1 < pvalue->count && pnode != 0; pnode = pnode->next, xx1++){
+        pdata = (e2ap_RANfunctionID_ItemIEs*)pnode->data;
+        rtxUIntToCharStr(xx1, numBuf, sizeof(numBuf), 0);
+        rtxStrJoin(nameBuf, sizeof(nameBuf), name, "[", numBuf, "]", 0);
+        #if 1
+        if(asn1PrtToStr_e2ap_RANfunctionID_ItemIEs(nameBuf, pdata, buffer, bufSize) <0){
+            return -1;
+        }
+        #endif
+    }
+    return 0;
+}
+// --- End of e2ap_RANfunctionsID_List.c ---
 
 // --- Begin of e2ap_CauseRICrequest.c ---
 /******************************************************/
@@ -1586,280 +2234,21 @@ void asn1Free_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue)
 
 // --- End of e2ap_Cause.c ---
 
-// --- Begin of e2ap_ProcedureCode.c ---
-/*****************************************/
-/*           ProcedureCode                */
-/*****************************************/
-//6 mau integer
-// mau integer size(a...b) mau la procedurecode
-EXTERN int asn1PE_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode value){
-    int stat = 0;
-    RTXCTCXTPUSHTYPENAME (pctxt, "ProcedureCode");
-    stat = pe_ConsUnsigned (pctxt, value, 0, 255);
-    if (stat != 0) return LOG_RTERR (pctxt, stat);
-    RTXCTXTPOPTYPENAME (pctxt);
-    return stat;
-}
-EXTERN int asn1PD_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode* pvalue){
-    int stat = 0;
-    RTXCTCXTPUSHTYPENAME (pctxt, "ProcedureCode");
-    if(pctxt->buffer.aligned){
-        int stat2 = PD_BYTE_ALIGN(pctxt);
-        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
-    }
-    stat = rtxDecBitsToByte(pctxt, pvalue, 0);
-    if (stat != 0) return LOG_RTERR (pctxt, stat);
-    RTXCTXTPOPTYPENAME (pctxt);
-    return stat;
-}
-//EXTERN int asn1Print_e2ap_ProcedureCode (const char* name, const e2ap_ProcedureCode* pvalue);
-//EXTERN int asn1PrtToStr_e2ap_ProcedureCode (const char* name, e2ap_ProcedureCode* pvalue, char* buffer, OSSIZE bufSize);
-//EXTERN int asn1PrtToStrm_e2ap_ProcedureCode (OSCTXT* pctxt, const char* name, const e2ap_ProcedureCode* pvalue);
-EXTERN int asn1Init_e2ap_ProcedureCode (e2ap_ProcedureCode* pvalue){
-    //if (pvalue == 0) return RTERR_NULLPTR;
-    //*pvalue = 0;
-    return 0;
-}
-EXTERN int asn1Free_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode* pvalue){
-    // No dynamic memory to free for integer
-    return 0;
-}
-
-// --- End of e2ap_ProcedureCode.c ---
-
-// --- Begin of e2ap_TriggeringMessage.c ---
-/******************************************************/
-/*                                                    */
-/*    TriggeringMessage                          */
-/*                                                    */
-/******************************************************/
-//enumerated
-
-
-const OSEnumItem e2ap_TriggeringMessage_ENUMTAB[] = {
-    { OSUTF8("initiating_message"), 0, 18, 0 },
-    { OSUTF8("successful_outcome"), 1, 18, 1 },
-    { OSUTF8("unsuccessfull_outcome"), 2, 21, 2 }
-};
-
-
-const OSUTF8CHAR* e2ap_TriggeringMessage_ToString (OSUINT32 value){
-   OSINT32 idx = value;
-   if(idx >=0 && idx < e2ap_TriggeringMessage_ENUMTABSIZE){
-      return e2ap_TriggeringMessage_ENUMTAB[e2ap_TriggeringMessage_ENUMTAB[idx].transidx].name;
-   }else{
-      return OSUTF8("_UNKNOWN_");
-   }
-}
-
-
-int e2ap_TriggeringMessage_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_TriggeringMessage* pvalue)
-{
-   OSSIZE valueLen = rtxUTF8LenBytes(value);
-   return e2ap_TriggeringMessage_ToEnum2 (pctxt, value, valueLen, pvalue);
-}
-
-int e2ap_TriggeringMessage_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_TriggeringMessage* pvalue)
-{
-   OSINT32 idx = rtxLookupEnum(value, valueLen,
-      e2ap_TriggeringMessage_ENUMTAB, e2ap_TriggeringMessage_ENUMTABSIZE);
-   if (idx >= 0) {
-      *pvalue = (e2ap_TriggeringMessage)e2ap_TriggeringMessage_ENUMTAB[idx].value;
-      return 0;
-   } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
-      return LOG_RTERR (pctxt, RTERR_INVENUM);
-   }
-}
-
-EXTERN int asn1PE_e2ap_TriggeringMessage (OSCTXT* pctxt, e2ap_TriggeringMessage value)
-{
-   int stat = 0;
-   RTXCTXTPUSHTYPENAME (pctxt, "TriggeringMessage");
-   if (value >= 3) {
-      rtxErrAddIntParm (pctxt, value);
-      return LOG_RTERR (pctxt, RTERR_INVENUM);
-   }
-   stat = pe_ConsUnsigned (pctxt, value, 0, OSUINTCONST(2));
-   if(stat != 0) return LOG_RTERR (pctxt, stat);
-   RTXCTXTPOPTYPENAME (pctxt);
-   return stat;
-}
-
-EXTERN int asn1PD_e2ap_TriggeringMessage (OSCTXT* pctxt, e2ap_TriggeringMessage* pvalue)
-{
-   int stat = 0;
-
-   RTXCTXTPUSHTYPENAME (pctxt, "TriggeringMessage");
-
-   stat = pd_ConsUnsigned (pctxt, pvalue, 0, OSUINTCONST(2));
-   if(stat != 0) return LOG_RTERR (pctxt, stat);
-
-   RTXCTXTPOPTYPENAME (pctxt);
-
-   return stat;
-}
-
-EXTERN int asn1PrtToStr_e2ap_TriggeringMessage (const char* name, e2ap_TriggeringMessage* pvalue, char* buffer, OSSIZE bufSize)
-{
-   int stat;
-
-   if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
-   if(rtPrintToString(name, buffer, bufSize) < 0) return -1;
-
-   switch(*pvalue) {
-      case 0:
-         stat = rtPrintToString(" = initiating_message \n", buffer, bufSize);
-         break;
-      case 1:
-         stat = rtPrintToString(" = successful_outcome \n", buffer, bufSize);
-         break;
-      case 2:
-         stat = rtPrintToString(" = unsuccessfull_outcome \n", buffer, bufSize);
-         break;
-      default:
-         stat = rtPrintToString(" = ???\n", buffer, bufSize);
-   }
-
-   if (stat < 0) return -1;
-   return 0;
-
-}
-
-/*Init*/
-EXTERN int asn1Init_e2ap_TriggeringMessage (e2ap_TriggeringMessage* pvalue){
-      //if (pvalue == 0) return RTERR_NULLPTR;
-      //*pvalue = 0;
-      return 0;
-}
-// --- End of e2ap_TriggeringMessage.c ---
-
-// --- Begin of e2ap_Criticality.c ---
-/******************************************************/
-/*                                                    */
-/*    Criticality                          */
-/*                                                    */
-/******************************************************/
-//enumerated
-
-
-const OSEnumItem e2ap_Criticality_ENUMTAB[] = {
-    { OSUTF8("reject"), 0, 6, 0 },
-    { OSUTF8("ignore"), 1, 6, 1 },
-    { OSUTF8("notify"), 2, 6, 2 }
-};
-
-
-const OSUTF8CHAR* e2ap_Criticality_ToString (OSUINT32 value){
-   OSINT32 idx = value;
-   if(idx >=0 && idx < e2ap_Criticality_ENUMTABSIZE){
-      return e2ap_Criticality_ENUMTAB[e2ap_Criticality_ENUMTAB[idx].transidx].name;
-   }else{
-      return OSUTF8("_UNKNOWN_");
-   }
-}
-
-
-int e2ap_Criticality_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_Criticality* pvalue)
-{
-   OSSIZE valueLen = rtxUTF8LenBytes(value);
-   return e2ap_Criticality_ToEnum2 (pctxt, value, valueLen, pvalue);
-}
-
-int e2ap_Criticality_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_Criticality* pvalue)
-{
-   OSINT32 idx = rtxLookupEnum(value, valueLen,
-      e2ap_Criticality_ENUMTAB, e2ap_Criticality_ENUMTABSIZE);
-   if (idx >= 0) {
-      *pvalue = (e2ap_Criticality)e2ap_Criticality_ENUMTAB[idx].value;
-      return 0;
-   } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
-      return LOG_RTERR (pctxt, RTERR_INVENUM);
-   }
-}
-
-EXTERN int asn1PE_e2ap_Criticality (OSCTXT* pctxt, e2ap_Criticality value)
-{
-   int stat = 0;
-   RTXCTXTPUSHTYPENAME (pctxt, "Criticality");
-   if (value >= 3) {
-      rtxErrAddIntParm (pctxt, value);
-      return LOG_RTERR (pctxt, RTERR_INVENUM);
-   }
-   stat = pe_ConsUnsigned (pctxt, value, 0, OSUINTCONST(2));
-   if(stat != 0) return LOG_RTERR (pctxt, stat);
-   RTXCTXTPOPTYPENAME (pctxt);
-   return stat;
-}
-
-EXTERN int asn1PD_e2ap_Criticality (OSCTXT* pctxt, e2ap_Criticality* pvalue)
-{
-   int stat = 0;
-
-   RTXCTXTPUSHTYPENAME (pctxt, "Criticality");
-
-   stat = pd_ConsUnsigned (pctxt, pvalue, 0, OSUINTCONST(2));
-   if(stat != 0) return LOG_RTERR (pctxt, stat);
-
-   RTXCTXTPOPTYPENAME (pctxt);
-
-   return stat;
-}
-
-EXTERN int asn1PrtToStr_e2ap_Criticality (const char* name, e2ap_Criticality* pvalue, char* buffer, OSSIZE bufSize)
-{
-   int stat;
-
-   if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
-   if(rtPrintToString(name, buffer, bufSize) < 0) return -1;
-
-   switch(*pvalue) {
-      case 0:
-         stat = rtPrintToString(" = reject \n", buffer, bufSize);
-         break;
-      case 1:
-         stat = rtPrintToString(" = ignore \n", buffer, bufSize);
-         break;
-      case 2:
-         stat = rtPrintToString(" = notify \n", buffer, bufSize);
-         break;
-      default:
-         stat = rtPrintToString(" = ???\n", buffer, bufSize);
-   }
-
-   if (stat < 0) return -1;
-   return 0;
-
-}
-
-/*Init*/
-EXTERN int asn1Init_e2ap_Criticality (e2ap_Criticality* pvalue){
-      //if (pvalue == 0) return RTERR_NULLPTR;
-      //*pvalue = 0;
-      return 0;
-}
-// --- End of e2ap_Criticality.c ---
-
-/************************************/
-/* File .c missing: e2ap_SEQUENCE.c */
-/************************************/
-
-// --- Begin of e2ap_CriticalityDiagnostics_IE_List.c ---
+// --- Begin of e2ap_RANfunctionIDcause_Item.c ---
 
 /*****************************************/
-/*           CriticalityDiagnostics-IE-List                */
+/*           RANfunctionIDcause-Item                */
 /*****************************************/
 //sequence normal
 // Các nội dung cần thiết cho template seq_normal.c.j2
 
 // Các phần còn lại của template seq_normal.c.j2
 //contain extensition bit -> theo mau cua GlobalgNB-ID
-int asn1PE_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityDiagnostics_IE_List* pvalue)
+int asn1PE_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_Item* pvalue)
 {
    int stat = 0;
    OSBOOL extbit = FALSE;
-   RTXCTXTPUSHTYPENAME(pctxt, "CriticalityDiagnostics-IE-List");
+   RTXCTXTPUSHTYPENAME(pctxt, "RANfunctionIDcause-Item");
 
    /*extension bit*/
    extbit = (OSBOOL)(pvalue->extElem1.count > 0);
@@ -1868,23 +2257,16 @@ int asn1PE_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityD
 
 
    /*encode root elements*/   
-   /* encode field iECriticality - id = -1*/  
-   RTXCTXTPUSHELEMNAME(pctxt, "iECriticality");
-   stat = asn1PE_e2ap_Criticality (pctxt, pvalue->iECriticality);
+   /* encode field ranFunctionID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "ranFunctionID");
+   stat = asn1PE_e2ap_RANfunctionID (pctxt, pvalue->ranFunctionID);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
 
-   /* encode field iE_ID - id = -1*/  
-   RTXCTXTPUSHELEMNAME(pctxt, "iE-ID");
-   stat = asn1PE_e2ap_ProtocolIE_ID (pctxt, pvalue->iE_ID);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   RTXCTXTPOPELEMNAME(pctxt);
-
-
-   /* encode field typeOfError - id = -1*/  
-   RTXCTXTPUSHELEMNAME(pctxt, "typeOfError");
-   stat = asn1PE_e2ap_TypeOfError (pctxt, pvalue->typeOfError);
+   /* encode field cause - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "cause");
+   stat = asn1PE_e2ap_Cause (pctxt, pvalue->cause);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
@@ -1918,7 +2300,4805 @@ int asn1PE_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityD
    return (stat);
 }
 
-int asn1PD_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityDiagnostics_IE_List* pvalue)
+int asn1PD_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_Item* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "RANfunctionIDcause-Item");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field ranFunctionID */
+   RTXCTXTPUSHELEMNAME(pctxt, "ranFunctionID");
+      stat = asn1PD_e2ap_RANfunctionID (pctxt, &pvalue->ranFunctionID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field cause */
+   RTXCTXTPUSHELEMNAME(pctxt, "cause");
+      stat = asn1PD_e2ap_Cause (pctxt, &pvalue->cause);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_RANfunctionIDcause_Item (e2ap_RANfunctionIDcause_Item* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_RANfunctionID (&pvalue->ranFunctionID);
+   asn1Init_e2ap_Cause (&pvalue->cause);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_Item* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_RANfunctionID (pctxt, &pvalue->ranFunctionID);
+   asn1Free_e2ap_Cause (pctxt, &pvalue->cause);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_RANfunctionIDcause_Item (const char* name, e2ap_RANfunctionIDcause_Item* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_RANfunctionID ("ranFunctionID", &pvalue->ranFunctionID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_Cause ("cause", &pvalue->cause, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_RANfunctionIDcause_Item.c ---
+
+// --- Begin of e2ap_RANfunctionIDcause_ItemIEs.c ---
+/*****************************************/
+/*           RANfunctionIDcause_ItemIEs                */
+/*****************************************/
+/* ie.c.j2 */
+/*ie thường*/
+int asn1PE_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue)
+{
+   int stat = 0;
+   //RTXCTXTPUSHTYPENAME (pctxt, "RANfunctionIDcause-ItemIEs");
+
+   /* encode id */
+   RTXCTXTPUSHELEMNAME (pctxt, "id");
+   stat = asn1PE_e2ap_ProtocolIE_ID (pctxt, pvalue->id);//xoa con tro
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   /* encode criticality */
+   RTXCTXTPUSHELEMNAME (pctxt, "criticality");
+   stat = asn1PE_e2ap_Criticality (pctxt, pvalue->criticality);//xoa con tro
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   /* encode value */
+   RTXCTXTPUSHELEMNAME (pctxt, "value");
+
+   {
+      OSCTXT ictxt;
+      OSOCTET* pDynamicEncodeBuffer;
+      ASN1OpenType openType;
+      OSBOOL  encoded = TRUE;
+
+      openType.numocts = 0;
+      openType.data = 0;
+
+      rtxCopyContext (&ictxt, pctxt);
+      pctxt->pStream = 0;
+
+      stat = rtxInitContextBuffer (pctxt, 0, 0);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+      switch (pvalue->value.t) {
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item:
+         
+        // RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionIDcause_ItemIEs_id_RANfunctionIDcause_Item");
+         RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionIDcause-Item");
+         stat = asn1PE_e2ap_RANfunctionIDcause_Item (pctxt, pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item);
+         RTXCTXTPOPELEMNAME (pctxt);
+      
+         break;
+
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_UNDEF_:
+      {
+          if(0!=pvalue->value.u.extElem1){
+              openType.numocts = pvalue->value.u.extElem1->numocts;
+              openType.data = pvalue->value.u.extElem1->data;
+          } else {
+              /* No extension element to encode */
+          }
+          encoded = FALSE;
+          break;
+      }
+      default:
+         encoded = FALSE;
+         stat = RTERR_INVOPT;
+      }
+
+      if (encoded) {
+         openType.numocts = (OSUINT32) pe_GetMsgLen (pctxt);
+         openType.data = pDynamicEncodeBuffer = pctxt->buffer.data;
+      }
+      rtxCopyContext (pctxt, &ictxt);
+      if(stat ==0) stat = pe_OpenType(pctxt, openType.numocts, openType.data);
+      /*free dynamic encode buffer*/
+      if(encoded){
+          rtxMemFreePtr(pctxt, pDynamicEncodeBuffer);
+      }
+   }
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+   //RTXCTXTPOPTYPENAME (pctxt);
+   return 0;
+}
+
+int asn1PD_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue)
+{
+   int stat =0;
+   /*deode root element id*/
+   RTXCTXTPUSHELEMNAME(pctxt, "id");
+   stat = asn1PD_e2ap_ProtocolIE_ID (pctxt, &pvalue->id);
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /*decode root element criticality*/
+   RTXCTXTPUSHELEMNAME(pctxt, "criticality");
+   stat = asn1PD_e2ap_Criticality (pctxt, &pvalue->criticality);
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+   /*decode root element value*/
+   RTXCTXTPUSHELEMNAME(pctxt, "value");
+   {
+      OSUINT32 openTypeLen;
+      size_t bitStartOffset, bitLength;
+      stat = pd_UnconsLength(pctxt, &openTypeLen);
+      if(stat <0) return LOG_RTERR(pctxt, stat);
+      else if(stat == RT_OK_FRAG){
+         rtxErrAddStrParm(pctxt, "open type with fragmented length use - perindef");
+         return LOG_RTERRNEW(pctxt, RTERR_NOTSUPP);
+      }
+      bitStartOffset = PU_GETCTXTBITOFFSET(pctxt);
+      bitLength = openTypeLen * 8;
+      switch (pvalue->id){
+         case T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item;
+            RTXCTXTPUSHELEMNAME(pctxt, "RANfunctionIDcause-Item");
+            //pvalue->value.u._e2ap_RANfunctionIDcause_ItemIEs_id_RANfunctionIDcause_Item 
+             pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item = rtxMemAllocType(pctxt, e2ap_RANfunctionIDcause_Item);
+            //asn1Init_e2ap_RANfunctionIDcause_Item(pvalue->value.u._e2ap_RANfunctionIDcause_ItemIEs_id_RANfunctionIDcause_Item);
+            asn1Init_e2ap_RANfunctionIDcause_Item(pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item);
+            stat = asn1PD_e2ap_RANfunctionIDcause_Item (pctxt,
+                    (e2ap_RANfunctionIDcause_Item*)pvalue->value.
+                    u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item);
+            if(stat!=0) return LOG_RTERR(pctxt, stat);
+            RTXCTXTPOPELEMNAME(pctxt);
+            break;
+
+        default:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_UNDEF_;
+            pvalue->value.u.extElem1 = rtxMemAllocType(pctxt, ASN1OpenType);
+            if(0==pvalue->value.u.extElem1){
+                return LOG_RTERR(pctxt, RTERR_NOMEM);
+            }
+
+            {
+                OSOCTET *pdata =(OSOCTET*)rtxMemAlloc(pctxt, openTypeLen);
+                if(0==pdata){
+                    return LOG_RTERR(pctxt, RTERR_NOMEM);
+                }
+                stat = rtxDecBitsToByteArray(pctxt, pdata, openTypeLen, openTypeLen*8);
+                if(stat!=0){
+                    rtxMemFreePtr(pctxt, pdata);
+                    rtxMemFreePtr(pctxt, pvalue->value.u.extElem1);
+                    return LOG_RTERR(pctxt, stat);
+                }
+
+                pvalue->value.u.extElem1->numocts = openTypeLen;
+                pvalue->value.u.extElem1->data = pdata;
+            }
+            break;
+      }
+      {
+      size_t bitEndOffset = PU_GETCTXTBITOFFSET(pctxt);
+      size_t bitsConsumed = bitEndOffset - bitStartOffset;
+      if(bitsConsumed < bitLength){
+         stat = pd_moveBitCursor(pctxt, (int)(bitLength - bitsConsumed));
+      } else {
+         stat = (bitsConsumed > bitLength) ? ASN_E_INVLEN : 0;
+      }
+      }
+   }
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+   return stat;
+}
+
+void asn1Init_e2ap_RANfunctionIDcause_ItemIEs (e2ap_RANfunctionIDcause_ItemIEs* pvalue)
+{
+   if (!pvalue) return;
+   OSCRTLMEMSET (pvalue, 0, sizeof(e2ap_RANfunctionIDcause_ItemIEs));
+}
+
+#if 0
+void asn1Free_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue)
+{
+   if (!pvalue) return;
+   if (pvalue->extElem1) {
+      rtxMemFreeArray (pctxt, pvalue->extElem1);
+      pvalue->extElem1 = 0;
+      pvalue->extElem1_n = 0;
+   }
+}
+#endif
+void asn1Free_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue)
+{
+   if(0==pvalue) return;
+   switch(pvalue->value.t){
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item:
+         asn1Free_e2ap_RANfunctionIDcause_Item (pctxt, pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item);
+         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item);
+         pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item = 0;
+         break;
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_UNDEF_:
+         if(0!=pvalue->value.u.extElem1){
+             rtxMemFreePtr(pctxt, pvalue->value.u.extElem1->data);
+             rtxMemFreePtr(pctxt, pvalue->value.u.extElem1);
+             pvalue->value.u.extElem1 =0;
+         }
+         break;
+         default:;
+   }
+}
+
+int  asn1PrtToStr_e2ap_RANfunctionIDcause_ItemIEs (const char * name, e2ap_RANfunctionIDcause_ItemIEs* pvalue, char * buffer, OSSIZE bufSize){
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize)<0)
+       return -1;
+
+      if(asn1PrtToStr_e2ap_ProtocolIE_ID("id", &pvalue->id, buffer, bufSize)<0)
+         return -1;
+
+      if(asn1PrtToStr_e2ap_Criticality("criticality", &pvalue->criticality, buffer, bufSize)<0)
+         return -1;
+      if(rtPrintToStringOpenBrace("value", buffer, bufSize)<0)
+         return -1;
+      switch (pvalue->value.t) {
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item:
+         if(asn1PrtToStr_e2ap_RANfunctionIDcause_Item("RANfunctionIDcause-Item",
+                pvalue->value.u._e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item, buffer, bufSize)<0)
+            return -1;
+         break;
+      default:
+         if(0!=pvalue -> value.u.extElem1){
+             rtPrintToStringIndent(buffer, bufSize);
+             rtPrintToStringHexStr("extElem1", pvalue->value.u.extElem1->numocts, pvalue->value.u.extElem1->data, buffer, bufSize);
+
+         }
+      }
+      if(rtPrintToStringCloseBrace( buffer, bufSize)<0) return -1;
+      if(rtPrintToStringCloseBrace( buffer, bufSize)<0) return -1;
+
+      return 0;
+
+}
+ 
+
+
+// --- End of e2ap_RANfunctionIDcause_ItemIEs.c ---
+
+// --- Begin of e2ap_RANfunctionsIDcause_List.c ---
+/*****************************************/
+/*           RANfunctionsIDcause_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+int asn1PE_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* pvalue)
+{
+   int stat = 0;
+   OSRTDListNode* pnode;
+   OSSIZE xx1 = 0;
+   OSSIZE count = 0;
+
+   e2ap_RANfunctionIDcause_ItemIEs* pdata;
+
+   RTXCTXTPUSHTYPENAME (pctxt, "RANfunctionsIDcause-List");
+
+   /* encode length determinant */
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(256), 0, 0);
+
+   stat = pe_Length (pctxt, pvalue->count);
+   if (stat < 0) return LOG_RTERR (pctxt, stat);
+
+   /* encode elements */
+   pnode = pvalue->head;
+   for (xx1 = 0; pnode != 0 && xx1 < pvalue->count; pnode = pnode->next, xx1++) {
+      pdata = (e2ap_RANfunctionIDcause_ItemIEs*) pnode->data;
+      RTXCTXTPUSHARRAYELEMNAME (pctxt, "SEQUENCE", xx1);
+
+      stat = asn1PE_e2ap_RANfunctionIDcause_ItemIEs (pctxt, pdata);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+      //xx1++;
+      RTXCTXTPOPARRAYELEMNAME (pctxt);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+int asn1PD_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* ppvalue)
+{
+   int stat = 0;
+   OSSIZE xx1 = 0;
+   OSSIZE count = 0;
+
+   e2ap_RANfunctionIDcause_ItemIEs* pdata;
+
+   RTXCTXTPUSHTYPENAME (pctxt, "RANfunctionsIDcause-List");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(256), 0, 0);
+
+   stat = pd_Length64 (pctxt, &count);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   rtxDListInit (ppvalue);
+
+   for (xx1 = 0; xx1 < count; xx1++) {
+      RTXCTXTPUSHARRAYELEMNAME (pctxt, "SEQUENCE", xx1);
+
+      pdata = rtxMemAllocType (pctxt, e2ap_RANfunctionIDcause_ItemIEs);
+      if (!pdata) return LOG_RTERR (pctxt, RTERR_NOMEM);
+      asn1Init_e2ap_RANfunctionIDcause_ItemIEs (pdata);
+      stat = asn1PD_e2ap_RANfunctionIDcause_ItemIEs (pctxt, pdata);
+      if (stat != 0) {
+         rtxMemFreePtr (pctxt, pdata);
+         return LOG_RTERR (pctxt, stat);
+      }
+
+      rtxDListAppendNode (ppvalue, pdata);
+
+      RTXCTXTPOPARRAYELEMNAME (pctxt);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return 0;
+}
+
+void asn1Init_e2ap_RANfunctionsIDcause_List (e2ap_RANfunctionsIDcause_List* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   rtxDListFastInit (pvalue);
+}
+
+void asn1Free_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* pvalue)
+{
+   if(pvalue==0) return;
+   OSRTDListNode* pnode = pvalue->head;
+   while (pnode) {
+      e2ap_RANfunctionIDcause_ItemIEs* pdata = (e2ap_RANfunctionIDcause_ItemIEs*) pnode->data;
+      if (pdata) {
+         asn1Free_e2ap_RANfunctionIDcause_ItemIEs (pctxt, pdata);
+         rtxMemFreePtr (pctxt, pdata);
+      }
+      pnode = pnode->next;
+   }
+      rtxDListFreeAll(pctxt, pvalue);
+}
+
+#if 0
+void asn1Free_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* pvalue){
+   if(0==pvalue ) return;
+   {
+      e2ap_RANfunctionIDcause_ItemIEs * pdata;
+      OSRTDListNode *pnode = pvalue->head;
+      while(0!=pnode){
+         pdata = (e2ap_RANfunctionIDcause_ItemIEs*)pnode->data;
+         asn1Free_e2ap_RANfunctionIDcause_ItemIEs(pctxt, pdata);
+         pnode = pnode->next;
+      }
+      rtxDListFreeAll(pctxt, pvalue);
+   }
+}
+#endif
+
+
+int asn1PrtToStr_e2ap_RANfunctionsIDcause_List(const char* name, e2ap_RANfunctionsIDcause_List* pvalue, char* buffer, OSSIZE bufSize)
+{
+    e2ap_RANfunctionIDcause_ItemIEs* pdata;
+    OSRTDListNode* pnode;
+    char nameBuf[256];
+    char numBuf[32];
+    OSUINT32 xx1=0;
+    for(pnode = pvalue->head;  xx1 < pvalue->count && pnode != 0; pnode = pnode->next, xx1++){
+        pdata = (e2ap_RANfunctionIDcause_ItemIEs*)pnode->data;
+        rtxUIntToCharStr(xx1, numBuf, sizeof(numBuf), 0);
+        rtxStrJoin(nameBuf, sizeof(nameBuf), name, "[", numBuf, "]", 0);
+        #if 1
+        if(asn1PrtToStr_e2ap_RANfunctionIDcause_ItemIEs(nameBuf, pdata, buffer, bufSize) <0){
+            return -1;
+        }
+        #endif
+    }
+    return 0;
+}
+// --- End of e2ap_RANfunctionsIDcause_List.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceType.c ---
+/******************************************************/
+/*                                                    */
+/*    E2nodeComponentInterfaceType                          */
+/*                                                    */
+/******************************************************/
+//enumerated
+
+
+const OSEnumItem e2ap_E2nodeComponentInterfaceType_ENUMTAB[] = {
+    { OSUTF8("ng"), 0, 2, 0 },
+    { OSUTF8("xn"), 1, 2, 1 },
+    { OSUTF8("e1"), 2, 2, 2 },
+    { OSUTF8("f1"), 3, 2, 3 },
+    { OSUTF8("w1"), 4, 2, 4 },
+    { OSUTF8("s1"), 5, 2, 5 },
+    { OSUTF8("x2"), 6, 2, 6 }
+};
+
+
+const OSUTF8CHAR* e2ap_E2nodeComponentInterfaceType_ToString (OSUINT32 value){
+   OSINT32 idx = value;
+   if(idx >=0 && idx < e2ap_E2nodeComponentInterfaceType_ENUMTABSIZE){
+      return e2ap_E2nodeComponentInterfaceType_ENUMTAB[e2ap_E2nodeComponentInterfaceType_ENUMTAB[idx].transidx].name;
+   }else{
+      return OSUTF8("_UNKNOWN_");
+   }
+}
+
+
+int e2ap_E2nodeComponentInterfaceType_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_E2nodeComponentInterfaceType* pvalue)
+{
+   OSSIZE valueLen = rtxUTF8LenBytes(value);
+   return e2ap_E2nodeComponentInterfaceType_ToEnum2 (pctxt, value, valueLen, pvalue);
+}
+
+int e2ap_E2nodeComponentInterfaceType_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_E2nodeComponentInterfaceType* pvalue)
+{
+   OSINT32 idx = rtxLookupEnum(value, valueLen,
+      e2ap_E2nodeComponentInterfaceType_ENUMTAB, e2ap_E2nodeComponentInterfaceType_ENUMTABSIZE);
+   if (idx >= 0) {
+      *pvalue = (e2ap_E2nodeComponentInterfaceType)e2ap_E2nodeComponentInterfaceType_ENUMTAB[idx].value;
+      return 0;
+   } else {
+      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      return LOG_RTERR (pctxt, RTERR_INVENUM);
+   }
+}
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceType (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceType value)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentInterfaceType");
+   if (value >= 7) {
+      rtxErrAddIntParm (pctxt, value);
+      return LOG_RTERR (pctxt, RTERR_INVENUM);
+   }
+   stat = pe_ConsUnsigned (pctxt, value, 0, OSUINTCONST(6));
+   if(stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceType (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceType* pvalue)
+{
+   int stat = 0;
+
+   RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentInterfaceType");
+
+   stat = pd_ConsUnsigned (pctxt, pvalue, 0, OSUINTCONST(6));
+   if(stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+
+   return stat;
+}
+
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceType (const char* name, e2ap_E2nodeComponentInterfaceType* pvalue, char* buffer, OSSIZE bufSize)
+{
+   int stat;
+
+   if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+   if(rtPrintToString(name, buffer, bufSize) < 0) return -1;
+
+   switch(*pvalue) {
+      case 0:
+         stat = rtPrintToString(" = ng \n", buffer, bufSize);
+         break;
+      case 1:
+         stat = rtPrintToString(" = xn \n", buffer, bufSize);
+         break;
+      case 2:
+         stat = rtPrintToString(" = e1 \n", buffer, bufSize);
+         break;
+      case 3:
+         stat = rtPrintToString(" = f1 \n", buffer, bufSize);
+         break;
+      case 4:
+         stat = rtPrintToString(" = w1 \n", buffer, bufSize);
+         break;
+      case 5:
+         stat = rtPrintToString(" = s1 \n", buffer, bufSize);
+         break;
+      case 6:
+         stat = rtPrintToString(" = x2 \n", buffer, bufSize);
+         break;
+      default:
+         stat = rtPrintToString(" = ???\n", buffer, bufSize);
+   }
+
+   if (stat < 0) return -1;
+   return 0;
+
+}
+
+/*Init*/
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceType (e2ap_E2nodeComponentInterfaceType* pvalue){
+      //if (pvalue == 0) return RTERR_NULLPTR;
+      //*pvalue = 0;
+      return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceType.c ---
+
+// --- Begin of e2ap_AMFName.c ---
+/* e2ap_AMFName.c */
+
+//printable string
+/*****************************************/
+/*           AMFName                */
+/*****************************************/
+
+/* Constrained PrintableString */
+EXTERN int asn1PE_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName value)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "AMFName");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   char c = (char) rtValidateStr (19, value);  /* 19 = PrintableString */
+   if (c != 0) {
+      char lbuf[2];
+      lbuf[0] = c;
+      lbuf[1] = 0;
+
+      rtxErrAddEleNameParm(pctxt);
+      rtxErrAddStrParm (pctxt, lbuf);
+      return LOG_RTERR (pctxt, RTERR_CONSVIO);
+   }
+
+   stat = pe_ConstrainedStringEx (pctxt, value, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PD_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName* ppvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "AMFName");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   stat = pd_ConstrainedStringEx (pctxt, ppvalue, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+
+void asn1Free_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName pvalue)
+{
+   if(0==pvalue) return;
+   rtxMemFreePtr (pctxt, (void*)pvalue);
+   pvalue = 0;
+}
+
+/* Print to string */
+int asn1PrtToStr_e2ap_AMFName (const char* name, e2ap_AMFName pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringIndent (buffer, bufSize) < 0) return -1;
+   if (rtPrintToStringCharStr (name, pvalue, buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+EXTERN int asn1Init_e2ap_AMFName (e2ap_AMFName* pvalue){
+   //if(0==pvalue) return RTERR_NULLPTR;
+   //pvalue = 0;
+   return 0;
+}
+// --- End of e2ap_AMFName.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceNG.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceNG                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceNG* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceNG");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field amf_name - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "amf-name");
+   stat = asn1PE_e2ap_AMFName (pctxt, pvalue->amf_name);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceNG* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[1];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceNG");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 1; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field amf_name */
+   RTXCTXTPUSHELEMNAME(pctxt, "amf-name");
+      stat = asn1PD_e2ap_AMFName (pctxt, &pvalue->amf_name);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceNG (e2ap_E2nodeComponentInterfaceNG* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_AMFName (&pvalue->amf_name);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceNG* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_AMFName (pctxt, &pvalue->amf_name);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceNG (const char* name, e2ap_E2nodeComponentInterfaceNG* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_AMFName ("amf_name", &pvalue->amf_name, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceNG.c ---
+
+// --- Begin of e2ap_GNB_ID_Choice.c ---
+/* e2ap_GNB_ID_Choice.c */
+
+/*****************************************/
+/*           GNB_ID_Choice                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.c.j2
+    // Nội dung của file .c cho primitive BIT STRING (SIZE(22..32))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 4
+
+
+
+//type 4  mau la ul_coordination_info bitstring (a..b)
+
+EXTERN int asn1PE_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt, e2ap_GNB_ID_Choice_gnb_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "gnb-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(22), OSUINTCONST(32), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 32), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt, e2ap_GNB_ID_Choice_gnb_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "gnb-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(22), OSUINTCONST(32), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+//EXTERN int asn1PrtToStr_e2ap_GNB_ID_Choice_gnb_ID (const char* name, e2ap_GNB_ID_Choice_gnb_ID* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_GNB_ID_Choice_gnb_ID (OSCTXT* pctxt, const char* name, const e2ap_GNB_ID_Choice_gnb_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt,const e2ap_GNB_ID_Choice_gnb_ID* pSrcValue,  e2ap_GNB_ID_Choice_gnb_ID* pDstValue);
+EXTERN int asn1Init_e2ap_GNB_ID_Choice_gnb_ID(e2ap_GNB_ID_Choice_gnb_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt, e2ap_GNB_ID_Choice_gnb_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+// Các phần còn lại của template choice.c.j2
+// choice without extension
+
+EXTERN int asn1PE_e2ap_GNB_ID_Choice (OSCTXT* pctxt, e2ap_GNB_ID_Choice* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "GNB-ID-Choice");
+   RTXCTXTPUSHELEMNAME (pctxt, "t");
+ 
+   stat = rtxEncBits (pctxt, pvalue->t - 1, 0);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (pvalue->t) {
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "gnb-ID");
+         //primitive BIT STRING - id = 4
+         stat = asn1PE_e2ap_GNB_ID_Choice_gnb_ID (pctxt, &pvalue->u.gnb_ID); //bit string in choice type 4
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_GNB_ID_Choice (OSCTXT* pctxt, e2ap_GNB_ID_Choice* pvalue)
+{
+   int stat = 0;
+   OSUINT32 ui;
+   RTXCTXTPUSHTYPENAME (pctxt, "GNB-ID-Choice");
+
+ 
+   stat = rtxDecBits (pctxt, &ui, 0);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   else pvalue->t = ui + 1;
+   //RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (ui) {
+      case 0:
+         RTXCTXTPUSHELEMNAME (pctxt, "gnb-ID");
+         pvalue->u.gnb_ID = rtxMemAllocType (pctxt, e2ap_GNB_ID_Choice_gnb_ID);
+         if (pvalue->u.gnb_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_GNB_ID_Choice_gnb_ID(pvalue->u.gnb_ID);
+         stat = asn1PD_e2ap_GNB_ID_Choice_gnb_ID (pctxt, pvalue->u.gnb_ID);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PrtToStr_e2ap_GNB_ID_Choice (const char* name, e2ap_GNB_ID_Choice* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) return -1;
+   
+
+   switch (pvalue->t) {
+      case T_e2ap_GNB_ID_Choice_gnb_ID:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_GNB_ID_Choice_gnb_ID (pctxt, pvalue->u.gnb_ID);
+         break;
+      default:
+         return RTERR_INVOPT;
+   }
+
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+int asn1Init_e2ap_GNB_ID_Choice (e2ap_GNB_ID_Choice* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+
+void asn1Free_e2ap_GNB_ID_Choice (OSCTXT* pctxt, e2ap_GNB_ID_Choice* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.gnb_ID) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.gnb_ID);
+            pvalue->u.gnb_ID = 0;
+         }
+         break;
+   }
+}
+
+
+// --- End of e2ap_GNB_ID_Choice.c ---
+
+// --- Begin of e2ap_GlobalgNB_ID.c ---
+
+/*****************************************/
+/*           GlobalgNB-ID                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_GlobalgNB_ID (OSCTXT* pctxt, e2ap_GlobalgNB_ID* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalgNB-ID");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field plmn_id - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "plmn-id");
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->plmn_id);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field gnb_id - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "gnb-id");
+   stat = asn1PE_e2ap_GNB_ID_Choice (pctxt, pvalue->gnb_id);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_GlobalgNB_ID (OSCTXT* pctxt, e2ap_GlobalgNB_ID* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalgNB-ID");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field plmn_id */
+   RTXCTXTPUSHELEMNAME(pctxt, "plmn-id");
+      stat = asn1PD_e2ap_PLMN_Identity (pctxt, &pvalue->plmn_id);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field gnb_id */
+   RTXCTXTPUSHELEMNAME(pctxt, "gnb-id");
+      stat = asn1PD_e2ap_GNB_ID_Choice (pctxt, &pvalue->gnb_id);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_GlobalgNB_ID (e2ap_GlobalgNB_ID* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_PLMN_Identity (&pvalue->plmn_id);
+   asn1Init_e2ap_GNB_ID_Choice (&pvalue->gnb_id);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_GlobalgNB_ID (OSCTXT* pctxt, e2ap_GlobalgNB_ID* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_PLMN_Identity (pctxt, &pvalue->plmn_id);
+   asn1Free_e2ap_GNB_ID_Choice (pctxt, &pvalue->gnb_id);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_GlobalgNB_ID (const char* name, e2ap_GlobalgNB_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_PLMN_Identity ("plmn_id", &pvalue->plmn_id, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_GNB_ID_Choice ("gnb_id", &pvalue->gnb_id, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_GlobalgNB_ID.c ---
+
+// --- Begin of e2ap_ENB_ID_Choice.c ---
+/* e2ap_ENB_ID_Choice.c */
+
+/*****************************************/
+/*           ENB_ID_Choice                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.c.j2
+    // Nội dung của file .c cho primitive BIT STRING (SIZE(20))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "enb-ID-macro");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(20), OSUINTCONST(20), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 20), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "enb-ID-macro");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(20), OSUINTCONST(20), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_macro (const char* name, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 20), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice_enb_ID_macro (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice_enb_ID_macro* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt,const e2ap_ENB_ID_Choice_enb_ID_macro* pSrcValue,  e2ap_ENB_ID_Choice_enb_ID_macro* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice_enb_ID_macro(e2ap_ENB_ID_Choice_enb_ID_macro* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+    // Nội dung của file .c cho primitive BIT STRING (SIZE(18))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "enb-ID-shortmacro");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(18), OSUINTCONST(18), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 18), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "enb-ID-shortmacro");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(18), OSUINTCONST(18), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_shortmacro (const char* name, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 18), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice_enb_ID_shortmacro (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt,const e2ap_ENB_ID_Choice_enb_ID_shortmacro* pSrcValue,  e2ap_ENB_ID_Choice_enb_ID_shortmacro* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice_enb_ID_shortmacro(e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+    // Nội dung của file .c cho primitive BIT STRING (SIZE(21))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "enb-ID-longmacro");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(21), OSUINTCONST(21), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 21), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "enb-ID-longmacro");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(21), OSUINTCONST(21), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_longmacro (const char* name, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 21), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice_enb_ID_longmacro (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt,const e2ap_ENB_ID_Choice_enb_ID_longmacro* pSrcValue,  e2ap_ENB_ID_Choice_enb_ID_longmacro* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice_enb_ID_longmacro(e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+
+// Các phần còn lại của template choice.c.j2
+// choice without extension
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice (OSCTXT* pctxt, e2ap_ENB_ID_Choice* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "ENB-ID-Choice");
+   RTXCTXTPUSHELEMNAME (pctxt, "t");
+ 
+   stat = rtxEncBits (pctxt, pvalue->t - 1, 2);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (pvalue->t) {
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "enb-ID-macro");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_Choice_enb_ID_macro (pctxt, &pvalue->u.enb_ID_macro); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "enb-ID-shortmacro");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_Choice_enb_ID_shortmacro (pctxt, &pvalue->u.enb_ID_shortmacro); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 3:
+         RTXCTXTPUSHELEMNAME (pctxt, "enb-ID-longmacro");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_Choice_enb_ID_longmacro (pctxt, &pvalue->u.enb_ID_longmacro); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_ENB_ID_Choice (OSCTXT* pctxt, e2ap_ENB_ID_Choice* pvalue)
+{
+   int stat = 0;
+   OSUINT32 ui;
+   RTXCTXTPUSHTYPENAME (pctxt, "ENB-ID-Choice");
+
+ 
+   stat = rtxDecBits (pctxt, &ui, 2);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   else pvalue->t = ui + 1;
+   //RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (ui) {
+      case 0:
+         RTXCTXTPUSHELEMNAME (pctxt, "enb-ID-macro");
+         pvalue->u.enb_ID_macro = rtxMemAllocType (pctxt, e2ap_ENB_ID_Choice_enb_ID_macro);
+         if (pvalue->u.enb_ID_macro == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_Choice_enb_ID_macro(pvalue->u.enb_ID_macro);
+         stat = asn1PD_e2ap_ENB_ID_Choice_enb_ID_macro (pctxt, pvalue->u.enb_ID_macro);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "enb-ID-shortmacro");
+         pvalue->u.enb_ID_shortmacro = rtxMemAllocType (pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro);
+         if (pvalue->u.enb_ID_shortmacro == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_Choice_enb_ID_shortmacro(pvalue->u.enb_ID_shortmacro);
+         stat = asn1PD_e2ap_ENB_ID_Choice_enb_ID_shortmacro (pctxt, pvalue->u.enb_ID_shortmacro);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "enb-ID-longmacro");
+         pvalue->u.enb_ID_longmacro = rtxMemAllocType (pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro);
+         if (pvalue->u.enb_ID_longmacro == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_Choice_enb_ID_longmacro(pvalue->u.enb_ID_longmacro);
+         stat = asn1PD_e2ap_ENB_ID_Choice_enb_ID_longmacro (pctxt, pvalue->u.enb_ID_longmacro);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PrtToStr_e2ap_ENB_ID_Choice (const char* name, e2ap_ENB_ID_Choice* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) return -1;
+   
+
+   switch (pvalue->t) {
+      case T_e2ap_ENB_ID_Choice_enb_ID_macro:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_macro (pctxt, pvalue->u.enb_ID_macro);
+         break;
+      case T_e2ap_ENB_ID_Choice_enb_ID_shortmacro:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_shortmacro (pctxt, pvalue->u.enb_ID_shortmacro);
+         break;
+      case T_e2ap_ENB_ID_Choice_enb_ID_longmacro:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_longmacro (pctxt, pvalue->u.enb_ID_longmacro);
+         break;
+      default:
+         return RTERR_INVOPT;
+   }
+
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+int asn1Init_e2ap_ENB_ID_Choice (e2ap_ENB_ID_Choice* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+
+void asn1Free_e2ap_ENB_ID_Choice (OSCTXT* pctxt, e2ap_ENB_ID_Choice* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.enb_ID_macro) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.enb_ID_macro);
+            pvalue->u.enb_ID_macro = 0;
+         }
+         break;
+      case 2:
+         if (pvalue->u.enb_ID_shortmacro) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.enb_ID_shortmacro);
+            pvalue->u.enb_ID_shortmacro = 0;
+         }
+         break;
+      case 3:
+         if (pvalue->u.enb_ID_longmacro) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.enb_ID_longmacro);
+            pvalue->u.enb_ID_longmacro = 0;
+         }
+         break;
+   }
+}
+
+
+// --- End of e2ap_ENB_ID_Choice.c ---
+
+// --- Begin of e2ap_GlobalngeNB_ID.c ---
+
+/*****************************************/
+/*           GlobalngeNB-ID                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalngeNB-ID");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field plmn_id - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "plmn-id");
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->plmn_id);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field enb_id - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "enb-id");
+   stat = asn1PE_e2ap_ENB_ID_Choice (pctxt, pvalue->enb_id);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalngeNB-ID");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field plmn_id */
+   RTXCTXTPUSHELEMNAME(pctxt, "plmn-id");
+      stat = asn1PD_e2ap_PLMN_Identity (pctxt, &pvalue->plmn_id);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field enb_id */
+   RTXCTXTPUSHELEMNAME(pctxt, "enb-id");
+      stat = asn1PD_e2ap_ENB_ID_Choice (pctxt, &pvalue->enb_id);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_GlobalngeNB_ID (e2ap_GlobalngeNB_ID* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_PLMN_Identity (&pvalue->plmn_id);
+   asn1Init_e2ap_ENB_ID_Choice (&pvalue->enb_id);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_PLMN_Identity (pctxt, &pvalue->plmn_id);
+   asn1Free_e2ap_ENB_ID_Choice (pctxt, &pvalue->enb_id);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_GlobalngeNB_ID (const char* name, e2ap_GlobalngeNB_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_PLMN_Identity ("plmn_id", &pvalue->plmn_id, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_ENB_ID_Choice ("enb_id", &pvalue->enb_id, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_GlobalngeNB_ID.c ---
+
+// --- Begin of e2ap_GlobalNG_RANNode_ID.c ---
+/* e2ap_GlobalNG_RANNode_ID.c */
+
+/*****************************************/
+/*           GlobalNG_RANNode_ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.c.j2
+
+// Các phần còn lại của template choice.c.j2
+// choice without extension
+
+EXTERN int asn1PE_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, e2ap_GlobalNG_RANNode_ID* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "GlobalNG-RANNode-ID");
+   RTXCTXTPUSHELEMNAME (pctxt, "t");
+ 
+   stat = rtxEncBits (pctxt, pvalue->t - 1, 1);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (pvalue->t) {
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "gNB");
+         stat = asn1PE_e2ap_GlobalgNB_ID (pctxt, pvalue->u.gNB); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "ng-eNB");
+         stat = asn1PE_e2ap_GlobalngeNB_ID (pctxt, pvalue->u.ng_eNB); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, e2ap_GlobalNG_RANNode_ID* pvalue)
+{
+   int stat = 0;
+   OSUINT32 ui;
+   RTXCTXTPUSHTYPENAME (pctxt, "GlobalNG-RANNode-ID");
+
+ 
+   stat = rtxDecBits (pctxt, &ui, 1);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   else pvalue->t = ui + 1;
+   //RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (ui) {
+      case 0:
+         RTXCTXTPUSHELEMNAME (pctxt, "gNB");
+         pvalue->u.gNB = rtxMemAllocType (pctxt, e2ap_GlobalgNB_ID);
+         if (pvalue->u.gNB == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_GlobalgNB_ID(pvalue->u.gNB);
+         stat = asn1PD_e2ap_GlobalgNB_ID (pctxt, pvalue->u.gNB);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "ng-eNB");
+         pvalue->u.ng_eNB = rtxMemAllocType (pctxt, e2ap_GlobalngeNB_ID);
+         if (pvalue->u.ng_eNB == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_GlobalngeNB_ID(pvalue->u.ng_eNB);
+         stat = asn1PD_e2ap_GlobalngeNB_ID (pctxt, pvalue->u.ng_eNB);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PrtToStr_e2ap_GlobalNG_RANNode_ID (const char* name, e2ap_GlobalNG_RANNode_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) return -1;
+   
+
+   switch (pvalue->t) {
+      case T_e2ap_GlobalNG_RANNode_ID_gNB:
+         if (asn1PrtToStr_e2ap_GlobalgNB_ID ( "gNB", pvalue->u.gNB, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_GlobalNG_RANNode_ID_ng_eNB:
+         if (asn1PrtToStr_e2ap_GlobalngeNB_ID ( "ng_eNB", pvalue->u.ng_eNB, buffer, bufSize) < 0) return -1;
+         break;
+      default:
+         return RTERR_INVOPT;
+   }
+
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+int asn1Init_e2ap_GlobalNG_RANNode_ID (e2ap_GlobalNG_RANNode_ID* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+
+void asn1Free_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, e2ap_GlobalNG_RANNode_ID* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.gNB) {
+            //not primitive
+            asn1Free_e2ap_GlobalgNB_ID (pctxt, pvalue->u.gNB);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.gNB);
+            pvalue->u.gNB = 0;
+         }
+         break;
+      case 2:
+         if (pvalue->u.ng_eNB) {
+            //not primitive
+            asn1Free_e2ap_GlobalngeNB_ID (pctxt, pvalue->u.ng_eNB);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.ng_eNB);
+            pvalue->u.ng_eNB = 0;
+         }
+         break;
+   }
+}
+
+
+// --- End of e2ap_GlobalNG_RANNode_ID.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceXn.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceXn                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceXn* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceXn");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field global_NG_RAN_Node_ID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "global-NG-RAN-Node-ID");
+   stat = asn1PE_e2ap_GlobalNG_RANNode_ID (pctxt, pvalue->global_NG_RAN_Node_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceXn* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[1];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceXn");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 1; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field global_NG_RAN_Node_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "global-NG-RAN-Node-ID");
+      stat = asn1PD_e2ap_GlobalNG_RANNode_ID (pctxt, &pvalue->global_NG_RAN_Node_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceXn (e2ap_E2nodeComponentInterfaceXn* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_GlobalNG_RANNode_ID (&pvalue->global_NG_RAN_Node_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceXn* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_GlobalNG_RANNode_ID (pctxt, &pvalue->global_NG_RAN_Node_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceXn (const char* name, e2ap_E2nodeComponentInterfaceXn* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_GlobalNG_RANNode_ID ("global_NG_RAN_Node_ID", &pvalue->global_NG_RAN_Node_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceXn.c ---
+
+// --- Begin of e2ap_GNB_CU_UP_ID.c ---
+/*****************************************/
+/*           GNB_CU_UP_ID                */
+/*****************************************/
+//6 mau integer
+// mau integer size(a...b) mau la procedurecode
+EXTERN int asn1PE_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, e2ap_GNB_CU_UP_ID value){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "GNB-CU-UP-ID");
+    stat = pe_ConsUnsigned (pctxt, value, 0, 68719476735);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, e2ap_GNB_CU_UP_ID* pvalue){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "GNB-CU-UP-ID");
+    if(pctxt->buffer.aligned){
+        int stat2 = PD_BYTE_ALIGN(pctxt);
+        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
+    }
+    stat = rtxDecBitsToByte(pctxt, pvalue, 0);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+//EXTERN int asn1Print_e2ap_GNB_CU_UP_ID (const char* name, const e2ap_GNB_CU_UP_ID* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_GNB_CU_UP_ID (const char* name, e2ap_GNB_CU_UP_ID* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, const char* name, const e2ap_GNB_CU_UP_ID* pvalue);
+EXTERN int asn1Init_e2ap_GNB_CU_UP_ID (e2ap_GNB_CU_UP_ID* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, e2ap_GNB_CU_UP_ID* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+
+// --- End of e2ap_GNB_CU_UP_ID.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceE1.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceE1                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceE1* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceE1");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field gNB_CU_UP_ID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "gNB-CU-UP-ID");
+   stat = asn1PE_e2ap_GNB_CU_UP_ID (pctxt, pvalue->gNB_CU_UP_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceE1* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[1];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceE1");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 1; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field gNB_CU_UP_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "gNB-CU-UP-ID");
+      stat = asn1PD_e2ap_GNB_CU_UP_ID (pctxt, &pvalue->gNB_CU_UP_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceE1 (e2ap_E2nodeComponentInterfaceE1* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_GNB_CU_UP_ID (&pvalue->gNB_CU_UP_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceE1* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_GNB_CU_UP_ID (pctxt, &pvalue->gNB_CU_UP_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceE1 (const char* name, e2ap_E2nodeComponentInterfaceE1* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_GNB_CU_UP_ID ("gNB_CU_UP_ID", &pvalue->gNB_CU_UP_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceE1.c ---
+
+// --- Begin of e2ap_GNB_DU_ID.c ---
+/*****************************************/
+/*           GNB_DU_ID                */
+/*****************************************/
+//6 mau integer
+// mau integer size(a...b) mau la procedurecode
+EXTERN int asn1PE_e2ap_GNB_DU_ID (OSCTXT* pctxt, e2ap_GNB_DU_ID value){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "GNB-DU-ID");
+    stat = pe_ConsUnsigned (pctxt, value, 0, 68719476735);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_GNB_DU_ID (OSCTXT* pctxt, e2ap_GNB_DU_ID* pvalue){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "GNB-DU-ID");
+    if(pctxt->buffer.aligned){
+        int stat2 = PD_BYTE_ALIGN(pctxt);
+        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
+    }
+    stat = rtxDecBitsToByte(pctxt, pvalue, 0);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+//EXTERN int asn1Print_e2ap_GNB_DU_ID (const char* name, const e2ap_GNB_DU_ID* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_GNB_DU_ID (const char* name, e2ap_GNB_DU_ID* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_GNB_DU_ID (OSCTXT* pctxt, const char* name, const e2ap_GNB_DU_ID* pvalue);
+EXTERN int asn1Init_e2ap_GNB_DU_ID (e2ap_GNB_DU_ID* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_GNB_DU_ID (OSCTXT* pctxt, e2ap_GNB_DU_ID* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+
+// --- End of e2ap_GNB_DU_ID.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceF1.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceF1                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceF1* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceF1");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field gNB_DU_ID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "gNB-DU-ID");
+   stat = asn1PE_e2ap_GNB_DU_ID (pctxt, pvalue->gNB_DU_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceF1* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[1];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceF1");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 1; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field gNB_DU_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "gNB-DU-ID");
+      stat = asn1PD_e2ap_GNB_DU_ID (pctxt, &pvalue->gNB_DU_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceF1 (e2ap_E2nodeComponentInterfaceF1* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_GNB_DU_ID (&pvalue->gNB_DU_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceF1* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_GNB_DU_ID (pctxt, &pvalue->gNB_DU_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceF1 (const char* name, e2ap_E2nodeComponentInterfaceF1* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_GNB_DU_ID ("gNB_DU_ID", &pvalue->gNB_DU_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceF1.c ---
+
+// --- Begin of e2ap_NGENB_DU_ID.c ---
+/*****************************************/
+/*           NGENB_DU_ID                */
+/*****************************************/
+//6 mau integer
+// mau integer size(a...b) mau la procedurecode
+EXTERN int asn1PE_e2ap_NGENB_DU_ID (OSCTXT* pctxt, e2ap_NGENB_DU_ID value){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "NGENB-DU-ID");
+    stat = pe_ConsUnsigned (pctxt, value, 0, 68719476735);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_NGENB_DU_ID (OSCTXT* pctxt, e2ap_NGENB_DU_ID* pvalue){
+    int stat = 0;
+    RTXCTCXTPUSHTYPENAME (pctxt, "NGENB-DU-ID");
+    if(pctxt->buffer.aligned){
+        int stat2 = PD_BYTE_ALIGN(pctxt);
+        if(stat2 != 0) return LOG_RTERR (pctxt, stat2);
+    }
+    stat = rtxDecBitsToByte(pctxt, pvalue, 0);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+    RTXCTXTPOPTYPENAME (pctxt);
+    return stat;
+}
+//EXTERN int asn1Print_e2ap_NGENB_DU_ID (const char* name, const e2ap_NGENB_DU_ID* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_NGENB_DU_ID (const char* name, e2ap_NGENB_DU_ID* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_NGENB_DU_ID (OSCTXT* pctxt, const char* name, const e2ap_NGENB_DU_ID* pvalue);
+EXTERN int asn1Init_e2ap_NGENB_DU_ID (e2ap_NGENB_DU_ID* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+EXTERN int asn1Free_e2ap_NGENB_DU_ID (OSCTXT* pctxt, e2ap_NGENB_DU_ID* pvalue){
+    // No dynamic memory to free for integer
+    return 0;
+}
+
+// --- End of e2ap_NGENB_DU_ID.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceW1.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceW1                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceW1* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceW1");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field ng_eNB_DU_ID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "ng-eNB-DU-ID");
+   stat = asn1PE_e2ap_NGENB_DU_ID (pctxt, pvalue->ng_eNB_DU_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceW1* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[1];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceW1");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 1; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field ng_eNB_DU_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "ng-eNB-DU-ID");
+      stat = asn1PD_e2ap_NGENB_DU_ID (pctxt, &pvalue->ng_eNB_DU_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceW1 (e2ap_E2nodeComponentInterfaceW1* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_NGENB_DU_ID (&pvalue->ng_eNB_DU_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceW1* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_NGENB_DU_ID (pctxt, &pvalue->ng_eNB_DU_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceW1 (const char* name, e2ap_E2nodeComponentInterfaceW1* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_NGENB_DU_ID ("ng_eNB_DU_ID", &pvalue->ng_eNB_DU_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceW1.c ---
+
+// --- Begin of e2ap_MMEname.c ---
+/* e2ap_MMEname.c */
+
+//printable string
+/*****************************************/
+/*           MMEname                */
+/*****************************************/
+
+/* Constrained PrintableString */
+EXTERN int asn1PE_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname value)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "MMEname");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   char c = (char) rtValidateStr (19, value);  /* 19 = PrintableString */
+   if (c != 0) {
+      char lbuf[2];
+      lbuf[0] = c;
+      lbuf[1] = 0;
+
+      rtxErrAddEleNameParm(pctxt);
+      rtxErrAddStrParm (pctxt, lbuf);
+      return LOG_RTERR (pctxt, RTERR_CONSVIO);
+   }
+
+   stat = pe_ConstrainedStringEx (pctxt, value, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+EXTERN int asn1PD_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname* ppvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "MMEname");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(150), OSUINTCONST(0), OSUINT32_MAX);
+
+   stat = pd_ConstrainedStringEx (pctxt, ppvalue, 0, 8, 7, 7);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
+
+
+void asn1Free_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname pvalue)
+{
+   if(0==pvalue) return;
+   rtxMemFreePtr (pctxt, (void*)pvalue);
+   pvalue = 0;
+}
+
+/* Print to string */
+int asn1PrtToStr_e2ap_MMEname (const char* name, e2ap_MMEname pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringIndent (buffer, bufSize) < 0) return -1;
+   if (rtPrintToStringCharStr (name, pvalue, buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+EXTERN int asn1Init_e2ap_MMEname (e2ap_MMEname* pvalue){
+   //if(0==pvalue) return RTERR_NULLPTR;
+   //pvalue = 0;
+   return 0;
+}
+// --- End of e2ap_MMEname.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceS1.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceS1                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceS1* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceS1");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field mme_name - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "mme-name");
+   stat = asn1PE_e2ap_MMEname (pctxt, pvalue->mme_name);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceS1* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[1];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceS1");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 1; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field mme_name */
+   RTXCTXTPUSHELEMNAME(pctxt, "mme-name");
+      stat = asn1PD_e2ap_MMEname (pctxt, &pvalue->mme_name);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceS1 (e2ap_E2nodeComponentInterfaceS1* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_MMEname (&pvalue->mme_name);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceS1* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_MMEname (pctxt, &pvalue->mme_name);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceS1 (const char* name, e2ap_E2nodeComponentInterfaceS1* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_MMEname ("mme_name", &pvalue->mme_name, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceS1.c ---
+
+// --- Begin of e2ap_ENB_ID.c ---
+/* e2ap_ENB_ID.c */
+
+/*****************************************/
+/*           ENB_ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.c.j2
+    // Nội dung của file .c cho primitive BIT STRING (SIZE (20))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_macro_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "macro-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(20), OSUINTCONST(20), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 20), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_macro_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "macro-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(20), OSUINTCONST(20), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_macro_eNB_ID (const char* name, e2ap_ENB_ID_macro_eNB_ID* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 20), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_macro_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_macro_eNB_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_macro_eNB_ID* pSrcValue,  e2ap_ENB_ID_macro_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_macro_eNB_ID(e2ap_ENB_ID_macro_eNB_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_macro_eNB_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+    // Nội dung của file .c cho primitive BIT STRING (SIZE (28))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_home_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "home-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(28), OSUINTCONST(28), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 28), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_home_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "home-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(28), OSUINTCONST(28), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_home_eNB_ID (const char* name, e2ap_ENB_ID_home_eNB_ID* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 28), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_home_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_home_eNB_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_home_eNB_ID* pSrcValue,  e2ap_ENB_ID_home_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_home_eNB_ID(e2ap_ENB_ID_home_eNB_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_home_eNB_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+    // Nội dung của file .c cho primitive BIT STRING (SIZE(18))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "short-Macro-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(18), OSUINTCONST(18), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 18), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "short-Macro-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(18), OSUINTCONST(18), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_short_Macro_eNB_ID (const char* name, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 18), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_short_Macro_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_short_Macro_eNB_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_short_Macro_eNB_ID* pSrcValue,  e2ap_ENB_ID_short_Macro_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_short_Macro_eNB_ID(e2ap_ENB_ID_short_Macro_eNB_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+    // Nội dung của file .c cho primitive BIT STRING (SIZE(21))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 3
+
+//mau rnti_full ben xn  bitstring (n)
+
+EXTERN int asn1PE_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "long-Macro-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(21), OSUINTCONST(21), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 21), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "long-Macro-eNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(21), OSUINTCONST(21), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_long_Macro_eNB_ID (const char* name, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToStringBitStrBraceText (name, OS_MIN(pvalue->numbits, 21), pvalue->data, buffer, bufSize) < 0) return -1;
+    return 0;
+}
+//EXTERN int asn1PrtToStrm_e2ap_ENB_ID_long_Macro_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_long_Macro_eNB_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_long_Macro_eNB_ID* pSrcValue,  e2ap_ENB_ID_long_Macro_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_long_Macro_eNB_ID(e2ap_ENB_ID_long_Macro_eNB_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+
+
+// Các phần còn lại của template choice.c.j2
+// choice without extension
+
+EXTERN int asn1PE_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "ENB-ID");
+   RTXCTXTPUSHELEMNAME (pctxt, "t");
+ 
+   stat = rtxEncBits (pctxt, pvalue->t - 1, 2);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (pvalue->t) {
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "macro-eNB-ID");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_macro_eNB_ID (pctxt, &pvalue->u.macro_eNB_ID); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "home-eNB-ID");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_home_eNB_ID (pctxt, &pvalue->u.home_eNB_ID); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 3:
+         RTXCTXTPUSHELEMNAME (pctxt, "short-Macro-eNB-ID");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_short_Macro_eNB_ID (pctxt, &pvalue->u.short_Macro_eNB_ID); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 4:
+         RTXCTXTPUSHELEMNAME (pctxt, "long-Macro-eNB-ID");
+         //primitive BIT STRING - id = 3
+         stat = asn1PE_e2ap_ENB_ID_long_Macro_eNB_ID (pctxt, &pvalue->u.long_Macro_eNB_ID); //bit string in choice type 3
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
+{
+   int stat = 0;
+   OSUINT32 ui;
+   RTXCTXTPUSHTYPENAME (pctxt, "ENB-ID");
+
+ 
+   stat = rtxDecBits (pctxt, &ui, 2);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   else pvalue->t = ui + 1;
+   //RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (ui) {
+      case 0:
+         RTXCTXTPUSHELEMNAME (pctxt, "macro-eNB-ID");
+         pvalue->u.macro_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_macro_eNB_ID);
+         if (pvalue->u.macro_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_macro_eNB_ID(pvalue->u.macro_eNB_ID);
+         stat = asn1PD_e2ap_ENB_ID_macro_eNB_ID (pctxt, pvalue->u.macro_eNB_ID);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "home-eNB-ID");
+         pvalue->u.home_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_home_eNB_ID);
+         if (pvalue->u.home_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_home_eNB_ID(pvalue->u.home_eNB_ID);
+         stat = asn1PD_e2ap_ENB_ID_home_eNB_ID (pctxt, pvalue->u.home_eNB_ID);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "short-Macro-eNB-ID");
+         pvalue->u.short_Macro_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_short_Macro_eNB_ID);
+         if (pvalue->u.short_Macro_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_short_Macro_eNB_ID(pvalue->u.short_Macro_eNB_ID);
+         stat = asn1PD_e2ap_ENB_ID_short_Macro_eNB_ID (pctxt, pvalue->u.short_Macro_eNB_ID);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 3:
+         RTXCTXTPUSHELEMNAME (pctxt, "long-Macro-eNB-ID");
+         pvalue->u.long_Macro_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_long_Macro_eNB_ID);
+         if (pvalue->u.long_Macro_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENB_ID_long_Macro_eNB_ID(pvalue->u.long_Macro_eNB_ID);
+         stat = asn1PD_e2ap_ENB_ID_long_Macro_eNB_ID (pctxt, pvalue->u.long_Macro_eNB_ID);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PrtToStr_e2ap_ENB_ID (const char* name, e2ap_ENB_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) return -1;
+   
+
+   switch (pvalue->t) {
+      case T_e2ap_ENB_ID_macro_eNB_ID:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_macro_eNB_ID (pctxt, pvalue->u.macro_eNB_ID);
+         break;
+      case T_e2ap_ENB_ID_home_eNB_ID:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_home_eNB_ID (pctxt, pvalue->u.home_eNB_ID);
+         break;
+      case T_e2ap_ENB_ID_short_Macro_eNB_ID:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_short_Macro_eNB_ID (pctxt, pvalue->u.short_Macro_eNB_ID);
+         break;
+      case T_e2ap_ENB_ID_long_Macro_eNB_ID:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENB_ID_long_Macro_eNB_ID (pctxt, pvalue->u.long_Macro_eNB_ID);
+         break;
+      default:
+         return RTERR_INVOPT;
+   }
+
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+int asn1Init_e2ap_ENB_ID (e2ap_ENB_ID* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+
+void asn1Free_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.macro_eNB_ID) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.macro_eNB_ID);
+            pvalue->u.macro_eNB_ID = 0;
+         }
+         break;
+      case 2:
+         if (pvalue->u.home_eNB_ID) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.home_eNB_ID);
+            pvalue->u.home_eNB_ID = 0;
+         }
+         break;
+      case 3:
+         if (pvalue->u.short_Macro_eNB_ID) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.short_Macro_eNB_ID);
+            pvalue->u.short_Macro_eNB_ID = 0;
+         }
+         break;
+      case 4:
+         if (pvalue->u.long_Macro_eNB_ID) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.long_Macro_eNB_ID);
+            pvalue->u.long_Macro_eNB_ID = 0;
+         }
+         break;
+   }
+}
+
+
+// --- End of e2ap_ENB_ID.c ---
+
+// --- Begin of e2ap_GlobalENB_ID.c ---
+
+/*****************************************/
+/*           GlobalENB-ID                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_GlobalENB_ID (OSCTXT* pctxt, e2ap_GlobalENB_ID* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalENB-ID");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field pLMN_Identity - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->pLMN_Identity);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field eNB_ID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "eNB-ID");
+   stat = asn1PE_e2ap_ENB_ID (pctxt, pvalue->eNB_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_GlobalENB_ID (OSCTXT* pctxt, e2ap_GlobalENB_ID* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalENB-ID");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field pLMN_Identity */
+   RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
+      stat = asn1PD_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field eNB_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "eNB-ID");
+      stat = asn1PD_e2ap_ENB_ID (pctxt, &pvalue->eNB_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_GlobalENB_ID (e2ap_GlobalENB_ID* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_PLMN_Identity (&pvalue->pLMN_Identity);
+   asn1Init_e2ap_ENB_ID (&pvalue->eNB_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_GlobalENB_ID (OSCTXT* pctxt, e2ap_GlobalENB_ID* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
+   asn1Free_e2ap_ENB_ID (pctxt, &pvalue->eNB_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_GlobalENB_ID (const char* name, e2ap_GlobalENB_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_PLMN_Identity ("pLMN_Identity", &pvalue->pLMN_Identity, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_ENB_ID ("eNB_ID", &pvalue->eNB_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_GlobalENB_ID.c ---
+
+// --- Begin of e2ap_ENGNB_ID.c ---
+/* e2ap_ENGNB_ID.c */
+
+/*****************************************/
+/*           ENGNB_ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.c.j2
+    // Nội dung của file .c cho primitive BIT STRING (SIZE (22..32))
+    /* bitstring intergrate header file */
+//metadata.parsed.primitive_id == 4
+
+
+
+//type 4  mau la ul_coordination_info bitstring (a..b)
+
+EXTERN int asn1PE_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "gNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(22), OSUINTCONST(32), 0, 0);
+    stat = pe_BitString (pctxt, OS_MIN(pvalue->numbits, 32), pvalue->data);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue){
+    int stat =0;
+    //RTXCTXTPUSHTYPENAME(pctxt, "gNB-ID");
+    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(22), OSUINTCONST(32), 0, 0);
+    stat = pd_BitString (pctxt, &pvalue->numbits, pvalue->data, sizeof(pvalue->data));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    //RTXCTXTPOPTYPENAME(pctxt);
+    return stat;
+}
+//EXTERN int asn1PrtToStr_e2ap_ENGNB_ID_gNB_ID (const char* name, e2ap_ENGNB_ID_gNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+//EXTERN int asn1PrtToStrm_e2ap_ENGNB_ID_gNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENGNB_ID_gNB_ID* pvalue);
+//EXTERN int asn1Copy_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt,const e2ap_ENGNB_ID_gNB_ID* pSrcValue,  e2ap_ENGNB_ID_gNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENGNB_ID_gNB_ID(e2ap_ENGNB_ID_gNB_ID* pvalue){
+    if(0==pvalue) return RTERR_NULLPTR;
+    pvalue->numbits=0;
+    return 0;
+}
+EXTERN void asn1Free_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue){
+    // No dynamic memory to free for fixed-size BIT STRING
+    return;
+}
+
+
+// Các phần còn lại của template choice.c.j2
+// choice without extension
+
+EXTERN int asn1PE_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "ENGNB-ID");
+   RTXCTXTPUSHELEMNAME (pctxt, "t");
+ 
+   stat = rtxEncBits (pctxt, pvalue->t - 1, 0);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (pvalue->t) {
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "gNB-ID");
+         //primitive BIT STRING - id = 4
+         stat = asn1PE_e2ap_ENGNB_ID_gNB_ID (pctxt, &pvalue->u.gNB_ID); //bit string in choice type 4
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue)
+{
+   int stat = 0;
+   OSUINT32 ui;
+   RTXCTXTPUSHTYPENAME (pctxt, "ENGNB-ID");
+
+ 
+   stat = rtxDecBits (pctxt, &ui, 0);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   else pvalue->t = ui + 1;
+   //RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (ui) {
+      case 0:
+         RTXCTXTPUSHELEMNAME (pctxt, "gNB-ID");
+         pvalue->u.gNB_ID = rtxMemAllocType (pctxt, e2ap_ENGNB_ID_gNB_ID);
+         if (pvalue->u.gNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         //primitive BIT STRING
+         asn1Init_e2ap_ENGNB_ID_gNB_ID(pvalue->u.gNB_ID);
+         stat = asn1PD_e2ap_ENGNB_ID_gNB_ID (pctxt, pvalue->u.gNB_ID);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PrtToStr_e2ap_ENGNB_ID (const char* name, e2ap_ENGNB_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) return -1;
+   
+
+   switch (pvalue->t) {
+      case T_e2ap_ENGNB_ID_gNB_ID:
+         //primitive BIT STRING
+         asn1PrtToStr_e2ap_ENGNB_ID_gNB_ID (pctxt, pvalue->u.gNB_ID);
+         break;
+      default:
+         return RTERR_INVOPT;
+   }
+
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+int asn1Init_e2ap_ENGNB_ID (e2ap_ENGNB_ID* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+
+void asn1Free_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.gNB_ID) {
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.gNB_ID);
+            pvalue->u.gNB_ID = 0;
+         }
+         break;
+   }
+}
+
+
+// --- End of e2ap_ENGNB_ID.c ---
+
+// --- Begin of e2ap_GlobalenGNB_ID.c ---
+
+/*****************************************/
+/*           GlobalenGNB-ID                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, e2ap_GlobalenGNB_ID* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalenGNB-ID");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field pLMN_Identity - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->pLMN_Identity);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field gNB_ID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "gNB-ID");
+   stat = asn1PE_e2ap_ENGNB_ID (pctxt, pvalue->gNB_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, e2ap_GlobalenGNB_ID* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "GlobalenGNB-ID");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field pLMN_Identity */
+   RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
+      stat = asn1PD_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field gNB_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "gNB-ID");
+      stat = asn1PD_e2ap_ENGNB_ID (pctxt, &pvalue->gNB_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_GlobalenGNB_ID (e2ap_GlobalenGNB_ID* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_PLMN_Identity (&pvalue->pLMN_Identity);
+   asn1Init_e2ap_ENGNB_ID (&pvalue->gNB_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, e2ap_GlobalenGNB_ID* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
+   asn1Free_e2ap_ENGNB_ID (pctxt, &pvalue->gNB_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_GlobalenGNB_ID (const char* name, e2ap_GlobalenGNB_ID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_PLMN_Identity ("pLMN_Identity", &pvalue->pLMN_Identity, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_ENGNB_ID ("gNB_ID", &pvalue->gNB_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_GlobalenGNB_ID.c ---
+
+// --- Begin of e2ap_E2nodeComponentInterfaceX2.c ---
+
+/*****************************************/
+/*           E2nodeComponentInterfaceX2                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceX2* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceX2");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   /*optional bit for field global_eNB_ID*/
+   stat = rtxEncBit (pctxt, pvalue->m_global_eNB_IDPresent);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   /*optional bit for field global_en_gNB_ID*/
+   stat = rtxEncBit (pctxt, pvalue->m_global_en_gNB_IDPresent);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   /*encode root elements*/   
+   /* encode field global_eNB_ID - id = -1*/  
+   if (pvalue->m_global_eNB_IDPresent) {//OPTIONAL FIELD
+   RTXCTXTPUSHELEMNAME(pctxt, "global-eNB-ID");
+   stat = asn1PE_e2ap_GlobalENB_ID (pctxt, pvalue->global_eNB_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   }
+
+   /* encode field global_en_gNB_ID - id = -1*/  
+   if (pvalue->m_global_en_gNB_IDPresent) {//OPTIONAL FIELD
+   RTXCTXTPUSHELEMNAME(pctxt, "global-en-gNB-ID");
+   stat = asn1PE_e2ap_GlobalenGNB_ID (pctxt, pvalue->global_en_gNB_ID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   }
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceX2* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentInterfaceX2");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field global_eNB_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "global-eNB-ID");
+   if (optbits[0]) {
+      pvalue->m_global_eNB_IDPresent = TRUE;
+      stat = asn1PD_e2ap_GlobalENB_ID (pctxt, &pvalue->global_eNB_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   } else {
+      pvalue->m_global_eNB_IDPresent = FALSE;
+   }
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field global_en_gNB_ID */
+   RTXCTXTPUSHELEMNAME(pctxt, "global-en-gNB-ID");
+   if (optbits[0]) {
+      pvalue->m_global_en_gNB_IDPresent = TRUE;
+      stat = asn1PD_e2ap_GlobalenGNB_ID (pctxt, &pvalue->global_en_gNB_ID);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   } else {
+      pvalue->m_global_en_gNB_IDPresent = FALSE;
+   }
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentInterfaceX2 (e2ap_E2nodeComponentInterfaceX2* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_GlobalENB_ID (&pvalue->global_eNB_ID);
+   asn1Init_e2ap_GlobalenGNB_ID (&pvalue->global_en_gNB_ID);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceX2* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_GlobalENB_ID (pctxt, &pvalue->global_eNB_ID);
+   asn1Free_e2ap_GlobalenGNB_ID (pctxt, &pvalue->global_en_gNB_ID);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentInterfaceX2 (const char* name, e2ap_E2nodeComponentInterfaceX2* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+   if(asn1PrtToStr_e2ap_GlobalENB_ID ("global_eNB_ID", &pvalue->global_eNB_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+   if(asn1PrtToStr_e2ap_GlobalenGNB_ID ("global_en_gNB_ID", &pvalue->global_en_gNB_ID, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentInterfaceX2.c ---
+
+// --- Begin of e2ap_E2nodeComponentID.c ---
+/* e2ap_E2nodeComponentID.c */
+
+/*****************************************/
+/*           E2nodeComponentID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.c.j2
+
+// Các phần còn lại của template choice.c.j2
+// choice without extension
+
+EXTERN int asn1PE_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue)
+{
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentID");
+   RTXCTXTPUSHELEMNAME (pctxt, "t");
+ 
+   stat = rtxEncBits (pctxt, pvalue->t - 1, 3);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (pvalue->t) {
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeNG");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceNG (pctxt, pvalue->u.e2nodeComponentInterfaceTypeNG); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeXn");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceXn (pctxt, pvalue->u.e2nodeComponentInterfaceTypeXn); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 3:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeE1");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceE1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeE1); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 4:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeF1");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceF1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeF1); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 5:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeW1");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceW1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeW1); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 6:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeS1");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceS1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeS1); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 7:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeX2");
+         stat = asn1PE_e2ap_E2nodeComponentInterfaceX2 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeX2); //not primitive
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue)
+{
+   int stat = 0;
+   OSUINT32 ui;
+   RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentID");
+
+ 
+   stat = rtxDecBits (pctxt, &ui, 3);// kha nang la numbits
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   else pvalue->t = ui + 1;
+   //RTXCTXTPOPELEMNAME (pctxt);
+
+   switch (ui) {
+      case 0:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeNG");
+         pvalue->u.e2nodeComponentInterfaceTypeNG = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceNG);
+         if (pvalue->u.e2nodeComponentInterfaceTypeNG == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceNG(pvalue->u.e2nodeComponentInterfaceTypeNG);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceNG (pctxt, pvalue->u.e2nodeComponentInterfaceTypeNG);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 1:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeXn");
+         pvalue->u.e2nodeComponentInterfaceTypeXn = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceXn);
+         if (pvalue->u.e2nodeComponentInterfaceTypeXn == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceXn(pvalue->u.e2nodeComponentInterfaceTypeXn);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceXn (pctxt, pvalue->u.e2nodeComponentInterfaceTypeXn);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 2:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeE1");
+         pvalue->u.e2nodeComponentInterfaceTypeE1 = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceE1);
+         if (pvalue->u.e2nodeComponentInterfaceTypeE1 == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceE1(pvalue->u.e2nodeComponentInterfaceTypeE1);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceE1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeE1);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 3:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeF1");
+         pvalue->u.e2nodeComponentInterfaceTypeF1 = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceF1);
+         if (pvalue->u.e2nodeComponentInterfaceTypeF1 == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceF1(pvalue->u.e2nodeComponentInterfaceTypeF1);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceF1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeF1);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 4:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeW1");
+         pvalue->u.e2nodeComponentInterfaceTypeW1 = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceW1);
+         if (pvalue->u.e2nodeComponentInterfaceTypeW1 == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceW1(pvalue->u.e2nodeComponentInterfaceTypeW1);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceW1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeW1);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 5:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeS1");
+         pvalue->u.e2nodeComponentInterfaceTypeS1 = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceS1);
+         if (pvalue->u.e2nodeComponentInterfaceTypeS1 == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceS1(pvalue->u.e2nodeComponentInterfaceTypeS1);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceS1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeS1);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      case 6:
+         RTXCTXTPUSHELEMNAME (pctxt, "e2nodeComponentInterfaceTypeX2");
+         pvalue->u.e2nodeComponentInterfaceTypeX2 = rtxMemAllocType (pctxt, e2ap_E2nodeComponentInterfaceX2);
+         if (pvalue->u.e2nodeComponentInterfaceTypeX2 == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+         asn1Init_e2ap_E2nodeComponentInterfaceX2(pvalue->u.e2nodeComponentInterfaceTypeX2);
+         stat = asn1PD_e2ap_E2nodeComponentInterfaceX2 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeX2);
+         if (stat != 0) return LOG_RTERR (pctxt, stat);
+         RTXCTXTPOPELEMNAME (pctxt);
+         break;
+      default:
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+   }
+
+   RTXCTXTPOPTYPENAME (pctxt);
+   return (stat);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentID (const char* name, e2ap_E2nodeComponentID* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) return -1;
+   
+
+   switch (pvalue->t) {
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeNG:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceNG ( "e2nodeComponentInterfaceTypeNG", pvalue->u.e2nodeComponentInterfaceTypeNG, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeXn:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceXn ( "e2nodeComponentInterfaceTypeXn", pvalue->u.e2nodeComponentInterfaceTypeXn, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeE1:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceE1 ( "e2nodeComponentInterfaceTypeE1", pvalue->u.e2nodeComponentInterfaceTypeE1, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeF1:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceF1 ( "e2nodeComponentInterfaceTypeF1", pvalue->u.e2nodeComponentInterfaceTypeF1, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeW1:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceW1 ( "e2nodeComponentInterfaceTypeW1", pvalue->u.e2nodeComponentInterfaceTypeW1, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeS1:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceS1 ( "e2nodeComponentInterfaceTypeS1", pvalue->u.e2nodeComponentInterfaceTypeS1, buffer, bufSize) < 0) return -1;
+         break;
+      case T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeX2:
+         if (asn1PrtToStr_e2ap_E2nodeComponentInterfaceX2 ( "e2nodeComponentInterfaceTypeX2", pvalue->u.e2nodeComponentInterfaceTypeX2, buffer, bufSize) < 0) return -1;
+         break;
+      default:
+         return RTERR_INVOPT;
+   }
+
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+
+int asn1Init_e2ap_E2nodeComponentID (e2ap_E2nodeComponentID* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+
+void asn1Free_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.e2nodeComponentInterfaceTypeNG) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceNG (pctxt, pvalue->u.e2nodeComponentInterfaceTypeNG);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeNG);
+            pvalue->u.e2nodeComponentInterfaceTypeNG = 0;
+         }
+         break;
+      case 2:
+         if (pvalue->u.e2nodeComponentInterfaceTypeXn) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceXn (pctxt, pvalue->u.e2nodeComponentInterfaceTypeXn);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeXn);
+            pvalue->u.e2nodeComponentInterfaceTypeXn = 0;
+         }
+         break;
+      case 3:
+         if (pvalue->u.e2nodeComponentInterfaceTypeE1) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceE1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeE1);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeE1);
+            pvalue->u.e2nodeComponentInterfaceTypeE1 = 0;
+         }
+         break;
+      case 4:
+         if (pvalue->u.e2nodeComponentInterfaceTypeF1) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceF1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeF1);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeF1);
+            pvalue->u.e2nodeComponentInterfaceTypeF1 = 0;
+         }
+         break;
+      case 5:
+         if (pvalue->u.e2nodeComponentInterfaceTypeW1) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceW1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeW1);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeW1);
+            pvalue->u.e2nodeComponentInterfaceTypeW1 = 0;
+         }
+         break;
+      case 6:
+         if (pvalue->u.e2nodeComponentInterfaceTypeS1) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceS1 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeS1);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeS1);
+            pvalue->u.e2nodeComponentInterfaceTypeS1 = 0;
+         }
+         break;
+      case 7:
+         if (pvalue->u.e2nodeComponentInterfaceTypeX2) {
+            //not primitive
+            asn1Free_e2ap_E2nodeComponentInterfaceX2 (pctxt, pvalue->u.e2nodeComponentInterfaceTypeX2);
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.e2nodeComponentInterfaceTypeX2);
+            pvalue->u.e2nodeComponentInterfaceTypeX2 = 0;
+         }
+         break;
+   }
+}
+
+
+// --- End of e2ap_E2nodeComponentID.c ---
+
+// --- Begin of e2ap_E2nodeComponentConfigurationAck.c ---
+
+/*****************************************/
+/*           E2nodeComponentConfigurationAck                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+    // Nội dung của file .c cho primitive ENUMERATED
+    //enumerated intergrate
+//metadata.parsed.primitive_id == 13
+
+//mau tu dapsresponseinfo-item -> dapsressponseindicator
+const OSEnumItem e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTAB[] = {
+    {OSUTF8("success"), 0,7,0},
+    {OSUTF8("failure"), 1,7,1}
+};
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigurationAck_updateOutcome (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck_updateOutcome value){
+    int stat =0;
+    if(value >= 2) {
+       rtxErrAddIntParm (pctxt, value);
+       return LOG_RTERR (pctxt, RTERR_INVENUM);
+    }
+
+    /*extention bit*/
+    stat = rtxEncBit (pctxt, 0);
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    stat = pe_ConsUnsigned (pctxt, value, 0, OSUINTCONST(1));
+    if(stat != 0) return LOG_RTERR (pctxt, stat);
+    return stat;
+}
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigurationAck_updateOutcome (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue){
+    int stat = 0;
+    OSUINT32 ui;
+    OSBOOL extbit = FALSE;
+    stat = DEC_BIT(pctxt, &extbit);
+    if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+    if(extbit){
+        stat = pd_SmallNonNegWholeNumber(pctxt, &ui);
+        if(stat != 0) return LOG_RTERR (pctxt, stat);
+        *pvalue = ASN_K_EXTENUM;
+    }else{
+        stat = pd_ConsUnsigned (pctxt, &ui, 0, OSUINTCONST(1));
+        if(stat != 0) return LOG_RTERR (pctxt, stat);
+    }
+    
+    return stat;
+
+}
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigurationAck_updateOutcome (const char* name, const e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue){
+    rtxPrintIndent();
+    printf("%s: ", name);
+    switch(*pvalue) {
+        case 0:
+            printf("success\n");
+            break;
+        case 1:
+            printf("failure\n");
+            break;
+        default:
+            printf("??? (%u)\n", *pvalue);
+    }
+}
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigurationAck_updateOutcome (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue){
+    rtPrintToStringIndent(pctxt);
+    rtPrintToStream(pctxt, name);
+    switch(*pvalue) {
+        case 0:
+            rtPrintToStream(pctxt, " = success \n");
+            break;
+        case 1:
+            rtPrintToStream(pctxt, " = failure \n");
+            break;
+        default:
+            rtPrintToStreamUnsigned(pctxt, " = ???\n", *pvalue);
+    }
+}
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigurationAck_updateOutcome (const char* name,e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue,  char* buffer,OSSIZE bufSize){
+    int stat;
+    
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToString(name, buffer, bufSize) < 0) return -1;
+    
+    switch(*pvalue) {
+        case 0:
+            stat = rtPrintToString(" = success \n", buffer, bufSize);
+            break;
+        case 1:
+            stat = rtPrintToString(" = failure \n", buffer, bufSize);
+            break;
+        default:
+            stat = rtPrintToStringUnsigned(" = ???\n",*pvalue, buffer, bufSize);
+    }
+    
+    if (stat < 0) return -1;
+    return 0;   
+}
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToString (OSUINT32 value){
+    OSINT32 idx = value;
+    if (idx >= 0 && idx < e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTABSIZE) {
+        return e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTAB
+        [e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTAB[idx].transidx].name;
+    } else {
+        return OSUTF8("_UNKNOWN_");
+    }
+}
+EXTERN int e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue){
+    OSSIZE valueLen = rtxUTF8LenBytes(value);
+    return e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToEnum2 (pctxt, value, valueLen, pvalue);
+}
+
+EXTERN int e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue){
+    OSINT32 idx = rtxLookupEnum(value, valueLen,
+       e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTAB, 
+       e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTABSIZE);
+    if (idx >= 0) {
+       *pvalue = (e2ap_E2nodeComponentConfigurationAck_updateOutcome)e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTAB[idx].value;
+       return 0;
+    } else {
+       rtxErrAddStrParm (pctxt, (const char*)value);
+       return LOG_RTERR (pctxt, RTERR_INVENUM);
+    }
+}
+
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigurationAck_updateOutcome (e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue){
+    //if (pvalue == 0) return RTERR_NULLPTR;
+    //*pvalue = 0;
+    return 0;
+}
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentConfigurationAck");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   /*optional bit for field failureCause*/
+   stat = rtxEncBit (pctxt, pvalue->m_failureCausePresent);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+   /*encode root elements*/   
+   /* encode field updateOutcome - id = 13*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "updateOutcome");
+   stat = asn1PE_e2ap_E2nodeComponentConfigurationAck_updateOutcome(pctxt, &pvalue->updateOutcome); //enum inter prim
+  
+  
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field failureCause - id = -1*/  
+   if (pvalue->m_failureCausePresent) {//OPTIONAL FIELD
+   RTXCTXTPUSHELEMNAME(pctxt, "failureCause");
+   stat = asn1PE_e2ap_Cause (pctxt, pvalue->failureCause);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   }
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck* pvalue)
+{
+   int stat =0;
+   ASN1OpenType openType;
+   ASN1OpenType* pOpenType;
+   OSUINT32 bitcnt;
+   OSUINT32 i_;
+   OSBOOL extbit = FALSE;
+   OSBOOL optbits[2];
+
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentConfigurationAck");
+
+   /*extension bit*/
+   stat = DEC_BIT(pctxt, &extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   rtxDListInit(&pvalue->extElem1); 
+
+   /*optional bits*/
+   for(i_ = 0; i_ < 2; i_++) {
+      stat = DEC_BIT(pctxt, &optbits[i_]);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+
+   /*decode root elements*/
+   /* decode field updateOutcome */
+   RTXCTXTPUSHELEMNAME(pctxt, "updateOutcome");
+      stat = asn1PD_e2ap_E2nodeComponentConfigurationAck_updateOutcome (pctxt, &pvalue->updateOutcome); //primitive
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+   /* decode field failureCause */
+   RTXCTXTPUSHELEMNAME(pctxt, "failureCause");
+   if (optbits[0]) {
+      pvalue->m_failureCausePresent = TRUE;
+      stat = asn1PD_e2ap_Cause (pctxt, &pvalue->failureCause);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   } else {
+      pvalue->m_failureCausePresent = FALSE;
+   }
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /*decode extension elements*/
+   if(extbit) {
+      OSOCTET *poptbits;
+      /*decode optional bits length */
+      stat = pd_SmallLength(pctxt, &bitcnt);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*decode optional bits*/
+      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
+      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         stat = DEC_BIT(pctxt, &poptbits[i_]);
+         if (stat != 0) {
+            rtxMemFreePtr(pctxt, poptbits);
+            return LOG_RTERR(pctxt, stat);
+         }
+      }
+
+      for(i_ = 0; i_ < bitcnt; i_++) {
+         if(stat != 0) break;
+         if(poptbits[i_]) {
+            /*decode extension element*/
+            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+
+            if(0==stat){
+               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
+               if(0!=pOpenType){
+                  pOpenType->numocts = openType.numocts;
+                  pOpenType->data = openType.data;
+                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
+               }
+               else stat = RTERR_NOMEM;
+            }
+            else{
+               LOG_RTERR(pctxt, stat);
+               break;
+            }
+         }
+         else{//unknown element
+            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
+         }
+      }
+      rtxMemFreePtr(pctxt, poptbits);
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+
+   return (stat);
+
+}
+
+int asn1Init_e2ap_E2nodeComponentConfigurationAck (e2ap_E2nodeComponentConfigurationAck* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   asn1Init_e2ap_E2nodeComponentConfigurationAck_updateOutcome (&pvalue->updateOutcome); //primitive delete &
+   asn1Init_e2ap_Cause (&pvalue->failureCause);
+   rtxDListFastInit(&pvalue->extElem1);
+   return 0;
+}
+
+void asn1Free_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck* pvalue)
+{
+   if(0==pvalue) return;
+   asn1Free_e2ap_Cause (pctxt, &pvalue->failureCause);
+   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+}
+
+int asn1PrtToStr_e2ap_E2nodeComponentConfigurationAck (const char* name, e2ap_E2nodeComponentConfigurationAck* pvalue, char* buffer, OSSIZE bufSize)
+{
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
+   {
+      return -1;
+   }
+
+   if(asn1PrtToStr_e2ap_E2nodeComponentConfigurationAck_updateOutcome ("updateOutcome", &pvalue->updateOutcome, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+   if(asn1PrtToStr_e2ap_Cause ("failureCause", &pvalue->failureCause, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+
+
+
+   /*assum there is an extension*/
+   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
+   {
+      return -1;
+   }
+   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+   return 0;
+}
+// --- End of e2ap_E2nodeComponentConfigurationAck.c ---
+
+// --- Begin of e2ap_E2nodeComponentConfigAdditionAck_Item.c ---
+
+/*****************************************/
+/*           E2nodeComponentConfigAdditionAck-Item                */
+/*****************************************/
+//sequence normal
+// Các nội dung cần thiết cho template seq_normal.c.j2
+
+// Các phần còn lại của template seq_normal.c.j2
+//contain extensition bit -> theo mau cua GlobalgNB-ID
+int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue)
+{
+   int stat = 0;
+   OSBOOL extbit = FALSE;
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentConfigAdditionAck-Item");
+
+   /*extension bit*/
+   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+
+   /*encode root elements*/   
+   /* encode field e2nodeComponentInterfaceType - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentInterfaceType");
+   stat = asn1PE_e2ap_E2nodeComponentInterfaceType (pctxt, pvalue->e2nodeComponentInterfaceType);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field e2nodeComponentID - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentID");
+   stat = asn1PE_e2ap_E2nodeComponentID (pctxt, pvalue->e2nodeComponentID);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+   /* encode field e2nodeComponentConfigurationAck - id = -1*/  
+   RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentConfigurationAck");
+   stat = asn1PE_e2ap_E2nodeComponentConfigurationAck (pctxt, pvalue->e2nodeComponentConfigurationAck);
+   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+
+
+
+   /*
+   if (pvalue->extElem1Present) {
+      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+   }
+   */
+
+   if(extbit) {
+      /*encode extension optional bits length */
+      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode optional bit*/
+      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
+      if (stat != 0) return LOG_RTERR(pctxt, stat);
+
+      /*encode extension elements*/
+      if (pvalue->extElem1.count > 0) {
+         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
+         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
+         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      }
+   }
+
+   RTXCTXTPOPTYPENAME(pctxt);
+   return (stat);
+}
+
+int asn1PD_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue)
 {
    int stat =0;
    ASN1OpenType openType;
@@ -1928,7 +7108,7 @@ int asn1PD_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityD
    OSBOOL extbit = FALSE;
    OSBOOL optbits[3];
 
-   RTXCTXTPUSHTYPENAME(pctxt, "CriticalityDiagnostics-IE-List");
+   RTXCTXTPUSHTYPENAME(pctxt, "E2nodeComponentConfigAdditionAck-Item");
 
    /*extension bit*/
    stat = DEC_BIT(pctxt, &extbit);
@@ -1942,21 +7122,21 @@ int asn1PD_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityD
    }
 
    /*decode root elements*/
-   /* decode field iECriticality */
-   RTXCTXTPUSHELEMNAME(pctxt, "iECriticality");
-      stat = asn1PD_e2ap_Criticality (pctxt, &pvalue->iECriticality);
+   /* decode field e2nodeComponentInterfaceType */
+   RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentInterfaceType");
+      stat = asn1PD_e2ap_E2nodeComponentInterfaceType (pctxt, &pvalue->e2nodeComponentInterfaceType);
       if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
-   /* decode field iE_ID */
-   RTXCTXTPUSHELEMNAME(pctxt, "iE-ID");
-      stat = asn1PD_e2ap_ProtocolIE_ID (pctxt, &pvalue->iE_ID);
+   /* decode field e2nodeComponentID */
+   RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentID");
+      stat = asn1PD_e2ap_E2nodeComponentID (pctxt, &pvalue->e2nodeComponentID);
       if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
-   /* decode field typeOfError */
-   RTXCTXTPUSHELEMNAME(pctxt, "typeOfError");
-      stat = asn1PD_e2ap_TypeOfError (pctxt, &pvalue->typeOfError);
+   /* decode field e2nodeComponentConfigurationAck */
+   RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentConfigurationAck");
+      stat = asn1PD_e2ap_E2nodeComponentConfigurationAck (pctxt, &pvalue->e2nodeComponentConfigurationAck);
       if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
@@ -2013,44 +7193,44 @@ int asn1PD_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityD
 
 }
 
-int asn1Init_e2ap_CriticalityDiagnostics_IE_List (e2ap_CriticalityDiagnostics_IE_List* pvalue)
+int asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item (e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue)
 {
    if(0==pvalue) return RTERR_NULLPTR;
-   asn1Init_e2ap_Criticality (&pvalue->iECriticality);
-   asn1Init_e2ap_ProtocolIE_ID (&pvalue->iE_ID);
-   asn1Init_e2ap_TypeOfError (&pvalue->typeOfError);
+   asn1Init_e2ap_E2nodeComponentInterfaceType (&pvalue->e2nodeComponentInterfaceType);
+   asn1Init_e2ap_E2nodeComponentID (&pvalue->e2nodeComponentID);
+   asn1Init_e2ap_E2nodeComponentConfigurationAck (&pvalue->e2nodeComponentConfigurationAck);
    rtxDListFastInit(&pvalue->extElem1);
    return 0;
 }
 
-void asn1Free_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityDiagnostics_IE_List* pvalue)
+void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue)
 {
    if(0==pvalue) return;
-   asn1Free_e2ap_Criticality (pctxt, &pvalue->iECriticality);
-   asn1Free_e2ap_ProtocolIE_ID (pctxt, &pvalue->iE_ID);
-   asn1Free_e2ap_TypeOfError (pctxt, &pvalue->typeOfError);
+   asn1Free_e2ap_E2nodeComponentInterfaceType (pctxt, &pvalue->e2nodeComponentInterfaceType);
+   asn1Free_e2ap_E2nodeComponentID (pctxt, &pvalue->e2nodeComponentID);
+   asn1Free_e2ap_E2nodeComponentConfigurationAck (pctxt, &pvalue->e2nodeComponentConfigurationAck);
    rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
 }
 
-int asn1PrtToStr_e2ap_CriticalityDiagnostics_IE_List (const char* name, e2ap_CriticalityDiagnostics_IE_List* pvalue, char* buffer, OSSIZE bufSize)
+int asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_Item (const char* name, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue, char* buffer, OSSIZE bufSize)
 {
    if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
    {
       return -1;
    }
-   if(asn1PrtToStr_e2ap_Criticality ("iECriticality", &pvalue->iECriticality, buffer, bufSize) < 0)
+   if(asn1PrtToStr_e2ap_E2nodeComponentInterfaceType ("e2nodeComponentInterfaceType", &pvalue->e2nodeComponentInterfaceType, buffer, bufSize) < 0)
    {
       return -1;
    }
 
 
-   if(asn1PrtToStr_e2ap_ProtocolIE_ID ("iE_ID", &pvalue->iE_ID, buffer, bufSize) < 0)
+   if(asn1PrtToStr_e2ap_E2nodeComponentID ("e2nodeComponentID", &pvalue->e2nodeComponentID, buffer, bufSize) < 0)
    {
       return -1;
    }
 
 
-   if(asn1PrtToStr_e2ap_TypeOfError ("typeOfError", &pvalue->typeOfError, buffer, bufSize) < 0)
+   if(asn1PrtToStr_e2ap_E2nodeComponentConfigurationAck ("e2nodeComponentConfigurationAck", &pvalue->e2nodeComponentConfigurationAck, buffer, bufSize) < 0)
    {
       return -1;
    }
@@ -2065,329 +7245,390 @@ int asn1PrtToStr_e2ap_CriticalityDiagnostics_IE_List (const char* name, e2ap_Cri
    if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
    return 0;
 }
-// --- End of e2ap_CriticalityDiagnostics_IE_List.c ---
+// --- End of e2ap_E2nodeComponentConfigAdditionAck_Item.c ---
 
-// --- Begin of e2ap_CriticalityDiagnostics.c ---
-
+// --- Begin of e2ap_E2nodeComponentConfigAdditionAck_ItemIEs.c ---
 /*****************************************/
-/*           CriticalityDiagnostics                */
+/*           E2nodeComponentConfigAdditionAck_ItemIEs                */
 /*****************************************/
-//sequence normal
-// Các nội dung cần thiết cho template seq_normal.c.j2
-
-// Các phần còn lại của template seq_normal.c.j2
-//contain extensition bit -> theo mau cua GlobalgNB-ID
-int asn1PE_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, e2ap_CriticalityDiagnostics* pvalue)
+/* ie.c.j2 */
+/*ie thường*/
+int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue)
 {
    int stat = 0;
-   OSBOOL extbit = FALSE;
-   RTXCTXTPUSHTYPENAME(pctxt, "CriticalityDiagnostics");
+   //RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentConfigAdditionAck-ItemIEs");
 
-   /*extension bit*/
-   extbit = (OSBOOL)(pvalue->extElem1.count > 0);
-   stat = rtxEncBit (pctxt, extbit);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   /* encode id */
+   RTXCTXTPUSHELEMNAME (pctxt, "id");
+   stat = asn1PE_e2ap_ProtocolIE_ID (pctxt, pvalue->id);//xoa con tro
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
 
-   /*optional bit for field procedureCode*/
-   stat = rtxEncBit (pctxt, pvalue->m_procedureCodePresent);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   /*optional bit for field triggeringMessage*/
-   stat = rtxEncBit (pctxt, pvalue->m_triggeringMessagePresent);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   /*optional bit for field procedureCriticality*/
-   stat = rtxEncBit (pctxt, pvalue->m_procedureCriticalityPresent);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   /*optional bit for field ricRequestorID*/
-   stat = rtxEncBit (pctxt, pvalue->m_ricRequestorIDPresent);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   /*optional bit for field iEsCriticalityDiagnostics*/
-   stat = rtxEncBit (pctxt, pvalue->m_iEsCriticalityDiagnosticsPresent);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
+   /* encode criticality */
+   RTXCTXTPUSHELEMNAME (pctxt, "criticality");
+   stat = asn1PE_e2ap_Criticality (pctxt, pvalue->criticality);//xoa con tro
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
 
-   /*encode root elements*/   
-   /* encode field procedureCode - id = -1*/  
-   if (pvalue->m_procedureCodePresent) {//OPTIONAL FIELD
-   RTXCTXTPUSHELEMNAME(pctxt, "procedureCode");
-   stat = asn1PE_e2ap_ProcedureCode (pctxt, pvalue->procedureCode);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   RTXCTXTPOPELEMNAME(pctxt);
+   /* encode value */
+   RTXCTXTPUSHELEMNAME (pctxt, "value");
 
-   }
+   {
+      OSCTXT ictxt;
+      OSOCTET* pDynamicEncodeBuffer;
+      ASN1OpenType openType;
+      OSBOOL  encoded = TRUE;
 
-   /* encode field triggeringMessage - id = -1*/  
-   if (pvalue->m_triggeringMessagePresent) {//OPTIONAL FIELD
-   RTXCTXTPUSHELEMNAME(pctxt, "triggeringMessage");
-   stat = asn1PE_e2ap_TriggeringMessage (pctxt, pvalue->triggeringMessage);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   RTXCTXTPOPELEMNAME(pctxt);
+      openType.numocts = 0;
+      openType.data = 0;
 
-   }
+      rtxCopyContext (&ictxt, pctxt);
+      pctxt->pStream = 0;
 
-   /* encode field procedureCriticality - id = -1*/  
-   if (pvalue->m_procedureCriticalityPresent) {//OPTIONAL FIELD
-   RTXCTXTPUSHELEMNAME(pctxt, "procedureCriticality");
-   stat = asn1PE_e2ap_Criticality (pctxt, pvalue->procedureCriticality);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   RTXCTXTPOPELEMNAME(pctxt);
+      stat = rtxInitContextBuffer (pctxt, 0, 0);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
 
-   }
+      switch (pvalue->value.t) {
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
+         
+        // RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item");
+         RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck-Item");
+         stat = asn1PE_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt, pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+         RTXCTXTPOPELEMNAME (pctxt);
+      
+         break;
 
-   /* encode field ricRequestorID - id = -1*/  
-   if (pvalue->m_ricRequestorIDPresent) {//OPTIONAL FIELD
-   RTXCTXTPUSHELEMNAME(pctxt, "ricRequestorID");
-   stat = asn1PE_e2ap_RICrequestID (pctxt, pvalue->ricRequestorID);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   RTXCTXTPOPELEMNAME(pctxt);
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_UNDEF_:
+      {
+          if(0!=pvalue->value.u.extElem1){
+              openType.numocts = pvalue->value.u.extElem1->numocts;
+              openType.data = pvalue->value.u.extElem1->data;
+          } else {
+              /* No extension element to encode */
+          }
+          encoded = FALSE;
+          break;
+      }
+      default:
+         encoded = FALSE;
+         stat = RTERR_INVOPT;
+      }
 
-   }
-
-   /* encode field iEsCriticalityDiagnostics - id = -1*/  
-   if (pvalue->m_iEsCriticalityDiagnosticsPresent) {//OPTIONAL FIELD
-   RTXCTXTPUSHELEMNAME(pctxt, "iEsCriticalityDiagnostics");
-   stat = asn1PE_e2ap_CriticalityDiagnostics_IE_List (pctxt, pvalue->iEsCriticalityDiagnostics);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   RTXCTXTPOPELEMNAME(pctxt);
-
-   }
-
-
-   /*
-   if (pvalue->extElem1Present) {
-      stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   }
-   */
-
-   if(extbit) {
-      /*encode extension optional bits length */
-      stat = pe_SmallLength(pctxt, pvalue->extElem1.count);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-
-      /*encode optional bit*/
-      stat = pe_OpenTypeExtBits(pctxt, &pvalue->extElem1);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-
-      /*encode extension elements*/
-      if (pvalue->extElem1.count > 0) {
-         //stat = pe_OpenType (pctxt, pvalue->extElem1.numocts, pvalue->extElem1.data);
-         stat = pe_OpenTypeExt(pctxt, &pvalue->extElem1);
-         if (stat != 0) return LOG_RTERR(pctxt, stat);
+      if (encoded) {
+         openType.numocts = (OSUINT32) pe_GetMsgLen (pctxt);
+         openType.data = pDynamicEncodeBuffer = pctxt->buffer.data;
+      }
+      rtxCopyContext (pctxt, &ictxt);
+      if(stat ==0) stat = pe_OpenType(pctxt, openType.numocts, openType.data);
+      /*free dynamic encode buffer*/
+      if(encoded){
+          rtxMemFreePtr(pctxt, pDynamicEncodeBuffer);
       }
    }
-
-   RTXCTXTPOPTYPENAME(pctxt);
-   return (stat);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+   RTXCTXTPOPELEMNAME (pctxt);
+   //RTXCTXTPOPTYPENAME (pctxt);
+   return 0;
 }
 
-int asn1PD_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, e2ap_CriticalityDiagnostics* pvalue)
+int asn1PD_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue)
 {
    int stat =0;
-   ASN1OpenType openType;
-   ASN1OpenType* pOpenType;
-   OSUINT32 bitcnt;
-   OSUINT32 i_;
-   OSBOOL extbit = FALSE;
-   OSBOOL optbits[5];
-
-   RTXCTXTPUSHTYPENAME(pctxt, "CriticalityDiagnostics");
-
-   /*extension bit*/
-   stat = DEC_BIT(pctxt, &extbit);
-   if (stat != 0) return LOG_RTERR(pctxt, stat);
-   rtxDListInit(&pvalue->extElem1); 
-
-   /*optional bits*/
-   for(i_ = 0; i_ < 5; i_++) {
-      stat = DEC_BIT(pctxt, &optbits[i_]);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   }
-
-   /*decode root elements*/
-   /* decode field procedureCode */
-   RTXCTXTPUSHELEMNAME(pctxt, "procedureCode");
-   if (optbits[0]) {
-      pvalue->m_procedureCodePresent = TRUE;
-      stat = asn1PD_e2ap_ProcedureCode (pctxt, &pvalue->procedureCode);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   } else {
-      pvalue->m_procedureCodePresent = FALSE;
-   }
+   /*deode root element id*/
+   RTXCTXTPUSHELEMNAME(pctxt, "id");
+   stat = asn1PD_e2ap_ProtocolIE_ID (pctxt, &pvalue->id);
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
-   /* decode field triggeringMessage */
-   RTXCTXTPUSHELEMNAME(pctxt, "triggeringMessage");
-   if (optbits[0]) {
-      pvalue->m_triggeringMessagePresent = TRUE;
-      stat = asn1PD_e2ap_TriggeringMessage (pctxt, &pvalue->triggeringMessage);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   } else {
-      pvalue->m_triggeringMessagePresent = FALSE;
-   }
+   /*decode root element criticality*/
+   RTXCTXTPUSHELEMNAME(pctxt, "criticality");
+   stat = asn1PD_e2ap_Criticality (pctxt, &pvalue->criticality);
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
-
-   /* decode field procedureCriticality */
-   RTXCTXTPUSHELEMNAME(pctxt, "procedureCriticality");
-   if (optbits[0]) {
-      pvalue->m_procedureCriticalityPresent = TRUE;
-      stat = asn1PD_e2ap_Criticality (pctxt, &pvalue->procedureCriticality);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   } else {
-      pvalue->m_procedureCriticalityPresent = FALSE;
-   }
-   RTXCTXTPOPELEMNAME(pctxt);
-
-   /* decode field ricRequestorID */
-   RTXCTXTPUSHELEMNAME(pctxt, "ricRequestorID");
-   if (optbits[0]) {
-      pvalue->m_ricRequestorIDPresent = TRUE;
-      stat = asn1PD_e2ap_RICrequestID (pctxt, &pvalue->ricRequestorID);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   } else {
-      pvalue->m_ricRequestorIDPresent = FALSE;
-   }
-   RTXCTXTPOPELEMNAME(pctxt);
-
-   /* decode field iEsCriticalityDiagnostics */
-   RTXCTXTPUSHELEMNAME(pctxt, "iEsCriticalityDiagnostics");
-   if (optbits[0]) {
-      pvalue->m_iEsCriticalityDiagnosticsPresent = TRUE;
-      stat = asn1PD_e2ap_CriticalityDiagnostics_IE_List (pctxt, &pvalue->iEsCriticalityDiagnostics);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-   } else {
-      pvalue->m_iEsCriticalityDiagnosticsPresent = FALSE;
-   }
-   RTXCTXTPOPELEMNAME(pctxt);
-
-
-   /*decode extension elements*/
-   if(extbit) {
-      OSOCTET *poptbits;
-      /*decode optional bits length */
-      stat = pd_SmallLength(pctxt, &bitcnt);
-      if (stat != 0) return LOG_RTERR(pctxt, stat);
-
-      /*decode optional bits*/
-      poptbits = (OSOCTET*)rtxMemAlloc(pctxt, bitcnt);
-      if(0==poptbits) return LOG_RTERR(pctxt, RTERR_NOMEM);
-
-      for(i_ = 0; i_ < bitcnt; i_++) {
-         stat = DEC_BIT(pctxt, &poptbits[i_]);
-         if (stat != 0) {
-            rtxMemFreePtr(pctxt, poptbits);
-            return LOG_RTERR(pctxt, stat);
-         }
+   /*decode root element value*/
+   RTXCTXTPUSHELEMNAME(pctxt, "value");
+   {
+      OSUINT32 openTypeLen;
+      size_t bitStartOffset, bitLength;
+      stat = pd_UnconsLength(pctxt, &openTypeLen);
+      if(stat <0) return LOG_RTERR(pctxt, stat);
+      else if(stat == RT_OK_FRAG){
+         rtxErrAddStrParm(pctxt, "open type with fragmented length use - perindef");
+         return LOG_RTERRNEW(pctxt, RTERR_NOTSUPP);
       }
+      bitStartOffset = PU_GETCTXTBITOFFSET(pctxt);
+      bitLength = openTypeLen * 8;
+      switch (pvalue->id){
+         case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item;
+            RTXCTXTPUSHELEMNAME(pctxt, "E2nodeComponentConfigAdditionAck-Item");
+            //pvalue->value.u._e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item 
+             pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item = rtxMemAllocType(pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item);
+            //asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item(pvalue->value.u._e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
+            asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item(pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+            stat = asn1PD_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt,
+                    (e2ap_E2nodeComponentConfigAdditionAck_Item*)pvalue->value.
+                    u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+            if(stat!=0) return LOG_RTERR(pctxt, stat);
+            RTXCTXTPOPELEMNAME(pctxt);
+            break;
 
-      for(i_ = 0; i_ < bitcnt; i_++) {
-         if(stat != 0) break;
-         if(poptbits[i_]) {
-            /*decode extension element*/
-            stat = pd_OpenType (pctxt, &openType, &openType.numocts);
+        default:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_UNDEF_;
+            pvalue->value.u.extElem1 = rtxMemAllocType(pctxt, ASN1OpenType);
+            if(0==pvalue->value.u.extElem1){
+                return LOG_RTERR(pctxt, RTERR_NOMEM);
+            }
 
-            if(0==stat){
-               pOpenType = rtxMemAllocType(pctxt, ASN1OpenType);
-               if(0!=pOpenType){
-                  pOpenType->numocts = openType.numocts;
-                  pOpenType->data = openType.data;
-                  rtxDListAppend(pctxt, &pvalue->extElem1, pOpenType);
-               }
-               else stat = RTERR_NOMEM;
+            {
+                OSOCTET *pdata =(OSOCTET*)rtxMemAlloc(pctxt, openTypeLen);
+                if(0==pdata){
+                    return LOG_RTERR(pctxt, RTERR_NOMEM);
+                }
+                stat = rtxDecBitsToByteArray(pctxt, pdata, openTypeLen, openTypeLen*8);
+                if(stat!=0){
+                    rtxMemFreePtr(pctxt, pdata);
+                    rtxMemFreePtr(pctxt, pvalue->value.u.extElem1);
+                    return LOG_RTERR(pctxt, stat);
+                }
+
+                pvalue->value.u.extElem1->numocts = openTypeLen;
+                pvalue->value.u.extElem1->data = pdata;
             }
-            else{
-               LOG_RTERR(pctxt, stat);
-               break;
-            }
-         }
-         else{//unknown element
-            rtxDListAppend(pctxt, &pvalue->extElem1, 0);
-         }
+            break;
       }
-      rtxMemFreePtr(pctxt, poptbits);
+      {
+      size_t bitEndOffset = PU_GETCTXTBITOFFSET(pctxt);
+      size_t bitsConsumed = bitEndOffset - bitStartOffset;
+      if(bitsConsumed < bitLength){
+         stat = pd_moveBitCursor(pctxt, (int)(bitLength - bitsConsumed));
+      } else {
+         stat = (bitsConsumed > bitLength) ? ASN_E_INVLEN : 0;
+      }
+      }
    }
-
-   RTXCTXTPOPTYPENAME(pctxt);
-
-   return (stat);
-
+   if(stat!=0) return LOG_RTERR(pctxt, stat);
+   RTXCTXTPOPELEMNAME(pctxt);
+   return stat;
 }
 
-int asn1Init_e2ap_CriticalityDiagnostics (e2ap_CriticalityDiagnostics* pvalue)
+void asn1Init_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue)
 {
-   if(0==pvalue) return RTERR_NULLPTR;
-   asn1Init_e2ap_ProcedureCode (&pvalue->procedureCode);
-   asn1Init_e2ap_TriggeringMessage (&pvalue->triggeringMessage);
-   asn1Init_e2ap_Criticality (&pvalue->procedureCriticality);
-   asn1Init_e2ap_RICrequestID (&pvalue->ricRequestorID);
-   asn1Init_e2ap_CriticalityDiagnostics_IE_List (&pvalue->iEsCriticalityDiagnostics);
-   rtxDListFastInit(&pvalue->extElem1);
-   return 0;
+   if (!pvalue) return;
+   OSCRTLMEMSET (pvalue, 0, sizeof(e2ap_E2nodeComponentConfigAdditionAck_ItemIEs));
 }
 
-void asn1Free_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, e2ap_CriticalityDiagnostics* pvalue)
+#if 0
+void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue)
+{
+   if (!pvalue) return;
+   if (pvalue->extElem1) {
+      rtxMemFreeArray (pctxt, pvalue->extElem1);
+      pvalue->extElem1 = 0;
+      pvalue->extElem1_n = 0;
+   }
+}
+#endif
+void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue)
 {
    if(0==pvalue) return;
-   asn1Free_e2ap_ProcedureCode (pctxt, &pvalue->procedureCode);
-   asn1Free_e2ap_TriggeringMessage (pctxt, &pvalue->triggeringMessage);
-   asn1Free_e2ap_Criticality (pctxt, &pvalue->procedureCriticality);
-   asn1Free_e2ap_RICrequestID (pctxt, &pvalue->ricRequestorID);
-   asn1Free_e2ap_CriticalityDiagnostics_IE_List (pctxt, &pvalue->iEsCriticalityDiagnostics);
-   rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
+   switch(pvalue->value.t){
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
+         asn1Free_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt, pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+         pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item = 0;
+         break;
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_UNDEF_:
+         if(0!=pvalue->value.u.extElem1){
+             rtxMemFreePtr(pctxt, pvalue->value.u.extElem1->data);
+             rtxMemFreePtr(pctxt, pvalue->value.u.extElem1);
+             pvalue->value.u.extElem1 =0;
+         }
+         break;
+         default:;
+   }
 }
 
-int asn1PrtToStr_e2ap_CriticalityDiagnostics (const char* name, e2ap_CriticalityDiagnostics* pvalue, char* buffer, OSSIZE bufSize)
+int  asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (const char * name, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue, char * buffer, OSSIZE bufSize){
+   if(rtPrintToStringOpenBrace(name, buffer, bufSize)<0)
+       return -1;
+
+      if(asn1PrtToStr_e2ap_ProtocolIE_ID("id", &pvalue->id, buffer, bufSize)<0)
+         return -1;
+
+      if(asn1PrtToStr_e2ap_Criticality("criticality", &pvalue->criticality, buffer, bufSize)<0)
+         return -1;
+      if(rtPrintToStringOpenBrace("value", buffer, bufSize)<0)
+         return -1;
+      switch (pvalue->value.t) {
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
+         if(asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_Item("E2nodeComponentConfigAdditionAck-Item",
+                pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item, buffer, bufSize)<0)
+            return -1;
+         break;
+      default:
+         if(0!=pvalue -> value.u.extElem1){
+             rtPrintToStringIndent(buffer, bufSize);
+             rtPrintToStringHexStr("extElem1", pvalue->value.u.extElem1->numocts, pvalue->value.u.extElem1->data, buffer, bufSize);
+
+         }
+      }
+      if(rtPrintToStringCloseBrace( buffer, bufSize)<0) return -1;
+      if(rtPrintToStringCloseBrace( buffer, bufSize)<0) return -1;
+
+      return 0;
+
+}
+ 
+
+
+// --- End of e2ap_E2nodeComponentConfigAdditionAck_ItemIEs.c ---
+
+// --- Begin of e2ap_E2nodeComponentConfigAdditionAck_List.c ---
+/*****************************************/
+/*           E2nodeComponentConfigAdditionAck_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue)
 {
-   if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
-   {
-      return -1;
-   }
-   if(asn1PrtToStr_e2ap_ProcedureCode ("procedureCode", &pvalue->procedureCode, buffer, bufSize) < 0)
-   {
-      return -1;
-   }
+   int stat = 0;
+   OSRTDListNode* pnode;
+   OSSIZE xx1 = 0;
+   OSSIZE count = 0;
 
+   e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pdata;
 
-   if(asn1PrtToStr_e2ap_TriggeringMessage ("triggeringMessage", &pvalue->triggeringMessage, buffer, bufSize) < 0)
-   {
-      return -1;
-   }
+   RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentConfigAdditionAck-List");
 
+   /* encode length determinant */
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(1024), 0, 0);
 
-   if(asn1PrtToStr_e2ap_Criticality ("procedureCriticality", &pvalue->procedureCriticality, buffer, bufSize) < 0)
-   {
-      return -1;
-   }
+   stat = pe_Length (pctxt, pvalue->count);
+   if (stat < 0) return LOG_RTERR (pctxt, stat);
 
+   /* encode elements */
+   pnode = pvalue->head;
+   for (xx1 = 0; pnode != 0 && xx1 < pvalue->count; pnode = pnode->next, xx1++) {
+      pdata = (e2ap_E2nodeComponentConfigAdditionAck_ItemIEs*) pnode->data;
+      RTXCTXTPUSHARRAYELEMNAME (pctxt, "SEQUENCE", xx1);
 
-   if(asn1PrtToStr_e2ap_RICrequestID ("ricRequestorID", &pvalue->ricRequestorID, buffer, bufSize) < 0)
-   {
-      return -1;
-   }
+      stat = asn1PE_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (pctxt, pdata);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
 
-
-   if(asn1PrtToStr_e2ap_CriticalityDiagnostics_IE_List ("iEsCriticalityDiagnostics", &pvalue->iEsCriticalityDiagnostics, buffer, bufSize) < 0)
-   {
-      return -1;
+      //xx1++;
+      RTXCTXTPOPARRAYELEMNAME (pctxt);
    }
 
+   RTXCTXTPOPTYPENAME (pctxt);
+   return stat;
+}
 
+int asn1PD_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* ppvalue)
+{
+   int stat = 0;
+   OSSIZE xx1 = 0;
+   OSSIZE count = 0;
 
-   /*assum there is an extension*/
-   if(rtPrintToStringOpenTypeExtBraceText("extElem1", &pvalue->extElem1, buffer, bufSize) < 0)
-   {
-      return -1;
+   e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pdata;
+
+   RTXCTXTPUSHTYPENAME (pctxt, "E2nodeComponentConfigAdditionAck-List");
+
+   PU_SETSIZECONSTRAINT (pctxt, OSUINTCONST(1), OSUINTCONST(1024), 0, 0);
+
+   stat = pd_Length64 (pctxt, &count);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   rtxDListInit (ppvalue);
+
+   for (xx1 = 0; xx1 < count; xx1++) {
+      RTXCTXTPUSHARRAYELEMNAME (pctxt, "SEQUENCE", xx1);
+
+      pdata = rtxMemAllocType (pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs);
+      if (!pdata) return LOG_RTERR (pctxt, RTERR_NOMEM);
+      asn1Init_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (pdata);
+      stat = asn1PD_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (pctxt, pdata);
+      if (stat != 0) {
+         rtxMemFreePtr (pctxt, pdata);
+         return LOG_RTERR (pctxt, stat);
+      }
+
+      rtxDListAppendNode (ppvalue, pdata);
+
+      RTXCTXTPOPARRAYELEMNAME (pctxt);
    }
-   if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
+
+   RTXCTXTPOPTYPENAME (pctxt);
    return 0;
 }
-// --- End of e2ap_CriticalityDiagnostics.c ---
 
-// --- Begin of e2ap_RICqueryFailure_IEs.c ---
+void asn1Init_e2ap_E2nodeComponentConfigAdditionAck_List (e2ap_E2nodeComponentConfigAdditionAck_List* pvalue)
+{
+   if(0==pvalue) return RTERR_NULLPTR;
+   rtxDListFastInit (pvalue);
+}
+
+void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue)
+{
+   if(pvalue==0) return;
+   OSRTDListNode* pnode = pvalue->head;
+   while (pnode) {
+      e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pdata = (e2ap_E2nodeComponentConfigAdditionAck_ItemIEs*) pnode->data;
+      if (pdata) {
+         asn1Free_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (pctxt, pdata);
+         rtxMemFreePtr (pctxt, pdata);
+      }
+      pnode = pnode->next;
+   }
+      rtxDListFreeAll(pctxt, pvalue);
+}
+
+#if 0
+void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue){
+   if(0==pvalue ) return;
+   {
+      e2ap_E2nodeComponentConfigAdditionAck_ItemIEs * pdata;
+      OSRTDListNode *pnode = pvalue->head;
+      while(0!=pnode){
+         pdata = (e2ap_E2nodeComponentConfigAdditionAck_ItemIEs*)pnode->data;
+         asn1Free_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs(pctxt, pdata);
+         pnode = pnode->next;
+      }
+      rtxDListFreeAll(pctxt, pvalue);
+   }
+}
+#endif
+
+
+int asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_List(const char* name, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue, char* buffer, OSSIZE bufSize)
+{
+    e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pdata;
+    OSRTDListNode* pnode;
+    char nameBuf[256];
+    char numBuf[32];
+    OSUINT32 xx1=0;
+    for(pnode = pvalue->head;  xx1 < pvalue->count && pnode != 0; pnode = pnode->next, xx1++){
+        pdata = (e2ap_E2nodeComponentConfigAdditionAck_ItemIEs*)pnode->data;
+        rtxUIntToCharStr(xx1, numBuf, sizeof(numBuf), 0);
+        rtxStrJoin(nameBuf, sizeof(nameBuf), name, "[", numBuf, "]", 0);
+        #if 1
+        if(asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs(nameBuf, pdata, buffer, bufSize) <0){
+            return -1;
+        }
+        #endif
+    }
+    return 0;
+}
+// --- End of e2ap_E2nodeComponentConfigAdditionAck_List.c ---
+
+// --- Begin of e2ap_E2setupResponseIEs.c ---
 /*****************************************/
-/*           RICqueryFailure_IEs                */
+/*           E2setupResponseIEs                */
 /*****************************************/
 /* ie.c.j2 */
  /* d là con của msg */
-EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue)
+EXTERN int asn1PE_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue)
 {
     int stat =0;
 
@@ -2423,40 +7664,48 @@ EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_
         if(stat!=0) return LOG_RTERR(pctxt, stat);
 
         switch(pvalue->value.t){
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "id-RICrequestID");
-                    stat = asn1PE_e2ap_RICrequestID (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
+                RTXCTXTPUSHELEMNAME (pctxt, "id-TransactionID");
+                    stat = asn1PE_e2ap_TransactionID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
                     if (stat != 0) return LOG_RTERR (pctxt, stat);
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "id-RANfunctionID");
-                    stat = asn1PE_e2ap_RANfunctionID (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
+                RTXCTXTPUSHELEMNAME (pctxt, "id-GlobalRIC-ID");
+                    stat = asn1PE_e2ap_GlobalRIC_ID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
                     if (stat != 0) return LOG_RTERR (pctxt, stat);
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "id-Cause");
-                    stat = asn1PE_e2ap_Cause (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
+                RTXCTXTPUSHELEMNAME (pctxt, "id-RANfunctionsAccepted");
+                    stat = asn1PE_e2ap_RANfunctionsID_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted);
                     if (stat != 0) return LOG_RTERR (pctxt, stat);
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "id-CriticalityDiagnostics");
-                    stat = asn1PE_e2ap_CriticalityDiagnostics (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
+                RTXCTXTPUSHELEMNAME (pctxt, "id-RANfunctionsRejected");
+                    stat = asn1PE_e2ap_RANfunctionsIDcause_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected);
+                    if (stat != 0) return LOG_RTERR (pctxt, stat);
+                RTXCTXTPOPELEMNAME (pctxt);
+                break;
+            }
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck:
+            {
+                RTXCTXTPUSHELEMNAME (pctxt, "id-E2nodeComponentConfigAdditionAck");
+                    stat = asn1PE_e2ap_E2nodeComponentConfigAdditionAck_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
                     if (stat != 0) return LOG_RTERR (pctxt, stat);
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
 
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_UNDEF_:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_UNDEF_:
             {
                 if(0!=pvalue->value.u.extElem1){
                     openType.numocts = pvalue->value.u.extElem1->numocts;
@@ -2497,7 +7746,7 @@ EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_
 
 }
 
-EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue){
+EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue){
     int stat =0;
 
     /*decode id*/
@@ -2530,64 +7779,80 @@ EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap
 
         switch(pvalue->id){//dungnm23 check case lai nhe
         
-            case ASN1V_e2ap_id_RICrequestID:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID;
-            RTXCTXTPUSHELEMNAME(pctxt, "id-RICrequestID");
-                pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID = rtxMemAllocType(pctxt, e2ap_RICrequestID);
+            case ASN1V_e2ap_id_TransactionID:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID;
+            RTXCTXTPUSHELEMNAME(pctxt, "id-TransactionID");
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = rtxMemAllocType(pctxt, e2ap_TransactionID);
 
-                asn1Init_e2ap_RICrequestID(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
+                asn1Init_e2ap_TransactionID(pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
 
-                stat = asn1PD_e2ap_RICrequestID (pctxt,
-                        (e2ap_RICrequestID*)pvalue->value.
-                        u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
+                stat = asn1PD_e2ap_TransactionID (pctxt,
+                        (e2ap_TransactionID*)pvalue->value.
+                        u._e2ap_E2setupResponseIEs_id_TransactionID);
                         
                 if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
             break;
     
         
-            case ASN1V_e2ap_id_RANfunctionID:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID;
-            RTXCTXTPUSHELEMNAME(pctxt, "id-RANfunctionID");
-                pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID = rtxMemAllocType(pctxt, e2ap_RANfunctionID);
+            case ASN1V_e2ap_id_GlobalRIC_ID:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID;
+            RTXCTXTPUSHELEMNAME(pctxt, "id-GlobalRIC-ID");
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = rtxMemAllocType(pctxt, e2ap_GlobalRIC_ID);
 
-                asn1Init_e2ap_RANfunctionID(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
+                asn1Init_e2ap_GlobalRIC_ID(pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
 
-                stat = asn1PD_e2ap_RANfunctionID (pctxt,
-                        (e2ap_RANfunctionID*)pvalue->value.
-                        u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
+                stat = asn1PD_e2ap_GlobalRIC_ID (pctxt,
+                        (e2ap_GlobalRIC_ID*)pvalue->value.
+                        u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
                         
                 if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
             break;
     
         
-            case ASN1V_e2ap_id_Cause:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause;
-            RTXCTXTPUSHELEMNAME(pctxt, "id-Cause");
-                pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause = rtxMemAllocType(pctxt, e2ap_Cause);
+            case ASN1V_e2ap_id_RANfunctionsAccepted:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted;
+            RTXCTXTPUSHELEMNAME(pctxt, "id-RANfunctionsAccepted");
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted = rtxMemAllocType(pctxt, e2ap_RANfunctionsID_List);
 
-                asn1Init_e2ap_Cause(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
+                asn1Init_e2ap_RANfunctionsID_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted);
 
-                stat = asn1PD_e2ap_Cause (pctxt,
-                        (e2ap_Cause*)pvalue->value.
-                        u._e2ap_RICqueryFailure_IEs_id_Cause);
+                stat = asn1PD_e2ap_RANfunctionsID_List (pctxt,
+                        (e2ap_RANfunctionsID_List*)pvalue->value.
+                        u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted);
                         
                 if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
             break;
     
         
-            case ASN1V_e2ap_id_CriticalityDiagnostics:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics;
-            RTXCTXTPUSHELEMNAME(pctxt, "id-CriticalityDiagnostics");
-                pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics = rtxMemAllocType(pctxt, e2ap_CriticalityDiagnostics);
+            case ASN1V_e2ap_id_RANfunctionsRejected:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected;
+            RTXCTXTPUSHELEMNAME(pctxt, "id-RANfunctionsRejected");
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected = rtxMemAllocType(pctxt, e2ap_RANfunctionsIDcause_List);
 
-                asn1Init_e2ap_CriticalityDiagnostics(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
+                asn1Init_e2ap_RANfunctionsIDcause_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected);
 
-                stat = asn1PD_e2ap_CriticalityDiagnostics (pctxt,
-                        (e2ap_CriticalityDiagnostics*)pvalue->value.
-                        u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
+                stat = asn1PD_e2ap_RANfunctionsIDcause_List (pctxt,
+                        (e2ap_RANfunctionsIDcause_List*)pvalue->value.
+                        u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected);
+                        
+                if(stat!=0) return LOG_RTERR(pctxt, stat);
+            RTXCTXTPOPELEMNAME(pctxt);
+            break;
+    
+        
+            case ASN1V_e2ap_id_E2nodeComponentConfigAdditionAck:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck;
+            RTXCTXTPUSHELEMNAME(pctxt, "id-E2nodeComponentConfigAdditionAck");
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck = rtxMemAllocType(pctxt, e2ap_E2nodeComponentConfigAdditionAck_List);
+
+                asn1Init_e2ap_E2nodeComponentConfigAdditionAck_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
+
+                stat = asn1PD_e2ap_E2nodeComponentConfigAdditionAck_List (pctxt,
+                        (e2ap_E2nodeComponentConfigAdditionAck_List*)pvalue->value.
+                        u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
                         
                 if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
@@ -2595,7 +7860,7 @@ EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap
     
 
         default:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_UNDEF_;
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_UNDEF_;
             pvalue->value.u.extElem1 = rtxMemAllocType(pctxt, ASN1OpenType);
             if(0==pvalue->value.u.extElem1){
                 return LOG_RTERR(pctxt, RTERR_NOMEM);
@@ -2633,7 +7898,7 @@ EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap
 }
 
 
-int asn1Init_e2ap_RICqueryFailure_protocolIEs_element(e2ap_RICqueryFailure_protocolIEs_element* pvalue)
+int asn1Init_e2ap_E2setupResponse_protocolIEs_element(e2ap_E2setupResponse_protocolIEs_element* pvalue)
 {
     if(0==pvalue) return RTERR_NULLPTR;
     OSCRTLMEMSET (&pvalue->value, 0, sizeof(pvalue->value));
@@ -2643,51 +7908,61 @@ int asn1Init_e2ap_RICqueryFailure_protocolIEs_element(e2ap_RICqueryFailure_proto
 
 //-----> chuaw có template rtxFreeASN1OpenType
 #if 0
-void asn1Free_e2ap_RICqueryFailure_protocolIEs_element(OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue)
+void asn1Free_e2ap_E2setupResponse_protocolIEs_element(OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue)
 {
     if(NULL==pvalue) return;
     switch(pvalue->value.t){
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID:
-            // rtxFreeE2ap_RICrequestID(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
+            // rtxFreeE2ap_TransactionID(pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
 
-            if(pvalue->value.i._e2ap_RICqueryFailure_id_RICrequestID!=NULL){
-            asn1Free_e2ap_RICrequestID(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
-           // pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID = NULL;
-           pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_TransactionID!=NULL){
+            asn1Free_e2ap_TransactionID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = NULL;
+           pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID:
-            // rtxFreeE2ap_RANfunctionID(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
+            // rtxFreeE2ap_GlobalRIC_ID(pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
 
-            if(pvalue->value.i._e2ap_RICqueryFailure_id_RANfunctionID!=NULL){
-            asn1Free_e2ap_RANfunctionID(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
-           // pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID = NULL;
-           pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_GlobalRIC_ID!=NULL){
+            asn1Free_e2ap_GlobalRIC_ID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = NULL;
+           pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause:
-            // rtxFreeE2ap_Cause(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsID_List:
+            // rtxFreeE2ap_RANfunctionsID_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
 
-            if(pvalue->value.i._e2ap_RICqueryFailure_id_Cause!=NULL){
-            asn1Free_e2ap_Cause(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
-           // pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause = NULL;
-           pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_RANfunctionsID_List!=NULL){
+            asn1Free_e2ap_RANfunctionsID_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List = NULL;
+           pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics:
-            // rtxFreeE2ap_CriticalityDiagnostics(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List:
+            // rtxFreeE2ap_RANfunctionsIDcause_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
 
-            if(pvalue->value.i._e2ap_RICqueryFailure_id_CriticalityDiagnostics!=NULL){
-            asn1Free_e2ap_CriticalityDiagnostics(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
-           // pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics = NULL;
-           pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_RANfunctionsIDcause_List!=NULL){
+            asn1Free_e2ap_RANfunctionsIDcause_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List = NULL;
+           pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_UNDEF_:
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List:
+            // rtxFreeE2ap_E2nodeComponentConfigAdditionAck_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
+
+            if(pvalue->value.i._e2ap_E2setupResponse_id_E2nodeComponentConfigAdditionAck_List!=NULL){
+            asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List = NULL;
+           pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck = NULL;
+            }
+            break;
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_UNDEF_:
             rtxFreeASN1OpenType(pvalue->value.u.extElem1);
             break;
         default:
@@ -2695,10 +7970,10 @@ void asn1Free_e2ap_RICqueryFailure_protocolIEs_element(OSCTXT* pctxt, e2ap_RICqu
     }
 }
 
-int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element(OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue)
+int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element(OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue)
 {
     int stat =0;
-    RTXCTXTPUSHELEMNAME(pctxt, "e2ap_RICqueryFailure_protocolIEs_element");
+    RTXCTXTPUSHELEMNAME(pctxt, "e2ap_E2setupResponse_protocolIEs_element");
 
     /*print id*/
     RTXCTXTPUSHELEMNAME(pctxt, "id");
@@ -2716,48 +7991,58 @@ int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element(OSCTXT* pctxt, e2ap_RI
     RTXCTXTPUSHELEMNAME(pctxt, "value");
         
         switch(pvalue->value.t){
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "RICrequestID");
+                RTXCTXTPUSHELEMNAME (pctxt, "TransactionID");
 
-                stat = asn1PrtToStr_e2ap_RICrequestID (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
+                stat = asn1PrtToStr_e2ap_TransactionID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionID");
+                RTXCTXTPUSHELEMNAME (pctxt, "GlobalRIC-ID");
 
-                stat = asn1PrtToStr_e2ap_RANfunctionID (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
+                stat = asn1PrtToStr_e2ap_GlobalRIC_ID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsID_List:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "Cause");
+                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionsID-List");
 
-                stat = asn1PrtToStr_e2ap_Cause (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
+                stat = asn1PrtToStr_e2ap_RANfunctionsID_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "CriticalityDiagnostics");
+                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionsIDcause-List");
 
-                stat = asn1PrtToStr_e2ap_CriticalityDiagnostics (pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
+                stat = asn1PrtToStr_e2ap_RANfunctionsIDcause_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
+                if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+                RTXCTXTPOPELEMNAME (pctxt);
+                break;
+            }
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List:
+            {
+                RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck-List");
+
+                stat = asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
 
-            case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_UNDEF_:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_UNDEF_:
             {
                 rtxPLogMsg(pctxt, "Extension element present - raw data not printed.\n");
                 break;
@@ -2773,8 +8058,8 @@ int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element(OSCTXT* pctxt, e2ap_RI
 #endif
 
 
-int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (const char * name,
- e2ap_RICqueryFailure_protocolIEs_element* pvalue, 
+int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element (const char * name,
+ e2ap_E2setupResponse_protocolIEs_element* pvalue, 
  char * buffer, OSSIZE bufSize){
     if(rtPrintToStringOpenBrace(name, buffer, bufSize)<0)
         return -1;
@@ -2786,24 +8071,29 @@ int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (const char * name,
         return -1;
 
     switch(pvalue->value.t){
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID:
-            if(asn1PrtToStr_e2ap_RICrequestID("RICrequestID", 
-                    pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID, buffer, bufSize)<0)
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
+            if(asn1PrtToStr_e2ap_TransactionID("TransactionID", 
+                    pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID, buffer, bufSize)<0)
                 return -1;
             break;    
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID:
-            if(asn1PrtToStr_e2ap_RANfunctionID("RANfunctionID", 
-                    pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID, buffer, bufSize)<0)
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
+            if(asn1PrtToStr_e2ap_GlobalRIC_ID("GlobalRIC-ID", 
+                    pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID, buffer, bufSize)<0)
                 return -1;
             break;    
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause:
-            if(asn1PrtToStr_e2ap_Cause("Cause", 
-                    pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause, buffer, bufSize)<0)
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted:
+            if(asn1PrtToStr_e2ap_RANfunctionsID_List("RANfunctionsID-List", 
+                    pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted, buffer, bufSize)<0)
                 return -1;
             break;    
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics:
-            if(asn1PrtToStr_e2ap_CriticalityDiagnostics("CriticalityDiagnostics", 
-                    pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics, buffer, bufSize)<0)
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected:
+            if(asn1PrtToStr_e2ap_RANfunctionsIDcause_List("RANfunctionsIDcause-List", 
+                    pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected, buffer, bufSize)<0)
+                return -1;
+            break;    
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck:
+            if(asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_List("E2nodeComponentConfigAdditionAck-List", 
+                    pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck, buffer, bufSize)<0)
                 return -1;
             break;    
         default:
@@ -2820,35 +8110,42 @@ int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (const char * name,
 
  }
 
- void asn1Free_e2ap_RICqueryFailure_protocolIEs_element(OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue){
+ void asn1Free_e2ap_E2setupResponse_protocolIEs_element(OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue){
     if(NULL==pvalue) return;
     switch(pvalue->value.t){
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID:
-            if(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID!=NULL){
-            asn1Free_e2ap_RICrequestID(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID);
-            pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RICrequestID = NULL;
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
+            if(pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID!=NULL){
+            asn1Free_e2ap_TransactionID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
+            pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID:
-            if(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID!=NULL){
-            asn1Free_e2ap_RANfunctionID(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID);
-            pvalue->value.u._e2ap_RICqueryFailure_IEs_id_RANfunctionID = NULL;
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
+            if(pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID!=NULL){
+            asn1Free_e2ap_GlobalRIC_ID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
+            pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause:
-            if(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause!=NULL){
-            asn1Free_e2ap_Cause(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause);
-            pvalue->value.u._e2ap_RICqueryFailure_IEs_id_Cause = NULL;
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted:
+            if(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted!=NULL){
+            asn1Free_e2ap_RANfunctionsID_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted);
+            pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics:
-            if(pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics!=NULL){
-            asn1Free_e2ap_CriticalityDiagnostics(pctxt, pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics);
-            pvalue->value.u._e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics = NULL;
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected:
+            if(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected!=NULL){
+            asn1Free_e2ap_RANfunctionsIDcause_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected);
+            pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected = NULL;
+            }
+            break;
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck:
+            if(pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck!=NULL){
+            asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
+            pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck = NULL;
             }
             break;
         default:
@@ -2861,15 +8158,15 @@ int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (const char * name,
  
 
 
-// --- End of e2ap_RICqueryFailure_IEs.c ---
+// --- End of e2ap_E2setupResponseIEs.c ---
 
-// --- Begin of e2ap_RICqueryFailure.c ---
+// --- Begin of e2ap_E2setupResponse.c ---
 /*****************************************/
-/*           RICqueryFailure                */
+/*           E2setupResponse                */
 /*****************************************/
 //2_container.c
 /* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue)
+EXTERN int asn1PE_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue)
 {
     int stat =0;
     OSRTDListNode* pnode;
@@ -2884,7 +8181,7 @@ EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICquery
     xx1 =0;
     for(pnode = pvalue->head; pnode != 0 && xx1<pvalue->count; pnode = pnode->next){
         RTXCTXTPUSHARRAYELEMNAME(pctxt, "SEQUENCE", xx1);
-        stat = asn1PE_e2ap_RICqueryFailure_protocolIEs_element (pctxt, ((e2ap_RICqueryFailure_protocolIEs_element*)pnode->data));
+        stat = asn1PE_e2ap_E2setupResponse_protocolIEs_element (pctxt, ((e2ap_E2setupResponse_protocolIEs_element*)pnode->data));
         if(stat!=0) return LOG_RTERR(pctxt, stat);
         xx1++;
         RTXCTXTPOPARRAYELEMNAME(pctxt);
@@ -2893,7 +8190,7 @@ EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICquery
     return (stat);
 }
 
-EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs(OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue)
+EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs(OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue)
 {
      int stat =0;
      OSRTDListNode* pnode;
@@ -2910,14 +8207,14 @@ EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs(OSCTXT* pctxt, e2ap_RICquery
     rtxDListInit(pvalue);
 
     for(xx1=0; xx1 < count; xx1++){
-        e2ap_RICqueryFailure_protocolIEs_element* pdata;
+        e2ap_E2setupResponse_protocolIEs_element* pdata;
         RTXCTXTPUSHARRAYELEMNAME(pctxt, "SEQUENCE",xx1);
 
         if(pnode == NULL) return LOG_RTERR(pctxt, RTERR_NOMEM);
 
-        asn1Init_e2ap_RICqueryFailure_protocolIEs_element(pdata);
+        asn1Init_e2ap_E2setupResponse_protocolIEs_element(pdata);
         rtxDListAppendNode(pvalue, pnode);
-        stat = asn1PD_e2ap_RICqueryFailure_protocolIEs_element (pctxt, pdata);
+        stat = asn1PD_e2ap_E2setupResponse_protocolIEs_element (pctxt, pdata);
         if(stat!=0) return LOG_RTERR(pctxt, stat);
         RTXCTXTPOPARRAYELEMNAME(pctxt);
 
@@ -2926,21 +8223,21 @@ EXTERN int  asn1PD_e2ap_RICqueryFailure_protocolIEs(OSCTXT* pctxt, e2ap_RICquery
 }
 
 
-int asn1Init_e2ap_RICqueryFailure_protocolIEs(e2ap_RICqueryFailure_protocolIEs* pvalue)
+int asn1Init_e2ap_E2setupResponse_protocolIEs(e2ap_E2setupResponse_protocolIEs* pvalue)
 {
     if(0==pvalue) return RTERR_NULLPTR;
     rtxDListFastInit (pvalue);
     return 0;
 }
 #if 1 //ao that day
-void asn1Free_e2ap_RICqueryFailure_protocolIEs(OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue)
+void asn1Free_e2ap_E2setupResponse_protocolIEs(OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue)
 {
     if(0==pvalue) return;   
-    e2ap_RICqueryFailure_protocolIEs_element* pdata;
+    e2ap_E2setupResponse_protocolIEs_element* pdata;
     OSRTDListNode* pnode=pvalue->head;
     while(0!=pnode){
-        pdata = (e2ap_RICqueryFailure_protocolIEs_element*)pnode->data;
-       // asn1Free_e2ap_RICqueryFailure_protocolIEs_element(pctxt, pdata);
+        pdata = (e2ap_E2setupResponse_protocolIEs_element*)pnode->data;
+       // asn1Free_e2ap_E2setupResponse_protocolIEs_element(pctxt, pdata);
         pnode = pnode->next;
     }
     rtxDListFreeAll(pctxt, pvalue);
@@ -2948,19 +8245,19 @@ void asn1Free_e2ap_RICqueryFailure_protocolIEs(OSCTXT* pctxt, e2ap_RICqueryFailu
 #endif
 
 
-EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs(const char* name, e2ap_RICqueryFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize)
+EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs(const char* name, e2ap_E2setupResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize)
 {
-    e2ap_RICqueryFailure_protocolIEs_element* pdata0;
+    e2ap_E2setupResponse_protocolIEs_element* pdata0;
     OSRTDListNode* pnode0;
     char nameBuf[256];
     char numBuf[32];
     OSUINT32 xx1=0;
     for(pnode0 = pvalue->head;  xx1 < pvalue->count && pnode0 != 0; pnode0 = pnode0->next, xx1++){
-        pdata0 = (e2ap_RICqueryFailure_protocolIEs_element*)pnode0->data;
+        pdata0 = (e2ap_E2setupResponse_protocolIEs_element*)pnode0->data;
         rtxUIntToCharStr(xx1, numBuf, sizeof(numBuf), 0);
         rtxStrJoin(nameBuf, sizeof(nameBuf), name, "[", numBuf, "]", 0);
         #if 0
-        if(asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element(nameBuf, pdata0, buffer, bufSize) <0){
+        if(asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element(nameBuf, pdata0, buffer, bufSize) <0){
             return -1;
         }
         #endif
@@ -2969,13 +8266,13 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs(const char* name, e2ap_
 }
 
 
-/*2 . RICqueryFailure -> mẫu cũ ở seq_normal*/
+/*2 . E2setupResponse -> mẫu cũ ở seq_normal*/
 
-int asn1PE_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
+int asn1PE_e2ap_E2setupResponse (OSCTXT* pctxt, e2ap_E2setupResponse* pvalue)
 {
    int stat = 0;
    OSBOOL extbit = FALSE;
-   RTXCTXTPUSHTYPENAME(pctxt, "RICqueryFailure");
+   RTXCTXTPUSHTYPENAME(pctxt, "E2setupResponse");
    /*extension bit*/
    extbit = (OSBOOL)(pvalue->extElem1.count > 0);
    stat = rtxEncBit (pctxt, extbit);
@@ -2985,7 +8282,7 @@ int asn1PE_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
    /*encode root elements*/   
    /* encode field protocolIEs - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "protocolIEs");
-   stat = asn1PE_e2ap_RICqueryFailure_protocolIEs (pctxt, &pvalue->protocolIEs);
+   stat = asn1PE_e2ap_E2setupResponse_protocolIEs (pctxt, &pvalue->protocolIEs);
    if(stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
@@ -3017,7 +8314,7 @@ int asn1PE_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
    return (stat);
 }
 
-int asn1PD_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
+int asn1PD_e2ap_E2setupResponse (OSCTXT* pctxt, e2ap_E2setupResponse* pvalue)
 {
    int stat =0;
    ASN1OpenType openType;
@@ -3027,7 +8324,7 @@ int asn1PD_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
    OSBOOL extbit = FALSE;
    OSBOOL optbits[1];
 
-   RTXCTXTPUSHTYPENAME(pctxt, "RICqueryFailure");
+   RTXCTXTPUSHTYPENAME(pctxt, "E2setupResponse");
 
    /*extension bit*/
    stat = DEC_BIT(pctxt, &extbit);
@@ -3043,7 +8340,7 @@ int asn1PD_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
    /*decode root elements*/
    /* decode field protocolIEs */
    RTXCTXTPUSHELEMNAME(pctxt, "protocolIEs");
-      stat = asn1PD_e2ap_RICqueryFailure_protocolIEs (pctxt, &pvalue->protocolIEs);
+      stat = asn1PD_e2ap_E2setupResponse_protocolIEs (pctxt, &pvalue->protocolIEs);
       if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
@@ -3100,29 +8397,29 @@ int asn1PD_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
 
 }
 
-int asn1Init_e2ap_RICqueryFailure (e2ap_RICqueryFailure* pvalue)
+int asn1Init_e2ap_E2setupResponse (e2ap_E2setupResponse* pvalue)
 {
    if(0==pvalue) return RTERR_NULLPTR;
-   asn1Init_e2ap_RICqueryFailure_protocolIEs(&pvalue->protocolIEs);
+   asn1Init_e2ap_E2setupResponse_protocolIEs(&pvalue->protocolIEs);
    rtxDListFastInit(&pvalue->extElem1);
    return 0;
 }
 
-void asn1Free_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue)
+void asn1Free_e2ap_E2setupResponse (OSCTXT* pctxt, e2ap_E2setupResponse* pvalue)
 {
    if(0==pvalue) return;
-   asn1Free_e2ap_RICqueryFailure_protocolIEs(pctxt, &pvalue->protocolIEs);
+   asn1Free_e2ap_E2setupResponse_protocolIEs(pctxt, &pvalue->protocolIEs);
    rtxMemFreeOpenSeqExt(pctxt, &pvalue->extElem1);
 }
 
-int asn1PrtToStr_e2ap_RICqueryFailure (const char* name, e2ap_RICqueryFailure* pvalue, char* buffer, OSSIZE bufSize)
+int asn1PrtToStr_e2ap_E2setupResponse (const char* name, e2ap_E2setupResponse* pvalue, char* buffer, OSSIZE bufSize)
 {
    if(rtPrintToStringOpenBrace(name, buffer, bufSize) < 0) 
    {
       return -1;
    }
 
-   if(asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs("protocolIEs", &pvalue->protocolIEs, buffer, bufSize) <0){
+   if(asn1PrtToStr_e2ap_E2setupResponse_protocolIEs("protocolIEs", &pvalue->protocolIEs, buffer, bufSize) <0){
       return -1;
    }
 
@@ -3134,5 +8431,5 @@ int asn1PrtToStr_e2ap_RICqueryFailure (const char* name, e2ap_RICqueryFailure* p
    if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
    return 0;
 }
-// --- End of e2ap_RICqueryFailure.c ---
+// --- End of e2ap_E2setupResponse.c ---
 

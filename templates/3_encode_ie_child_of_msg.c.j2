@@ -1,15 +1,24 @@
 /**************************************************/
-/* XXX_3typ.e -> InitiatingMessage/  /            */
+/*      encode_{{choices[0].dad_type_name}}                    */
 /*                                                */
 /**************************************************/
-
-xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(e2ap_{{choices[0].dad_type_name}}_t* p_{{choices[0].dad_type_name}},
-                                            UInt8 *p_asn_msg, 
-                                            UInt16* p_asn_msg_len)
+/*
+{{tree}}
+*/
+xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
+                e2ap_{{choices[0].dad_type_name}}_t* p_{{choices[0].dad_type_name}},
+                UInt8 *p_asn_msg, 
+                UInt16* p_asn_msg_len
+)
 {
 
+/*
+{{bottom_up}}
+*/
 #if 0 // hardcode
     /* gan gi tri cho p_{{choices[0].dad_type_name}} o day*/
+
+
 #endif
 
 

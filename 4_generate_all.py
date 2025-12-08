@@ -69,6 +69,29 @@ types_df = wb.get("Types", pd.DataFrame())
 primitives_df = wb.get("Primitives", pd.DataFrame())
 messages_df = wb.get("Messages", pd.DataFrame())
 
+# ======load bottomup ========
+from pathlib import Path
+
+def load_bottomup():
+    text = ""
+
+    for f in Path("Tool_read_pdf").glob("*_bottomup.txt"):
+        with open(f, "r", encoding="utf-8") as file:
+            for line in file:
+                #line = line.replace("-", "_")
+                text += "// " + line   # line vẫn giữ \n
+
+    return text
+
+#=============================
+
+#load tree.txt
+def load_tree():
+    text = ""
+    for f in Path("Tool_read_pdf").glob("*_tree.txt"):
+        with open(f, "r", encoding="utf-8") as file:
+            text += file.read()  # giữ nguyên \n
+    return text
 
 # -------------------------
 # 2) Keep original check_if_primitive (sheet-based)
@@ -784,6 +807,7 @@ def gen_ie_outputs():
                 safe_write(os.path.join(COMPOSE_DIR, f"compose_{ies_name}.c"), env.get_template("3_compose_ie.c.j2").render(data))
 
             if child_msg_parent and child_msg_type == ies_name: #encode_XXX -> IE là con của message
+                data = {"ies_name": ies_name_raw.replace("-", "_"), "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}", "bottom_up": load_bottomup(), "tree": load_tree()}
                 compose_name = child_msg_parent.replace("-", "_")  # ví dụ: E2connectionUpdate
                 safe_write(os.path.join(COMPOSE_DIR, f"compose_{compose_name}.c"),env.get_template("3_encode_ie_child_of_msg.c.j2").render(data))
             

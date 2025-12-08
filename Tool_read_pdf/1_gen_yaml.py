@@ -676,6 +676,14 @@ def main(ppath, target):
 
     print("\n--- TREE ---")
     pretty_print(tree)
+    out_tree_txt = f"./e2_{real_target}_tree.txt"
+    with open(out_tree_txt, "w", encoding="utf-8") as f:
+        def write_node(n, indent=0):
+            pfx = " " * indent
+            f.write(f"{pfx}{n.name}\n")
+            for c in n.children:
+                write_node(c, indent + 4)
+        write_node(tree)
 
     out_json = f"./e2_{real_target}_tree.json"
     with open(out_json, "w", encoding="utf-8") as f:

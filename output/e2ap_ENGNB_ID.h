@@ -1,0 +1,47 @@
+
+
+/*****************************************/
+/*           ENGNB-ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE (22..32))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 4
+//type 4  mau la datatrafficresource bitstring (a..b)
+typedef struct e2ap_ENGNB_ID_gNB_ID {
+    OSUINT8 numbits;
+    OSOCTET data[4];
+} e2ap_ENGNB_ID_gNB_ID;
+EXTERN int asn1PE_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENGNB_ID_gNB_ID (const char* name, e2ap_ENGNB_ID_gNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENGNB_ID_gNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt,const e2ap_ENGNB_ID_gNB_ID* pSrcValue,  e2ap_ENGNB_ID_gNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENGNB_ID_gNB_ID(e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue);
+
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_ENGNB_ID_gNB_ID  1
+#define T_e2ap_ENGNB_ID_extElem1 2
+
+typedef struct e2ap_ENGNB_ID {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_ENGNB_ID_gNB_ID *gNB_ID;
+      /* t = 2*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_ENGNB_ID;
+
+EXTERN int asn1PE_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_ENGNB_ID (const char* name, const e2ap_ENGNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENGNB_ID (const char* name, e2ap_ENGNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENGNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENGNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENGNB_ID (OSCTXT* pctxt, const e2ap_ENGNB_ID* pSrcValue, e2ap_ENGNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENGNB_ID (e2ap_ENGNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue);

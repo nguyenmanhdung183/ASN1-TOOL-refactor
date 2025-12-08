@@ -1,2 +1,11 @@
-ricRequestorID
-ricInstanceID
+updateOutcome
+macro-eNB-ID
+home-eNB-ID
+short-Macro-eNB-ID
+long-Macro-eNB-ID
+enb-ID-macro
+enb-ID-shortmacro
+enb-ID-longmacro
+gNB-ID
+gnb-ID
+ric-ID

@@ -122,7 +122,7 @@ def merge_main_struct_headers_by_parts(parts, existed_parts, skip_parts=None):
     output_path = os.path.join(MAIN_STRUCT_DIR, MAIN_STRUCT_FILE)
 
     with open(output_path, "w", encoding="utf-8") as out:
-        out.write("/* Auto-generated MAIN_STRUCT.h */\n\n")
+        out.write("#ifndef MAIN_STRUCT_H\n#define MAIN_STRUCT_H\n\n")
 
         for part in parts:
             if part in existed_parts or part in skip_parts:
@@ -140,6 +140,8 @@ def merge_main_struct_headers_by_parts(parts, existed_parts, skip_parts=None):
                 # Tương tự logic rectangular_comment() trong code bạn
                 missing = f"File .h missing: {file_base}"
                 out.write(rectangular_comment(missing))
+                
+        out.write("#endif // MAIN_STRUCT_H\n")        
 
     print(f" Đã tạo file merged: {output_path}")
 
@@ -150,7 +152,8 @@ def compose_main_file_by_parts(parts, existed_parts, skip_parts=None):
     compose_out_path = os.path.join(COMPOSE_DIR, COMPOSE_C_FILE)
 
     with open(compose_out_path, "w", encoding="utf-8") as compose_out:
-        compose_out.write("// Auto-generated MAIN_COMPOSE.c\n\n")
+        compose_out.write("#include \"main_struct.h\"\n")
+        compose_out.write("#include \"output_main.h\"\n\n")
 
         for part in parts:
             if part in existed_parts or part in skip_parts:

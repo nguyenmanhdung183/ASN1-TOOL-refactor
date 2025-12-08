@@ -43,7 +43,8 @@ typedef struct{
 }_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING
     {% endif %}
 {% endfor %}
-typedef struct{ {#/* main struct for sequence -*/#}
+
+typedef struct{ {#/* main struct for sequence -*/#} 
 {# optional bit mask #}
 {% set has_optional = false %}
 {% set bitmask_value = 0%}
