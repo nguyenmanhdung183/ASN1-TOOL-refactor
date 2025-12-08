@@ -161,9 +161,9 @@ def compose_main_file_by_parts(parts, existed_parts, skip_parts=None):
 
             if os.path.isfile(compose_path):
                 with open(compose_path, "r", encoding="utf-8") as cpf:
-                    compose_out.write(f"// --- Begin of {part_file_base}.c ---\n")
+                    #compose_out.write(f"// --- Begin of {part_file_base}.c ---\n")
                     compose_out.write(cpf.read())
-                    compose_out.write(f"\n// --- End of {part_file_base}.c ---\n\n")
+                    #compose_out.write(f"\n// --- End of {part_file_base}.c ---\n\n")
             else:
                 comment = rectangular_comment(f"File compose missing: {part_file_base}.c")
                 compose_out.write(comment)

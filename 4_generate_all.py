@@ -498,8 +498,9 @@ def gen_primitives_outputs():
 
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.h"), h_tmpl.render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.c"), c_tmpl.render(data))
-            #safe_write(os.path.join(COMPOSE_DIR, f"compose_{name}_en.c"), compose_tmpl.render(data))
+            safe_write(os.path.join(COMPOSE_DIR, f"compose_{name}.c"), env.get_template("3_compose_primitive.c.j2").render(data))
             safe_write(f"main_struct_output/e2ap_{name.replace('-', '_')}.h", env.get_template("1_main_struct_primitive.h.j2").render(data))
+            
             print(f"primitive data:\n{json.dumps(data, indent=4)}\n\n")
 
         except Exception as e:

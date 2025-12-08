@@ -85,7 +85,9 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(e2ap_{{choices[0].dad_ty
             asn1Init_e2ap_{{choices[0].dad_type_name}}(p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}});
             #endif
             //message_name.item_type -> type = {{ie.item_type}}
-            if(XNAP_FAILURE == e2ap_compose_{{ie.item_type}}(&asn1_ctx, p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}})){
+            if(XNAP_FAILURE == e2ap_compose_{{ie.item_type}}(&asn1_ctx, 
+                                p_e2ap_protocolIEs_elem->value.u._e2ap{{ choices[0].dad_type_name }}_IEs_{{ ie.field_name | replace('-', '_') }},
+                                p_{{choices[0].dad_type_name}}->{{ie.field_name}})){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{ie.item_type}}",__FUNCTION__);
                 break;
             }else{

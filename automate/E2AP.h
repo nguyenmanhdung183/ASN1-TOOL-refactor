@@ -709,6 +709,7 @@ typedef enum {
  
 } e2ap_E2connectionUpdate_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2connectionUpdate_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -744,6 +745,7 @@ typedef enum {
  
 } e2ap_E2connectionUpdate_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2connectionUpdate_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -842,6 +844,7 @@ typedef enum {
  
 } e2ap_E2connectionUpdateRemove_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2connectionUpdateRemove_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -904,7 +907,8 @@ typedef enum {
  
 } e2ap_E2connectionUpdate_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2connectionUpdate_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2connectionUpdate_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -10383,6 +10387,7 @@ typedef enum {
  
 } e2ap_E2connectionSetupFailed_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2connectionSetupFailed_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -10443,7 +10448,8 @@ typedef enum {
  
 } e2ap_E2connectionUpdateAck_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -16148,7 +16154,8 @@ typedef enum {
  
 } e2ap_E2connectionUpdateFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2connectionUpdateFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2connectionUpdateFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -20100,6 +20107,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigAddition_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigAddition_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20135,6 +20143,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigAddition_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigAddition_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20237,6 +20246,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigUpdate_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigUpdate_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20318,6 +20328,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigRemoval_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigRemoval_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20399,6 +20410,7 @@ typedef enum {
  
 } e2ap_E2nodeTNLassociationRemoval_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeTNLassociationRemoval_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20465,7 +20477,8 @@ typedef enum {
  
 } e2ap_E2nodeConfigurationUpdate_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2nodeConfigurationUpdate_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdate_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -20751,6 +20764,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigAdditionAck_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20786,6 +20800,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigAdditionAck_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20888,6 +20903,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigUpdateAck_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigUpdateAck_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -20971,6 +20987,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigRemovalAck_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigRemovalAck_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -21033,7 +21050,8 @@ typedef enum {
  
 } e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -21133,7 +21151,8 @@ typedef enum {
  
 } e2ap_E2nodeConfigurationUpdateFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -21227,7 +21246,8 @@ typedef enum {
  
 } e2ap_E2RemovalRequestIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2RemovalRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2RemovalRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -21305,7 +21325,8 @@ typedef enum {
  
 } e2ap_E2RemovalResponseIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2RemovalResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2RemovalResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -21391,7 +21412,8 @@ typedef enum {
  
 } e2ap_E2RemovalFailureIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2RemovalFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2RemovalFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -21487,7 +21509,8 @@ typedef enum {
  
 } e2ap_E2setupFailureIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2setupFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -22369,6 +22392,7 @@ typedef enum {
  
 } e2ap_RANfunction_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunction_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -22404,6 +22428,7 @@ typedef enum {
  
 } e2ap_RANfunction_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunction_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -22485,7 +22510,8 @@ typedef enum {
  
 } e2ap_E2setupRequestIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2setupRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -22729,6 +22755,7 @@ typedef enum {
  
 } e2ap_RANfunctionID_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionID_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -22764,6 +22791,7 @@ typedef enum {
  
 } e2ap_RANfunctionID_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionID_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -22799,6 +22827,7 @@ typedef enum {
  
 } e2ap_RANfunctionID_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionID_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -22834,6 +22863,7 @@ typedef enum {
  
 } e2ap_RANfunctionID_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionID_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -22999,6 +23029,7 @@ typedef enum {
  
 } e2ap_RANfunctionIDcause_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionIDcause_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -23034,6 +23065,7 @@ typedef enum {
  
 } e2ap_RANfunctionIDcause_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionIDcause_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -23117,7 +23149,8 @@ typedef enum {
  
 } e2ap_E2setupResponseIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2setupResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23225,7 +23258,8 @@ typedef enum {
  
 } e2ap_ErrorIndication_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_ErrorIndication_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_ErrorIndication_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23327,7 +23361,8 @@ typedef enum {
  
 } e2ap_ResetRequestIEs_TVALUE;
 
- typedef struct EXTERN e2ap_ResetRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_ResetRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23411,7 +23446,8 @@ typedef enum {
  
 } e2ap_ResetResponseIEs_TVALUE;
 
- typedef struct EXTERN e2ap_ResetResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_ResetResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23497,7 +23533,8 @@ typedef enum {
  
 } e2ap_RICassistanceFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICassistanceFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23693,7 +23730,8 @@ typedef enum {
  
 } e2ap_RICassistanceIndication_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICassistanceIndication_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceIndication_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23787,7 +23825,8 @@ typedef enum {
  
 } e2ap_RICassistanceHalt_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICassistanceHalt_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceHalt_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -23944,7 +23983,8 @@ typedef enum {
  
 } e2ap_RICassistanceRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICassistanceRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -24048,7 +24088,8 @@ typedef enum {
  
 } e2ap_RICassistanceResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICassistanceResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -24244,7 +24285,8 @@ typedef enum {
  
 } e2ap_RICcontrolAcknowledge_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICcontrolAcknowledge_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICcontrolAcknowledge_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -24348,7 +24390,8 @@ typedef enum {
  
 } e2ap_RICcontrolFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICcontrolFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICcontrolFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -24538,7 +24581,8 @@ typedef enum {
  
 } e2ap_RICcontrolRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICcontrolRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICcontrolRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -24970,7 +25014,8 @@ typedef enum {
  
 } e2ap_RICindication_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICindication_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICindication_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -25294,6 +25339,7 @@ typedef enum {
  
 } e2ap_RICactionLoadRequest_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICactionLoadRequest_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -25377,6 +25423,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionLoadRequest_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionLoadRequest_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -25462,6 +25509,7 @@ typedef enum {
  
 } e2ap_RANfunctionLoadRequest_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionLoadRequest_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -25569,7 +25617,8 @@ typedef enum {
  
 } e2ap_RICserviceLoadStatusRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceLoadStatusRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadStatusRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -25766,6 +25815,7 @@ typedef enum {
  
 } e2ap_RICactionLoadConfirm_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICactionLoadConfirm_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -25849,6 +25899,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionLoadConfirm_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionLoadConfirm_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -25934,6 +25985,7 @@ typedef enum {
  
 } e2ap_RANfunctionLoadConfirm_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionLoadConfirm_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -25994,7 +26046,8 @@ typedef enum {
  
 } e2ap_RICserviceLoadStatusResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceLoadStatusResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadStatusResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -26088,7 +26141,8 @@ typedef enum {
  
 } e2ap_RICserviceLoadStatusFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceLoadStatusFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadStatusFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -26318,6 +26372,7 @@ typedef enum {
  
 } e2ap_RICactionLoad_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICactionLoad_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -26401,6 +26456,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionLoad_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionLoad_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -26486,6 +26542,7 @@ typedef enum {
  
 } e2ap_RANfunctionLoad_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionLoad_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -26546,7 +26603,8 @@ typedef enum {
  
 } e2ap_RICserviceLoadUpdate_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceLoadUpdate_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadUpdate_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -26636,7 +26694,8 @@ typedef enum {
  
 } e2ap_RICserviceQuery_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceQuery_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceQuery_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -26724,7 +26783,8 @@ typedef enum {
  
 } e2ap_RICserviceUpdate_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceUpdate_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceUpdate_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -26822,7 +26882,8 @@ typedef enum {
  
 } e2ap_RICserviceUpdateAcknowledge_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceUpdateAcknowledge_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceUpdateAcknowledge_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -26916,7 +26977,8 @@ typedef enum {
  
 } e2ap_RICserviceUpdateFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICserviceUpdateFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceUpdateFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -27016,7 +27078,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -27624,6 +27687,7 @@ typedef enum {
  
 } e2ap_RICaction_ToBeSetup_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ToBeSetup_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -27736,7 +27800,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -27884,6 +27949,7 @@ typedef enum {
  
 } e2ap_RICaction_Admitted_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_Admitted_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -27919,6 +27985,7 @@ typedef enum {
  
 } e2ap_RICaction_Admitted_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_Admitted_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -28019,6 +28086,7 @@ typedef enum {
  
 } e2ap_RICaction_NotAdmitted_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_NotAdmitted_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -28081,7 +28149,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -28179,7 +28248,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionAuditFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionAuditFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionAuditFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -28383,6 +28453,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionAudit_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionAudit_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -28418,6 +28489,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionAudit_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionAudit_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -28497,7 +28569,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionAuditRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionAuditRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionAuditRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -28612,6 +28685,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionAuditAction_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionAuditAction_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -28674,7 +28748,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionAuditResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionAuditResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionAuditResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -28774,7 +28849,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionDeleteFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionDeleteFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -28870,7 +28946,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionDeleteRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionDeleteRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -28954,7 +29031,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionDeleteResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionDeleteResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -29063,6 +29141,7 @@ typedef enum {
  
 } e2ap_RICsubscription_withCause_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscription_withCause_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29119,7 +29198,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionDeleteRequired_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionDeleteRequired_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteRequired_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -29218,6 +29298,7 @@ typedef enum {
  
 } e2ap_RICaction_ToBeRemovedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ToBeRemovedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29303,6 +29384,7 @@ typedef enum {
  
 } e2ap_RICaction_ToBeModifiedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ToBeModifiedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29390,6 +29472,7 @@ typedef enum {
  
 } e2ap_RICaction_ToBeAddedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ToBeAddedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29456,7 +29539,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionModificationRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionModificationRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -29585,6 +29669,7 @@ typedef enum {
  
 } e2ap_RICaction_RemovedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_RemovedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29666,6 +29751,7 @@ typedef enum {
  
 } e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29745,6 +29831,7 @@ typedef enum {
  
 } e2ap_RICaction_ModifiedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ModifiedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29826,6 +29913,7 @@ typedef enum {
  
 } e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29905,6 +29993,7 @@ typedef enum {
  
 } e2ap_RICaction_AddedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_AddedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -29986,6 +30075,7 @@ typedef enum {
  
 } e2ap_RICaction_FailedToBeAddedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_FailedToBeAddedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30056,7 +30146,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionModificationResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionModificationResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -30180,7 +30271,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionModificationFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionModificationFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -30299,6 +30391,7 @@ typedef enum {
  
 } e2ap_RICaction_RequiredToBeModified_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_RequiredToBeModified_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30380,6 +30473,7 @@ typedef enum {
  
 } e2ap_RICaction_RequiredToBeRemoved_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_RequiredToBeRemoved_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30442,7 +30536,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionModificationRequired_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionModificationRequired_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationRequired_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -30559,6 +30654,7 @@ typedef enum {
  
 } e2ap_RICaction_ConfirmedForModification_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ConfirmedForModification_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30640,6 +30736,7 @@ typedef enum {
  
 } e2ap_RICaction_RefusedToBeModified_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_RefusedToBeModified_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30719,6 +30816,7 @@ typedef enum {
  
 } e2ap_RICaction_ConfirmedForRemoval_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ConfirmedForRemoval_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30800,6 +30898,7 @@ typedef enum {
  
 } e2ap_RICaction_RefusedToBeRemoved_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_RefusedToBeRemoved_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -30866,7 +30965,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionModificationConfirm_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionModificationConfirm_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationConfirm_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -30978,7 +31078,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionModificationRefuse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionModificationRefuse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationRefuse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -31120,6 +31221,7 @@ typedef enum {
  
 } e2ap_RICaction_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -31155,6 +31257,7 @@ typedef enum {
  
 } e2ap_RICaction_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICaction_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -31282,6 +31385,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionList_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionList_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -31317,6 +31421,7 @@ typedef enum {
  
 } e2ap_RICsubscriptionList_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RICsubscriptionList_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -31419,6 +31524,7 @@ typedef enum {
  
 } e2ap_RANfunctionStateControl_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionStateControl_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -31477,7 +31583,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionStateControlRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionStateControlRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionStateControlRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -31624,6 +31731,7 @@ typedef enum {
  
 } e2ap_RANfunctionStateConfirm_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionStateConfirm_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -31682,7 +31790,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionStateControlResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionStateControlResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionStateControlResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -31768,7 +31877,8 @@ typedef enum {
  
 } e2ap_RICsubscriptionStateControlFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICsubscriptionStateControlFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionStateControlFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -31896,7 +32006,8 @@ typedef enum {
  
 } e2ap_RICqueryRequest_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICqueryRequest_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICqueryRequest_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -32011,7 +32122,8 @@ typedef enum {
  
 } e2ap_RICqueryResponse_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICqueryResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICqueryResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
@@ -32105,7 +32217,8 @@ typedef enum {
  
 } e2ap_RICqueryFailure_IEs_TVALUE;
 
- typedef struct EXTERN e2ap_RICqueryFailure_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICqueryFailure_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
