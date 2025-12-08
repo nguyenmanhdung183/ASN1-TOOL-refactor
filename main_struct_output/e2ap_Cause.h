@@ -4,13 +4,13 @@
 
  
 typedef struct{  
-    #define E2AP_CAUSE_e2ap_RIC_REQUEST 0 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_RIC_SERVICE 1 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_E2NODE 2 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_TRANSPORT 3 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_PROTOCOL 4 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_MISC 5 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_SERVICE_LAYER 6 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_RIC_REQUEST 1 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_RIC_SERVICE 2 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_E2NODE 3 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_TRANSPORT 4 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_PROTOCOL 5 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_MISC 6 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_SERVICE_LAYER 7 //NAME + field_name
     #define E2AP_CAUSE_e2ap_INVALID 0xFF
 
     UInt32 choice_type;

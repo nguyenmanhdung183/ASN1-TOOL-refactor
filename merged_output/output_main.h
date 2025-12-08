@@ -162,6 +162,7 @@ typedef enum {
  
 } e2ap_RANfunctionID_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionID_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -603,6 +604,7 @@ typedef enum {
  
 } e2ap_RANfunctionIDcause_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionIDcause_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -1568,6 +1570,7 @@ typedef enum {
  
 } e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_E2nodeComponentConfigAdditionAck_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -1632,7 +1635,8 @@ typedef enum {
  
 } e2ap_E2setupResponseIEs_TVALUE;
 
- typedef struct EXTERN e2ap_E2setupResponse_protocolIEs_element {
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupResponse_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{

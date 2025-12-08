@@ -841,8 +841,7 @@ RICsubscriptionAuditResponse-IEs E2AP-PROTOCOL-IES ::= {
  ...  
 } 
 
-RICsubscriptionAuditActionList ::= SEQUENCE (SIZE(1..maxofRICsubscriptions)) OF ProtocolIE-SingleContainer 
-{{RICsubscriptionAuditAction-ItemIEs}} 
+RICsubscriptionAuditActionList ::= SEQUENCE (SIZE(1..maxofRICsubscriptions)) OF ProtocolIE-SingleContainer {{RICsubscriptionAuditAction-ItemIEs}} 
 
 RICsubscriptionAuditAction-ItemIEs  E2AP-PROTOCOL-IES ::= { 
  { ID id-RICsubscriptionAuditAction-Item CRITICALITY ignore  TYPE RICsubscriptionAuditAction-Item PRESENCE mandatory },
@@ -1260,8 +1259,7 @@ RICaction-ConfirmedForModification-Item ::= SEQUENCE {
  ricActionID     RICactionID, 
  ... 
 } 
-RICactions-RefusedToBeModified-List ::= SEQUENCE (SIZE(0..maxofRICactionID)) OF ProtocolIE-SingleContainer 
-{{RICaction-RefusedToBeModified-ItemIEs}} 
+RICactions-RefusedToBeModified-List ::= SEQUENCE (SIZE(0..maxofRICactionID)) OF ProtocolIE-SingleContainer {{RICaction-RefusedToBeModified-ItemIEs}} 
 
 RICaction-RefusedToBeModified-ItemIEs  E2AP-PROTOCOL-IES ::= { 
  { ID id-RICaction-RefusedToBeModified-Item   CRITICALITY ignore  TYPE RICaction-RefusedToBeModified-Item  PRESENCE mandatory },
@@ -1274,8 +1272,7 @@ RICaction-RefusedToBeModified-Item ::= SEQUENCE {
  ... 
 } 
 
-RICactions-ConfirmedForRemoval-List ::= SEQUENCE (SIZE(0..maxofRICactionID)) OF ProtocolIE-SingleContainer 
-{{RICaction-ConfirmedForRemoval-ItemIEs}} 
+RICactions-ConfirmedForRemoval-List ::= SEQUENCE (SIZE(0..maxofRICactionID)) OF ProtocolIE-SingleContainer {{RICaction-ConfirmedForRemoval-ItemIEs}} 
 
 RICaction-ConfirmedForRemoval-ItemIEs  E2AP-PROTOCOL-IES ::= { 
  { ID id-RICaction-ConfirmedForRemoval-Item   CRITICALITY ignore  TYPE RICaction-ConfirmedForRemoval-Item  PRESENCE mandatory },

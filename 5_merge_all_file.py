@@ -7,6 +7,8 @@ MAIN_STRUCT_DIR = "main_struct_output"
 MAIN_STRUCT_FILE = "MAIN_STRUCT.h"
 MAIN_C_FILE = "output_main.c"
 MAIN_H_FILE = "output_main.h"
+COMPOSE_DIR = "compose_output"
+COMPOSE_C_FILE = "MAIN_COMPOSE.c"
 PREFIX = "e2ap_"
 EXISTED_FILE = "existed.txt"
 text_to_insert_c_header ="#include \"output_main.h\""
@@ -141,6 +143,33 @@ def merge_main_struct_headers_by_parts(parts, existed_parts, skip_parts=None):
 
     print(f" Đã tạo file merged: {output_path}")
 
+
+def compose_main_file_by_parts(parts, existed_parts, skip_parts=None):
+    os.makedirs(COMPOSE_DIR, exist_ok=True)
+
+    compose_out_path = os.path.join(COMPOSE_DIR, COMPOSE_C_FILE)
+
+    with open(compose_out_path, "w", encoding="utf-8") as compose_out:
+        compose_out.write("// Auto-generated MAIN_COMPOSE.c\n\n")
+
+        for part in parts:
+            if part in existed_parts or part in skip_parts:
+                continue  # bỏ qua part đã tồn tại
+
+            part_file_base = "compose_" + part.replace("-", "_")
+            compose_path = os.path.join(COMPOSE_DIR, part_file_base + ".c")
+
+            if os.path.isfile(compose_path):
+                with open(compose_path, "r", encoding="utf-8") as cpf:
+                    compose_out.write(f"// --- Begin of {part_file_base}.c ---\n")
+                    compose_out.write(cpf.read())
+                    compose_out.write(f"\n// --- End of {part_file_base}.c ---\n\n")
+            else:
+                comment = rectangular_comment(f"File compose missing: {part_file_base}.c")
+                compose_out.write(comment)
+
+    print(f" Đã tạo file {compose_out_path} trong thư mục {COMPOSE_DIR}")
+
 #===============================================
 def main():
     os.makedirs(MERGED_DIR, exist_ok=True)
@@ -232,7 +261,8 @@ def main():
 
     # Merge MAIN_STRUCT.h 
     merge_main_struct_headers_by_parts(all_parts, existed_parts,skip_parts)
-
+    # Merge COMPOSE_C_FILE
+    compose_main_file_by_parts(all_parts, existed_parts,skip_parts)
 
 if __name__ == "__main__":
     main()

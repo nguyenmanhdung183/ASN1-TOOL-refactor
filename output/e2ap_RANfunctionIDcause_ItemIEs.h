@@ -9,6 +9,7 @@ typedef enum {
  
 } e2ap_RANfunctionIDcause_ItemIEs_TVALUE;
 
+/* ie thường */
 typedef struct EXTERN e2ap_RANfunctionIDcause_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;

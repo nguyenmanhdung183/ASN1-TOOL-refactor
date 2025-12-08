@@ -85,7 +85,6 @@ GlobalE2node-ng-eNB-ID
 GlobalE2node-eNB-ID
 GlobalE2node-ID
 E2nodeComponentInterfaceType
-PrintableString
 AMFName
 E2nodeComponentInterfaceNG
 GlobalNG-RANNode-ID
@@ -120,7 +119,6 @@ E2nodeConfigurationUpdate-IEs
 E2nodeConfigurationUpdate
 TransactionID
 E2nodeComponentInterfaceType
-PrintableString
 AMFName
 E2nodeComponentInterfaceNG
 PLMN-Identity
@@ -289,7 +287,6 @@ GlobalE2node-ID
 RANfunctionID
 RANfunctionDefinition
 RANfunctionRevision
-PrintableString
 RANfunctionOID
 RANfunction-Item
 RANfunction-ItemIEs
@@ -336,7 +333,6 @@ RANfunctionIDcause-Item
 RANfunctionIDcause-ItemIEs
 RANfunctionsIDcause-List
 E2nodeComponentInterfaceType
-PrintableString
 AMFName
 E2nodeComponentInterfaceNG
 gnb-ID
@@ -617,7 +613,6 @@ TransactionID
 RANfunctionID
 RANfunctionDefinition
 RANfunctionRevision
-PrintableString
 RANfunctionOID
 RANfunction-Item
 RANfunction-ItemIEs

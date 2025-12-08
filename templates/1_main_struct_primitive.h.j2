@@ -3,20 +3,20 @@
 /************************************************/
 {% if metadata.primitive_id ==  2%} {# BIT STRING A..B,...#}  
 typedef struct{
-    Uint{{metadata.max|stdbit}} numbits;
-    UInt8* data;
+    #define {{name}}_OCTET_SIZE {{(metadata.max +7)//8 }}
+    UInt8 data[{{name}}_OCTET_SIZE];
 } _e2ap_{{name}}_t;// BIT STRING SIZE (A..B,...) - P  ?
 {% endif %}
 {% if metadata.primitive_id ==  3%} {# BIT STRING N  ?#}  
 typedef struct{
-    unsigned int numbits;
-    unsigned char data[{{ (metadata.max +7)//8 }}];
+    UInt{{metadata.max |stdbit}} numbits;
+    UInt8 data[{{ (metadata.max +7)//8 }}];
 }_e2ap_{{name}}_t;// BIT STRING SIZE (N) - P  ?
 {% endif %}
 {% if metadata.primitive_id ==  4%} {# BIT STRING A..B  ?#}  
 typedef struct{
-    unsigned int numbits;
-    unsigned char data[{{ (metadata.max +7)//8 }}];
+    UInt{{metadata.max |stdbit}} numbits;
+    UInt8 data[{{ (metadata.max +7)//8 }}];
 }_e2ap_{{name}}_t;// BIT STRING SIZE (A..B) - P  ?
 {% endif %}
 {% if metadata.primitive_id == 5 %} {# INTERGER A..B,... ?#}  
@@ -27,27 +27,19 @@ typedef UInt{{metadata.max|stdbit}} _e2ap_{{name}}_t;// INTEGER (A..B) - P  ?
 {% endif %}
 {% if metadata.primitive_id ==  8%} {# OCTET STRING SIZE N ? #}  
 typedef struct{
-    UInt8 {{name}}[{{size}}];
+    #define {{name}}_MAX_BYTES {{(metadata.max +7)//8 }}
+    UInt8 {{name}}[{{name}}_MAX_BYTES];
 }_e2ap_{{name}}_t; //OCTET STRING SIZE N - P  ?
 {% endif %}
 {% if metadata.primitive_id ==  9%} {# OCTET STRING ?#} 
 typedef struct{
-    unsigned int numocts;
-    const char* data;
+    UInt{{metadata.max |stdbit}} num_string_len;
+    UInt8 * string_data;
 }_e2ap_{{name}}_t; //OCTET STRING - P  ?
 {% endif %}
 {% if metadata.primitive_id == 10 %} {# Printable String A..B,...  ?#} 
-typedef struct{
-    unsigned int numchars;
-    const char* data;
-}_e2ap_{{name}}_t; //Printable STRING SIZE (A..B,...) - P  ?
+typedef const char* _e2ap_{{name}}_t;//Printable STRING SIZE (A..B,...) - P  ?
 {% endif %} 
-{% if metadata.primitive_id == 11 %} {# Printable String  ?#} 
-typedef struct{
-    unsigned int numchars;
-    const char* data;
-}_e2ap_{{name}}_t; //Printable STRING - P  ?
-{% endif %}
 {% if metadata.primitive_id ==  13%} {# ENUMERATED  ?#} 
 typedef enum{
     {% for enum in items %}    

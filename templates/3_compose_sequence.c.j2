@@ -1,0 +1,43 @@
+// compose sequence
+xnap_return_et e2ap_compose_{{name}}(
+                OSCTXT                        *p_asn1_ctx,
+                e2ap_{{name}}                 *p_e2ap_{{name}}, //dest
+                _e2ap_{{name}}_t              *p_{{name}} //src
+                )
+{
+
+
+//cần alloc node
+
+{% for f in fields %}
+    {  /*SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}}*/
+
+        {% if f.primitive.primitive_id ==-1 %}{#not primitive #}
+        if(XNAP_FAILURE == e2ap_compose_{{f.ie_type|replace("-","_")}}(p_asn1_ctx,
+                                                p_e2ap_{{name}}->{{f.field_name}},
+                                                p_{{name}}->{{f.field_name}}))
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+        {% endif %}
+
+        {% if f.primitive.primitive_id != -1 %} {#primitive #}
+             {% if f.primitive.primitive_id ==  5 or f.primitive.primitive_id ==  6 %}{# INTERGER #}
+
+             {% endif %} {#end INTERGER #}
+             {% if f.primitive.primitive_id ==  13 %} {# ENUM #}
+             {% endif %} {#end ENUM #}
+             {% if f.primitive.primitive_id ==  4 or f.primitive.primitive_id ==  3  %}{# BIT STRING 3+4 #}
+    memcpy(p_e2ap_{{name}}->{{f.field_name}}.data, p_{{name}}->{{f.field_name}}.data, sizeof(p_{{name}}->{{f.field_name}}.data));
+        p_e2ap_{{name}}->{{f.field_name}}.numbits = p_{{name}}->{{f.field_name}}.numbits;
+             {% endif %} {#end BIT STRING 3+4 #}
+
+        {% endif %}
+    } /* end SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}}*/
+
+{% endfor%}
+
+    // cần appendnode
+    return XNAP_SUCCESS;
+}

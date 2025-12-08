@@ -1,0 +1,129 @@
+/**************************************************/
+/* XXX_3typ.e -> InitiatingMessage/  /            */
+/*                                                */
+/**************************************************/
+
+xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(e2ap_{{choices[0].dad_type_name}}_t* p_{{choices[0].dad_type_name}},
+                                            UInt8 *p_asn_msg, 
+                                            UInt16* p_asn_msg_len)
+{
+
+#if 0 // hardcode
+    /* gan gi tri cho p_{{choices[0].dad_type_name}} o day*/
+#endif
+
+
+    xnap_return_et retVal = XNAP_FAILURE;
+    OSCTXT asn1_ctx;
+    e2ap_E2AP_PDU e2ap_pdu;
+    OSRTDListNode* p_node = GNB_PNULL;
+    e2ap_{{choices[0].dad_type_name}}* p_{{choices[0].dad_type_name}} = GNB_PNULL;
+    e2ap_{{choices[0].dad_type_name}}_protocolIEs_element* p_e2ap_protocolIEs_elem = GNB_PNULL;
+    /* Initialize ASN.1 context */
+    if(0!=rtInitContext(&asn1_ctx)){
+        XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: ASN context initialization failed",__FUNCTION__);
+        XNAP_UT_TRACE_ENTER();
+        return retVal;
+    }do{
+        XNAP_MEMSET(&e2ap_pdu,0,sizeof(e2ap_E2AP_PDU));
+        /*set PDU type to initing/ SSF/ USSF */
+        e2ap_pdu.t = T_e2ap_E2AP_PDU_{{parent_full.Msg_3_Type}};
+        XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to {{parent_full.Msg_3_Type}}",__FUNCTION__);
+        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_{{parent_full.Msg_3_Type}});
+        if(GNB_PNULL==e2ap_pdu.u.{{parent_full.Msg_3_Type}}){
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for {{parent_full.Msg_3_Type}}",__FUNCTION__);
+            break;
+        }
+
+        asn1Init_e2ap_{{parent_full.Msg_3_Type}}(e2ap_pdu.u.{{parent_full.Msg_3_Type}});
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->procedureCode = ASN1V_e2ap_id_{{choices[0].dad_type_name}}
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->criticality = e2ap_{{parent_full.Msg_Critical}};
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_{{parent_full.Type_Name}};
+        p_{{choices[0].dad_type_name}} = rtxMemAllocType(&asn1_ctx, e2ap_{{choices[0].dad_type_name}});
+        if(GNB_PNULL==p_{{choices[0].dad_type_name}}){
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for {{choices[0].dad_type_name}}",__FUNCTION__);
+            break;
+        }else{
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation success for {{choices[0].dad_type_name}}",__FUNCTION__);
+        }
+
+        asn1Init_e2ap_{{choices[0].dad_type_name}}(p_{{choices[0].dad_type_name}});
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.u.{{parent_full.Elem_Procedure}} = p_{{choices[0].dad_type_name}};
+
+        /* Fill ProtocolIEs */
+{% for ie in choices %}
+#if 1 // thiếu check optional bitmask
+        {
+            /*IE-{{loop.index}}   encode {{ie.field_name}}*/
+            rtxDListAllocNodeAndData(&asn1_ctx,
+                                    e2ap_{{choices[0].dad_type_name}}_protocolIEs_element,
+                                    &p_node,
+                                    &p_e2ap_protocolIEs_elem);
+            if(GNB_PNULL==p_node){
+                /* not enough memory */
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{parent_full.Type_Name}}_protocolIEs_element",__FUNCTION__);
+                break;
+            }
+
+            asn1Init_e2ap_{{choices[0].dad_type_name}}_protocolIEs_element(p_e2ap_protocolIEs_elem);
+            /*fill the type of ProtocolIEs _protocolIEs_element*/
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_{{ie.item_type}};
+            p_e2ap_protocolIEs_elem->criticality = e2ap_{{ie.critical}};
+            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}};
+{% if ie.alias !=-1 %} {# primitive #}
+            p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_id_{{ie.item_type}} = p_{{choices[0].dad_type_name}}->{{ie.field_name}}; //assign primitive
+{% endif %}
+
+{% if ie.alias == -1%} {# ko phải primitive #}
+
+            #if 1 // ko đẩy vào compose nữa
+            p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_id_{{ie.item_type}} = rtxMemAllocType(&asn1_ctx, e2ap_{{ie.item_type}});
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}}){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{ie.item_type}}",__FUNCTION__);
+                break;
+            }
+            asn1Init_e2ap_{{choices[0].dad_type_name}}(p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}});
+            #endif
+            //message_name.item_type -> type = {{ie.item_type}}
+            if(XNAP_FAILURE == e2ap_compose_{{ie.item_type}}(&asn1_ctx, p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}})){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{ie.item_type}}",__FUNCTION__);
+                break;
+            }else{
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field {{ie.item_type}}",__FUNCTION__);
+            }
+{% endif %}
+            
+            /* Append the node to protocolIEs list */
+            rtxDListAppendNode(&p_{{choices[0].dad_type_name}}->protocolIEs, p_node);
+            rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP PDU", &e2ap_pdu);
+        }
+#endif
+{% endfor %}
+
+        /*ASN encode msg*/
+        {
+            if(RT_OK != pu_setBuffer(&asn1_ctx, p_asn_msg, XNAP_MAX_ASN1_BUF_LEN, TRUE)){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: pu_setBuffer failed",__FUNCTION__);
+                break;
+            }
+            if(0!=asn1PE_e2ap_E2AP_PDU(&asn1_ctx, &e2ap_pdu)){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: ASN encoding failed",__FUNCTION__);
+                *p_asn_msg_len = (UInt16)pe_GetMsgLen(&asn1_ctx);
+                rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP_PDU", &e2ap_pdu);
+                SInt8 buff[500];
+                rtxErrGetTextBuf(&asn1_ctx, buff, 500);
+                XNAP_TRACE(XNAP_ERROR, "dungnm23 BUFFER[%s], %x", (SInt8*)buff, buff);
+                ASN_ERROR_PRINT(&asn1_ctx);
+                break;
+            }else{
+                XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: ASN encoding success",__FUNCTION__);
+                *p_asn_msg_len = (UInt16)pe_GetMsgLen(&asn1_ctx);
+                retVal = XNAP_SUCCESS;
+            }
+        }
+
+    }while(0);
+    rtFreeContext(&asn1_ctx);
+    XNAP_UT_TRACE_EXIT();
+    return retVal;
+}

@@ -11,7 +11,8 @@ typedef UInt8 _e2ap_TransactionID_t; // INTEGER (A..B,...) - P  ?
 /************************************************/
    
 typedef struct{
-    UInt8 PLMN_Identity[3];
+    #define PLMN_Identity_MAX_BYTES 1
+    UInt8 PLMN_Identity[PLMN_Identity_MAX_BYTES];
 }_e2ap_PLMN_Identity_t; //OCTET STRING SIZE N - P  ?
  
 /************************************************/
@@ -158,8 +159,8 @@ typedef enum{
 /************************************************/
   
 typedef struct{
-    unsigned int numocts;
-    const char* data;
+    UInt8 num_string_len;
+    UInt8 * string_data;
 }_e2ap_ServiceLayerCause_t; //OCTET STRING - P  ?
  
 /************************************************/
@@ -176,13 +177,13 @@ typedef struct{
 
  
 typedef struct{  
-    #define E2AP_CAUSE_e2ap_RIC_REQUEST 0 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_RIC_SERVICE 1 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_E2NODE 2 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_TRANSPORT 3 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_PROTOCOL 4 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_MISC 5 //NAME + field_name
-    #define E2AP_CAUSE_e2ap_SERVICE_LAYER 6 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_RIC_REQUEST 1 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_RIC_SERVICE 2 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_E2NODE 3 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_TRANSPORT 4 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_PROTOCOL 5 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_MISC 6 //NAME + field_name
+    #define E2AP_CAUSE_e2ap_SERVICE_LAYER 7 //NAME + field_name
     #define E2AP_CAUSE_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -239,10 +240,7 @@ typedef enum{
 /*        PRIMITIVE - AMFName               */
 /************************************************/
   
-typedef struct{
-    unsigned int numchars;
-    const char* data;
-}_e2ap_AMFName_t; //Printable STRING SIZE (A..B,...) - P  ?
+typedef const char* _e2ap_AMFName_t;//Printable STRING SIZE (A..B,...) - P  ?
  
 /************************************************/
 /*       SEQUENCE - E2nodeComponentInterfaceNG        */
@@ -263,7 +261,7 @@ typedef struct{
 
  
 typedef struct{  
-    #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 0 //NAME + field_name
+    #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 1 //NAME + field_name
     #define E2AP_GNB_ID_CHOICE_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -303,9 +301,9 @@ typedef struct{
 
  
 typedef struct{  
-    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_MACRO 0 //NAME + field_name
-    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_SHORTMACRO 1 //NAME + field_name
-    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_LONGMACRO 2 //NAME + field_name
+    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_MACRO 1 //NAME + field_name
+    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_SHORTMACRO 2 //NAME + field_name
+    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_LONGMACRO 3 //NAME + field_name
     #define E2AP_ENB_ID_CHOICE_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -332,8 +330,8 @@ typedef struct{
 
  
 typedef struct{  
-    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB 0 //NAME + field_name
-    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB 1 //NAME + field_name
+    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB 1 //NAME + field_name
+    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB 2 //NAME + field_name
     #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -397,10 +395,7 @@ typedef struct{
 /*        PRIMITIVE - MMEname               */
 /************************************************/
   
-typedef struct{
-    unsigned int numchars;
-    const char* data;
-}_e2ap_MMEname_t; //Printable STRING SIZE (A..B,...) - P  ?
+typedef const char* _e2ap_MMEname_t;//Printable STRING SIZE (A..B,...) - P  ?
  
 /************************************************/
 /*       SEQUENCE - E2nodeComponentInterfaceS1        */
@@ -436,10 +431,10 @@ typedef struct{
 
  
 typedef struct{  
-    #define E2AP_ENB_ID_e2ap_MACRO_E_NB_ID 0 //NAME + field_name
-    #define E2AP_ENB_ID_e2ap_HOME_E_NB_ID 1 //NAME + field_name
-    #define E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID 2 //NAME + field_name
-    #define E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID 3 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_MACRO_E_NB_ID 1 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_HOME_E_NB_ID 2 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID 3 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID 4 //NAME + field_name
     #define E2AP_ENB_ID_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -472,7 +467,7 @@ typedef struct{
 
  
 typedef struct{  
-    #define E2AP_ENGNB_ID_e2ap_G_NB_ID 0 //NAME + field_name
+    #define E2AP_ENGNB_ID_e2ap_G_NB_ID 1 //NAME + field_name
     #define E2AP_ENGNB_ID_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -511,13 +506,13 @@ typedef struct{     #define E2AP_E2NODE_COMPONENT_INTERFACE_X2_e2ap_GLOBAL_E_NB_
 
  
 typedef struct{  
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG 0 //NAME + field_name
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN 1 //NAME + field_name
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1 2 //NAME + field_name
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_F1 3 //NAME + field_name
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_W1 4 //NAME + field_name
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_S1 5 //NAME + field_name
-    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_X2 6 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG 1 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN 2 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1 3 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_F1 4 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_W1 5 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_S1 6 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_X2 7 //NAME + field_name
     #define E2AP_E2NODE_COMPONENT_ID_e2ap_INVALID 0xFF
 
     UInt32 choice_type;
@@ -578,6 +573,7 @@ typedef struct{
 /*       IE - E2setupResponse - (IEs)               */
 /******************************************/
 typedef struct{
+    // thiếu bitmask
     _e2ap_TransactionID_t id_TransactionID; //e2ap_{item_type} {field_name} alias = 5
     _e2ap_GlobalRIC_ID_t id_GlobalRIC_ID; //e2ap_{item_type} {field_name} alias = -1
     _e2ap_RANfunctionsID_List_t id_RANfunctionsAccepted; //e2ap_{item_type} {field_name} alias = -1

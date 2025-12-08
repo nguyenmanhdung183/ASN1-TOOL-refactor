@@ -24,10 +24,10 @@
 
  
 typedef struct{  
-    #define E2AP_ENB_ID_e2ap_MACRO_E_NB_ID 0 //NAME + field_name
-    #define E2AP_ENB_ID_e2ap_HOME_E_NB_ID 1 //NAME + field_name
-    #define E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID 2 //NAME + field_name
-    #define E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID 3 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_MACRO_E_NB_ID 1 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_HOME_E_NB_ID 2 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID 3 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID 4 //NAME + field_name
     #define E2AP_ENB_ID_e2ap_INVALID 0xFF
 
     UInt32 choice_type;

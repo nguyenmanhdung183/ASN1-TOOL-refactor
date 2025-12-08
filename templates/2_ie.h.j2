@@ -18,6 +18,7 @@ typedef enum {
 } e2ap_{{ies_name}}_TVALUE;
 
 {% if choices[0].note == "child_of_msg" %} {#msg chill#}
+/* ie là con của msg*/
 typedef struct EXTERN e2ap_{{choices[0].dad_type_name|replace('-', '_')}}_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
@@ -46,6 +47,7 @@ EXTERN void asn1Free_e2ap_{{choices[0].dad_type_name|replace('-', '_')}}_protoco
 EXTERN int asn1PrtToStr_e2ap_{{choices[0].dad_type_name|replace('-', '_')}}_protocolIEs_element (const char * name, e2ap_{{choices[0].dad_type_name|replace('-', '_')}}_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
 
 {% else %}{#msg thường#}
+/* ie thường */
 typedef struct EXTERN e2ap_{{ies_name}} {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;

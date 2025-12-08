@@ -9,7 +9,7 @@
 
  
 typedef struct{  
-    #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 0 //NAME + field_name
+    #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 1 //NAME + field_name
     #define E2AP_GNB_ID_CHOICE_e2ap_INVALID 0xFF
 
     UInt32 choice_type;

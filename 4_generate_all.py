@@ -619,7 +619,7 @@ def gen_choice_outputs():
             safe_write(f"output/e2ap_{name_clean}.h", env.get_template("2_choice.h.j2").render(data))
             safe_write(f"output/e2ap_{name_clean}.c", env.get_template("2_choice.c.j2").render(data))
             safe_write(f"main_struct_output/e2ap_{name_clean}.h", env.get_template("1_main_struct_choice.h.j2").render(data))
-           
+            safe_write(f"compose_output/compose_{name_clean}.c", env.get_template("3_compose_choice.c.j2").render(data))
         except Exception as e:
             print(f"[WARN] choice template failed for {name_clean}: {e}")
         print(f"choice data:\n{json.dumps(data, indent=4)}\n\n")
@@ -677,6 +677,7 @@ def gen_single_container_outputs():
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}.c"), env.get_template("2_single_container.c.j2").render(data))
             #safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}_helper.h"), env.get_template("seq_of_single_container_helper.h.j2").render(data))
             safe_write(os.path.join(STRUCT_DIR, f"e2ap_{list_name}.h"), env.get_template("1_main_struct_single_container.h.j2").render(data))
+            safe_write(os.path.join(COMPOSE_DIR, f"compose_{list_name}.c"), env.get_template("3_compose_single_container.c.j2").render(data))
         except Exception as e:
             print(f"[WARN] single container template failed for {list_name}: {e}")
        # print(f"SingleContainer → {list_name} (uses {item_ies})")
@@ -700,6 +701,10 @@ def gen_ie_outputs():
     for ies_name_raw, group in ie_rows.groupby("Type_Name"):
         ies_name = str(ies_name_raw).replace("-", "_")
         choices = []
+        parent_full = []
+        child_msg_parent = None
+        child_msg_type = None
+
         for _, row in group.iterrows():
             item_type = row.get("IE_Type")
             field_name = row.get("Field_Name")
@@ -708,6 +713,23 @@ def gen_ie_outputs():
             dad_type_name = row.get("Dad_Name")
             alias = row.get("Alias")
             note = row.get("Note")
+            
+            # Nếu row được đánh dấu child_of_msg → tìm message cha thật sự
+            if note == "child_of_msg":
+                # IE list của message = tên gốc của IE (Type_Name)
+                ie_list_name = ies_name_raw  # ví dụ: E2connectionUpdate-IEs
+
+                # tìm dòng của message Container chứa IE list này
+                msg_row = df[
+                    (df["ASN1_Type"] == "Container") &
+                    (df["IE_Type"] == ie_list_name)
+                ]
+
+                if not msg_row.empty:
+                    child_msg_parent = msg_row.iloc[0]["Type_Name"]  # vd: E2connectionUpdate
+                    child_msg_type = ies_name  # E2connectionUpdate_IEs
+                    parent_full = msg_row.iloc[0].to_dict()
+            # ---------------------------------------------
             presence = "optional" if (pd.notna(optional_val) and str(optional_val).strip() != "") else "mandatory"
             field_name_clean = str(field_name).replace("-", "_")
 
@@ -718,6 +740,7 @@ def gen_ie_outputs():
                 "item_type": item_type.replace("-", "_"),
                 "dad_type_name": dad_type_name,
                 "field_name": field_name_clean,
+                "field" :item_type.replace("-", "_"),
                 "presence": presence,
                 "alias": alias,
                 "critical": criticality,
@@ -751,12 +774,18 @@ def gen_ie_outputs():
             #     print(f"IE (BIG) → {ies_name_cleaned} dùng ie_big_msg.h/c")
             # else:
             if True:
-                data = {"ies_name": ies_name_raw.replace("-", "_"), "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}"}
+                data = {"ies_name": ies_name_raw.replace("-", "_"), "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}"}
 
                 safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{ies_name}.h"), env.get_template("2_ie.h.j2").render(data))
                 safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{ies_name}.c"), env.get_template("2_ie.c.j2").render(data))
                 safe_write(os.path.join(STRUCT_DIR, f"e2ap_{ies_name}.h"), env.get_template("1_main_struct_ie.h.j2").render(data))
+                # IE thường
+                safe_write(os.path.join(COMPOSE_DIR, f"compose_{ies_name}.c"), env.get_template("3_compose_ie.c.j2").render(data))
 
+            if child_msg_parent and child_msg_type == ies_name: #encode_XXX -> IE là con của message
+                compose_name = child_msg_parent.replace("-", "_")  # ví dụ: E2connectionUpdate
+                safe_write(os.path.join(COMPOSE_DIR, f"compose_{compose_name}.c"),env.get_template("3_encode_ie_child_of_msg.c.j2").render(data))
+            
                # print(f"IE → {ies_name} dùng ie.h/c")
         except Exception as e:
             print(f"[WARN] ie template failed for {ies_name}: {e}")
@@ -797,6 +826,7 @@ def gen_sequence_outputs():
             enum_items = parse_enum_from_types(row)
             fields.append({
                 "field": field_name,
+                "field_name": field_name,
                 "ie_type": ie_type_str.replace("-", "_"),
                 "presence": presence,
                 "alias": row.get("Alias"),
@@ -883,9 +913,9 @@ def gen_sequence_outputs():
         try:
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{seq_name}.h"), env.get_template("2_sequence.h.j2").render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{seq_name}.c"), env.get_template("2_sequence.c.j2").render(data))
-            safe_write(os.path.join(COMPOSE_DIR, f"compose_{seq_name}_en.c"), env.get_template("compose_sequence_en.c.j2").render(data))
+            #safe_write(os.path.join(COMPOSE_DIR, f"compose_{seq_name}_en.c"), env.get_template("compose_sequence_en.c.j2").render(data))
             safe_write(os.path.join(STRUCT_DIR, f"e2ap_{seq_name}.h"), env.get_template("1_main_struct_sequence.h.j2").render(data))
-            
+            safe_write(os.path.join(COMPOSE_DIR, f"compose_{seq_name}.c"), env.get_template("3_compose_sequence.c.j2").render(data))
 
             #print(f"SEQUENCE → e2ap_{seq_name}.h/c  ({len(fields)} fields, extensible={extensible})")
         except Exception as e:
@@ -967,6 +997,7 @@ def gen_container_outputs():
         try:
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{container_name}.h"), env.get_template("2_container.h.j2").render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{container_name}.c"), env.get_template("2_container.c.j2").render(data))
+            #safe_write(os.path.join(COMPOSE_DIR, f"e2ap_{container_name}.c"), env.get_template("3_encode_container.c.j2").render(data))
             #print(f"Container → {container_name} with {len(ies_list)} child IEs")
         except Exception as e:
             print(f"[WARN] container template failed for {container_name}: {e}")

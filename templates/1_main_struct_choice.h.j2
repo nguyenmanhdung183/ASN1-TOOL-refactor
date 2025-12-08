@@ -48,7 +48,7 @@ typedef struct{
 {% endfor %} 
 typedef struct{ {# /*define for choice*/#} 
 {% for d in choices %}
-    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.field | replace('-', '_') | camel_to_upper_snake }} {{loop.index0}} //NAME + field_name
+    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.field | replace('-', '_') | camel_to_upper_snake }} {{loop.index0 + 1}} //NAME + field_name
 {% endfor %}
     #define E2AP_{{name|camel_to_upper_snake}}_e2ap_INVALID 0xFF
 

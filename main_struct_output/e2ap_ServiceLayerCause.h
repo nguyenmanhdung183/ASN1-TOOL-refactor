@@ -3,7 +3,7 @@
 /************************************************/
   
 typedef struct{
-    unsigned int numocts;
-    const char* data;
+    UInt8 num_string_len;
+    UInt8 * string_data;
 }_e2ap_ServiceLayerCause_t; //OCTET STRING - P  ?
  

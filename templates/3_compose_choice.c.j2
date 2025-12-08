@@ -1,0 +1,48 @@
+// compose choice trong xn thì mẫu là compose_globalNG_RAN_id()
+xnap_return_et e2ap_compose_{{name}}(
+                OSCTXT                        *p_asn1_ctx,
+                e2ap_{{name}}             *p_e2ap_{{name}}, //dest
+                _e2ap_{{name}}_t          *p_{{name}} //src
+                )
+{
+    p_e2ap_{{name}}->t =  p_{{name}}->choice_type;
+    xnap_return_et retVal = XNAP_SUCCESS;
+
+    switch(p_{{name}}->t)
+    {
+        {% for d in choices %}
+        /*CHOICE_INDEX-{{loop.index}}    {{d.field}}*/
+        case: E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.field | replace('-', '_') | camel_to_upper_snake }}:
+        {
+            {% if d.primitive.primitive_id ==-1 %}{#not primitive #}
+            p_e2ap_{{name}}->u.{{d.field}} = rtxMemAllocType(p_asn1_ctx, e2ap_{{d.ie_type}});
+            if(GNB_PNULL == p_e2ap_{{name}}->u.{{d.field}}){
+                /* not enough memory */
+                XNAP_TRACE(XNAP_ERROR,"%s: Memory allocation failed for e2ap_{{d.ie_type}}",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            asn1Init_e2ap_{{d.ie_type}}(p_e2ap_{{name}}->u.{{d.field}});
+
+            if(XNAP_FAILURE == e2ap_compose_{{d.ie_type}}(xxx)){
+                XNAP_TRACE(XNAP_ERROR,"%s: compose failed for e2ap_{{d.ie_type}}",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+
+            {% endif %}{#end not primitive #}
+
+            {% if d.primitive.primitive_id != -1 %} {#primitive #}
+                {% if d.primitive.primitive_id ==  5 or d.primitive.primitive_id ==  6 %}{# INTERGER #}
+
+                {% endif %} {#end INTERGER #}
+                {% if d.primitive.primitive_id ==  13 %} {# ENUM #}
+                {% endif %} {#end ENUM #}
+                {% if d.primitive.primitive_id ==  4 or d.primitive.primitive_id ==  3  %}{# BIT STRING 3+4 #}
+                {% endif %} {#end BIT STRING 3+4 #}
+            {% endif %} {#end primitive #}
+            break;
+        }
+
+        {% endfor %}
+    }
+    return retVal;
+}
