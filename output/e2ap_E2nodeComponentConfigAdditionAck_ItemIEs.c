@@ -39,11 +39,11 @@ int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2
       if (stat != 0) return LOG_RTERR (pctxt, stat);
 
       switch (pvalue->value.t) {
-      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item:
          
         // RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item");
          RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck-Item");
-         stat = asn1PE_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt, pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+         stat = asn1PE_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt, pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
          RTXCTXTPOPELEMNAME (pctxt);
       
          break;
@@ -109,16 +109,17 @@ int asn1PD_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2
       bitStartOffset = PU_GETCTXTBITOFFSET(pctxt);
       bitLength = openTypeLen * 8;
       switch (pvalue->id){
-         case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item;
+         case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item;
             RTXCTXTPUSHELEMNAME(pctxt, "E2nodeComponentConfigAdditionAck-Item");
-            //pvalue->value.u._e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item 
-             pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item = rtxMemAllocType(pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item);
-            //asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item(pvalue->value.u._e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
-            asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item(pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+            //pvalue->value.u._e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_id_E2nodeComponentConfigAdditionAck_Item 
+             pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item 
+                    = rtxMemAllocType(pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item);
+            //asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item(pvalue->value.u._e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_id_E2nodeComponentConfigAdditionAck_Item);
+            asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item(pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
             stat = asn1PD_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt,
                     (e2ap_E2nodeComponentConfigAdditionAck_Item*)pvalue->value.
-                    u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
+                    u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
             if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
             break;
@@ -183,10 +184,10 @@ void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap
 {
    if(0==pvalue) return;
    switch(pvalue->value.t){
-      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
-         asn1Free_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt, pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
-         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item);
-         pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item = 0;
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item:
+         asn1Free_e2ap_E2nodeComponentConfigAdditionAck_Item (pctxt, pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
+         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item);
+         pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item = 0;
          break;
       case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_UNDEF_:
          if(0!=pvalue->value.u.extElem1){
@@ -211,9 +212,9 @@ int  asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (const char * na
       if(rtPrintToStringOpenBrace("value", buffer, bufSize)<0)
          return -1;
       switch (pvalue->value.t) {
-      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item:
+      case T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item:
          if(asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_Item("E2nodeComponentConfigAdditionAck-Item",
-                pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item, buffer, bufSize)<0)
+                pvalue->value.u._e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item, buffer, bufSize)<0)// dungnm23 check lai nhe xem la
             return -1;
          break;
       default:

@@ -6,7 +6,7 @@
 
 typedef struct EXTERN e2ap_{{name|replace("-","_")}} {
     OSUINT32 numocts;
-    OSOCTET data[( {{metadata.size}} )];
+    OSOCTET data[{{size}}];
 } e2ap_{{name|replace("-","_")}};
 
 EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue);

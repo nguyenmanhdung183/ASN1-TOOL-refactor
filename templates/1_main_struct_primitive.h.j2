@@ -27,13 +27,13 @@ typedef UInt{{metadata.max|stdbit}} _e2ap_{{name}}_t;// INTEGER (A..B) - P  ?
 {% endif %}
 {% if metadata.primitive_id ==  8%} {# OCTET STRING SIZE N ? #}  
 typedef struct{
-    #define {{name}}_MAX_BYTES {{(metadata.max +7)//8 }}
+    #define {{name}}_MAX_BYTES {{size}}
     UInt8 {{name}}[{{name}}_MAX_BYTES];
 }_e2ap_{{name}}_t; //OCTET STRING SIZE N - P  ?
 {% endif %}
 {% if metadata.primitive_id ==  9%} {# OCTET STRING ?#} 
 typedef struct{
-    UInt{{metadata.max |stdbit}} num_string_len;
+    UInt{{metadata.max |stdbit}} num_string_len; /// dungnm23 fix size
     UInt8 * string_data;
 }_e2ap_{{name}}_t; //OCTET STRING - P  ?
 {% endif %}

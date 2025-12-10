@@ -39,11 +39,11 @@ int asn1PE_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs
       if (stat != 0) return LOG_RTERR (pctxt, stat);
 
       switch (pvalue->value.t) {
-      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item:
          
         // RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionID_ItemIEs_id_RANfunctionID_Item");
          RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionID-Item");
-         stat = asn1PE_e2ap_RANfunctionID_Item (pctxt, pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+         stat = asn1PE_e2ap_RANfunctionID_Item (pctxt, pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item);
          RTXCTXTPOPELEMNAME (pctxt);
       
          break;
@@ -109,16 +109,17 @@ int asn1PD_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs
       bitStartOffset = PU_GETCTXTBITOFFSET(pctxt);
       bitLength = openTypeLen * 8;
       switch (pvalue->id){
-         case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
-            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item;
+         case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item:
+            pvalue->value.t = T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item;
             RTXCTXTPUSHELEMNAME(pctxt, "RANfunctionID-Item");
-            //pvalue->value.u._e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item 
-             pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item = rtxMemAllocType(pctxt, e2ap_RANfunctionID_Item);
-            //asn1Init_e2ap_RANfunctionID_Item(pvalue->value.u._e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item);
-            asn1Init_e2ap_RANfunctionID_Item(pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+            //pvalue->value.u._e2ap_RANfunctionID_ItemIEs_id_id_RANfunctionID_Item 
+             pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item 
+                    = rtxMemAllocType(pctxt, e2ap_RANfunctionID_Item);
+            //asn1Init_e2ap_RANfunctionID_Item(pvalue->value.u._e2ap_RANfunctionID_ItemIEs_id_id_RANfunctionID_Item);
+            asn1Init_e2ap_RANfunctionID_Item(pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item);
             stat = asn1PD_e2ap_RANfunctionID_Item (pctxt,
                     (e2ap_RANfunctionID_Item*)pvalue->value.
-                    u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
+                    u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item);
             if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
             break;
@@ -183,10 +184,10 @@ void asn1Free_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_Item
 {
    if(0==pvalue) return;
    switch(pvalue->value.t){
-      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
-         asn1Free_e2ap_RANfunctionID_Item (pctxt, pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
-         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item);
-         pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item = 0;
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item:
+         asn1Free_e2ap_RANfunctionID_Item (pctxt, pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item);
+         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item);
+         pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item = 0;
          break;
       case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_UNDEF_:
          if(0!=pvalue->value.u.extElem1){
@@ -211,9 +212,9 @@ int  asn1PrtToStr_e2ap_RANfunctionID_ItemIEs (const char * name, e2ap_RANfunctio
       if(rtPrintToStringOpenBrace("value", buffer, bufSize)<0)
          return -1;
       switch (pvalue->value.t) {
-      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_RANfunctionID_Item:
+      case T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item:
          if(asn1PrtToStr_e2ap_RANfunctionID_Item("RANfunctionID-Item",
-                pvalue->value.u._e2apRANfunctionID_ItemIEs_RANfunctionID_Item, buffer, bufSize)<0)
+                pvalue->value.u._e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item, buffer, bufSize)<0)// dungnm23 check lai nhe xem la
             return -1;
          break;
       default:

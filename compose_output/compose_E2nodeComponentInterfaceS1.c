@@ -15,10 +15,11 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceS1(
 
 //cần alloc node
 
-    {  /*SEQ_ELEM-1  Encode mme_name*/
+    {  /*SEQ_ELEM-1  Encode mme_name alias-id = 10 - primitive = False*/
+         /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_MMEname(p_asn1_ctx,
-                                                p_e2ap_E2nodeComponentInterfaceS1->mme_name,
-                                                p_E2nodeComponentInterfaceS1->mme_name))
+                                                &p_e2ap_E2nodeComponentInterfaceS1->mme_name,
+                                                &p_E2nodeComponentInterfaceS1->mme_name))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field mme_name",__FUNCTION__);
             return XNAP_FAILURE;

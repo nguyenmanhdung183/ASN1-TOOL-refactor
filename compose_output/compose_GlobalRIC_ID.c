@@ -27,20 +27,22 @@ xnap_return_et e2ap_compose_GlobalRIC_ID(
 
 //cần alloc node
 
-    {  /*SEQ_ELEM-1  Encode pLMN_Identity*/
+    {  /*SEQ_ELEM-1  Encode pLMN_Identity alias-id = 8 - primitive = False*/
+         /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_PLMN_Identity(p_asn1_ctx,
-                                                p_e2ap_GlobalRIC_ID->pLMN_Identity,
-                                                p_GlobalRIC_ID->pLMN_Identity))
+                                                &p_e2ap_GlobalRIC_ID->pLMN_Identity,
+                                                &p_GlobalRIC_ID->pLMN_Identity))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field pLMN_Identity",__FUNCTION__);
             return XNAP_FAILURE;
         }
     } /* end SEQ_ELEM-1  Encode pLMN_Identity*/
 
-    {  /*SEQ_ELEM-2  Encode ric_ID*/
-         if(XNAP_FAILURE == e2ap_compose_GlobalRIC_ID_ric_ID(p_asn1_ctx,
-                                                p_e2ap_GlobalRIC_ID->ric_ID,
-                                                p_GlobalRIC_ID->ric_ID))
+    {  /*SEQ_ELEM-2  Encode ric_ID alias-id = -1 - primitive = True*/
+        /*==primitive in scope==*/
+        if(XNAP_FAILURE == e2ap_compose_GlobalRIC_ID_ric_ID(p_asn1_ctx,
+                                                &p_e2ap_GlobalRIC_ID->ric_ID,
+                                                &p_GlobalRIC_ID->ric_ID))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ric_ID",__FUNCTION__);
             return XNAP_FAILURE;

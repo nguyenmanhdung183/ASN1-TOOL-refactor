@@ -1,6 +1,8 @@
 import os
 import glob
 
+
+RESULT_DIR = "1_RESULT"
 OUTPUT_DIR = "output"
 MERGED_DIR = "merged_output"
 MAIN_STRUCT_DIR = "main_struct_output"
@@ -173,6 +175,29 @@ def compose_main_file_by_parts(parts, existed_parts, skip_parts=None):
 
     print(f" Đã tạo file {compose_out_path} trong thư mục {COMPOSE_DIR}")
 
+#==============================================
+
+def move_result_files():
+    os.makedirs(RESULT_DIR, exist_ok=True)
+
+    merged_c_path = os.path.join(MERGED_DIR, MAIN_C_FILE)
+    merged_h_path = os.path.join(MERGED_DIR, MAIN_H_FILE)
+
+    if os.path.isfile(merged_c_path):
+        os.replace(merged_c_path, os.path.join(RESULT_DIR, MAIN_C_FILE))
+    if os.path.isfile(merged_h_path):
+        os.replace(merged_h_path, os.path.join(RESULT_DIR, MAIN_H_FILE))
+
+    main_struct_path = os.path.join(MAIN_STRUCT_DIR, MAIN_STRUCT_FILE)
+    if os.path.isfile(main_struct_path):
+        os.replace(main_struct_path, os.path.join(RESULT_DIR, MAIN_STRUCT_FILE))
+
+    compose_c_path = os.path.join(COMPOSE_DIR, COMPOSE_C_FILE)
+    if os.path.isfile(compose_c_path):
+        os.replace(compose_c_path, os.path.join(RESULT_DIR, COMPOSE_C_FILE))
+
+    print(f"Đã di chuyển các file kết quả vào thư mục {RESULT_DIR}")
+
 #===============================================
 def main():
     os.makedirs(MERGED_DIR, exist_ok=True)
@@ -266,6 +291,6 @@ def main():
     merge_main_struct_headers_by_parts(all_parts, existed_parts,skip_parts)
     # Merge COMPOSE_C_FILE
     compose_main_file_by_parts(all_parts, existed_parts,skip_parts)
-
+    move_result_files()
 if __name__ == "__main__":
     main()

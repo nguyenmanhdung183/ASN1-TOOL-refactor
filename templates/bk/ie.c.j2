@@ -45,7 +45,7 @@ int asn1PE_e2ap_{{ies_name}} (OSCTXT* pctxt, e2ap_{{ies_name}}* pvalue)
       case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.item_type | replace('-', '_') }}:
          
          RTXCTXTPUSHELEMNAME (pctxt, "_e2ap_{{ ies_name }}_id_{{ d.item_type | replace('-', '_') }}");
-         stat = asn1PE_e2ap_{{ d.item_type | replace('-', '_') }} (pctxt, pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_')}});
+         stat = asn1PE_e2ap_{{ d.item_type | replace('-', '_') }} (pctxt, pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_')}});
          RTXCTXTPOPELEMNAME (pctxt);
       
          break;
@@ -116,13 +116,14 @@ int asn1PD_e2ap_{{ies_name}} (OSCTXT* pctxt, e2ap_{{ies_name}}* pvalue)
          case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.item_type | replace('-', '_') }}:
             pvalue->value.t = T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.item_type | replace('-', '_') }};
             RTXCTXTPUSHELEMNAME(pctxt, "id-{{ d.item_type | replace('_', '-') }}");
-            //pvalue->value.u._e2ap_{{ ies_name }}_id_{{ d.item_type | replace('-', '_') }} 
-             pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_') }} = rtxMemAllocType(pctxt, e2ap_{{ d.item_type | replace('-', '_') }});
-            //asn1Init_e2ap_{{ d.item_type | replace('-', '_') }}(pvalue->value.u._e2ap_{{ ies_name }}_id_{{ d.item_type | replace('-', '_') }});
-                 asn1Init_e2ap_{{ d.item_type | replace('-', '_') }}(pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_') }});
+            //pvalue->value.u._e2ap_{{ ies_name }}_id_{{ d.field_name | replace('-', '_') }} 
+             pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_') }} 
+                        = rtxMemAllocType(pctxt, e2ap_{{ d.item_type | replace('-', '_') }});
+            //asn1Init_e2ap_{{ d.item_type | replace('-', '_') }}(pvalue->value.u._e2ap_{{ ies_name }}_id_{{ d.field_name | replace('-', '_') }});
+                 asn1Init_e2ap_{{ d.item_type | replace('-', '_') }}(pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name| replace('-', '_') }});
             stat = asn1PD_e2ap_{{ d.item_type | replace('-', '_') }} (pctxt,
                 (e2ap_{{ d.item_type | replace('-', '_') }}*)pvalue->value.
-                u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_') }});
+                u._e2ap{{ ies_name }}_{{ d.field_name| replace('-', '_') }});
             if(stat!=0) return LOG_RTERR(pctxt, stat);
             RTXCTXTPOPELEMNAME(pctxt);
             break;
@@ -189,10 +190,10 @@ void asn1Free_e2ap_{{ies_name}} (OSCTXT* pctxt, e2ap_{{ies_name}}* pvalue)
    if(0==pvalue) return;
    switch(pvalue->value.t){
    {% for d in choices %}
-      case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.item_type | replace('-', '_') }}:
-         asn1Free_e2ap_{{ d.item_type | replace('-', '_') }} (pctxt, pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_')}});
-         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_')}});
-         pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_')}} = 0;
+      case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.field_name | replace('-', '_') }}:
+         asn1Free_e2ap_{{ d.item_type | replace('-', '_') }} (pctxt, pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_')}});
+         rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_')}});
+         pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_')}} = 0;
          break;
    {% endfor %}
       case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_UNDEF_:
@@ -219,9 +220,9 @@ int  asn1PrtToStr_e2ap_{{ies_name}} (const char * name, e2ap_{{ies_name}}* pvalu
          return -1;
       switch (pvalue->value.t) {
       {% for d in choices %}
-      case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.item_type | replace('-', '_') }}:
+      case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.field_name | replace('-', '_') }}:
          if(asn1PrtToStr_e2ap_{{ d.item_type | replace('-', '_') }}("{{ d.item_type | replace('_', '-') }}",
-            pvalue->value.u._e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_')}}, buffer, bufSize)<0)
+            pvalue->value.u._e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_')}}, buffer, bufSize)<0)
             return -1;
          break;
       {% endfor %}

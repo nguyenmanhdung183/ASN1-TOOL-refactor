@@ -15,20 +15,32 @@ xnap_return_et e2ap_compose_RANfunctionIDcause_Item(
 
 //cần alloc node
 
-    {  /*SEQ_ELEM-1  Encode ranFunctionID*/
+    {  /*SEQ_ELEM-1  Encode ranFunctionID alias-id = 6 - primitive = False*/
+         /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_RANfunctionID(p_asn1_ctx,
-                                                p_e2ap_RANfunctionIDcause_Item->ranFunctionID,
-                                                p_RANfunctionIDcause_Item->ranFunctionID))
+                                                &p_e2ap_RANfunctionIDcause_Item->ranFunctionID,
+                                                &p_RANfunctionIDcause_Item->ranFunctionID))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ranFunctionID",__FUNCTION__);
             return XNAP_FAILURE;
         }
     } /* end SEQ_ELEM-1  Encode ranFunctionID*/
 
-    {  /*SEQ_ELEM-2  Encode cause*/
+    {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
+        /* == not primitive (SEQ or CHOICE)==*/
+            /* 1.alloc mem */
+        p_e2ap_RANfunctionIDcause_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
+        if(XNAP_P_NULL == p_e2ap_RANfunctionIDcause_Item->cause)
+        {
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+            /* 2.init */
+        asn1Init_e2ap_Cause(&p_e2ap_RANfunctionIDcause_Item->cause);
+            /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                p_e2ap_RANfunctionIDcause_Item->cause,
-                                                p_RANfunctionIDcause_Item->cause))
+                                                &p_e2ap_RANfunctionIDcause_Item->cause,
+                                                &p_RANfunctionIDcause_Item->cause))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;

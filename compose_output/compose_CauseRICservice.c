@@ -11,4 +11,4 @@
     *p_dest = (e2ap_CauseRICservice)*p_src;
     return XNAP_SUCCESS;
 }
- 
+   

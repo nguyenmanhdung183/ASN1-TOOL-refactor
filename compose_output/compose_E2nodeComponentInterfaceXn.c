@@ -15,10 +15,21 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceXn(
 
 //cần alloc node
 
-    {  /*SEQ_ELEM-1  Encode global_NG_RAN_Node_ID*/
+    {  /*SEQ_ELEM-1  Encode global_NG_RAN_Node_ID alias-id = -1 - primitive = False*/
+        /* == not primitive (SEQ or CHOICE)==*/
+            /* 1.alloc mem */
+        p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalNG_RANNode_ID);
+        if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID)
+        {
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_NG_RAN_Node_ID",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+            /* 2.init */
+        asn1Init_e2ap_GlobalNG_RANNode_ID(&p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID);
+            /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalNG_RANNode_ID(p_asn1_ctx,
-                                                p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID,
-                                                p_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID))
+                                                &p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID,
+                                                &p_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_NG_RAN_Node_ID",__FUNCTION__);
             return XNAP_FAILURE;

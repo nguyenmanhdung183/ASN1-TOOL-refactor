@@ -79,6 +79,8 @@ def load_bottomup():
         with open(f, "r", encoding="utf-8") as file:
             for line in file:
                 #line = line.replace("-", "_")
+                if line.endswith("PrintableString\n"):
+                    continue
                 text += "// " + line   # line vẫn giữ \n
 
     return text
@@ -566,6 +568,7 @@ def gen_choice_outputs():
             choices.append({ # ví dụ 1 bản tin choice có 3 trường thì coi như là mảng 3 phần tử
                 "tag": tag,
                 "field": field.replace("-", "_"),
+                "field_name": field.replace("-", "_"),
                 "type": (ie_type_str or "").replace("-", "_"),
                 "ie_type": (ie_type_str or "").replace("-", "_"),
                 "alias": row.get("Alias"),
@@ -628,7 +631,8 @@ def gen_choice_outputs():
             "name": name_clean,
             "choices": choices,
             "extensible": extensible,
-            "primitive_files_data": primitive_files_data  # Gửi thông tin file con vào template
+            "primitive_files_data": primitive_files_data,  # Gửi thông tin file con vào template
+            "fields": choices
         }
         print(f"dungnm23 choice_h_content: {data['primitive_files_data']}")
 
@@ -678,7 +682,7 @@ def gen_single_container_outputs():
             "item_ies": item_ies,
             "item_type": item_type_str,
             "ie_id": ie_id,
-            "criticality": f"e2ap_Criticality_{criticality}",
+            "criticality": criticality,
             "min_size": min_value,
             "max_size": max_size,
             "primitive": primitive_sheet,

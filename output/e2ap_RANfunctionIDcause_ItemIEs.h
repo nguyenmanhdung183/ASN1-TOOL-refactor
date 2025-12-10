@@ -5,7 +5,7 @@
 /* ie là con của msg + ie thường*/
 typedef enum {
    T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_UNDEF_,
-   T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item 
+   T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_id_RANfunctionIEcause_Item 
  
 } e2ap_RANfunctionIDcause_ItemIEs_TVALUE;
 
@@ -16,7 +16,7 @@ typedef struct EXTERN e2ap_RANfunctionIDcause_ItemIEs {
    struct{
       e2ap_RANfunctionIDcause_ItemIEs_TVALUE t;
       union {
-         e2ap_RANfunctionIDcause_Item * _e2apRANfunctionIDcause_ItemIEs_RANfunctionIDcause_Item;
+         e2ap_RANfunctionIDcause_Item * _e2apRANfunctionIDcause_ItemIEs_id_RANfunctionIEcause_Item;
 
          ASN1OpenType* extElem1;  /* extension */
       } u;

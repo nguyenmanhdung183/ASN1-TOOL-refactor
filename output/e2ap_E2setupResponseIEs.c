@@ -157,7 +157,8 @@ EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap
             case ASN1V_e2ap_id_TransactionID:
             pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID;
             RTXCTXTPUSHELEMNAME(pctxt, "id-TransactionID");
-                pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = rtxMemAllocType(pctxt, e2ap_TransactionID);
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID 
+                    = rtxMemAllocType(pctxt, e2ap_TransactionID);
 
                 asn1Init_e2ap_TransactionID(pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
 
@@ -173,7 +174,8 @@ EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap
             case ASN1V_e2ap_id_GlobalRIC_ID:
             pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID;
             RTXCTXTPUSHELEMNAME(pctxt, "id-GlobalRIC-ID");
-                pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = rtxMemAllocType(pctxt, e2ap_GlobalRIC_ID);
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID 
+                    = rtxMemAllocType(pctxt, e2ap_GlobalRIC_ID);
 
                 asn1Init_e2ap_GlobalRIC_ID(pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
 
@@ -189,7 +191,8 @@ EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap
             case ASN1V_e2ap_id_RANfunctionsAccepted:
             pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted;
             RTXCTXTPUSHELEMNAME(pctxt, "id-RANfunctionsAccepted");
-                pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted = rtxMemAllocType(pctxt, e2ap_RANfunctionsID_List);
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted 
+                    = rtxMemAllocType(pctxt, e2ap_RANfunctionsID_List);
 
                 asn1Init_e2ap_RANfunctionsID_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted);
 
@@ -205,7 +208,8 @@ EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap
             case ASN1V_e2ap_id_RANfunctionsRejected:
             pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected;
             RTXCTXTPUSHELEMNAME(pctxt, "id-RANfunctionsRejected");
-                pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected = rtxMemAllocType(pctxt, e2ap_RANfunctionsIDcause_List);
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected 
+                    = rtxMemAllocType(pctxt, e2ap_RANfunctionsIDcause_List);
 
                 asn1Init_e2ap_RANfunctionsIDcause_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected);
 
@@ -221,7 +225,8 @@ EXTERN int  asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap
             case ASN1V_e2ap_id_E2nodeComponentConfigAdditionAck:
             pvalue->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck;
             RTXCTXTPUSHELEMNAME(pctxt, "id-E2nodeComponentConfigAdditionAck");
-                pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck = rtxMemAllocType(pctxt, e2ap_E2nodeComponentConfigAdditionAck_List);
+                pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck 
+                    = rtxMemAllocType(pctxt, e2ap_E2nodeComponentConfigAdditionAck_List);
 
                 asn1Init_e2ap_E2nodeComponentConfigAdditionAck_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
 
@@ -282,58 +287,59 @@ int asn1Init_e2ap_E2setupResponse_protocolIEs_element(e2ap_E2setupResponse_proto
 
 
 //-----> chuaw có template rtxFreeASN1OpenType
+
 #if 0
 void asn1Free_e2ap_E2setupResponse_protocolIEs_element(OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue)
 {
     if(NULL==pvalue) return;
     switch(pvalue->value.t){
-        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
-            // rtxFreeE2ap_TransactionID(pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_TransactionID:
+            // rtxFreeE2ap_TransactionID(pvalue->value.u._e2ap_E2setupResponseIEs_id_id_TransactionID);
 
-            if(pvalue->value.i._e2ap_E2setupResponse_id_TransactionID!=NULL){
-            asn1Free_e2ap_TransactionID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
-           // pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_TransactionID!=NULL){// dungnm23 check lai nhe
+            asn1Free_e2ap_TransactionID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_TransactionID);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_id_TransactionID);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_id_TransactionID = NULL;
            pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
-            // rtxFreeE2ap_GlobalRIC_ID(pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID:
+            // rtxFreeE2ap_GlobalRIC_ID(pvalue->value.u._e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID);
 
-            if(pvalue->value.i._e2ap_E2setupResponse_id_GlobalRIC_ID!=NULL){
-            asn1Free_e2ap_GlobalRIC_ID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
-           // pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_GlobalRIC_ID!=NULL){// dungnm23 check lai nhe
+            asn1Free_e2ap_GlobalRIC_ID(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID = NULL;
            pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsID_List:
-            // rtxFreeE2ap_RANfunctionsID_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted:
+            // rtxFreeE2ap_RANfunctionsID_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted);
 
-            if(pvalue->value.i._e2ap_E2setupResponse_id_RANfunctionsID_List!=NULL){
-            asn1Free_e2ap_RANfunctionsID_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
-           // pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_RANfunctionsID_List!=NULL){// dungnm23 check lai nhe
+            asn1Free_e2ap_RANfunctionsID_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted = NULL;
            pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsAccepted = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List:
-            // rtxFreeE2ap_RANfunctionsIDcause_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected:
+            // rtxFreeE2ap_RANfunctionsIDcause_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected);
 
-            if(pvalue->value.i._e2ap_E2setupResponse_id_RANfunctionsIDcause_List!=NULL){
-            asn1Free_e2ap_RANfunctionsIDcause_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
-           // pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_RANfunctionsIDcause_List!=NULL){// dungnm23 check lai nhe
+            asn1Free_e2ap_RANfunctionsIDcause_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected = NULL;
            pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsRejected = NULL;
             }
             break;
-        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List:
-            // rtxFreeE2ap_E2nodeComponentConfigAdditionAck_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
+        case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck:
+            // rtxFreeE2ap_E2nodeComponentConfigAdditionAck_List(pvalue->value.u._e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck);
 
-            if(pvalue->value.i._e2ap_E2setupResponse_id_E2nodeComponentConfigAdditionAck_List!=NULL){
-            asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
-            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
-           // pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List = NULL;
+            if(pvalue->value.i._e2ap_E2setupResponse_id_E2nodeComponentConfigAdditionAck_List!=NULL){// dungnm23 check lai nhe
+            asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List(pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck);
+            rtxMemFreePtr(pctxt, (void*)pvalue->value.u._e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck);
+           // pvalue->value.u._e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck = NULL;
            pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck = NULL;
             }
             break;
@@ -366,51 +372,51 @@ int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element(OSCTXT* pctxt, e2ap_E2
     RTXCTXTPUSHELEMNAME(pctxt, "value");
         
         switch(pvalue->value.t){
-            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_TransactionID:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "TransactionID");
+                RTXCTXTPUSHELEMNAME (pctxt, "TransactionID");// dungnm23 check lai nhe -> xem là item_type hay field_name
 
-                stat = asn1PrtToStr_e2ap_TransactionID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_TransactionID);
+                stat = asn1PrtToStr_e2ap_TransactionID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_TransactionID);//dungnm23 check lai nhe
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "GlobalRIC-ID");
+                RTXCTXTPUSHELEMNAME (pctxt, "GlobalRIC-ID");// dungnm23 check lai nhe -> xem là item_type hay field_name
 
-                stat = asn1PrtToStr_e2ap_GlobalRIC_ID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_GlobalRIC_ID);
+                stat = asn1PrtToStr_e2ap_GlobalRIC_ID (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_GlobalRIC_ID);//dungnm23 check lai nhe
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsID_List:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionsID-List");
+                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionsID-List");// dungnm23 check lai nhe -> xem là item_type hay field_name
 
-                stat = asn1PrtToStr_e2ap_RANfunctionsID_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsID_List);
+                stat = asn1PrtToStr_e2ap_RANfunctionsID_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsAccepted);//dungnm23 check lai nhe
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionsIDcause-List");
+                RTXCTXTPUSHELEMNAME (pctxt, "RANfunctionsIDcause-List");// dungnm23 check lai nhe -> xem là item_type hay field_name
 
-                stat = asn1PrtToStr_e2ap_RANfunctionsIDcause_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_RANfunctionsIDcause_List);
+                stat = asn1PrtToStr_e2ap_RANfunctionsIDcause_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_RANfunctionsRejected);//dungnm23 check lai nhe
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
             }
-            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List:
+            case T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck:
             {
-                RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck-List");
+                RTXCTXTPUSHELEMNAME (pctxt, "E2nodeComponentConfigAdditionAck-List");// dungnm23 check lai nhe -> xem là item_type hay field_name
 
-                stat = asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck_List);
+                stat = asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_List (pctxt, pvalue->value.u._e2ap_E2setupResponseIEs_id_id_E2nodeComponentConfigAdditionAck);//dungnm23 check lai nhe
                 if (stat != 0) return LOG_RTERR (pctxt, stat);
 
                 RTXCTXTPOPELEMNAME (pctxt);

@@ -5,7 +5,7 @@
 
 typedef struct EXTERN e2ap_PLMN_Identity {
     OSUINT32 numocts;
-    OSOCTET data[(  )];
+    OSOCTET data[3];
 } e2ap_PLMN_Identity;
 
 EXTERN int asn1PE_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue);

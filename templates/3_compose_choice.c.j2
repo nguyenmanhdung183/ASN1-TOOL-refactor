@@ -63,41 +63,50 @@ xnap_return_et e2ap_compose_{{name}}(
 
     switch(p_{{name}}->t)
     {
-        {% for d in choices %}
-        /*CHOICE_INDEX-{{loop.index}}    {{d.field}}*/
-        case: E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ d.field | replace('-', '_') | camel_to_upper_snake }}:
+        {% for f in choices %}
+        /*CHOICE_INDEX-{{loop.index}}    {{f.field}}*/
+        case: E2AP_{{name|camel_to_upper_snake}}_e2ap_{{ f.field | replace('-', '_') | camel_to_upper_snake }}:
         {
-            {% if d.primitive.primitive_id ==-1 %}{#not primitive #}
-            p_e2ap_{{name}}->u.{{d.field}} = rtxMemAllocType(p_asn1_ctx, e2ap_{{d.ie_type}});
-            if(GNB_PNULL == p_e2ap_{{name}}->u.{{d.field}}){
-                /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"%s: Memory allocation failed for e2ap_{{d.ie_type}}",__FUNCTION__);
-                return XNAP_FAILURE;
-            }
-            asn1Init_e2ap_{{d.ie_type}}(p_e2ap_{{name}}->u.{{d.field}});
-
-            if(XNAP_FAILURE == e2ap_compose_{{d.ie_type}}(
-                                                p_asn1_ctx,
-                                                p_e2ap_{{name}}->u.{{d.field}},
-                                                p_{{name}}->{{d.field}})//dungnm23 check lai
-            )
+                {% if not (f.primitive.isprimitive == True or f.alias != -1) %}{#not primitive #}
+            /* == not primitive (SEQ or CHOICE)==*/
+                /* 1.alloc mem */
+            p_e2ap_{{name}}->{{f.field_name}} = rtxMemAllocType(p_asn1_ctx, e2ap_{{f.ie_type | replace("-","_")}});
+            if(XNAP_P_NULL == p_e2ap_{{name}}->{{f.field_name}})
             {
-                XNAP_TRACE(XNAP_ERROR,"%s: compose failed for e2ap_{{d.ie_type}}",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field {{f.field_name}}",__FUNCTION__);
                 return XNAP_FAILURE;
             }
-
-            {% endif %}{#end not primitive #}
-            {% if d.primitive.primitive_id != -1 %} {#primitive #}
-            if(XNAP_FAILURE == e2ap_compose_{{name}}_{{d.field}}(
-                                                p_asn1_ctx,
-                                                &p_e2ap_{{name}}->u.{{d.field}},
-                                                &p_{{name}}->{{d.field}})//dungnm23 check lai
-            )
+                /* 2.init */
+            asn1Init_e2ap_{{f.ie_type | replace("-","_")}}(&p_e2ap_{{name}}->{{f.field_name}});
+                /* 3.compose */
+            if(XNAP_FAILURE == e2ap_compose_{{f.ie_type|replace("-","_")}}(p_asn1_ctx,
+                                                    &p_e2ap_{{name}}->{{f.field_name}},
+                                                    &p_{{name}}->{{f.field_name}}))
             {
-                XNAP_TRACE(XNAP_ERROR,"%s: compose failed for primitive e2ap_{{d.ie_type}}",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
                 return XNAP_FAILURE;
             }
-            {% endif %} {#end primitive #}
+            {% endif %}
+            {% if (f.primitive.isprimitive == True) %}{#primitive in scope #}
+            /*==primitive in scope==*/
+            if(XNAP_FAILURE == e2ap_compose_{{name}}_{{f.field_name}}(p_asn1_ctx,
+                                                   &p_e2ap_{{name}}->{{f.field_name}},
+                                                   &p_{{name}}->{{f.field_name}}))
+            {
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            {% endif %}{# end primitive in scope #}
+            {% if (f.alias !=-1) %} {#primitive alias #}
+            /*==primitive alias== */
+            if(XNAP_FAILURE == e2ap_compose_{{f.ie_type}}(p_asn1_ctx,
+                                                    &p_e2ap_{{name}}->{{f.field_name}},
+                                                    &p_{{name}}->{{f.field_name}}))
+            {
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            {% endif %}{# end primitive alias #}
             break;
         }
 

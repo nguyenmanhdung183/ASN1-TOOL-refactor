@@ -5,7 +5,7 @@
 /* ie là con của msg + ie thường*/
 typedef enum {
    T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_UNDEF_,
-   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item 
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item 
  
 } e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE;
 
@@ -16,7 +16,7 @@ typedef struct EXTERN e2ap_E2nodeComponentConfigAdditionAck_ItemIEs {
    struct{
       e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE t;
       union {
-         e2ap_E2nodeComponentConfigAdditionAck_Item * _e2apE2nodeComponentConfigAdditionAck_ItemIEs_E2nodeComponentConfigAdditionAck_Item;
+         e2ap_E2nodeComponentConfigAdditionAck_Item * _e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item;
 
          ASN1OpenType* extElem1;  /* extension */
       } u;

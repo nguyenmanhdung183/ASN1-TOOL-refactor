@@ -15,10 +15,11 @@ xnap_return_et e2ap_compose_CauseServiceLayer(
 
 //cần alloc node
 
-    {  /*SEQ_ELEM-1  Encode serviceLayerCause*/
+    {  /*SEQ_ELEM-1  Encode serviceLayerCause alias-id = 9 - primitive = False*/
+         /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_ServiceLayerCause(p_asn1_ctx,
-                                                p_e2ap_CauseServiceLayer->serviceLayerCause,
-                                                p_CauseServiceLayer->serviceLayerCause))
+                                                &p_e2ap_CauseServiceLayer->serviceLayerCause,
+                                                &p_CauseServiceLayer->serviceLayerCause))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field serviceLayerCause",__FUNCTION__);
             return XNAP_FAILURE;

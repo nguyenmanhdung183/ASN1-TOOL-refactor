@@ -26,20 +26,32 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigurationAck(
 
 //cần alloc node
 
-    {  /*SEQ_ELEM-1  Encode updateOutcome*/
-         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigurationAck_updateOutcome(p_asn1_ctx,
-                                                p_e2ap_E2nodeComponentConfigurationAck->updateOutcome,
-                                                p_E2nodeComponentConfigurationAck->updateOutcome))
+    {  /*SEQ_ELEM-1  Encode updateOutcome alias-id = -1 - primitive = True*/
+        /*==primitive in scope==*/
+        if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigurationAck_updateOutcome(p_asn1_ctx,
+                                                &p_e2ap_E2nodeComponentConfigurationAck->updateOutcome,
+                                                &p_E2nodeComponentConfigurationAck->updateOutcome))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field updateOutcome",__FUNCTION__);
             return XNAP_FAILURE;
         }
     } /* end SEQ_ELEM-1  Encode updateOutcome*/
 
-    {  /*SEQ_ELEM-2  Encode failureCause*/
+    {  /*SEQ_ELEM-2  Encode failureCause alias-id = -1 - primitive = False*/
+        /* == not primitive (SEQ or CHOICE)==*/
+            /* 1.alloc mem */
+        p_e2ap_E2nodeComponentConfigurationAck->failureCause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
+        if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigurationAck->failureCause)
+        {
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field failureCause",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+            /* 2.init */
+        asn1Init_e2ap_Cause(&p_e2ap_E2nodeComponentConfigurationAck->failureCause);
+            /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                p_e2ap_E2nodeComponentConfigurationAck->failureCause,
-                                                p_E2nodeComponentConfigurationAck->failureCause))
+                                                &p_e2ap_E2nodeComponentConfigurationAck->failureCause,
+                                                &p_E2nodeComponentConfigurationAck->failureCause))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field failureCause",__FUNCTION__);
             return XNAP_FAILURE;

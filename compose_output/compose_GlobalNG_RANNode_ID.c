@@ -19,49 +19,49 @@ xnap_return_et e2ap_compose_GlobalNG_RANNode_ID(
         /*CHOICE_INDEX-1    gNB*/
         case: E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB:
         {
-            p_e2ap_GlobalNG_RANNode_ID->u.gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalgNB_ID);
-            if(GNB_PNULL == p_e2ap_GlobalNG_RANNode_ID->u.gNB){
-                /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"%s: Memory allocation failed for e2ap_GlobalgNB_ID",__FUNCTION__);
-                return XNAP_FAILURE;
-            }
-            asn1Init_e2ap_GlobalgNB_ID(p_e2ap_GlobalNG_RANNode_ID->u.gNB);
-
-            if(XNAP_FAILURE == e2ap_compose_GlobalgNB_ID(
-                                                p_asn1_ctx,
-                                                p_e2ap_GlobalNG_RANNode_ID->u.gNB,
-                                                p_GlobalNG_RANNode_ID->gNB)//dungnm23 check lai
-            )
+            /* == not primitive (SEQ or CHOICE)==*/
+                /* 1.alloc mem */
+            p_e2ap_GlobalNG_RANNode_ID->gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalgNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalNG_RANNode_ID->gNB)
             {
-                XNAP_TRACE(XNAP_ERROR,"%s: compose failed for e2ap_GlobalgNB_ID",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
-
-             break;
+                /* 2.init */
+            asn1Init_e2ap_GlobalgNB_ID(&p_e2ap_GlobalNG_RANNode_ID->gNB);
+                /* 3.compose */
+            if(XNAP_FAILURE == e2ap_compose_GlobalgNB_ID(p_asn1_ctx,
+                                                    &p_e2ap_GlobalNG_RANNode_ID->gNB,
+                                                    &p_GlobalNG_RANNode_ID->gNB))
+            {
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gNB",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            break;
         }
 
         /*CHOICE_INDEX-2    ng_eNB*/
         case: E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB:
         {
-            p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
-            if(GNB_PNULL == p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB){
-                /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"%s: Memory allocation failed for e2ap_GlobalngeNB_ID",__FUNCTION__);
-                return XNAP_FAILURE;
-            }
-            asn1Init_e2ap_GlobalngeNB_ID(p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB);
-
-            if(XNAP_FAILURE == e2ap_compose_GlobalngeNB_ID(
-                                                p_asn1_ctx,
-                                                p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB,
-                                                p_GlobalNG_RANNode_ID->ng_eNB)//dungnm23 check lai
-            )
+            /* == not primitive (SEQ or CHOICE)==*/
+                /* 1.alloc mem */
+            p_e2ap_GlobalNG_RANNode_ID->ng_eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalNG_RANNode_ID->ng_eNB)
             {
-                XNAP_TRACE(XNAP_ERROR,"%s: compose failed for e2ap_GlobalngeNB_ID",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ng_eNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
-
-             break;
+                /* 2.init */
+            asn1Init_e2ap_GlobalngeNB_ID(&p_e2ap_GlobalNG_RANNode_ID->ng_eNB);
+                /* 3.compose */
+            if(XNAP_FAILURE == e2ap_compose_GlobalngeNB_ID(p_asn1_ctx,
+                                                    &p_e2ap_GlobalNG_RANNode_ID->ng_eNB,
+                                                    &p_GlobalNG_RANNode_ID->ng_eNB))
+            {
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ng_eNB",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            break;
         }
 
     }

@@ -45,7 +45,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
         }
 
         asn1Init_e2ap_{{parent_full.Msg_3_Type}}(e2ap_pdu.u.{{parent_full.Msg_3_Type}});
-        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->procedureCode = ASN1V_e2ap_id_{{choices[0].dad_type_name}}
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->procedureCode = ASN1V_e2ap_{{parent_full.Msg_Procedure_Code|replace("-","_")}};
         e2ap_pdu.u.{{parent_full.Msg_3_Type}}->criticality = e2ap_{{parent_full.Msg_Critical}};
         e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_{{parent_full.Type_Name}};
         p_{{choices[0].dad_type_name}} = rtxMemAllocType(&asn1_ctx, e2ap_{{choices[0].dad_type_name}});
@@ -63,7 +63,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
 {% for ie in choices %}
 #if 1 // thiếu check optional bitmask
         {
-            /*IE-{{loop.index}}   encode {{ie.field_name}}*/
+            /*IE-{{loop.index}}   encode {{ie.field_name}} - presence = {{ie.presence}}*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_{{choices[0].dad_type_name}}_protocolIEs_element,
                                     &p_node,
@@ -76,28 +76,32 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
 
             asn1Init_e2ap_{{choices[0].dad_type_name}}_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_{{ie.item_type}};
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_{{ie.field_name}};
             p_e2ap_protocolIEs_elem->criticality = e2ap_{{ie.critical}};
-            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}};
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }};
 {% if ie.alias !=-1 %} {# primitive #}
-            p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_id_{{ie.item_type}} = p_{{choices[0].dad_type_name}}->{{ie.field_name}}; //assign primitive
+            p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} = p_{{choices[0].dad_type_name}}->{{ie.field_name}}; //assign primitive
 {% endif %}
 
 {% if ie.alias == -1%} {# ko phải primitive #}
 
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_id_{{ie.item_type}} = rtxMemAllocType(&asn1_ctx, e2ap_{{ie.item_type}});
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}}){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{ie.item_type}}",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_{{ie.item_type}});
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }}){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{ie.field_name}}",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_{{choices[0].dad_type_name}}(p_e2ap_protocolIEs_elem->value.u._e2ap_{{choices[0].dad_type_name}}_IEs_{{ie.item_type}});
+            asn1Init_e2ap_{{ie.item_type}}(p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }});
             #endif
             //message_name.item_type -> type = {{ie.item_type}}
             if(XNAP_FAILURE == e2ap_compose_{{ie.item_type}}(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2ap{{ choices[0].dad_type_name }}_IEs_{{ ie.field_name | replace('-', '_') }},
-                                p_{{choices[0].dad_type_name}}->{{ie.field_name}})){
+                                p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }},
+                                &p_{{choices[0].dad_type_name}}->{{ie.field_name}})){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{ie.item_type}}",__FUNCTION__);
+                rtFreeContext(&asn1_ctx);
+                //XNAP_UT_TRACE_EXIT();
+                //return XNAP_FAILURE;
                 break;
             }else{
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field {{ie.item_type}}",__FUNCTION__);
@@ -129,6 +133,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
             }else{
                 XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: ASN encoding success",__FUNCTION__);
                 *p_asn_msg_len = (UInt16)pe_GetMsgLen(&asn1_ctx);
+                rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP_PDU", &e2ap_pdu);
                 retVal = XNAP_SUCCESS;
             }
         }

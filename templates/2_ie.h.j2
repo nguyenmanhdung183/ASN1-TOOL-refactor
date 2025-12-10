@@ -9,7 +9,7 @@ typedef enum {
    {% if d.note == "child_of_msg"%}
    T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.field_name | replace('-', '_') }},
    {% else %}
-   T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.item_type | replace('-', '_') }}{% if not loop.last %},{% endif %}
+   T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ d.field_name | replace('-', '_') }}{% if not loop.last %},{% endif %}
    {% endif %} 
 {% endfor %}
 {% if choices[0].note == "child_of_msg" %}
@@ -55,7 +55,7 @@ typedef struct EXTERN e2ap_{{ies_name}} {
       e2ap_{{ies_name|replace('-', '_')}}_TVALUE t;
       union {
       {% for d in choices %}
-         e2ap_{{d.item_type|replace('-', '_')}} * _e2ap{{ ies_name }}_{{ d.item_type | replace('-', '_') }};
+         e2ap_{{d.item_type|replace('-', '_')}} * _e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_') }};
       {%endfor%}
 
          ASN1OpenType* extElem1;  /* extension */

@@ -11,4 +11,4 @@
     *p_dest = (e2ap_GNB_DU_ID)*p_src;
     return XNAP_SUCCESS;
 }
-  
+    

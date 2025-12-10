@@ -112,7 +112,6 @@ xnap_return_et e2ap_encode_E2setupResponse(
 // E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs
 // E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentInterfaceType
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName.PrintableString
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
@@ -133,7 +132,6 @@ xnap_return_et e2ap_encode_E2setupResponse(
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname.PrintableString
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
 // E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
@@ -197,7 +195,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
         }
 
         asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
-        e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2setupResponse
+        e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2setup;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2setupResponse;
         p_E2setupResponse = rtxMemAllocType(&asn1_ctx, e2ap_E2setupResponse);
@@ -214,7 +212,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
         /* Fill ProtocolIEs */
 #if 1 // thiếu check optional bitmask
         {
-            /*IE-1   encode id_TransactionID*/
+            /*IE-1   encode id_TransactionID - presence = mandatory*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_E2setupResponse_protocolIEs_element,
                                     &p_node,
@@ -229,8 +227,8 @@ xnap_return_et e2ap_encode_E2setupResponse(
             /*fill the type of ProtocolIEs _protocolIEs_element*/
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_E2setupResponse_IEs_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_id_TransactionID = p_E2setupResponse->id_TransactionID; //assign primitive
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID;
+             p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_TransactionID = p_E2setupResponse->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -240,7 +238,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
 #endif
 #if 1 // thiếu check optional bitmask
         {
-            /*IE-2   encode id_GlobalRIC_ID*/
+            /*IE-2   encode id_GlobalRIC_ID - presence = mandatory*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_E2setupResponse_protocolIEs_element,
                                     &p_node,
@@ -255,22 +253,26 @@ xnap_return_et e2ap_encode_E2setupResponse(
             /*fill the type of ProtocolIEs _protocolIEs_element*/
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_GlobalRIC_ID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_E2setupResponse_IEs_GlobalRIC_ID;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID;
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_id_GlobalRIC_ID = rtxMemAllocType(&asn1_ctx, e2ap_GlobalRIC_ID);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_GlobalRIC_ID){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_GlobalRIC_ID",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_GlobalRIC_ID 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_GlobalRIC_ID);
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_GlobalRIC_ID){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_GlobalRIC_ID",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_E2setupResponse(p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_GlobalRIC_ID);
+            asn1Init_e2ap_GlobalRIC_ID(p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_GlobalRIC_ID);
             #endif
             //message_name.item_type -> type = GlobalRIC_ID
             if(XNAP_FAILURE == e2ap_compose_GlobalRIC_ID(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponse_IEs_id_GlobalRIC_ID,
-                                p_E2setupResponse->id_GlobalRIC_ID)){
+                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_GlobalRIC_ID,
+                                &p_E2setupResponse->id_GlobalRIC_ID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field GlobalRIC_ID",__FUNCTION__);
+                rtFreeContext(&asn1_ctx);
+                //XNAP_UT_TRACE_EXIT();
+                //return XNAP_FAILURE;
                 break;
             }else{
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field GlobalRIC_ID",__FUNCTION__);
@@ -283,7 +285,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
 #endif
 #if 1 // thiếu check optional bitmask
         {
-            /*IE-3   encode id_RANfunctionsAccepted*/
+            /*IE-3   encode id_RANfunctionsAccepted - presence = optional*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_E2setupResponse_protocolIEs_element,
                                     &p_node,
@@ -296,24 +298,28 @@ xnap_return_et e2ap_encode_E2setupResponse(
 
             asn1Init_e2ap_E2setupResponse_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionsID_List;
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionsAccepted;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_E2setupResponse_IEs_RANfunctionsID_List;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted;
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_id_RANfunctionsID_List = rtxMemAllocType(&asn1_ctx, e2ap_RANfunctionsID_List);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_RANfunctionsID_List){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_RANfunctionsID_List",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsAccepted 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_RANfunctionsID_List);
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsAccepted){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_RANfunctionsAccepted",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_E2setupResponse(p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_RANfunctionsID_List);
+            asn1Init_e2ap_RANfunctionsID_List(p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsAccepted);
             #endif
             //message_name.item_type -> type = RANfunctionsID_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsID_List(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponse_IEs_id_RANfunctionsAccepted,
-                                p_E2setupResponse->id_RANfunctionsAccepted)){
+                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsAccepted,
+                                &p_E2setupResponse->id_RANfunctionsAccepted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsID_List",__FUNCTION__);
+                rtFreeContext(&asn1_ctx);
+                //XNAP_UT_TRACE_EXIT();
+                //return XNAP_FAILURE;
                 break;
             }else{
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field RANfunctionsID_List",__FUNCTION__);
@@ -326,7 +332,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
 #endif
 #if 1 // thiếu check optional bitmask
         {
-            /*IE-4   encode id_RANfunctionsRejected*/
+            /*IE-4   encode id_RANfunctionsRejected - presence = optional*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_E2setupResponse_protocolIEs_element,
                                     &p_node,
@@ -339,24 +345,28 @@ xnap_return_et e2ap_encode_E2setupResponse(
 
             asn1Init_e2ap_E2setupResponse_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionsIDcause_List;
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionsRejected;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_E2setupResponse_IEs_RANfunctionsIDcause_List;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected;
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_id_RANfunctionsIDcause_List = rtxMemAllocType(&asn1_ctx, e2ap_RANfunctionsIDcause_List);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_RANfunctionsIDcause_List){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_RANfunctionsIDcause_List",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsRejected 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_RANfunctionsIDcause_List);
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsRejected){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_RANfunctionsRejected",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_E2setupResponse(p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_RANfunctionsIDcause_List);
+            asn1Init_e2ap_RANfunctionsIDcause_List(p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsRejected);
             #endif
             //message_name.item_type -> type = RANfunctionsIDcause_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsIDcause_List(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponse_IEs_id_RANfunctionsRejected,
-                                p_E2setupResponse->id_RANfunctionsRejected)){
+                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsRejected,
+                                &p_E2setupResponse->id_RANfunctionsRejected)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsIDcause_List",__FUNCTION__);
+                rtFreeContext(&asn1_ctx);
+                //XNAP_UT_TRACE_EXIT();
+                //return XNAP_FAILURE;
                 break;
             }else{
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field RANfunctionsIDcause_List",__FUNCTION__);
@@ -369,7 +379,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
 #endif
 #if 1 // thiếu check optional bitmask
         {
-            /*IE-5   encode id_E2nodeComponentConfigAdditionAck*/
+            /*IE-5   encode id_E2nodeComponentConfigAdditionAck - presence = mandatory*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_E2setupResponse_protocolIEs_element,
                                     &p_node,
@@ -382,24 +392,28 @@ xnap_return_et e2ap_encode_E2setupResponse(
 
             asn1Init_e2ap_E2setupResponse_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2nodeComponentConfigAdditionAck_List;
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2nodeComponentConfigAdditionAck;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_e2ap_PDU_Contents_e2ap_E2setupResponse_IEs_E2nodeComponentConfigAdditionAck_List;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck;
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_id_E2nodeComponentConfigAdditionAck_List = rtxMemAllocType(&asn1_ctx, e2ap_E2nodeComponentConfigAdditionAck_List);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_E2nodeComponentConfigAdditionAck_List){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2nodeComponentConfigAdditionAck_List",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_E2nodeComponentConfigAdditionAck 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_E2nodeComponentConfigAdditionAck_List);
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_E2nodeComponentConfigAdditionAck){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2nodeComponentConfigAdditionAck",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_E2setupResponse(p_e2ap_protocolIEs_elem->value.u._e2ap_E2setupResponse_IEs_E2nodeComponentConfigAdditionAck_List);
+            asn1Init_e2ap_E2nodeComponentConfigAdditionAck_List(p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_E2nodeComponentConfigAdditionAck);
             #endif
             //message_name.item_type -> type = E2nodeComponentConfigAdditionAck_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigAdditionAck_List(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponse_IEs_id_E2nodeComponentConfigAdditionAck,
-                                p_E2setupResponse->id_E2nodeComponentConfigAdditionAck)){
+                                p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_E2nodeComponentConfigAdditionAck,
+                                &p_E2setupResponse->id_E2nodeComponentConfigAdditionAck)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigAdditionAck_List",__FUNCTION__);
+                rtFreeContext(&asn1_ctx);
+                //XNAP_UT_TRACE_EXIT();
+                //return XNAP_FAILURE;
                 break;
             }else{
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field E2nodeComponentConfigAdditionAck_List",__FUNCTION__);
@@ -429,6 +443,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
             }else{
                 XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: ASN encoding success",__FUNCTION__);
                 *p_asn_msg_len = (UInt16)pe_GetMsgLen(&asn1_ctx);
+                rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP_PDU", &e2ap_pdu);
                 retVal = XNAP_SUCCESS;
             }
         }

@@ -64,25 +64,47 @@ xnap_return_et e2ap_compose_{{name}}(
 //cần alloc node
 
 {% for f in fields %}
-    {  /*SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}}*/
-        {% if f.primitive.primitive_id ==-1 %}{#not primitive #}
+    {  /*SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}} alias-id = {{f.alias}} - primitive = {{f.primitive.isprimitive}}*/
+        {% if not (f.primitive.isprimitive == True or f.alias != -1) %}{#not primitive #}
+        /* == not primitive (SEQ or CHOICE)==*/
+            /* 1.alloc mem */
+        p_e2ap_{{name}}->{{f.field_name}} = rtxMemAllocType(p_asn1_ctx, e2ap_{{f.ie_type | replace("-","_")}});
+        if(XNAP_P_NULL == p_e2ap_{{name}}->{{f.field_name}})
+        {
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field {{f.field_name}}",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+            /* 2.init */
+        asn1Init_e2ap_{{f.ie_type | replace("-","_")}}(&p_e2ap_{{name}}->{{f.field_name}});
+            /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_{{f.ie_type|replace("-","_")}}(p_asn1_ctx,
-                                                p_e2ap_{{name}}->{{f.field_name}},
-                                                p_{{name}}->{{f.field_name}}))
+                                                &p_e2ap_{{name}}->{{f.field_name}},
+                                                &p_{{name}}->{{f.field_name}}))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
             return XNAP_FAILURE;
         }
         {% endif %}
-        {% if f.primitive.primitive_id != -1 %} {#primitive #}
+        {% if (f.primitive.isprimitive == True) %}{#primitive in scope #}
+        /*==primitive in scope==*/
         if(XNAP_FAILURE == e2ap_compose_{{name}}_{{f.field_name}}(p_asn1_ctx,
-                                                p_e2ap_{{name}}->{{f.field_name}},
-                                                p_{{name}}->{{f.field_name}}))
+                                                &p_e2ap_{{name}}->{{f.field_name}},
+                                                &p_{{name}}->{{f.field_name}}))
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
             return XNAP_FAILURE;
         }
-        {% endif %}
+        {% endif %}{# end primitive in scope #}
+        {% if (f.alias !=-1) %} {#primitive alias #}
+        /*==primitive alias== */
+        if(XNAP_FAILURE == e2ap_compose_{{f.ie_type}}(p_asn1_ctx,
+                                                &p_e2ap_{{name}}->{{f.field_name}},
+                                                &p_{{name}}->{{f.field_name}}))
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+        {% endif %}{# end primitive alias #}
     } /* end SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}}*/
 
 {% endfor%}
