@@ -1,0 +1,10980 @@
+#ifndef E2AP_H
+#define E2AP_H
+
+
+/*****************************************/
+/*           TransactionID                */
+/*****************************************/
+//5 mau interger
+//mau 5 integer size(a .. b..) mau la nrfreqencyband
+typedef OSUINT8 e2ap_TransactionID;
+EXTERN int asn1PE_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID value);
+EXTERN int asn1PD_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID* pvalue);
+EXTERN int asn1Print_e2ap_TransactionID (const char* name, const e2ap_TransactionID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_TransactionID (const char* name, e2ap_TransactionID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_TransactionID (OSCTXT* pctxt, const char* name, const e2ap_TransactionID* pvalue);
+EXTERN int asn1Free_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID* pvalue);
+EXTERN int asn1Init_e2ap_TransactionID (e2ap_TransactionID* pvalue);
+/*****************************************/
+/*           TNLinformation                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(1..160,...))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 2
+//mau Transportlayeraddress xn bitstring (a..b,..)
+typedef ASN1DynBitStr e2ap_TNLinformation_tnlAddress;
+
+EXTERN int asn1PE_e2ap_TNLinformation_tnlAddress(OSCTXT* pctxt, e2ap_TNLinformation_tnlAddress value);
+EXTERN int asn1PD_e2ap_TNLinformation_tnlAddress(OSCTXT* pctxt, e2ap_TNLinformation_tnlAddress* pvalue);
+EXTERN int asn1PrtToStr_e2ap_TNLinformation_tnlAddress (const char* name, e2ap_TNLinformation_tnlAddress *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_TNLinformation_tnlAddress (OSCTXT* pctxt, const char* name, const e2ap_TNLinformation_tnlAddress* pvalue);
+EXTERN int asn1Copy_e2ap_TNLinformation_tnlAddress(OSCTXT* pctxt,const e2ap_TNLinformation_tnlAddress* pSrcValue,  e2ap_TNLinformation_tnlAddress* pDstValue);
+EXTERN int asn1Init_e2ap_TNLinformation_tnlAddress(e2ap_TNLinformation_tnlAddress* pvalue);
+EXTERN void asn1Free_e2ap_TNLinformation_tnlAddress(OSCTXT* pctxt, e2ap_TNLinformation_tnlAddress* pvalue);
+
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(16))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_TNLinformation_tnlPort {
+    OSUINT8 numbits;
+    OSOCTET data[2];
+} e2ap_TNLinformation_tnlPort;
+
+EXTERN int asn1PE_e2ap_TNLinformation_tnlPort(OSCTXT* pctxt, e2ap_TNLinformation_tnlPort* pvalue);
+EXTERN int asn1PD_e2ap_TNLinformation_tnlPort(OSCTXT* pctxt, e2ap_TNLinformation_tnlPort* pvalue);
+EXTERN int asn1PrtToStr_e2ap_TNLinformation_tnlPort (const char* name, e2ap_TNLinformation_tnlPort* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_TNLinformation_tnlPort (OSCTXT* pctxt, const char* name, const e2ap_TNLinformation_tnlPort* pvalue);
+EXTERN int asn1Copy_e2ap_TNLinformation_tnlPort(OSCTXT* pctxt,const e2ap_TNLinformation_tnlPort* pSrcValue,  e2ap_TNLinformation_tnlPort* pDstValue);
+EXTERN int asn1Init_e2ap_TNLinformation_tnlPort(e2ap_TNLinformation_tnlPort* pvalue);
+EXTERN void asn1Free_e2ap_TNLinformation_tnlPort(OSCTXT* pctxt, e2ap_TNLinformation_tnlPort* pvalue);
+
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_TNLinformation {
+      //primitive
+   e2ap_TNLinformation_tnlAddress tnlAddress;
+      //primitive
+   e2ap_TNLinformation_tnlPort tnlPort;
+   OSBOOL m_tnlPortPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_TNLinformation;
+
+EXTERN int asn1PE_e2ap_TNLinformation (OSCTXT* pctxt, e2ap_TNLinformation* pvalue);
+EXTERN int asn1PD_e2ap_TNLinformation (OSCTXT* pctxt, e2ap_TNLinformation* pvalue);
+EXTERN int asn1Init_e2ap_TNLinformation (e2ap_TNLinformation* pvalue);
+EXTERN void asn1Free_e2ap_TNLinformation (OSCTXT* pctxt, e2ap_TNLinformation* pvalue);
+EXTERN void asn1Print_e2ap_TNLinformation (const char* name, const e2ap_TNLinformation* pvalue);
+EXTERN int asn1PrtToStr_e2ap_TNLinformation (const char* name, e2ap_TNLinformation* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_TNLinformation (OSCTXT* pctxt, const char* name, const e2ap_TNLinformation* pvalue);
+EXTERN int asn1Copy_e2ap_TNLinformation (OSCTXT* pctxt, const e2ap_TNLinformation* pSrcValue, e2ap_TNLinformation* pDstValue);/******************************************************/
+/*                                                    */
+/*    TNLusage                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_ric_service = 0,
+    e2ap_support_function = 1,
+    e2ap_both = 2
+} e2ap_TNLusage_Root;
+
+typedef OSUINT32 e2ap_TNLusage;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_TNLusage (OSCTXT* pctxt, e2ap_TNLusage value);
+EXTERN int asn1PD_e2ap_TNLusage (OSCTXT* pctxt, e2ap_TNLusage* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_TNLusage (const char* name, const e2ap_TNLusage* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_TNLusage (OSCTXT* pctxt, const char* name, const e2ap_TNLusage* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_TNLusage (const char* name,e2ap_TNLusage* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_TNLusage_ENUMTAB[];
+#define e2ap_TNLusage_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_TNLusage_ToString (OSUINT32 value);
+EXTERN int e2ap_TNLusage_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_TNLusage* pvalue);
+EXTERN int e2ap_TNLusage_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_TNLusage* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_TNLusage (e2ap_TNLusage* pvalue);/*****************************************/
+/*           E2connectionUpdate_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2connectionUpdate_Item {
+      //not primitive
+   e2ap_TNLinformation tnlInformation;
+      //not primitive
+   e2ap_TNLusage tnlUsage;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionUpdate_Item;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdate_Item (OSCTXT* pctxt, e2ap_E2connectionUpdate_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdate_Item (OSCTXT* pctxt, e2ap_E2connectionUpdate_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdate_Item (e2ap_E2connectionUpdate_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdate_Item (OSCTXT* pctxt, e2ap_E2connectionUpdate_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionUpdate_Item (const char* name, const e2ap_E2connectionUpdate_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_Item (const char* name, e2ap_E2connectionUpdate_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdate_Item (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdate_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionUpdate_Item (OSCTXT* pctxt, const e2ap_E2connectionUpdate_Item* pSrcValue, e2ap_E2connectionUpdate_Item* pDstValue);/*****************************************/
+/*           E2connectionUpdate_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item 
+ 
+} e2ap_E2connectionUpdate_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2connectionUpdate_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2connectionUpdate_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2connectionUpdate_Item * _e2apE2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2connectionUpdate_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2connectionUpdate_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2connectionUpdate_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2connectionUpdate_ItemIEs (e2ap_E2connectionUpdate_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdate_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2connectionUpdate_ItemIEs (const char * name, e2ap_E2connectionUpdate_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2connectionUpdate_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2connectionUpdate_List;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdate_List (OSCTXT* pctxt, e2ap_E2connectionUpdate_List* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdate_List (OSCTXT* pctxt, e2ap_E2connectionUpdate_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2connectionUpdate_List (e2ap_E2connectionUpdate_List* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdate_List (OSCTXT* pctxt, e2ap_E2connectionUpdate_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_List (const char* name, e2ap_E2connectionUpdate_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2connectionUpdate_List (OSCTXT* pctxt, const e2ap_E2connectionUpdate_List* pSrcValue, e2ap_E2connectionUpdate_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2connectionUpdate_List (const char *name, const e2ap_E2connectionUpdate_List* pvalue);/*****************************************/
+/*           E2connectionUpdateRemove_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2connectionUpdateRemove_Item {
+      //not primitive
+   e2ap_TNLinformation tnlInformation;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionUpdateRemove_Item;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateRemove_Item (e2ap_E2connectionUpdateRemove_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionUpdateRemove_Item (const char* name, const e2ap_E2connectionUpdateRemove_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateRemove_Item (const char* name, e2ap_E2connectionUpdateRemove_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdateRemove_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, const e2ap_E2connectionUpdateRemove_Item* pSrcValue, e2ap_E2connectionUpdateRemove_Item* pDstValue);/*****************************************/
+/*           E2connectionUpdateRemove_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateRemove_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateRemove_ItemIEs_id_E2connectionUpdateRemove_Item 
+ 
+} e2ap_E2connectionUpdateRemove_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2connectionUpdateRemove_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2connectionUpdateRemove_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2connectionUpdateRemove_Item * _e2apE2connectionUpdateRemove_ItemIEs_id_E2connectionUpdateRemove_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2connectionUpdateRemove_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2connectionUpdateRemove_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2connectionUpdateRemove_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2connectionUpdateRemove_ItemIEs (e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateRemove_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2connectionUpdateRemove_ItemIEs (const char * name, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2connectionUpdateRemove_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2connectionUpdateRemove_List;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_List* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2connectionUpdateRemove_List (e2ap_E2connectionUpdateRemove_List* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateRemove_List (const char* name, e2ap_E2connectionUpdateRemove_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, const e2ap_E2connectionUpdateRemove_List* pSrcValue, e2ap_E2connectionUpdateRemove_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2connectionUpdateRemove_List (const char *name, const e2ap_E2connectionUpdateRemove_List* pvalue);/*****************************************/
+/*           E2connectionUpdate_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateAdd,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateRemove,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateModify,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2connectionUpdate_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2connectionUpdate_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2connectionUpdate_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2connectionUpdate_IEs_id_TransactionID;
+        /*
+        *id: id-E2connectionUpdate_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2connectionUpdate_List * _e2apE2connectionUpdate_IEs_id_E2connectionUpdateAdd;
+        /*
+        *id: id-E2connectionUpdateRemove_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2connectionUpdateRemove_List * _e2apE2connectionUpdate_IEs_id_E2connectionUpdateRemove;
+        /*
+        *id: id-E2connectionUpdate_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2connectionUpdate_List * _e2apE2connectionUpdate_IEs_id_E2connectionUpdateModify;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2connectionUpdate_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdate_protocolIEs_element (e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs_element (const char * name, e2ap_E2connectionUpdate_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2connectionUpdate                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2connectionUpdate_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdate_protocolIEs (e2ap_E2connectionUpdate_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2connectionUpdate_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2connectionUpdate_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs (const char* name, e2ap_E2connectionUpdate_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2connectionUpdate -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2connectionUpdate {
+    e2ap_E2connectionUpdate_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionUpdate;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdate (OSCTXT* pctxt, e2ap_E2connectionUpdate* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdate (OSCTXT* pctxt, e2ap_E2connectionUpdate* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdate (e2ap_E2connectionUpdate* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdate (OSCTXT* pctxt, e2ap_E2connectionUpdate* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionUpdate (const char* name, const e2ap_E2connectionUpdate* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate (const char* name, e2ap_E2connectionUpdate* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdate (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdate* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionUpdate (OSCTXT* pctxt, const e2ap_E2connectionUpdate* pSrcValue, e2ap_E2connectionUpdate* pDstValue);/******************************************************/
+/*                                                    */
+/*    CauseRICrequest                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_ran_function_id_invalid = 0,
+    e2ap_action_not_supported = 1,
+    e2ap_excessive_actions = 2,
+    e2ap_duplicate_action = 3,
+    e2ap_duplicate_event_trigger = 4,
+    e2ap_function_resource_limit = 5,
+    e2ap_request_id_unknown = 6,
+    e2ap_inconsistent_action_subsequent_action_sequence = 7,
+    e2ap_control_message_invalid = 8,
+    e2ap_ric_call_process_id_invalid = 9,
+    e2ap_control_timer_expired = 10,
+    e2ap_control_failed_to_execute = 11,
+    e2ap_system_not_ready = 12,
+    e2ap_unspecified = 13,
+    e2ap_ric_subscription_end_time_expired = 14,
+    e2ap_ric_subscription_end_time_invalid = 15,
+    e2ap_duplicate_ric_request_id = 16,
+    e2ap_eventTriggerNotSupported = 17,
+    e2ap_requested_information_unavailable = 18,
+    e2ap_invalid_information_request = 19
+} e2ap_CauseRICrequest_Root;
+
+typedef OSUINT32 e2ap_CauseRICrequest;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseRICrequest (OSCTXT* pctxt, e2ap_CauseRICrequest value);
+EXTERN int asn1PD_e2ap_CauseRICrequest (OSCTXT* pctxt, e2ap_CauseRICrequest* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseRICrequest (const char* name, const e2ap_CauseRICrequest* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseRICrequest (OSCTXT* pctxt, const char* name, const e2ap_CauseRICrequest* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseRICrequest (const char* name,e2ap_CauseRICrequest* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseRICrequest_ENUMTAB[];
+#define e2ap_CauseRICrequest_ENUMTABSIZE 20
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseRICrequest_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseRICrequest_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseRICrequest* pvalue);
+EXTERN int e2ap_CauseRICrequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseRICrequest* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseRICrequest (e2ap_CauseRICrequest* pvalue);/******************************************************/
+/*                                                    */
+/*    CauseRICservice                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_ran_function_not_supported = 0,
+    e2ap_excessive_functions = 1,
+    e2ap_ric_resource_limit = 2
+} e2ap_CauseRICservice_Root;
+
+typedef OSUINT32 e2ap_CauseRICservice;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseRICservice (OSCTXT* pctxt, e2ap_CauseRICservice value);
+EXTERN int asn1PD_e2ap_CauseRICservice (OSCTXT* pctxt, e2ap_CauseRICservice* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseRICservice (const char* name, const e2ap_CauseRICservice* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseRICservice (OSCTXT* pctxt, const char* name, const e2ap_CauseRICservice* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseRICservice (const char* name,e2ap_CauseRICservice* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseRICservice_ENUMTAB[];
+#define e2ap_CauseRICservice_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseRICservice_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseRICservice_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseRICservice* pvalue);
+EXTERN int e2ap_CauseRICservice_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseRICservice* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseRICservice (e2ap_CauseRICservice* pvalue);/******************************************************/
+/*                                                    */
+/*    CauseE2node                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_e2node_component_unknown = 0
+} e2ap_CauseE2node_Root;
+
+typedef OSUINT32 e2ap_CauseE2node;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node value);
+EXTERN int asn1PD_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseE2node (const char* name, const e2ap_CauseE2node* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseE2node (OSCTXT* pctxt, const char* name, const e2ap_CauseE2node* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseE2node (const char* name,e2ap_CauseE2node* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseE2node_ENUMTAB[];
+#define e2ap_CauseE2node_ENUMTABSIZE 1
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseE2node_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseE2node_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseE2node* pvalue);
+EXTERN int e2ap_CauseE2node_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseE2node* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue);/******************************************************/
+/*                                                    */
+/*    CauseTransport                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_unspecified = 0,
+    e2ap_transport_resource_unavailable = 1
+} e2ap_CauseTransport_Root;
+
+typedef OSUINT32 e2ap_CauseTransport;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport value);
+EXTERN int asn1PD_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseTransport (const char* name, const e2ap_CauseTransport* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseTransport (OSCTXT* pctxt, const char* name, const e2ap_CauseTransport* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseTransport (const char* name,e2ap_CauseTransport* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseTransport_ENUMTAB[];
+#define e2ap_CauseTransport_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseTransport_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseTransport_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseTransport* pvalue);
+EXTERN int e2ap_CauseTransport_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseTransport* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseTransport (e2ap_CauseTransport* pvalue);/******************************************************/
+/*                                                    */
+/*    CauseProtocol                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_transfer_syntax_error = 0,
+    e2ap_abstract_syntax_error_reject = 1,
+    e2ap_abstract_syntax_error_ignore_and_notify = 2,
+    e2ap_message_not_compatible_with_receiver_state = 3,
+    e2ap_semantic_error = 4,
+    e2ap_abstract_syntax_error_falsely_constructed_message = 5,
+    e2ap_unspecified = 6
+} e2ap_CauseProtocol_Root;
+
+typedef OSUINT32 e2ap_CauseProtocol;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol value);
+EXTERN int asn1PD_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseProtocol (const char* name, const e2ap_CauseProtocol* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseProtocol (OSCTXT* pctxt, const char* name, const e2ap_CauseProtocol* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseProtocol (const char* name,e2ap_CauseProtocol* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseProtocol_ENUMTAB[];
+#define e2ap_CauseProtocol_ENUMTABSIZE 7
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseProtocol_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseProtocol_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseProtocol* pvalue);
+EXTERN int e2ap_CauseProtocol_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseProtocol* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseProtocol (e2ap_CauseProtocol* pvalue);/******************************************************/
+/*                                                    */
+/*    CauseMisc                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_control_processing_overload = 0,
+    e2ap_hardware_failure = 1,
+    e2ap_om_intervention = 2,
+    e2ap_unspecified = 3
+} e2ap_CauseMisc_Root;
+
+typedef OSUINT32 e2ap_CauseMisc;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc value);
+EXTERN int asn1PD_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseMisc (const char* name, const e2ap_CauseMisc* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseMisc (OSCTXT* pctxt, const char* name, const e2ap_CauseMisc* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseMisc (const char* name,e2ap_CauseMisc* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseMisc_ENUMTAB[];
+#define e2ap_CauseMisc_ENUMTABSIZE 4
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseMisc_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseMisc_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseMisc* pvalue);
+EXTERN int e2ap_CauseMisc_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseMisc* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseMisc (e2ap_CauseMisc* pvalue);/*****************************************/
+/*           ServiceLayerCause                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_ServiceLayerCause;
+EXTERN int asn1PE_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause value);
+EXTERN int asn1PD_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ServiceLayerCause (const char* name, e2ap_ServiceLayerCause *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ServiceLayerCause (OSCTXT* pctxt, const char* name, const e2ap_ServiceLayerCause* pvalue);
+EXTERN int asn1Copy_e2ap_ServiceLayerCause (OSCTXT* pctxt, const e2ap_ServiceLayerCause* pSrcValue, e2ap_ServiceLayerCause* pDstValue);
+EXTERN int asn1Init_e2ap_ServiceLayerCause (e2ap_ServiceLayerCause* pvalue);
+EXTERN void asn1Free_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause* pvalue);
+/*****************************************/
+/*           CauseServiceLayer                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_CauseServiceLayer {
+      //not primitive
+   e2ap_ServiceLayerCause serviceLayerCause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_CauseServiceLayer;
+
+EXTERN int asn1PE_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1PD_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1Init_e2ap_CauseServiceLayer (e2ap_CauseServiceLayer* pvalue);
+EXTERN void asn1Free_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue);
+EXTERN void asn1Print_e2ap_CauseServiceLayer (const char* name, const e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1PrtToStr_e2ap_CauseServiceLayer (const char* name, e2ap_CauseServiceLayer* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_CauseServiceLayer (OSCTXT* pctxt, const char* name, const e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1Copy_e2ap_CauseServiceLayer (OSCTXT* pctxt, const e2ap_CauseServiceLayer* pSrcValue, e2ap_CauseServiceLayer* pDstValue);
+
+/*****************************************/
+/*           Cause                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_Cause_ricRequest  1
+#define T_e2ap_Cause_ricService  2
+#define T_e2ap_Cause_e2Node  3
+#define T_e2ap_Cause_transport  4
+#define T_e2ap_Cause_protocol  5
+#define T_e2ap_Cause_misc  6
+#define T_e2ap_Cause_serviceLayer  7
+#define T_e2ap_Cause_extElem1 8
+
+typedef struct e2ap_Cause {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_CauseRICrequest *ricRequest;
+      /* t =  2 */
+      e2ap_CauseRICservice *ricService;
+      /* t =  3 */
+      e2ap_CauseE2node *e2Node;
+      /* t =  4 */
+      e2ap_CauseTransport *transport;
+      /* t =  5 */
+      e2ap_CauseProtocol *protocol;
+      /* t =  6 */
+      e2ap_CauseMisc *misc;
+      /* t =  7 */
+      e2ap_CauseServiceLayer *serviceLayer;
+      /* t = 8*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_Cause;
+
+EXTERN int asn1PE_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue);
+EXTERN int asn1PD_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue);
+EXTERN void asn1Print_e2ap_Cause (const char* name, const e2ap_Cause* pvalue);
+EXTERN int asn1PrtToStr_e2ap_Cause (const char* name, e2ap_Cause* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_Cause (OSCTXT* pctxt, const char* name, const e2ap_Cause* pvalue);
+EXTERN int asn1Copy_e2ap_Cause (OSCTXT* pctxt, const e2ap_Cause* pSrcValue, e2ap_Cause* pDstValue);
+EXTERN int asn1Init_e2ap_Cause (e2ap_Cause* pvalue);
+EXTERN void asn1Free_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue);
+/*****************************************/
+/*           E2connectionSetupFailed_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2connectionSetupFailed_Item {
+      //not primitive
+   e2ap_TNLinformation tnlInformation;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionSetupFailed_Item;
+
+EXTERN int asn1PE_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionSetupFailed_Item (e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionSetupFailed_Item (const char* name, const e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionSetupFailed_Item (const char* name, e2ap_E2connectionSetupFailed_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, const char* name, const e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, const e2ap_E2connectionSetupFailed_Item* pSrcValue, e2ap_E2connectionSetupFailed_Item* pDstValue);/*****************************************/
+/*           E2connectionSetupFailed_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2connectionSetupFailed_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item 
+ 
+} e2ap_E2connectionSetupFailed_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2connectionSetupFailed_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2connectionSetupFailed_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2connectionSetupFailed_Item * _e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2connectionSetupFailed_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2connectionSetupFailed_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2connectionSetupFailed_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2connectionSetupFailed_ItemIEs (e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionSetupFailed_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2connectionSetupFailed_ItemIEs (const char * name, e2ap_E2connectionSetupFailed_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2connectionSetupFailed_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2connectionSetupFailed_List;
+
+EXTERN int asn1PE_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_List* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2connectionSetupFailed_List (e2ap_E2connectionSetupFailed_List* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionSetupFailed_List (const char* name, e2ap_E2connectionSetupFailed_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, const e2ap_E2connectionSetupFailed_List* pSrcValue, e2ap_E2connectionSetupFailed_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2connectionSetupFailed_List (const char *name, const e2ap_E2connectionSetupFailed_List* pvalue);/*****************************************/
+/*           E2connectionUpdateAck_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2connectionUpdateAck_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2connectionUpdateAck_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2connectionUpdateAck_IEs_id_TransactionID;
+        /*
+        *id: id-E2connectionUpdate_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2connectionUpdate_List * _e2apE2connectionUpdateAck_IEs_id_E2connectionSetup;
+        /*
+        *id: id-E2connectionSetupFailed_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2connectionSetupFailed_List * _e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2connectionUpdateAcknowledge_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (const char * name, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2connectionUpdateAcknowledge                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2connectionUpdateAcknowledge_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs (e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs (const char* name, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2connectionUpdateAcknowledge -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge {
+    e2ap_E2connectionUpdateAcknowledge_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionUpdateAcknowledge;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge (e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionUpdateAcknowledge (const char* name, const e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge (const char* name, e2ap_E2connectionUpdateAcknowledge* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, const e2ap_E2connectionUpdateAcknowledge* pSrcValue, e2ap_E2connectionUpdateAcknowledge* pDstValue);/******************************************************/
+/*                                                    */
+/*    TimeToWait                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_v1s = 0,
+    e2ap_v2s = 1,
+    e2ap_v5s = 2,
+    e2ap_v10s = 3,
+    e2ap_v20s = 4,
+    e2ap_v60s = 5
+} e2ap_TimeToWait_Root;
+
+typedef OSUINT32 e2ap_TimeToWait;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_TimeToWait (OSCTXT* pctxt, e2ap_TimeToWait value);
+EXTERN int asn1PD_e2ap_TimeToWait (OSCTXT* pctxt, e2ap_TimeToWait* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_TimeToWait (const char* name, const e2ap_TimeToWait* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_TimeToWait (OSCTXT* pctxt, const char* name, const e2ap_TimeToWait* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_TimeToWait (const char* name,e2ap_TimeToWait* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_TimeToWait_ENUMTAB[];
+#define e2ap_TimeToWait_ENUMTABSIZE 6
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_TimeToWait_ToString (OSUINT32 value);
+EXTERN int e2ap_TimeToWait_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_TimeToWait* pvalue);
+EXTERN int e2ap_TimeToWait_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_TimeToWait* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_TimeToWait (e2ap_TimeToWait* pvalue);/*****************************************/
+/*           ProcedureCode                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT8 e2ap_ProcedureCode;
+EXTERN int asn1PE_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode value);
+EXTERN int asn1PD_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode* pvalue);
+EXTERN int asn1Print_e2ap_ProcedureCode (const char* name, const e2ap_ProcedureCode* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ProcedureCode (const char* name, e2ap_ProcedureCode* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ProcedureCode (OSCTXT* pctxt, const char* name, const e2ap_ProcedureCode* pvalue);
+EXTERN int asn1Init_e2ap_ProcedureCode (e2ap_ProcedureCode* pvalue);
+EXTERN int asn1Free_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode* pvalue);
+/******************************************************/
+/*                                                    */
+/*    TriggeringMessage                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_initiating_message = 0,
+    e2ap_successful_outcome = 1,
+    e2ap_unsuccessfull_outcome = 2
+} e2ap_TriggeringMessage_Root;
+
+typedef OSUINT32 e2ap_TriggeringMessage;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_TriggeringMessage (OSCTXT* pctxt, e2ap_TriggeringMessage value);
+EXTERN int asn1PD_e2ap_TriggeringMessage (OSCTXT* pctxt, e2ap_TriggeringMessage* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_TriggeringMessage (const char* name, const e2ap_TriggeringMessage* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_TriggeringMessage (OSCTXT* pctxt, const char* name, const e2ap_TriggeringMessage* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_TriggeringMessage (const char* name,e2ap_TriggeringMessage* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_TriggeringMessage_ENUMTAB[];
+#define e2ap_TriggeringMessage_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_TriggeringMessage_ToString (OSUINT32 value);
+EXTERN int e2ap_TriggeringMessage_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_TriggeringMessage* pvalue);
+EXTERN int e2ap_TriggeringMessage_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_TriggeringMessage* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_TriggeringMessage (e2ap_TriggeringMessage* pvalue);/******************************************************/
+/*                                                    */
+/*    Criticality                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_reject = 0,
+    e2ap_ignore = 1,
+    e2ap_notify = 2
+} e2ap_Criticality_Root;
+
+typedef OSUINT32 e2ap_Criticality;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_Criticality (OSCTXT* pctxt, e2ap_Criticality value);
+EXTERN int asn1PD_e2ap_Criticality (OSCTXT* pctxt, e2ap_Criticality* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_Criticality (const char* name, const e2ap_Criticality* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_Criticality (OSCTXT* pctxt, const char* name, const e2ap_Criticality* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_Criticality (const char* name,e2ap_Criticality* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_Criticality_ENUMTAB[];
+#define e2ap_Criticality_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_Criticality_ToString (OSUINT32 value);
+EXTERN int e2ap_Criticality_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_Criticality* pvalue);
+EXTERN int e2ap_Criticality_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_Criticality* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_Criticality (e2ap_Criticality* pvalue);/*****************************************/
+/*           RICrequestID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+    // Nội dung của file .h cho primitive INTEGER (0..65535)
+     /*****************************************/
+/*           ricRequestorID                */
+/*****************************************/
+//interger intergrate
+ //metadata.parsed.primitive_id == 6
+// mau integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RICrequestID_ricRequestorID;
+EXTERN int asn1PE_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, e2ap_RICrequestID_ricRequestorID value);
+EXTERN int asn1PD_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, e2ap_RICrequestID_ricRequestorID* pvalue);
+EXTERN int asn1Print_e2ap_RICrequestID_ricRequestorID (const char* name, const e2ap_RICrequestID_ricRequestorID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICrequestID_ricRequestorID (const char* name, e2ap_RICrequestID_ricRequestorID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, const char* name, const e2ap_RICrequestID_ricRequestorID* pvalue);
+EXTERN int asn1Init_e2ap_RICrequestID_ricRequestorID (e2ap_RICrequestID_ricRequestorID* pvalue);
+EXTERN int asn1Free_e2ap_RICrequestID_ricRequestorID (OSCTXT* pctxt, e2ap_RICrequestID_ricRequestorID* pvalue);
+
+    // Nội dung của file .h cho primitive INTEGER (0..65535)
+     /*****************************************/
+/*           ricInstanceID                */
+/*****************************************/
+//interger intergrate
+ //metadata.parsed.primitive_id == 6
+// mau integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RICrequestID_ricInstanceID;
+EXTERN int asn1PE_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequestID_ricInstanceID value);
+EXTERN int asn1PD_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequestID_ricInstanceID* pvalue);
+EXTERN int asn1Print_e2ap_RICrequestID_ricInstanceID (const char* name, const e2ap_RICrequestID_ricInstanceID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICrequestID_ricInstanceID (const char* name, e2ap_RICrequestID_ricInstanceID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, const char* name, const e2ap_RICrequestID_ricInstanceID* pvalue);
+EXTERN int asn1Init_e2ap_RICrequestID_ricInstanceID (e2ap_RICrequestID_ricInstanceID* pvalue);
+EXTERN int asn1Free_e2ap_RICrequestID_ricInstanceID (OSCTXT* pctxt, e2ap_RICrequestID_ricInstanceID* pvalue);
+
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICrequestID {
+      //primitive
+   e2ap_RICrequestID_ricRequestorID ricRequestorID;
+      //primitive
+   e2ap_RICrequestID_ricInstanceID ricInstanceID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICrequestID;
+
+EXTERN int asn1PE_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue);
+EXTERN int asn1PD_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue);
+EXTERN int asn1Init_e2ap_RICrequestID (e2ap_RICrequestID* pvalue);
+EXTERN void asn1Free_e2ap_RICrequestID (OSCTXT* pctxt, e2ap_RICrequestID* pvalue);
+EXTERN void asn1Print_e2ap_RICrequestID (const char* name, const e2ap_RICrequestID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICrequestID (const char* name, e2ap_RICrequestID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICrequestID (OSCTXT* pctxt, const char* name, const e2ap_RICrequestID* pvalue);
+EXTERN int asn1Copy_e2ap_RICrequestID (OSCTXT* pctxt, const e2ap_RICrequestID* pSrcValue, e2ap_RICrequestID* pDstValue);/*****************************************/
+/*           CriticalityDiagnostics_IE_List                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_CriticalityDiagnostics_IE_List {
+      //not primitive
+   e2ap_Criticality iECriticality;
+      //not primitive
+   e2ap_ProtocolIE_ID iE_ID;
+      //not primitive
+   e2ap_TypeOfError typeOfError;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_CriticalityDiagnostics_IE_List;
+
+EXTERN int asn1PE_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityDiagnostics_IE_List* pvalue);
+EXTERN int asn1PD_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityDiagnostics_IE_List* pvalue);
+EXTERN int asn1Init_e2ap_CriticalityDiagnostics_IE_List (e2ap_CriticalityDiagnostics_IE_List* pvalue);
+EXTERN void asn1Free_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, e2ap_CriticalityDiagnostics_IE_List* pvalue);
+EXTERN void asn1Print_e2ap_CriticalityDiagnostics_IE_List (const char* name, const e2ap_CriticalityDiagnostics_IE_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_CriticalityDiagnostics_IE_List (const char* name, e2ap_CriticalityDiagnostics_IE_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, const char* name, const e2ap_CriticalityDiagnostics_IE_List* pvalue);
+EXTERN int asn1Copy_e2ap_CriticalityDiagnostics_IE_List (OSCTXT* pctxt, const e2ap_CriticalityDiagnostics_IE_List* pSrcValue, e2ap_CriticalityDiagnostics_IE_List* pDstValue);/*****************************************/
+/*           CriticalityDiagnostics                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_CriticalityDiagnostics {
+      //not primitive
+   e2ap_ProcedureCode procedureCode;
+   OSBOOL m_procedureCodePresent;      //not primitive
+   e2ap_TriggeringMessage triggeringMessage;
+   OSBOOL m_triggeringMessagePresent;      //not primitive
+   e2ap_Criticality procedureCriticality;
+   OSBOOL m_procedureCriticalityPresent;      //not primitive
+   e2ap_RICrequestID ricRequestorID;
+   OSBOOL m_ricRequestorIDPresent;      //not primitive
+   e2ap_CriticalityDiagnostics_IE_List iEsCriticalityDiagnostics;
+   OSBOOL m_iEsCriticalityDiagnosticsPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_CriticalityDiagnostics;
+
+EXTERN int asn1PE_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, e2ap_CriticalityDiagnostics* pvalue);
+EXTERN int asn1PD_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, e2ap_CriticalityDiagnostics* pvalue);
+EXTERN int asn1Init_e2ap_CriticalityDiagnostics (e2ap_CriticalityDiagnostics* pvalue);
+EXTERN void asn1Free_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, e2ap_CriticalityDiagnostics* pvalue);
+EXTERN void asn1Print_e2ap_CriticalityDiagnostics (const char* name, const e2ap_CriticalityDiagnostics* pvalue);
+EXTERN int asn1PrtToStr_e2ap_CriticalityDiagnostics (const char* name, e2ap_CriticalityDiagnostics* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, const char* name, const e2ap_CriticalityDiagnostics* pvalue);
+EXTERN int asn1Copy_e2ap_CriticalityDiagnostics (OSCTXT* pctxt, const e2ap_CriticalityDiagnostics* pSrcValue, e2ap_CriticalityDiagnostics* pDstValue);/*****************************************/
+/*           E2connectionUpdateFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_TimeToWait,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2connectionUpdateFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2connectionUpdateFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2connectionUpdateFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2connectionUpdateFailure_IEs_id_TransactionID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_Cause * _e2apE2connectionUpdateFailure_IEs_id_Cause;
+        /*
+        *id: id-TimeToWait
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_TimeToWait * _e2apE2connectionUpdateFailure_IEs_id_TimeToWait;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apE2connectionUpdateFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2connectionUpdateFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateFailure_protocolIEs_element (e2ap_E2connectionUpdateFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure_protocolIEs_element (const char * name, e2ap_E2connectionUpdateFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2connectionUpdateFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2connectionUpdateFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateFailure_protocolIEs (e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure_protocolIEs (const char* name, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2connectionUpdateFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2connectionUpdateFailure {
+    e2ap_E2connectionUpdateFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionUpdateFailure;
+
+EXTERN int asn1PE_e2ap_E2connectionUpdateFailure (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateFailure (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateFailure (e2ap_E2connectionUpdateFailure* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateFailure (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionUpdateFailure (const char* name, const e2ap_E2connectionUpdateFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure (const char* name, e2ap_E2connectionUpdateFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdateFailure (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdateFailure* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionUpdateFailure (OSCTXT* pctxt, const e2ap_E2connectionUpdateFailure* pSrcValue, e2ap_E2connectionUpdateFailure* pDstValue);/*****************************************/
+/*           PLMN_Identity                */
+/*****************************************/
+//type 8  mau la octet string size(n) mau la plmn_identity
+
+typedef struct EXTERN e2ap_PLMN_Identity {
+    OSUINT32 numocts;
+    OSOCTET data[3];
+} e2ap_PLMN_Identity;
+
+EXTERN int asn1PE_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue);
+EXTERN int asn1PD_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue);
+EXTERN int asn1PrtToStr_e2ap_PLMN_Identity (const char* name, e2ap_PLMN_Identity* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_PLMN_Identity (OSCTXT* pctxt, const char* name, const e2ap_PLMN_Identity* pvalue);
+EXTERN int asn1Copy_e2ap_PLMN_Identity (OSCTXT* pctxt, const e2ap_PLMN_Identity* pSrcValue, e2ap_PLMN_Identity* pDstValue);
+EXTERN int asn1Init_e2ap_PLMN_Identity (e2ap_PLMN_Identity* pvalue);
+EXTERN void asn1Free_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue);
+
+
+/*****************************************/
+/*           GNB-ID-Choice                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(22..32))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 4
+//type 4  mau la datatrafficresource bitstring (a..b)
+typedef struct e2ap_GNB_ID_Choice_gnb_ID {
+    OSUINT8 numbits;
+    OSOCTET data[4];
+} e2ap_GNB_ID_Choice_gnb_ID;
+EXTERN int asn1PE_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt, e2ap_GNB_ID_Choice_gnb_ID* pvalue);
+EXTERN int asn1PD_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt, e2ap_GNB_ID_Choice_gnb_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GNB_ID_Choice_gnb_ID (const char* name, e2ap_GNB_ID_Choice_gnb_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GNB_ID_Choice_gnb_ID (OSCTXT* pctxt, const char* name, const e2ap_GNB_ID_Choice_gnb_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt,const e2ap_GNB_ID_Choice_gnb_ID* pSrcValue,  e2ap_GNB_ID_Choice_gnb_ID* pDstValue);
+EXTERN int asn1Init_e2ap_GNB_ID_Choice_gnb_ID(e2ap_GNB_ID_Choice_gnb_ID* pvalue);
+EXTERN void asn1Free_e2ap_GNB_ID_Choice_gnb_ID(OSCTXT* pctxt, e2ap_GNB_ID_Choice_gnb_ID* pvalue);
+
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_GNB_ID_Choice_gnb_ID  1
+#define T_e2ap_GNB_ID_Choice_extElem1 2
+
+typedef struct e2ap_GNB_ID_Choice {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_GNB_ID_Choice_gnb_ID *gnb_ID;
+      /* t = 2*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_GNB_ID_Choice;
+
+EXTERN int asn1PE_e2ap_GNB_ID_Choice (OSCTXT* pctxt, e2ap_GNB_ID_Choice* pvalue);
+EXTERN int asn1PD_e2ap_GNB_ID_Choice (OSCTXT* pctxt, e2ap_GNB_ID_Choice* pvalue);
+EXTERN void asn1Print_e2ap_GNB_ID_Choice (const char* name, const e2ap_GNB_ID_Choice* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GNB_ID_Choice (const char* name, e2ap_GNB_ID_Choice* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GNB_ID_Choice (OSCTXT* pctxt, const char* name, const e2ap_GNB_ID_Choice* pvalue);
+EXTERN int asn1Copy_e2ap_GNB_ID_Choice (OSCTXT* pctxt, const e2ap_GNB_ID_Choice* pSrcValue, e2ap_GNB_ID_Choice* pDstValue);
+EXTERN int asn1Init_e2ap_GNB_ID_Choice (e2ap_GNB_ID_Choice* pvalue);
+EXTERN void asn1Free_e2ap_GNB_ID_Choice (OSCTXT* pctxt, e2ap_GNB_ID_Choice* pvalue);
+/*****************************************/
+/*           GlobalgNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalgNB_ID {
+      //not primitive
+   e2ap_PLMN_Identity plmn_id;
+      //not primitive
+   e2ap_GNB_ID_Choice gnb_id;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalgNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalgNB_ID (OSCTXT* pctxt, e2ap_GlobalgNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalgNB_ID (OSCTXT* pctxt, e2ap_GlobalgNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalgNB_ID (e2ap_GlobalgNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalgNB_ID (OSCTXT* pctxt, e2ap_GlobalgNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalgNB_ID (const char* name, const e2ap_GlobalgNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalgNB_ID (const char* name, e2ap_GlobalgNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalgNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalgNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalgNB_ID (OSCTXT* pctxt, const e2ap_GlobalgNB_ID* pSrcValue, e2ap_GlobalgNB_ID* pDstValue);
+
+/*****************************************/
+/*           ENGNB-ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE (22..32))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 4
+//type 4  mau la datatrafficresource bitstring (a..b)
+typedef struct e2ap_ENGNB_ID_gNB_ID {
+    OSUINT8 numbits;
+    OSOCTET data[4];
+} e2ap_ENGNB_ID_gNB_ID;
+EXTERN int asn1PE_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENGNB_ID_gNB_ID (const char* name, e2ap_ENGNB_ID_gNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENGNB_ID_gNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt,const e2ap_ENGNB_ID_gNB_ID* pSrcValue,  e2ap_ENGNB_ID_gNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENGNB_ID_gNB_ID(e2ap_ENGNB_ID_gNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENGNB_ID_gNB_ID(OSCTXT* pctxt, e2ap_ENGNB_ID_gNB_ID* pvalue);
+
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_ENGNB_ID_gNB_ID  1
+#define T_e2ap_ENGNB_ID_extElem1 2
+
+typedef struct e2ap_ENGNB_ID {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_ENGNB_ID_gNB_ID *gNB_ID;
+      /* t = 2*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_ENGNB_ID;
+
+EXTERN int asn1PE_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_ENGNB_ID (const char* name, const e2ap_ENGNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENGNB_ID (const char* name, e2ap_ENGNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENGNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENGNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENGNB_ID (OSCTXT* pctxt, const e2ap_ENGNB_ID* pSrcValue, e2ap_ENGNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENGNB_ID (e2ap_ENGNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENGNB_ID (OSCTXT* pctxt, e2ap_ENGNB_ID* pvalue);
+/*****************************************/
+/*           GlobalenGNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalenGNB_ID {
+      //not primitive
+   e2ap_PLMN_Identity pLMN_Identity;
+      //not primitive
+   e2ap_ENGNB_ID gNB_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalenGNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, e2ap_GlobalenGNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, e2ap_GlobalenGNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalenGNB_ID (e2ap_GlobalenGNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, e2ap_GlobalenGNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalenGNB_ID (const char* name, const e2ap_GlobalenGNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalenGNB_ID (const char* name, e2ap_GlobalenGNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalenGNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalenGNB_ID (OSCTXT* pctxt, const e2ap_GlobalenGNB_ID* pSrcValue, e2ap_GlobalenGNB_ID* pDstValue);/*****************************************/
+/*           GNB_CU_UP_ID                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT64 e2ap_GNB_CU_UP_ID;
+EXTERN int asn1PE_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, e2ap_GNB_CU_UP_ID value);
+EXTERN int asn1PD_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, e2ap_GNB_CU_UP_ID* pvalue);
+EXTERN int asn1Print_e2ap_GNB_CU_UP_ID (const char* name, const e2ap_GNB_CU_UP_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GNB_CU_UP_ID (const char* name, e2ap_GNB_CU_UP_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, const char* name, const e2ap_GNB_CU_UP_ID* pvalue);
+EXTERN int asn1Init_e2ap_GNB_CU_UP_ID (e2ap_GNB_CU_UP_ID* pvalue);
+EXTERN int asn1Free_e2ap_GNB_CU_UP_ID (OSCTXT* pctxt, e2ap_GNB_CU_UP_ID* pvalue);
+/*****************************************/
+/*           GNB_DU_ID                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT64 e2ap_GNB_DU_ID;
+EXTERN int asn1PE_e2ap_GNB_DU_ID (OSCTXT* pctxt, e2ap_GNB_DU_ID value);
+EXTERN int asn1PD_e2ap_GNB_DU_ID (OSCTXT* pctxt, e2ap_GNB_DU_ID* pvalue);
+EXTERN int asn1Print_e2ap_GNB_DU_ID (const char* name, const e2ap_GNB_DU_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GNB_DU_ID (const char* name, e2ap_GNB_DU_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GNB_DU_ID (OSCTXT* pctxt, const char* name, const e2ap_GNB_DU_ID* pvalue);
+EXTERN int asn1Init_e2ap_GNB_DU_ID (e2ap_GNB_DU_ID* pvalue);
+EXTERN int asn1Free_e2ap_GNB_DU_ID (OSCTXT* pctxt, e2ap_GNB_DU_ID* pvalue);
+/*****************************************/
+/*           GlobalE2node_gNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalE2node_gNB_ID {
+      //not primitive
+   e2ap_GlobalgNB_ID global_gNB_ID;
+      //not primitive
+   e2ap_GlobalenGNB_ID global_en_gNB_ID;
+   OSBOOL m_global_en_gNB_IDPresent;      //not primitive
+   e2ap_GNB_CU_UP_ID gNB_CU_UP_ID;
+   OSBOOL m_gNB_CU_UP_IDPresent;      //not primitive
+   e2ap_GNB_DU_ID gNB_DU_ID;
+   OSBOOL m_gNB_DU_IDPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalE2node_gNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalE2node_gNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_gNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalE2node_gNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_gNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalE2node_gNB_ID (e2ap_GlobalE2node_gNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalE2node_gNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_gNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalE2node_gNB_ID (const char* name, const e2ap_GlobalE2node_gNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalE2node_gNB_ID (const char* name, e2ap_GlobalE2node_gNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalE2node_gNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalE2node_gNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalE2node_gNB_ID (OSCTXT* pctxt, const e2ap_GlobalE2node_gNB_ID* pSrcValue, e2ap_GlobalE2node_gNB_ID* pDstValue);/*****************************************/
+/*           GlobalE2node_en_gNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalE2node_en_gNB_ID {
+      //not primitive
+   e2ap_GlobalenGNB_ID global_en_gNB_ID;
+      //not primitive
+   e2ap_GNB_CU_UP_ID en_gNB_CU_UP_ID;
+   OSBOOL m_en_gNB_CU_UP_IDPresent;      //not primitive
+   e2ap_GNB_DU_ID en_gNB_DU_ID;
+   OSBOOL m_en_gNB_DU_IDPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalE2node_en_gNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalE2node_en_gNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_en_gNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalE2node_en_gNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_en_gNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalE2node_en_gNB_ID (e2ap_GlobalE2node_en_gNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalE2node_en_gNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_en_gNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalE2node_en_gNB_ID (const char* name, const e2ap_GlobalE2node_en_gNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalE2node_en_gNB_ID (const char* name, e2ap_GlobalE2node_en_gNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalE2node_en_gNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalE2node_en_gNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalE2node_en_gNB_ID (OSCTXT* pctxt, const e2ap_GlobalE2node_en_gNB_ID* pSrcValue, e2ap_GlobalE2node_en_gNB_ID* pDstValue);
+
+/*****************************************/
+/*           ENB-ID-Choice                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(20))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_Choice_enb_ID_macro {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_ENB_ID_Choice_enb_ID_macro;
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_macro (const char* name, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice_enb_ID_macro (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice_enb_ID_macro* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt,const e2ap_ENB_ID_Choice_enb_ID_macro* pSrcValue,  e2ap_ENB_ID_Choice_enb_ID_macro* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice_enb_ID_macro(e2ap_ENB_ID_Choice_enb_ID_macro* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_Choice_enb_ID_macro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_macro* pvalue);
+
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(18))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_Choice_enb_ID_shortmacro {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_ENB_ID_Choice_enb_ID_shortmacro;
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_shortmacro (const char* name, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice_enb_ID_shortmacro (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt,const e2ap_ENB_ID_Choice_enb_ID_shortmacro* pSrcValue,  e2ap_ENB_ID_Choice_enb_ID_shortmacro* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice_enb_ID_shortmacro(e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_Choice_enb_ID_shortmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_shortmacro* pvalue);
+
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(21))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_Choice_enb_ID_longmacro {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_ENB_ID_Choice_enb_ID_longmacro;
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice_enb_ID_longmacro (const char* name, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice_enb_ID_longmacro (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt,const e2ap_ENB_ID_Choice_enb_ID_longmacro* pSrcValue,  e2ap_ENB_ID_Choice_enb_ID_longmacro* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice_enb_ID_longmacro(e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_Choice_enb_ID_longmacro(OSCTXT* pctxt, e2ap_ENB_ID_Choice_enb_ID_longmacro* pvalue);
+
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_ENB_ID_Choice_enb_ID_macro  1
+#define T_e2ap_ENB_ID_Choice_enb_ID_shortmacro  2
+#define T_e2ap_ENB_ID_Choice_enb_ID_longmacro  3
+#define T_e2ap_ENB_ID_Choice_extElem1 4
+
+typedef struct e2ap_ENB_ID_Choice {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_ENB_ID_Choice_enb_ID_macro *enb_ID_macro;
+      /* t =  2 */
+      e2ap_ENB_ID_Choice_enb_ID_shortmacro *enb_ID_shortmacro;
+      /* t =  3 */
+      e2ap_ENB_ID_Choice_enb_ID_longmacro *enb_ID_longmacro;
+      /* t = 4*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_ENB_ID_Choice;
+
+EXTERN int asn1PE_e2ap_ENB_ID_Choice (OSCTXT* pctxt, e2ap_ENB_ID_Choice* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_Choice (OSCTXT* pctxt, e2ap_ENB_ID_Choice* pvalue);
+EXTERN void asn1Print_e2ap_ENB_ID_Choice (const char* name, const e2ap_ENB_ID_Choice* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_Choice (const char* name, e2ap_ENB_ID_Choice* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_Choice (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_Choice* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_Choice (OSCTXT* pctxt, const e2ap_ENB_ID_Choice* pSrcValue, e2ap_ENB_ID_Choice* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_Choice (e2ap_ENB_ID_Choice* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_Choice (OSCTXT* pctxt, e2ap_ENB_ID_Choice* pvalue);
+/*****************************************/
+/*           GlobalngeNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalngeNB_ID {
+      //not primitive
+   e2ap_PLMN_Identity plmn_id;
+      //not primitive
+   e2ap_ENB_ID_Choice enb_id;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalngeNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalngeNB_ID (e2ap_GlobalngeNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalngeNB_ID (const char* name, const e2ap_GlobalngeNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalngeNB_ID (const char* name, e2ap_GlobalngeNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalngeNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, const e2ap_GlobalngeNB_ID* pSrcValue, e2ap_GlobalngeNB_ID* pDstValue);
+
+/*****************************************/
+/*           ENB-ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE (20))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_macro_eNB_ID {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_ENB_ID_macro_eNB_ID;
+
+EXTERN int asn1PE_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_macro_eNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_macro_eNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_macro_eNB_ID (const char* name, e2ap_ENB_ID_macro_eNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_macro_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_macro_eNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_macro_eNB_ID* pSrcValue,  e2ap_ENB_ID_macro_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_macro_eNB_ID(e2ap_ENB_ID_macro_eNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_macro_eNB_ID* pvalue);
+
+    // Nội dung của file .h cho primitive BIT STRING (SIZE (28))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_home_eNB_ID {
+    OSUINT8 numbits;
+    OSOCTET data[4];
+} e2ap_ENB_ID_home_eNB_ID;
+
+EXTERN int asn1PE_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_home_eNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_home_eNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_home_eNB_ID (const char* name, e2ap_ENB_ID_home_eNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_home_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_home_eNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_home_eNB_ID* pSrcValue,  e2ap_ENB_ID_home_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_home_eNB_ID(e2ap_ENB_ID_home_eNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_home_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_home_eNB_ID* pvalue);
+
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(18))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_short_Macro_eNB_ID {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_ENB_ID_short_Macro_eNB_ID;
+
+EXTERN int asn1PE_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_short_Macro_eNB_ID (const char* name, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_short_Macro_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_short_Macro_eNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_short_Macro_eNB_ID* pSrcValue,  e2ap_ENB_ID_short_Macro_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_short_Macro_eNB_ID(e2ap_ENB_ID_short_Macro_eNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_short_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_short_Macro_eNB_ID* pvalue);
+
+    // Nội dung của file .h cho primitive BIT STRING (SIZE(21))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_ENB_ID_long_Macro_eNB_ID {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_ENB_ID_long_Macro_eNB_ID;
+
+EXTERN int asn1PE_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID_long_Macro_eNB_ID (const char* name, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID_long_Macro_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID_long_Macro_eNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt,const e2ap_ENB_ID_long_Macro_eNB_ID* pSrcValue,  e2ap_ENB_ID_long_Macro_eNB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID_long_Macro_eNB_ID(e2ap_ENB_ID_long_Macro_eNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_long_Macro_eNB_ID* pvalue);
+
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_ENB_ID_macro_eNB_ID  1
+#define T_e2ap_ENB_ID_home_eNB_ID  2
+#define T_e2ap_ENB_ID_short_Macro_eNB_ID  3
+#define T_e2ap_ENB_ID_long_Macro_eNB_ID  4
+#define T_e2ap_ENB_ID_extElem1 5
+
+typedef struct e2ap_ENB_ID {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_ENB_ID_macro_eNB_ID *macro_eNB_ID;
+      /* t =  2 */
+      e2ap_ENB_ID_home_eNB_ID *home_eNB_ID;
+      /* t =  3 */
+      e2ap_ENB_ID_short_Macro_eNB_ID *short_Macro_eNB_ID;
+      /* t =  4 */
+      e2ap_ENB_ID_long_Macro_eNB_ID *long_Macro_eNB_ID;
+      /* t = 5*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_ENB_ID;
+
+EXTERN int asn1PE_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue);
+EXTERN int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue);
+EXTERN void asn1Print_e2ap_ENB_ID (const char* name, const e2ap_ENB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ENB_ID (const char* name, e2ap_ENB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ENB_ID (OSCTXT* pctxt, const char* name, const e2ap_ENB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_ENB_ID (OSCTXT* pctxt, const e2ap_ENB_ID* pSrcValue, e2ap_ENB_ID* pDstValue);
+EXTERN int asn1Init_e2ap_ENB_ID (e2ap_ENB_ID* pvalue);
+EXTERN void asn1Free_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue);
+/*****************************************/
+/*           GlobalENB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalENB_ID {
+      //not primitive
+   e2ap_PLMN_Identity pLMN_Identity;
+      //not primitive
+   e2ap_ENB_ID eNB_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalENB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalENB_ID (OSCTXT* pctxt, e2ap_GlobalENB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalENB_ID (OSCTXT* pctxt, e2ap_GlobalENB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalENB_ID (e2ap_GlobalENB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalENB_ID (OSCTXT* pctxt, e2ap_GlobalENB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalENB_ID (const char* name, const e2ap_GlobalENB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalENB_ID (const char* name, e2ap_GlobalENB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalENB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalENB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalENB_ID (OSCTXT* pctxt, const e2ap_GlobalENB_ID* pSrcValue, e2ap_GlobalENB_ID* pDstValue);/*****************************************/
+/*           NGENB_DU_ID                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT64 e2ap_NGENB_DU_ID;
+EXTERN int asn1PE_e2ap_NGENB_DU_ID (OSCTXT* pctxt, e2ap_NGENB_DU_ID value);
+EXTERN int asn1PD_e2ap_NGENB_DU_ID (OSCTXT* pctxt, e2ap_NGENB_DU_ID* pvalue);
+EXTERN int asn1Print_e2ap_NGENB_DU_ID (const char* name, const e2ap_NGENB_DU_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_NGENB_DU_ID (const char* name, e2ap_NGENB_DU_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_NGENB_DU_ID (OSCTXT* pctxt, const char* name, const e2ap_NGENB_DU_ID* pvalue);
+EXTERN int asn1Init_e2ap_NGENB_DU_ID (e2ap_NGENB_DU_ID* pvalue);
+EXTERN int asn1Free_e2ap_NGENB_DU_ID (OSCTXT* pctxt, e2ap_NGENB_DU_ID* pvalue);
+/*****************************************/
+/*           GlobalE2node_ng_eNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalE2node_ng_eNB_ID {
+      //not primitive
+   e2ap_GlobalngeNB_ID global_ng_eNB_ID;
+      //not primitive
+   e2ap_GlobalENB_ID global_eNB_ID;
+   OSBOOL m_global_eNB_IDPresent;      //not primitive
+   e2ap_NGENB_DU_ID ngENB_DU_ID;
+   OSBOOL m_ngENB_DU_IDPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalE2node_ng_eNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalE2node_ng_eNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ng_eNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalE2node_ng_eNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ng_eNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalE2node_ng_eNB_ID (e2ap_GlobalE2node_ng_eNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalE2node_ng_eNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ng_eNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalE2node_ng_eNB_ID (const char* name, const e2ap_GlobalE2node_ng_eNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalE2node_ng_eNB_ID (const char* name, e2ap_GlobalE2node_ng_eNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalE2node_ng_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalE2node_ng_eNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalE2node_ng_eNB_ID (OSCTXT* pctxt, const e2ap_GlobalE2node_ng_eNB_ID* pSrcValue, e2ap_GlobalE2node_ng_eNB_ID* pDstValue);/*****************************************/
+/*           GlobalE2node_eNB_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalE2node_eNB_ID {
+      //not primitive
+   e2ap_GlobalENB_ID global_eNB_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalE2node_eNB_ID;
+
+EXTERN int asn1PE_e2ap_GlobalE2node_eNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_eNB_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalE2node_eNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_eNB_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalE2node_eNB_ID (e2ap_GlobalE2node_eNB_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalE2node_eNB_ID (OSCTXT* pctxt, e2ap_GlobalE2node_eNB_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalE2node_eNB_ID (const char* name, const e2ap_GlobalE2node_eNB_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalE2node_eNB_ID (const char* name, e2ap_GlobalE2node_eNB_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalE2node_eNB_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalE2node_eNB_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalE2node_eNB_ID (OSCTXT* pctxt, const e2ap_GlobalE2node_eNB_ID* pSrcValue, e2ap_GlobalE2node_eNB_ID* pDstValue);
+
+/*****************************************/
+/*           GlobalE2node-ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_GlobalE2node_ID_gNB  1
+#define T_e2ap_GlobalE2node_ID_en_gNB  2
+#define T_e2ap_GlobalE2node_ID_ng_eNB  3
+#define T_e2ap_GlobalE2node_ID_eNB  4
+#define T_e2ap_GlobalE2node_ID_extElem1 5
+
+typedef struct e2ap_GlobalE2node_ID {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_GlobalE2node_gNB_ID *gNB;
+      /* t =  2 */
+      e2ap_GlobalE2node_en_gNB_ID *en_gNB;
+      /* t =  3 */
+      e2ap_GlobalE2node_ng_eNB_ID *ng_eNB;
+      /* t =  4 */
+      e2ap_GlobalE2node_eNB_ID *eNB;
+      /* t = 5*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_GlobalE2node_ID;
+
+EXTERN int asn1PE_e2ap_GlobalE2node_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalE2node_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalE2node_ID (const char* name, const e2ap_GlobalE2node_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalE2node_ID (const char* name, e2ap_GlobalE2node_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalE2node_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalE2node_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalE2node_ID (OSCTXT* pctxt, const e2ap_GlobalE2node_ID* pSrcValue, e2ap_GlobalE2node_ID* pDstValue);
+EXTERN int asn1Init_e2ap_GlobalE2node_ID (e2ap_GlobalE2node_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalE2node_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ID* pvalue);
+/******************************************************/
+/*                                                    */
+/*    E2nodeComponentInterfaceType                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_ng = 0,
+    e2ap_xn = 1,
+    e2ap_e1 = 2,
+    e2ap_f1 = 3,
+    e2ap_w1 = 4,
+    e2ap_s1 = 5,
+    e2ap_x2 = 6
+} e2ap_E2nodeComponentInterfaceType_Root;
+
+typedef OSUINT32 e2ap_E2nodeComponentInterfaceType;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceType (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceType value);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceType (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceType* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceType (const char* name, const e2ap_E2nodeComponentInterfaceType* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceType (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceType* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceType (const char* name,e2ap_E2nodeComponentInterfaceType* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_E2nodeComponentInterfaceType_ENUMTAB[];
+#define e2ap_E2nodeComponentInterfaceType_ENUMTABSIZE 7
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_E2nodeComponentInterfaceType_ToString (OSUINT32 value);
+EXTERN int e2ap_E2nodeComponentInterfaceType_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_E2nodeComponentInterfaceType* pvalue);
+EXTERN int e2ap_E2nodeComponentInterfaceType_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_E2nodeComponentInterfaceType* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceType (e2ap_E2nodeComponentInterfaceType* pvalue);/* e2ap_AMFName.h */
+
+//printable string
+/*****************************************/
+/*           AMFName                */
+/*****************************************/
+
+
+typedef const char* e2ap_AMFName;
+
+EXTERN int asn1PE_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName value);
+EXTERN int asn1PD_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName* ppvalue);
+EXTERN void asn1Print_e2ap_AMFName (const char* name, e2ap_AMFName pvalue);
+EXTERN int asn1PrtToStr_e2ap_AMFName (const char* name, e2ap_AMFName pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_AMFName (OSCTXT* pctxt, const char* name, e2ap_AMFName pvalue);
+EXTERN int asn1Copy_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName pSrcValue, e2ap_AMFName* pDstValue);
+EXTERN void asn1Free_e2ap_AMFName (OSCTXT* pctxt, e2ap_AMFName pvalue);
+EXTERN int asn1Init_e2ap_AMFName (e2ap_AMFName* pvalue);/*****************************************/
+/*           E2nodeComponentInterfaceNG                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceNG {
+      //not primitive
+   e2ap_AMFName amf_name;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceNG;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceNG* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceNG* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceNG (e2ap_E2nodeComponentInterfaceNG* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceNG* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceNG (const char* name, const e2ap_E2nodeComponentInterfaceNG* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceNG (const char* name, e2ap_E2nodeComponentInterfaceNG* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceNG* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceNG (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceNG* pSrcValue, e2ap_E2nodeComponentInterfaceNG* pDstValue);
+
+/*****************************************/
+/*           GlobalNG-RANNode-ID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_GlobalNG_RANNode_ID_gNB  1
+#define T_e2ap_GlobalNG_RANNode_ID_ng_eNB  2
+#define T_e2ap_GlobalNG_RANNode_ID_extElem1 3
+
+typedef struct e2ap_GlobalNG_RANNode_ID {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_GlobalgNB_ID *gNB;
+      /* t =  2 */
+      e2ap_GlobalngeNB_ID *ng_eNB;
+      /* t = 3*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_GlobalNG_RANNode_ID;
+
+EXTERN int asn1PE_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, e2ap_GlobalNG_RANNode_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, e2ap_GlobalNG_RANNode_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalNG_RANNode_ID (const char* name, const e2ap_GlobalNG_RANNode_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalNG_RANNode_ID (const char* name, e2ap_GlobalNG_RANNode_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalNG_RANNode_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, const e2ap_GlobalNG_RANNode_ID* pSrcValue, e2ap_GlobalNG_RANNode_ID* pDstValue);
+EXTERN int asn1Init_e2ap_GlobalNG_RANNode_ID (e2ap_GlobalNG_RANNode_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalNG_RANNode_ID (OSCTXT* pctxt, e2ap_GlobalNG_RANNode_ID* pvalue);
+/*****************************************/
+/*           E2nodeComponentInterfaceXn                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceXn {
+      //not primitive
+   e2ap_GlobalNG_RANNode_ID global_NG_RAN_Node_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceXn;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceXn* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceXn* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceXn (e2ap_E2nodeComponentInterfaceXn* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceXn* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceXn (const char* name, const e2ap_E2nodeComponentInterfaceXn* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceXn (const char* name, e2ap_E2nodeComponentInterfaceXn* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceXn* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceXn* pSrcValue, e2ap_E2nodeComponentInterfaceXn* pDstValue);/*****************************************/
+/*           E2nodeComponentInterfaceE1                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceE1 {
+      //not primitive
+   e2ap_GNB_CU_UP_ID gNB_CU_UP_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceE1;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceE1* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceE1* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceE1 (e2ap_E2nodeComponentInterfaceE1* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceE1* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceE1 (const char* name, const e2ap_E2nodeComponentInterfaceE1* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceE1 (const char* name, e2ap_E2nodeComponentInterfaceE1* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceE1* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceE1 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceE1* pSrcValue, e2ap_E2nodeComponentInterfaceE1* pDstValue);/*****************************************/
+/*           E2nodeComponentInterfaceF1                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceF1 {
+      //not primitive
+   e2ap_GNB_DU_ID gNB_DU_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceF1;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceF1* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceF1* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceF1 (e2ap_E2nodeComponentInterfaceF1* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceF1* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceF1 (const char* name, const e2ap_E2nodeComponentInterfaceF1* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceF1 (const char* name, e2ap_E2nodeComponentInterfaceF1* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceF1* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceF1 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceF1* pSrcValue, e2ap_E2nodeComponentInterfaceF1* pDstValue);/*****************************************/
+/*           E2nodeComponentInterfaceW1                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceW1 {
+      //not primitive
+   e2ap_NGENB_DU_ID ng_eNB_DU_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceW1;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceW1* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceW1* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceW1 (e2ap_E2nodeComponentInterfaceW1* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceW1* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceW1 (const char* name, const e2ap_E2nodeComponentInterfaceW1* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceW1 (const char* name, e2ap_E2nodeComponentInterfaceW1* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceW1* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceW1 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceW1* pSrcValue, e2ap_E2nodeComponentInterfaceW1* pDstValue);/* e2ap_MMEname.h */
+
+//printable string
+/*****************************************/
+/*           MMEname                */
+/*****************************************/
+
+
+typedef const char* e2ap_MMEname;
+
+EXTERN int asn1PE_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname value);
+EXTERN int asn1PD_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname* ppvalue);
+EXTERN void asn1Print_e2ap_MMEname (const char* name, e2ap_MMEname pvalue);
+EXTERN int asn1PrtToStr_e2ap_MMEname (const char* name, e2ap_MMEname pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_MMEname (OSCTXT* pctxt, const char* name, e2ap_MMEname pvalue);
+EXTERN int asn1Copy_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname pSrcValue, e2ap_MMEname* pDstValue);
+EXTERN void asn1Free_e2ap_MMEname (OSCTXT* pctxt, e2ap_MMEname pvalue);
+EXTERN int asn1Init_e2ap_MMEname (e2ap_MMEname* pvalue);/*****************************************/
+/*           E2nodeComponentInterfaceS1                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceS1 {
+      //not primitive
+   e2ap_MMEname mme_name;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceS1;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceS1* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceS1* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceS1 (e2ap_E2nodeComponentInterfaceS1* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceS1* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceS1 (const char* name, const e2ap_E2nodeComponentInterfaceS1* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceS1 (const char* name, e2ap_E2nodeComponentInterfaceS1* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceS1* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceS1* pSrcValue, e2ap_E2nodeComponentInterfaceS1* pDstValue);/*****************************************/
+/*           E2nodeComponentInterfaceX2                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentInterfaceX2 {
+      //not primitive
+   e2ap_GlobalENB_ID global_eNB_ID;
+   OSBOOL m_global_eNB_IDPresent;      //not primitive
+   e2ap_GlobalenGNB_ID global_en_gNB_ID;
+   OSBOOL m_global_en_gNB_IDPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentInterfaceX2;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceX2* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceX2* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceX2 (e2ap_E2nodeComponentInterfaceX2* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceX2* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentInterfaceX2 (const char* name, const e2ap_E2nodeComponentInterfaceX2* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentInterfaceX2 (const char* name, e2ap_E2nodeComponentInterfaceX2* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentInterfaceX2* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, const e2ap_E2nodeComponentInterfaceX2* pSrcValue, e2ap_E2nodeComponentInterfaceX2* pDstValue);
+
+/*****************************************/
+/*           E2nodeComponentID                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeNG  1
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeXn  2
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeE1  3
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeF1  4
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeW1  5
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeS1  6
+#define T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeX2  7
+#define T_e2ap_E2nodeComponentID_extElem1 8
+
+typedef struct e2ap_E2nodeComponentID {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_E2nodeComponentInterfaceNG *e2nodeComponentInterfaceTypeNG;
+      /* t =  2 */
+      e2ap_E2nodeComponentInterfaceXn *e2nodeComponentInterfaceTypeXn;
+      /* t =  3 */
+      e2ap_E2nodeComponentInterfaceE1 *e2nodeComponentInterfaceTypeE1;
+      /* t =  4 */
+      e2ap_E2nodeComponentInterfaceF1 *e2nodeComponentInterfaceTypeF1;
+      /* t =  5 */
+      e2ap_E2nodeComponentInterfaceW1 *e2nodeComponentInterfaceTypeW1;
+      /* t =  6 */
+      e2ap_E2nodeComponentInterfaceS1 *e2nodeComponentInterfaceTypeS1;
+      /* t =  7 */
+      e2ap_E2nodeComponentInterfaceX2 *e2nodeComponentInterfaceTypeX2;
+      /* t = 8*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_E2nodeComponentID;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentID (const char* name, const e2ap_E2nodeComponentID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentID (const char* name, e2ap_E2nodeComponentID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentID (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentID* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentID (OSCTXT* pctxt, const e2ap_E2nodeComponentID* pSrcValue, e2ap_E2nodeComponentID* pDstValue);
+EXTERN int asn1Init_e2ap_E2nodeComponentID (e2ap_E2nodeComponentID* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentID (OSCTXT* pctxt, e2ap_E2nodeComponentID* pvalue);
+/*****************************************/
+/*           E2nodeComponentConfiguration                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+    // Nội dung của file .h cho primitive OCTET STRING
+     /*****************************************/
+/*           e2nodeComponentRequestPart                */
+/*****************************************/
+//octet string intergrate 
+//metadata.parsed.primitive_id == 9
+
+//-> mau la measurementtimingconfiguration
+typdef OSDynOctStr e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart;
+EXTERN int asn1PE_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart value);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (const char* name, e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (OSCTXT* pctxt, const e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart* pSrcValue, e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart* pDstValue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart* pvalue);
+
+    // Nội dung của file .h cho primitive OCTET STRING
+     /*****************************************/
+/*           e2nodeComponentResponsePart                */
+/*****************************************/
+//octet string intergrate 
+//metadata.parsed.primitive_id == 9
+
+//-> mau la measurementtimingconfiguration
+typdef OSDynOctStr e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart;
+EXTERN int asn1PE_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart value);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (const char* name, e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (OSCTXT* pctxt, const e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart* pSrcValue, e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart* pDstValue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart* pvalue);
+
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfiguration {
+      //primitive
+   e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart e2nodeComponentRequestPart;
+      //primitive
+   e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart e2nodeComponentResponsePart;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfiguration;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfiguration (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfiguration (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfiguration (e2ap_E2nodeComponentConfiguration* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfiguration (OSCTXT* pctxt, e2ap_E2nodeComponentConfiguration* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfiguration (const char* name, const e2ap_E2nodeComponentConfiguration* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfiguration (const char* name, e2ap_E2nodeComponentConfiguration* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfiguration (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfiguration* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfiguration (OSCTXT* pctxt, const e2ap_E2nodeComponentConfiguration* pSrcValue, e2ap_E2nodeComponentConfiguration* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigAddition_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigAddition_Item {
+      //not primitive
+   e2ap_E2nodeComponentInterfaceType e2nodeComponentInterfaceType;
+      //not primitive
+   e2ap_E2nodeComponentID e2nodeComponentID;
+      //not primitive
+   e2ap_E2nodeComponentConfiguration e2nodeComponentConfiguration;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigAddition_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigAddition_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigAddition_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigAddition_Item (e2ap_E2nodeComponentConfigAddition_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigAddition_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigAddition_Item (const char* name, const e2ap_E2nodeComponentConfigAddition_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigAddition_Item (const char* name, e2ap_E2nodeComponentConfigAddition_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigAddition_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigAddition_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigAddition_Item (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigAddition_Item* pSrcValue, e2ap_E2nodeComponentConfigAddition_Item* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigAddition_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAddition_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAddition_ItemIEs_id_E2nodeComponentConfigAddition_Item 
+ 
+} e2ap_E2nodeComponentConfigAddition_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeComponentConfigAddition_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeComponentConfigAddition_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeComponentConfigAddition_Item * _e2apE2nodeComponentConfigAddition_ItemIEs_id_E2nodeComponentConfigAddition_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeComponentConfigAddition_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeComponentConfigAddition_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeComponentConfigAddition_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigAddition_ItemIEs (e2ap_E2nodeComponentConfigAddition_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigAddition_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeComponentConfigAddition_ItemIEs (const char * name, e2ap_E2nodeComponentConfigAddition_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeComponentConfigAddition_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeComponentConfigAddition_List;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigAddition_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigAddition_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigAddition_List (e2ap_E2nodeComponentConfigAddition_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigAddition_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAddition_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigAddition_List (const char* name, e2ap_E2nodeComponentConfigAddition_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigAddition_List (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigAddition_List* pSrcValue, e2ap_E2nodeComponentConfigAddition_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigAddition_List (const char *name, const e2ap_E2nodeComponentConfigAddition_List* pvalue);/*****************************************/
+/*           E2nodeComponentConfigUpdate_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigUpdate_Item {
+      //not primitive
+   e2ap_E2nodeComponentInterfaceType e2nodeComponentInterfaceType;
+      //not primitive
+   e2ap_E2nodeComponentID e2nodeComponentID;
+      //not primitive
+   e2ap_E2nodeComponentConfiguration e2nodeComponentConfiguration;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigUpdate_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigUpdate_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigUpdate_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigUpdate_Item (e2ap_E2nodeComponentConfigUpdate_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigUpdate_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigUpdate_Item (const char* name, const e2ap_E2nodeComponentConfigUpdate_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigUpdate_Item (const char* name, e2ap_E2nodeComponentConfigUpdate_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigUpdate_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigUpdate_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigUpdate_Item (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigUpdate_Item* pSrcValue, e2ap_E2nodeComponentConfigUpdate_Item* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigUpdate_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigUpdate_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigUpdate_ItemIEs_id_E2nodeComponentConfigUpdate_Item 
+ 
+} e2ap_E2nodeComponentConfigUpdate_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeComponentConfigUpdate_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeComponentConfigUpdate_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeComponentConfigUpdate_Item * _e2apE2nodeComponentConfigUpdate_ItemIEs_id_E2nodeComponentConfigUpdate_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeComponentConfigUpdate_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeComponentConfigUpdate_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeComponentConfigUpdate_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigUpdate_ItemIEs (e2ap_E2nodeComponentConfigUpdate_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigUpdate_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeComponentConfigUpdate_ItemIEs (const char * name, e2ap_E2nodeComponentConfigUpdate_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeComponentConfigUpdate_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeComponentConfigUpdate_List;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigUpdate_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigUpdate_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigUpdate_List (e2ap_E2nodeComponentConfigUpdate_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigUpdate_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdate_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigUpdate_List (const char* name, e2ap_E2nodeComponentConfigUpdate_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigUpdate_List (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigUpdate_List* pSrcValue, e2ap_E2nodeComponentConfigUpdate_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigUpdate_List (const char *name, const e2ap_E2nodeComponentConfigUpdate_List* pvalue);/*****************************************/
+/*           E2nodeComponentConfigRemoval_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigRemoval_Item {
+      //not primitive
+   e2ap_E2nodeComponentInterfaceType e2nodeComponentInterfaceType;
+      //not primitive
+   e2ap_E2nodeComponentID e2nodeComponentID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigRemoval_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigRemoval_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigRemoval_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigRemoval_Item (e2ap_E2nodeComponentConfigRemoval_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigRemoval_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigRemoval_Item (const char* name, const e2ap_E2nodeComponentConfigRemoval_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigRemoval_Item (const char* name, e2ap_E2nodeComponentConfigRemoval_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigRemoval_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigRemoval_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigRemoval_Item (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigRemoval_Item* pSrcValue, e2ap_E2nodeComponentConfigRemoval_Item* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigRemoval_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigRemoval_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigRemoval_ItemIEs_id_E2nodeComponentConfigRemoval_Item 
+ 
+} e2ap_E2nodeComponentConfigRemoval_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeComponentConfigRemoval_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeComponentConfigRemoval_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeComponentConfigRemoval_Item * _e2apE2nodeComponentConfigRemoval_ItemIEs_id_E2nodeComponentConfigRemoval_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeComponentConfigRemoval_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeComponentConfigRemoval_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeComponentConfigRemoval_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigRemoval_ItemIEs (e2ap_E2nodeComponentConfigRemoval_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigRemoval_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeComponentConfigRemoval_ItemIEs (const char * name, e2ap_E2nodeComponentConfigRemoval_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeComponentConfigRemoval_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeComponentConfigRemoval_List;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigRemoval_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigRemoval_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigRemoval_List (e2ap_E2nodeComponentConfigRemoval_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigRemoval_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemoval_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigRemoval_List (const char* name, e2ap_E2nodeComponentConfigRemoval_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigRemoval_List (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigRemoval_List* pSrcValue, e2ap_E2nodeComponentConfigRemoval_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigRemoval_List (const char *name, const e2ap_E2nodeComponentConfigRemoval_List* pvalue);/*****************************************/
+/*           E2nodeTNLassociationRemoval_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeTNLassociationRemoval_Item {
+      //not primitive
+   e2ap_TNLinformation tnlInformation;
+      //not primitive
+   e2ap_TNLinformation tnlInformationRIC;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeTNLassociationRemoval_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeTNLassociationRemoval_Item (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeTNLassociationRemoval_Item (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeTNLassociationRemoval_Item (e2ap_E2nodeTNLassociationRemoval_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeTNLassociationRemoval_Item (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeTNLassociationRemoval_Item (const char* name, const e2ap_E2nodeTNLassociationRemoval_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeTNLassociationRemoval_Item (const char* name, e2ap_E2nodeTNLassociationRemoval_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeTNLassociationRemoval_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeTNLassociationRemoval_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeTNLassociationRemoval_Item (OSCTXT* pctxt, const e2ap_E2nodeTNLassociationRemoval_Item* pSrcValue, e2ap_E2nodeTNLassociationRemoval_Item* pDstValue);/*****************************************/
+/*           E2nodeTNLassociationRemoval_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeTNLassociationRemoval_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeTNLassociationRemoval_ItemIEs_id_E2nodeTNLassociationRemoval_Item 
+ 
+} e2ap_E2nodeTNLassociationRemoval_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeTNLassociationRemoval_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeTNLassociationRemoval_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeTNLassociationRemoval_Item * _e2apE2nodeTNLassociationRemoval_ItemIEs_id_E2nodeTNLassociationRemoval_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeTNLassociationRemoval_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeTNLassociationRemoval_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeTNLassociationRemoval_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeTNLassociationRemoval_ItemIEs (e2ap_E2nodeTNLassociationRemoval_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeTNLassociationRemoval_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeTNLassociationRemoval_ItemIEs (const char * name, e2ap_E2nodeTNLassociationRemoval_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeTNLassociationRemoval_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeTNLassociationRemoval_List;
+
+EXTERN int asn1PE_e2ap_E2nodeTNLassociationRemoval_List (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeTNLassociationRemoval_List (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeTNLassociationRemoval_List (e2ap_E2nodeTNLassociationRemoval_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeTNLassociationRemoval_List (OSCTXT* pctxt, e2ap_E2nodeTNLassociationRemoval_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeTNLassociationRemoval_List (const char* name, e2ap_E2nodeTNLassociationRemoval_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeTNLassociationRemoval_List (OSCTXT* pctxt, const e2ap_E2nodeTNLassociationRemoval_List* pSrcValue, e2ap_E2nodeTNLassociationRemoval_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeTNLassociationRemoval_List (const char *name, const e2ap_E2nodeTNLassociationRemoval_List* pvalue);/*****************************************/
+/*           E2nodeConfigurationUpdate_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_GlobalE2node_ID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigAddition,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigUpdate,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigRemoval,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_E2nodeTNLassociationRemoval,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2nodeConfigurationUpdate_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdate_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeConfigurationUpdate_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2nodeConfigurationUpdate_IEs_id_TransactionID;
+        /*
+        *id: id-GlobalE2node_ID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_GlobalE2node_ID * _e2apE2nodeConfigurationUpdate_IEs_id_GlobalE2node_ID;
+        /*
+        *id: id-E2nodeComponentConfigAddition_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeComponentConfigAddition_List * _e2apE2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigAddition;
+        /*
+        *id: id-E2nodeComponentConfigUpdate_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeComponentConfigUpdate_List * _e2apE2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigUpdate;
+        /*
+        *id: id-E2nodeComponentConfigRemoval_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeComponentConfigRemoval_List * _e2apE2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigRemoval;
+        /*
+        *id: id-E2nodeTNLassociationRemoval_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeTNLassociationRemoval_List * _e2apE2nodeConfigurationUpdate_IEs_id_E2nodeTNLassociationRemoval;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeConfigurationUpdate_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (e2ap_E2nodeConfigurationUpdate_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (const char * name, e2ap_E2nodeConfigurationUpdate_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2nodeConfigurationUpdate                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2nodeConfigurationUpdate_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdate_protocolIEs (e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate_protocolIEs (const char* name, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2nodeConfigurationUpdate -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdate {
+    e2ap_E2nodeConfigurationUpdate_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeConfigurationUpdate;
+
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdate (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdate (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdate (e2ap_E2nodeConfigurationUpdate* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdate (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeConfigurationUpdate (const char* name, const e2ap_E2nodeConfigurationUpdate* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate (const char* name, e2ap_E2nodeConfigurationUpdate* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeConfigurationUpdate (OSCTXT* pctxt, const char* name, const e2ap_E2nodeConfigurationUpdate* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeConfigurationUpdate (OSCTXT* pctxt, const e2ap_E2nodeConfigurationUpdate* pSrcValue, e2ap_E2nodeConfigurationUpdate* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigurationAck                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+    // Nội dung của file .h cho primitive ENUMERATED
+    //enumerated intergrate
+//metadata.parsed.primitive_id == 13
+
+typedef enum{
+    e2ap_success = 0,   
+    e2ap_failure = 1   
+}e2apE2nodeComponentConfigurationAck_updateOutcome_Root;
+
+typedef OSUINT32 e2ap_E2nodeComponentConfigurationAck_updateOutcome;
+
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigurationAck_updateOutcome (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck_updateOutcome value);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigurationAck_updateOutcome (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigurationAck_updateOutcome (const char* name, const e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigurationAck_updateOutcome (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigurationAck_updateOutcome (const char* name,e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTAB[];
+#define e2ap_E2nodeComponentConfigurationAck_updateOutcome_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToString (OSUINT32 value);
+EXTERN int e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue);
+EXTERN int e2ap_E2nodeComponentConfigurationAck_updateOutcome_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigurationAck_updateOutcome (e2ap_E2nodeComponentConfigurationAck_updateOutcome* pvalue);
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigurationAck {
+      //primitive
+   e2ap_E2nodeComponentConfigurationAck_updateOutcome updateOutcome;
+      //not primitive
+   e2ap_Cause failureCause;
+   OSBOOL m_failureCausePresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigurationAck;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigurationAck (e2ap_E2nodeComponentConfigurationAck* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeComponentConfigurationAck* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigurationAck (const char* name, const e2ap_E2nodeComponentConfigurationAck* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigurationAck (const char* name, e2ap_E2nodeComponentConfigurationAck* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigurationAck* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigurationAck* pSrcValue, e2ap_E2nodeComponentConfigurationAck* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigAdditionAck_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigAdditionAck_Item {
+      //not primitive
+   e2ap_E2nodeComponentInterfaceType e2nodeComponentInterfaceType;
+      //not primitive
+   e2ap_E2nodeComponentID e2nodeComponentID;
+      //not primitive
+   e2ap_E2nodeComponentConfigurationAck e2nodeComponentConfigurationAck;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigAdditionAck_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigAdditionAck_Item (e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigAdditionAck_Item (const char* name, const e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_Item (const char* name, e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigAdditionAck_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigAdditionAck_Item* pSrcValue, e2ap_E2nodeComponentConfigAdditionAck_Item* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigAdditionAck_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item 
+ 
+} e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeComponentConfigAdditionAck_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeComponentConfigAdditionAck_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeComponentConfigAdditionAck_Item * _e2apE2nodeComponentConfigAdditionAck_ItemIEs_id_E2nodeComponentConfigAdditionAck_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeComponentConfigAdditionAck_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_ItemIEs (const char * name, e2ap_E2nodeComponentConfigAdditionAck_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeComponentConfigAdditionAck_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeComponentConfigAdditionAck_List;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigAdditionAck_List (e2ap_E2nodeComponentConfigAdditionAck_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigAdditionAck_List (const char* name, e2ap_E2nodeComponentConfigAdditionAck_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigAdditionAck_List (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigAdditionAck_List* pSrcValue, e2ap_E2nodeComponentConfigAdditionAck_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigAdditionAck_List (const char *name, const e2ap_E2nodeComponentConfigAdditionAck_List* pvalue);/*****************************************/
+/*           E2nodeComponentConfigUpdateAck_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigUpdateAck_Item {
+      //not primitive
+   e2ap_E2nodeComponentInterfaceType e2nodeComponentInterfaceType;
+      //not primitive
+   e2ap_E2nodeComponentID e2nodeComponentID;
+      //not primitive
+   e2ap_E2nodeComponentConfigurationAck e2nodeComponentConfigurationAck;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigUpdateAck_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigUpdateAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigUpdateAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigUpdateAck_Item (e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigUpdateAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigUpdateAck_Item (const char* name, const e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigUpdateAck_Item (const char* name, e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigUpdateAck_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigUpdateAck_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigUpdateAck_Item (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigUpdateAck_Item* pSrcValue, e2ap_E2nodeComponentConfigUpdateAck_Item* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigUpdateAck_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs_id_E2nodeComponentConfigUpdateAck_Item 
+ 
+} e2ap_E2nodeComponentConfigUpdateAck_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeComponentConfigUpdateAck_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeComponentConfigUpdateAck_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeComponentConfigUpdateAck_Item * _e2apE2nodeComponentConfigUpdateAck_ItemIEs_id_E2nodeComponentConfigUpdateAck_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeComponentConfigUpdateAck_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs (e2ap_E2nodeComponentConfigUpdateAck_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeComponentConfigUpdateAck_ItemIEs (const char * name, e2ap_E2nodeComponentConfigUpdateAck_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeComponentConfigUpdateAck_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeComponentConfigUpdateAck_List;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigUpdateAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigUpdateAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigUpdateAck_List (e2ap_E2nodeComponentConfigUpdateAck_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigUpdateAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigUpdateAck_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigUpdateAck_List (const char* name, e2ap_E2nodeComponentConfigUpdateAck_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigUpdateAck_List (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigUpdateAck_List* pSrcValue, e2ap_E2nodeComponentConfigUpdateAck_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigUpdateAck_List (const char *name, const e2ap_E2nodeComponentConfigUpdateAck_List* pvalue);/*****************************************/
+/*           E2nodeComponentConfigRemovalAck_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2nodeComponentConfigRemovalAck_Item {
+      //not primitive
+   e2ap_E2nodeComponentInterfaceType e2nodeComponentInterfaceType;
+      //not primitive
+   e2ap_E2nodeComponentID e2nodeComponentID;
+      //not primitive
+   e2ap_E2nodeComponentConfigurationAck e2nodeComponentConfigurationAck;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeComponentConfigRemovalAck_Item;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigRemovalAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigRemovalAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeComponentConfigRemovalAck_Item (e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigRemovalAck_Item (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigRemovalAck_Item (const char* name, const e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigRemovalAck_Item (const char* name, e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeComponentConfigRemovalAck_Item (OSCTXT* pctxt, const char* name, const e2ap_E2nodeComponentConfigRemovalAck_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigRemovalAck_Item (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigRemovalAck_Item* pSrcValue, e2ap_E2nodeComponentConfigRemovalAck_Item* pDstValue);/*****************************************/
+/*           E2nodeComponentConfigRemovalAck_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs_id_E2nodeComponentConfigRemovalAck_Item 
+ 
+} e2ap_E2nodeComponentConfigRemovalAck_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_E2nodeComponentConfigRemovalAck_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeComponentConfigRemovalAck_ItemIEs_TVALUE t;
+      union {
+         e2ap_E2nodeComponentConfigRemovalAck_Item * _e2apE2nodeComponentConfigRemovalAck_ItemIEs_id_E2nodeComponentConfigRemovalAck_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeComponentConfigRemovalAck_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs (e2ap_E2nodeComponentConfigRemovalAck_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2nodeComponentConfigRemovalAck_ItemIEs (const char * name, e2ap_E2nodeComponentConfigRemovalAck_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           E2nodeComponentConfigRemovalAck_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_E2nodeComponentConfigRemovalAck_List;
+
+EXTERN int asn1PE_e2ap_E2nodeComponentConfigRemovalAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_List* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeComponentConfigRemovalAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2nodeComponentConfigRemovalAck_List (e2ap_E2nodeComponentConfigRemovalAck_List* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeComponentConfigRemovalAck_List (OSCTXT* pctxt, e2ap_E2nodeComponentConfigRemovalAck_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeComponentConfigRemovalAck_List (const char* name, e2ap_E2nodeComponentConfigRemovalAck_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2nodeComponentConfigRemovalAck_List (OSCTXT* pctxt, const e2ap_E2nodeComponentConfigRemovalAck_List* pSrcValue, e2ap_E2nodeComponentConfigRemovalAck_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2nodeComponentConfigRemovalAck_List (const char *name, const e2ap_E2nodeComponentConfigRemovalAck_List* pvalue);/*****************************************/
+/*           E2nodeConfigurationUpdateAcknowledge_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigAdditionAck,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigUpdateAck,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigRemovalAck,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_TransactionID;
+        /*
+        *id: id-E2nodeComponentConfigAdditionAck_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeComponentConfigAdditionAck_List * _e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigAdditionAck;
+        /*
+        *id: id-E2nodeComponentConfigUpdateAck_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeComponentConfigUpdateAck_List * _e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigUpdateAck;
+        /*
+        *id: id-E2nodeComponentConfigRemovalAck_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_E2nodeComponentConfigRemovalAck_List * _e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigRemovalAck;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element (e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element (const char * name, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2nodeConfigurationUpdateAcknowledge                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2nodeConfigurationUpdateAcknowledge_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (const char* name, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2nodeConfigurationUpdateAcknowledge -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdateAcknowledge {
+    e2ap_E2nodeConfigurationUpdateAcknowledge_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeConfigurationUpdateAcknowledge;
+
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateAcknowledge (e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeConfigurationUpdateAcknowledge (const char* name, const e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge (const char* name, e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeConfigurationUpdateAcknowledge (OSCTXT* pctxt, const char* name, const e2ap_E2nodeConfigurationUpdateAcknowledge* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeConfigurationUpdateAcknowledge (OSCTXT* pctxt, const e2ap_E2nodeConfigurationUpdateAcknowledge* pSrcValue, e2ap_E2nodeConfigurationUpdateAcknowledge* pDstValue);/*****************************************/
+/*           E2nodeConfigurationUpdateFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_TimeToWait,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2nodeConfigurationUpdateFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2nodeConfigurationUpdateFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2nodeConfigurationUpdateFailure_IEs_id_TransactionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apE2nodeConfigurationUpdateFailure_IEs_id_Cause;
+        /*
+        *id: id-TimeToWait
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_TimeToWait * _e2apE2nodeConfigurationUpdateFailure_IEs_id_TimeToWait;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apE2nodeConfigurationUpdateFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element (e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element (const char * name, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2nodeConfigurationUpdateFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2nodeConfigurationUpdateFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (const char* name, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2nodeConfigurationUpdateFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2nodeConfigurationUpdateFailure {
+    e2ap_E2nodeConfigurationUpdateFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2nodeConfigurationUpdateFailure;
+
+EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateFailure (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure* pvalue);
+EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateFailure (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure* pvalue);
+EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateFailure (e2ap_E2nodeConfigurationUpdateFailure* pvalue);
+EXTERN void asn1Free_e2ap_E2nodeConfigurationUpdateFailure (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure* pvalue);
+EXTERN void asn1Print_e2ap_E2nodeConfigurationUpdateFailure (const char* name, const e2ap_E2nodeConfigurationUpdateFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure (const char* name, e2ap_E2nodeConfigurationUpdateFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2nodeConfigurationUpdateFailure (OSCTXT* pctxt, const char* name, const e2ap_E2nodeConfigurationUpdateFailure* pvalue);
+EXTERN int asn1Copy_e2ap_E2nodeConfigurationUpdateFailure (OSCTXT* pctxt, const e2ap_E2nodeConfigurationUpdateFailure* pSrcValue, e2ap_E2nodeConfigurationUpdateFailure* pDstValue);/*****************************************/
+/*           E2RemovalRequestIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2RemovalRequestIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2RemovalRequestIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2RemovalRequestIEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2RemovalRequestIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2RemovalRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2RemovalRequestIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2RemovalRequestIEs_id_TransactionID;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2RemovalRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2RemovalRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalRequest_protocolIEs_element (e2ap_E2RemovalRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2RemovalRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest_protocolIEs_element (const char * name, e2ap_E2RemovalRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2RemovalRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2RemovalRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2RemovalRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalRequest_protocolIEs (e2ap_E2RemovalRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2RemovalRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2RemovalRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2RemovalRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest_protocolIEs (const char* name, e2ap_E2RemovalRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2RemovalRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2RemovalRequest {
+    e2ap_E2RemovalRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2RemovalRequest;
+
+EXTERN int asn1PE_e2ap_E2RemovalRequest (OSCTXT* pctxt, e2ap_E2RemovalRequest* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalRequest (OSCTXT* pctxt, e2ap_E2RemovalRequest* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalRequest (e2ap_E2RemovalRequest* pvalue);
+EXTERN void asn1Free_e2ap_E2RemovalRequest (OSCTXT* pctxt, e2ap_E2RemovalRequest* pvalue);
+EXTERN void asn1Print_e2ap_E2RemovalRequest (const char* name, const e2ap_E2RemovalRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest (const char* name, e2ap_E2RemovalRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2RemovalRequest (OSCTXT* pctxt, const char* name, const e2ap_E2RemovalRequest* pvalue);
+EXTERN int asn1Copy_e2ap_E2RemovalRequest (OSCTXT* pctxt, const e2ap_E2RemovalRequest* pSrcValue, e2ap_E2RemovalRequest* pDstValue);/*****************************************/
+/*           E2RemovalResponseIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2RemovalResponseIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2RemovalResponseIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2RemovalResponseIEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2RemovalResponseIEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2RemovalResponseIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2RemovalResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2RemovalResponseIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2RemovalResponseIEs_id_TransactionID;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apE2RemovalResponseIEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2RemovalResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2RemovalResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalResponse_protocolIEs_element (e2ap_E2RemovalResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2RemovalResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse_protocolIEs_element (const char * name, e2ap_E2RemovalResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2RemovalResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2RemovalResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2RemovalResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalResponse_protocolIEs (e2ap_E2RemovalResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2RemovalResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2RemovalResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2RemovalResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse_protocolIEs (const char* name, e2ap_E2RemovalResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2RemovalResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2RemovalResponse {
+    e2ap_E2RemovalResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2RemovalResponse;
+
+EXTERN int asn1PE_e2ap_E2RemovalResponse (OSCTXT* pctxt, e2ap_E2RemovalResponse* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalResponse (OSCTXT* pctxt, e2ap_E2RemovalResponse* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalResponse (e2ap_E2RemovalResponse* pvalue);
+EXTERN void asn1Free_e2ap_E2RemovalResponse (OSCTXT* pctxt, e2ap_E2RemovalResponse* pvalue);
+EXTERN void asn1Print_e2ap_E2RemovalResponse (const char* name, const e2ap_E2RemovalResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse (const char* name, e2ap_E2RemovalResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2RemovalResponse (OSCTXT* pctxt, const char* name, const e2ap_E2RemovalResponse* pvalue);
+EXTERN int asn1Copy_e2ap_E2RemovalResponse (OSCTXT* pctxt, const e2ap_E2RemovalResponse* pSrcValue, e2ap_E2RemovalResponse* pDstValue);/*****************************************/
+/*           E2RemovalFailureIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2RemovalFailureIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2RemovalFailureIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2RemovalFailureIEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2RemovalFailureIEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2RemovalFailureIEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2RemovalFailureIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2RemovalFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2RemovalFailureIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2RemovalFailureIEs_id_TransactionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apE2RemovalFailureIEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apE2RemovalFailureIEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2RemovalFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2RemovalFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalFailure_protocolIEs_element (e2ap_E2RemovalFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2RemovalFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure_protocolIEs_element (const char * name, e2ap_E2RemovalFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2RemovalFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2RemovalFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2RemovalFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalFailure_protocolIEs (e2ap_E2RemovalFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2RemovalFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2RemovalFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2RemovalFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure_protocolIEs (const char* name, e2ap_E2RemovalFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2RemovalFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2RemovalFailure {
+    e2ap_E2RemovalFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2RemovalFailure;
+
+EXTERN int asn1PE_e2ap_E2RemovalFailure (OSCTXT* pctxt, e2ap_E2RemovalFailure* pvalue);
+EXTERN int asn1PD_e2ap_E2RemovalFailure (OSCTXT* pctxt, e2ap_E2RemovalFailure* pvalue);
+EXTERN int asn1Init_e2ap_E2RemovalFailure (e2ap_E2RemovalFailure* pvalue);
+EXTERN void asn1Free_e2ap_E2RemovalFailure (OSCTXT* pctxt, e2ap_E2RemovalFailure* pvalue);
+EXTERN void asn1Print_e2ap_E2RemovalFailure (const char* name, const e2ap_E2RemovalFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure (const char* name, e2ap_E2RemovalFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2RemovalFailure (OSCTXT* pctxt, const char* name, const e2ap_E2RemovalFailure* pvalue);
+EXTERN int asn1Copy_e2ap_E2RemovalFailure (OSCTXT* pctxt, const e2ap_E2RemovalFailure* pSrcValue, e2ap_E2RemovalFailure* pDstValue);/*****************************************/
+/*           E2setupFailureIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_TimeToWait,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_TNLinformation,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2setupFailureIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2setupFailureIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2setupFailureIEs_id_TransactionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apE2setupFailureIEs_id_Cause;
+        /*
+        *id: id-TimeToWait
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_TimeToWait * _e2apE2setupFailureIEs_id_TimeToWait;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apE2setupFailureIEs_id_CriticalityDiagnostics;
+        /*
+        *id: id-TNLinformation
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_TNLinformation * _e2apE2setupFailureIEs_id_TNLinformation;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2setupFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2setupFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2setupFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2setupFailure_protocolIEs_element (e2ap_E2setupFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2setupFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2setupFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupFailure_protocolIEs_element (const char * name, e2ap_E2setupFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2setupFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2setupFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2setupFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2setupFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2setupFailure_protocolIEs (e2ap_E2setupFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2setupFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2setupFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2setupFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2setupFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupFailure_protocolIEs (const char* name, e2ap_E2setupFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2setupFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2setupFailure {
+    e2ap_E2setupFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2setupFailure;
+
+EXTERN int asn1PE_e2ap_E2setupFailure (OSCTXT* pctxt, e2ap_E2setupFailure* pvalue);
+EXTERN int asn1PD_e2ap_E2setupFailure (OSCTXT* pctxt, e2ap_E2setupFailure* pvalue);
+EXTERN int asn1Init_e2ap_E2setupFailure (e2ap_E2setupFailure* pvalue);
+EXTERN void asn1Free_e2ap_E2setupFailure (OSCTXT* pctxt, e2ap_E2setupFailure* pvalue);
+EXTERN void asn1Print_e2ap_E2setupFailure (const char* name, const e2ap_E2setupFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupFailure (const char* name, e2ap_E2setupFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2setupFailure (OSCTXT* pctxt, const char* name, const e2ap_E2setupFailure* pvalue);
+EXTERN int asn1Copy_e2ap_E2setupFailure (OSCTXT* pctxt, const e2ap_E2setupFailure* pSrcValue, e2ap_E2setupFailure* pDstValue);/*****************************************/
+/*           RANfunctionID                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RANfunctionID;
+EXTERN int asn1PE_e2ap_RANfunctionID (OSCTXT* pctxt, e2ap_RANfunctionID value);
+EXTERN int asn1PD_e2ap_RANfunctionID (OSCTXT* pctxt, e2ap_RANfunctionID* pvalue);
+EXTERN int asn1Print_e2ap_RANfunctionID (const char* name, const e2ap_RANfunctionID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionID (const char* name, e2ap_RANfunctionID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionID (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionID* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionID (e2ap_RANfunctionID* pvalue);
+EXTERN int asn1Free_e2ap_RANfunctionID (OSCTXT* pctxt, e2ap_RANfunctionID* pvalue);
+/*****************************************/
+/*           RANfunctionDefinition                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RANfunctionDefinition;
+EXTERN int asn1PE_e2ap_RANfunctionDefinition (OSCTXT* pctxt, e2ap_RANfunctionDefinition value);
+EXTERN int asn1PD_e2ap_RANfunctionDefinition (OSCTXT* pctxt, e2ap_RANfunctionDefinition* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionDefinition (const char* name, e2ap_RANfunctionDefinition *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionDefinition (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionDefinition* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionDefinition (OSCTXT* pctxt, const e2ap_RANfunctionDefinition* pSrcValue, e2ap_RANfunctionDefinition* pDstValue);
+EXTERN int asn1Init_e2ap_RANfunctionDefinition (e2ap_RANfunctionDefinition* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionDefinition (OSCTXT* pctxt, e2ap_RANfunctionDefinition* pvalue);
+/*****************************************/
+/*           RANfunctionRevision                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RANfunctionRevision;
+EXTERN int asn1PE_e2ap_RANfunctionRevision (OSCTXT* pctxt, e2ap_RANfunctionRevision value);
+EXTERN int asn1PD_e2ap_RANfunctionRevision (OSCTXT* pctxt, e2ap_RANfunctionRevision* pvalue);
+EXTERN int asn1Print_e2ap_RANfunctionRevision (const char* name, const e2ap_RANfunctionRevision* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionRevision (const char* name, e2ap_RANfunctionRevision* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionRevision (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionRevision* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionRevision (e2ap_RANfunctionRevision* pvalue);
+EXTERN int asn1Free_e2ap_RANfunctionRevision (OSCTXT* pctxt, e2ap_RANfunctionRevision* pvalue);
+/* e2ap_RANfunctionOID.h */
+
+//printable string
+/*****************************************/
+/*           RANfunctionOID                */
+/*****************************************/
+
+
+typedef const char* e2ap_RANfunctionOID;
+
+EXTERN int asn1PE_e2ap_RANfunctionOID (OSCTXT* pctxt, e2ap_RANfunctionOID value);
+EXTERN int asn1PD_e2ap_RANfunctionOID (OSCTXT* pctxt, e2ap_RANfunctionOID* ppvalue);
+EXTERN void asn1Print_e2ap_RANfunctionOID (const char* name, e2ap_RANfunctionOID pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionOID (const char* name, e2ap_RANfunctionOID pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionOID (OSCTXT* pctxt, const char* name, e2ap_RANfunctionOID pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionOID (OSCTXT* pctxt, e2ap_RANfunctionOID pSrcValue, e2ap_RANfunctionOID* pDstValue);
+EXTERN void asn1Free_e2ap_RANfunctionOID (OSCTXT* pctxt, e2ap_RANfunctionOID pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionOID (e2ap_RANfunctionOID* pvalue);/*****************************************/
+/*           RANfunction_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunction_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RANfunctionDefinition ranFunctionDefinition;
+      //not primitive
+   e2ap_RANfunctionRevision ranFunctionRevision;
+      //not primitive
+   e2ap_RANfunctionOID ranFunctionOID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunction_Item;
+
+EXTERN int asn1PE_e2ap_RANfunction_Item (OSCTXT* pctxt, e2ap_RANfunction_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunction_Item (OSCTXT* pctxt, e2ap_RANfunction_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunction_Item (e2ap_RANfunction_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunction_Item (OSCTXT* pctxt, e2ap_RANfunction_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunction_Item (const char* name, const e2ap_RANfunction_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunction_Item (const char* name, e2ap_RANfunction_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunction_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunction_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunction_Item (OSCTXT* pctxt, const e2ap_RANfunction_Item* pSrcValue, e2ap_RANfunction_Item* pDstValue);/*****************************************/
+/*           RANfunction_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunction_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunction_ItemIEs_id_RANfunction_Item 
+ 
+} e2ap_RANfunction_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunction_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunction_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunction_Item * _e2apRANfunction_ItemIEs_id_RANfunction_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunction_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunction_ItemIEs (OSCTXT* pctxt, e2ap_RANfunction_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunction_ItemIEs (OSCTXT* pctxt, e2ap_RANfunction_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunction_ItemIEs (e2ap_RANfunction_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunction_ItemIEs (OSCTXT* pctxt, e2ap_RANfunction_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunction_ItemIEs (const char * name, e2ap_RANfunction_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctions_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctions_List;
+
+EXTERN int asn1PE_e2ap_RANfunctions_List (OSCTXT* pctxt, e2ap_RANfunctions_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctions_List (OSCTXT* pctxt, e2ap_RANfunctions_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctions_List (e2ap_RANfunctions_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctions_List (OSCTXT* pctxt, e2ap_RANfunctions_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctions_List (const char* name, e2ap_RANfunctions_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctions_List (OSCTXT* pctxt, const e2ap_RANfunctions_List* pSrcValue, e2ap_RANfunctions_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctions_List (const char *name, const e2ap_RANfunctions_List* pvalue);/*****************************************/
+/*           E2setupRequestIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_id_GlobalE2node_ID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_id_RANfunctionsAdded,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_id_E2nodeComponentConfigAddition,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2setupRequestIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2setupRequestIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2setupRequestIEs_id_TransactionID;
+        /*
+        *id: id-GlobalE2node_ID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_GlobalE2node_ID * _e2apE2setupRequestIEs_id_GlobalE2node_ID;
+        /*
+        *id: id-RANfunctions_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctions_List * _e2apE2setupRequestIEs_id_RANfunctionsAdded;
+        /*
+        *id: id-E2nodeComponentConfigAddition_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_E2nodeComponentConfigAddition_List * _e2apE2setupRequestIEs_id_E2nodeComponentConfigAddition;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2setupRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2setupRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2setupRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2setupRequest_protocolIEs_element (e2ap_E2setupRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2setupRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2setupRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupRequest_protocolIEs_element (const char * name, e2ap_E2setupRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2setupRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2setupRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2setupRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2setupRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2setupRequest_protocolIEs (e2ap_E2setupRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2setupRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2setupRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2setupRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2setupRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupRequest_protocolIEs (const char* name, e2ap_E2setupRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2setupRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2setupRequest {
+    e2ap_E2setupRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2setupRequest;
+
+EXTERN int asn1PE_e2ap_E2setupRequest (OSCTXT* pctxt, e2ap_E2setupRequest* pvalue);
+EXTERN int asn1PD_e2ap_E2setupRequest (OSCTXT* pctxt, e2ap_E2setupRequest* pvalue);
+EXTERN int asn1Init_e2ap_E2setupRequest (e2ap_E2setupRequest* pvalue);
+EXTERN void asn1Free_e2ap_E2setupRequest (OSCTXT* pctxt, e2ap_E2setupRequest* pvalue);
+EXTERN void asn1Print_e2ap_E2setupRequest (const char* name, const e2ap_E2setupRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupRequest (const char* name, e2ap_E2setupRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2setupRequest (OSCTXT* pctxt, const char* name, const e2ap_E2setupRequest* pvalue);
+EXTERN int asn1Copy_e2ap_E2setupRequest (OSCTXT* pctxt, const e2ap_E2setupRequest* pSrcValue, e2ap_E2setupRequest* pDstValue);/*****************************************/
+/*           GlobalRIC_ID                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+    // Nội dung của file .h cho primitive BIT STRING (SIZE (20))
+    /* bitstring intergrate header file */
+ //metadata.parsed.primitive_id == 3
+//mau NID ben xn  bitstring (n)
+typedef struct e2ap_GlobalRIC_ID_ric_ID {
+    OSUINT8 numbits;
+    OSOCTET data[3];
+} e2ap_GlobalRIC_ID_ric_ID;
+
+EXTERN int asn1PE_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt, e2ap_GlobalRIC_ID_ric_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt, e2ap_GlobalRIC_ID_ric_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalRIC_ID_ric_ID (const char* name, e2ap_GlobalRIC_ID_ric_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalRIC_ID_ric_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalRIC_ID_ric_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt,const e2ap_GlobalRIC_ID_ric_ID* pSrcValue,  e2ap_GlobalRIC_ID_ric_ID* pDstValue);
+EXTERN int asn1Init_e2ap_GlobalRIC_ID_ric_ID(e2ap_GlobalRIC_ID_ric_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalRIC_ID_ric_ID(OSCTXT* pctxt, e2ap_GlobalRIC_ID_ric_ID* pvalue);
+
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_GlobalRIC_ID {
+      //not primitive
+   e2ap_PLMN_Identity pLMN_Identity;
+      //primitive
+   e2ap_GlobalRIC_ID_ric_ID ric_ID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_GlobalRIC_ID;
+
+EXTERN int asn1PE_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue);
+EXTERN int asn1PD_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue);
+EXTERN int asn1Init_e2ap_GlobalRIC_ID (e2ap_GlobalRIC_ID* pvalue);
+EXTERN void asn1Free_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue);
+EXTERN void asn1Print_e2ap_GlobalRIC_ID (const char* name, const e2ap_GlobalRIC_ID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_GlobalRIC_ID (const char* name, e2ap_GlobalRIC_ID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_GlobalRIC_ID (OSCTXT* pctxt, const char* name, const e2ap_GlobalRIC_ID* pvalue);
+EXTERN int asn1Copy_e2ap_GlobalRIC_ID (OSCTXT* pctxt, const e2ap_GlobalRIC_ID* pSrcValue, e2ap_GlobalRIC_ID* pDstValue);/*****************************************/
+/*           RANfunctionID_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionID_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RANfunctionRevision ranFunctionRevision;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionID_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionID_Item (OSCTXT* pctxt, e2ap_RANfunctionID_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionID_Item (OSCTXT* pctxt, e2ap_RANfunctionID_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionID_Item (e2ap_RANfunctionID_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionID_Item (OSCTXT* pctxt, e2ap_RANfunctionID_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionID_Item (const char* name, const e2ap_RANfunctionID_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionID_Item (const char* name, e2ap_RANfunctionID_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionID_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionID_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionID_Item (OSCTXT* pctxt, const e2ap_RANfunctionID_Item* pSrcValue, e2ap_RANfunctionID_Item* pDstValue);/*****************************************/
+/*           RANfunctionID_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionID_ItemIEs_id_RANfunctionID_Item 
+ 
+} e2ap_RANfunctionID_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionID_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionID_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionID_Item * _e2apRANfunctionID_ItemIEs_id_RANfunctionID_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionID_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionID_ItemIEs (e2ap_RANfunctionID_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionID_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionID_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionID_ItemIEs (const char * name, e2ap_RANfunctionID_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionsID_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionsID_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionsID_List (e2ap_RANfunctionsID_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionsID_List (OSCTXT* pctxt, e2ap_RANfunctionsID_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionsID_List (const char* name, e2ap_RANfunctionsID_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionsID_List (OSCTXT* pctxt, const e2ap_RANfunctionsID_List* pSrcValue, e2ap_RANfunctionsID_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionsID_List (const char *name, const e2ap_RANfunctionsID_List* pvalue);/*****************************************/
+/*           RANfunctionIDcause_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionIDcause_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionIDcause_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionIDcause_Item (e2ap_RANfunctionIDcause_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionIDcause_Item (const char* name, const e2ap_RANfunctionIDcause_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionIDcause_Item (const char* name, e2ap_RANfunctionIDcause_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionIDcause_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, const e2ap_RANfunctionIDcause_Item* pSrcValue, e2ap_RANfunctionIDcause_Item* pDstValue);/*****************************************/
+/*           RANfunctionIDcause_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionIDcause_ItemIEs_id_RANfunctionIEcause_Item 
+ 
+} e2ap_RANfunctionIDcause_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionIDcause_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionIDcause_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionIDcause_Item * _e2apRANfunctionIDcause_ItemIEs_id_RANfunctionIEcause_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionIDcause_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionIDcause_ItemIEs (e2ap_RANfunctionIDcause_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionIDcause_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionIDcause_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionIDcause_ItemIEs (const char * name, e2ap_RANfunctionIDcause_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionsIDcause_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionsIDcause_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionsIDcause_List (e2ap_RANfunctionsIDcause_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, e2ap_RANfunctionsIDcause_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionsIDcause_List (const char* name, e2ap_RANfunctionsIDcause_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionsIDcause_List (OSCTXT* pctxt, const e2ap_RANfunctionsIDcause_List* pSrcValue, e2ap_RANfunctionsIDcause_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionsIDcause_List (const char *name, const e2ap_RANfunctionsIDcause_List* pvalue);/*****************************************/
+/*           E2setupResponseIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_GlobalRIC_ID,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsAccepted,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_RANfunctionsRejected,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_E2nodeComponentConfigAdditionAck,
+ 
+   T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_Extended_RANNodeName_
+ 
+} e2ap_E2setupResponseIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_E2setupResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_E2setupResponseIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apE2setupResponseIEs_id_TransactionID;
+        /*
+        *id: id-GlobalRIC_ID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_GlobalRIC_ID * _e2apE2setupResponseIEs_id_GlobalRIC_ID;
+        /*
+        *id: id-RANfunctionsID_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionsID_List * _e2apE2setupResponseIEs_id_RANfunctionsAccepted;
+        /*
+        *id: id-RANfunctionsIDcause_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionsIDcause_List * _e2apE2setupResponseIEs_id_RANfunctionsRejected;
+        /*
+        *id: id-E2nodeComponentConfigAdditionAck_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_E2nodeComponentConfigAdditionAck_List * _e2apE2setupResponseIEs_id_E2nodeComponentConfigAdditionAck;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_E2setupResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2setupResponse_protocolIEs_element (e2ap_E2setupResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element (const char * name, e2ap_E2setupResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           E2setupResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2setupResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2setupResponse_protocolIEs (e2ap_E2setupResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2setupResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2setupResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs (const char* name, e2ap_E2setupResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . E2setupResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_E2setupResponse {
+    e2ap_E2setupResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2setupResponse;
+
+EXTERN int asn1PE_e2ap_E2setupResponse (OSCTXT* pctxt, e2ap_E2setupResponse* pvalue);
+EXTERN int asn1PD_e2ap_E2setupResponse (OSCTXT* pctxt, e2ap_E2setupResponse* pvalue);
+EXTERN int asn1Init_e2ap_E2setupResponse (e2ap_E2setupResponse* pvalue);
+EXTERN void asn1Free_e2ap_E2setupResponse (OSCTXT* pctxt, e2ap_E2setupResponse* pvalue);
+EXTERN void asn1Print_e2ap_E2setupResponse (const char* name, const e2ap_E2setupResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2setupResponse (const char* name, e2ap_E2setupResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2setupResponse (OSCTXT* pctxt, const char* name, const e2ap_E2setupResponse* pvalue);
+EXTERN int asn1Copy_e2ap_E2setupResponse (OSCTXT* pctxt, const e2ap_E2setupResponse* pSrcValue, e2ap_E2setupResponse* pDstValue);/*****************************************/
+/*           ErrorIndication_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_ErrorIndication_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_ErrorIndication_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_ErrorIndication_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_TransactionID * _e2apErrorIndication_IEs_id_TransactionID;
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICrequestID * _e2apErrorIndication_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionID * _e2apErrorIndication_IEs_id_RANfunctionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_Cause * _e2apErrorIndication_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apErrorIndication_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_ErrorIndication_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_ErrorIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_ErrorIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_ErrorIndication_protocolIEs_element (e2ap_ErrorIndication_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_ErrorIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_ErrorIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ErrorIndication_protocolIEs_element (const char * name, e2ap_ErrorIndication_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           ErrorIndication                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_ErrorIndication_ProtocolIE;
+EXTERN int asn1PE_e2ap_ErrorIndication_protocolIEs (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_ErrorIndication_protocolIEs (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_ErrorIndication_protocolIEs (e2ap_ErrorIndication_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_ErrorIndication_protocolIEs (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_ErrorIndication_protocolIEs (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apErrorIndication_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_ErrorIndication_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ErrorIndication_protocolIEs (const char* name, e2ap_ErrorIndication_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . ErrorIndication -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_ErrorIndication {
+    e2ap_ErrorIndication_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_ErrorIndication;
+
+EXTERN int asn1PE_e2ap_ErrorIndication (OSCTXT* pctxt, e2ap_ErrorIndication* pvalue);
+EXTERN int asn1PD_e2ap_ErrorIndication (OSCTXT* pctxt, e2ap_ErrorIndication* pvalue);
+EXTERN int asn1Init_e2ap_ErrorIndication (e2ap_ErrorIndication* pvalue);
+EXTERN void asn1Free_e2ap_ErrorIndication (OSCTXT* pctxt, e2ap_ErrorIndication* pvalue);
+EXTERN void asn1Print_e2ap_ErrorIndication (const char* name, const e2ap_ErrorIndication* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ErrorIndication (const char* name, e2ap_ErrorIndication* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ErrorIndication (OSCTXT* pctxt, const char* name, const e2ap_ErrorIndication* pvalue);
+EXTERN int asn1Copy_e2ap_ErrorIndication (OSCTXT* pctxt, const e2ap_ErrorIndication* pSrcValue, e2ap_ErrorIndication* pDstValue);/*****************************************/
+/*           ResetRequestIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_ResetRequestIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_ResetRequestIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_ResetRequestIEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_ResetRequestIEs_id_Extended_RANNodeName_
+ 
+} e2ap_ResetRequestIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_ResetRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_ResetRequestIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apResetRequestIEs_id_TransactionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apResetRequestIEs_id_Cause;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_ResetRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_ResetRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_ResetRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_ResetRequest_protocolIEs_element (e2ap_ResetRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_ResetRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_ResetRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ResetRequest_protocolIEs_element (const char * name, e2ap_ResetRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           ResetRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_ResetRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_ResetRequest_protocolIEs (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_ResetRequest_protocolIEs (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_ResetRequest_protocolIEs (e2ap_ResetRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_ResetRequest_protocolIEs (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_ResetRequest_protocolIEs (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apResetRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_ResetRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ResetRequest_protocolIEs (const char* name, e2ap_ResetRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . ResetRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_ResetRequest {
+    e2ap_ResetRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_ResetRequest;
+
+EXTERN int asn1PE_e2ap_ResetRequest (OSCTXT* pctxt, e2ap_ResetRequest* pvalue);
+EXTERN int asn1PD_e2ap_ResetRequest (OSCTXT* pctxt, e2ap_ResetRequest* pvalue);
+EXTERN int asn1Init_e2ap_ResetRequest (e2ap_ResetRequest* pvalue);
+EXTERN void asn1Free_e2ap_ResetRequest (OSCTXT* pctxt, e2ap_ResetRequest* pvalue);
+EXTERN void asn1Print_e2ap_ResetRequest (const char* name, const e2ap_ResetRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ResetRequest (const char* name, e2ap_ResetRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ResetRequest (OSCTXT* pctxt, const char* name, const e2ap_ResetRequest* pvalue);
+EXTERN int asn1Copy_e2ap_ResetRequest (OSCTXT* pctxt, const e2ap_ResetRequest* pSrcValue, e2ap_ResetRequest* pDstValue);/*****************************************/
+/*           ResetResponseIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_ResetResponseIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_ResetResponseIEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_ResetResponseIEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_ResetResponseIEs_id_Extended_RANNodeName_
+ 
+} e2ap_ResetResponseIEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_ResetResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_ResetResponseIEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apResetResponseIEs_id_TransactionID;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apResetResponseIEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_ResetResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_ResetResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_ResetResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_ResetResponse_protocolIEs_element (e2ap_ResetResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_ResetResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_ResetResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ResetResponse_protocolIEs_element (const char * name, e2ap_ResetResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           ResetResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_ResetResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_ResetResponse_protocolIEs (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_ResetResponse_protocolIEs (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_ResetResponse_protocolIEs (e2ap_ResetResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_ResetResponse_protocolIEs (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_ResetResponse_protocolIEs (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apResetResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_ResetResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ResetResponse_protocolIEs (const char* name, e2ap_ResetResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . ResetResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_ResetResponse {
+    e2ap_ResetResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_ResetResponse;
+
+EXTERN int asn1PE_e2ap_ResetResponse (OSCTXT* pctxt, e2ap_ResetResponse* pvalue);
+EXTERN int asn1PD_e2ap_ResetResponse (OSCTXT* pctxt, e2ap_ResetResponse* pvalue);
+EXTERN int asn1Init_e2ap_ResetResponse (e2ap_ResetResponse* pvalue);
+EXTERN void asn1Free_e2ap_ResetResponse (OSCTXT* pctxt, e2ap_ResetResponse* pvalue);
+EXTERN void asn1Print_e2ap_ResetResponse (const char* name, const e2ap_ResetResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ResetResponse (const char* name, e2ap_ResetResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ResetResponse (OSCTXT* pctxt, const char* name, const e2ap_ResetResponse* pvalue);
+EXTERN int asn1Copy_e2ap_ResetResponse (OSCTXT* pctxt, const e2ap_ResetResponse* pSrcValue, e2ap_ResetResponse* pDstValue);/*****************************************/
+/*           RICassistanceFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICassistanceFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICassistanceFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICassistanceFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICassistanceFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICassistanceFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICassistanceFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICassistanceFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICassistanceFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICassistanceFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceFailure_protocolIEs_element (e2ap_RICassistanceFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure_protocolIEs_element (const char * name, e2ap_RICassistanceFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICassistanceFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICassistanceFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceFailure_protocolIEs (e2ap_RICassistanceFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICassistanceFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICassistanceFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICassistanceFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure_protocolIEs (const char* name, e2ap_RICassistanceFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICassistanceFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICassistanceFailure {
+    e2ap_RICassistanceFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICassistanceFailure;
+
+EXTERN int asn1PE_e2ap_RICassistanceFailure (OSCTXT* pctxt, e2ap_RICassistanceFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceFailure (OSCTXT* pctxt, e2ap_RICassistanceFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceFailure (e2ap_RICassistanceFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceFailure (OSCTXT* pctxt, e2ap_RICassistanceFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICassistanceFailure (const char* name, const e2ap_RICassistanceFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure (const char* name, e2ap_RICassistanceFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceFailure (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceFailure (OSCTXT* pctxt, const e2ap_RICassistanceFailure* pSrcValue, e2ap_RICassistanceFailure* pDstValue);/*****************************************/
+/*           RICassistanceSN                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RICassistanceSN;
+EXTERN int asn1PE_e2ap_RICassistanceSN (OSCTXT* pctxt, e2ap_RICassistanceSN value);
+EXTERN int asn1PD_e2ap_RICassistanceSN (OSCTXT* pctxt, e2ap_RICassistanceSN* pvalue);
+EXTERN int asn1Print_e2ap_RICassistanceSN (const char* name, const e2ap_RICassistanceSN* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceSN (const char* name, e2ap_RICassistanceSN* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceSN (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceSN* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceSN (e2ap_RICassistanceSN* pvalue);
+EXTERN int asn1Free_e2ap_RICassistanceSN (OSCTXT* pctxt, e2ap_RICassistanceSN* pvalue);
+/*****************************************/
+/*           RICassistanceHeader                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICassistanceHeader;
+EXTERN int asn1PE_e2ap_RICassistanceHeader (OSCTXT* pctxt, e2ap_RICassistanceHeader value);
+EXTERN int asn1PD_e2ap_RICassistanceHeader (OSCTXT* pctxt, e2ap_RICassistanceHeader* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceHeader (const char* name, e2ap_RICassistanceHeader *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceHeader (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceHeader* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceHeader (OSCTXT* pctxt, const e2ap_RICassistanceHeader* pSrcValue, e2ap_RICassistanceHeader* pDstValue);
+EXTERN int asn1Init_e2ap_RICassistanceHeader (e2ap_RICassistanceHeader* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceHeader (OSCTXT* pctxt, e2ap_RICassistanceHeader* pvalue);
+/*****************************************/
+/*           RICassistanceOutcome                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICassistanceOutcome;
+EXTERN int asn1PE_e2ap_RICassistanceOutcome (OSCTXT* pctxt, e2ap_RICassistanceOutcome value);
+EXTERN int asn1PD_e2ap_RICassistanceOutcome (OSCTXT* pctxt, e2ap_RICassistanceOutcome* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceOutcome (const char* name, e2ap_RICassistanceOutcome *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceOutcome (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceOutcome* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceOutcome (OSCTXT* pctxt, const e2ap_RICassistanceOutcome* pSrcValue, e2ap_RICassistanceOutcome* pDstValue);
+EXTERN int asn1Init_e2ap_RICassistanceOutcome (e2ap_RICassistanceOutcome* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceOutcome (OSCTXT* pctxt, e2ap_RICassistanceOutcome* pvalue);
+/*****************************************/
+/*           RICassistanceIndication_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICassistanceSN,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICassistanceHeader,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICassistanceOutcome,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICassistanceIndication_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceIndication_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICassistanceIndication_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICassistanceIndication_IEs_id_RICrequestID;
+        /*
+        *id: id-RICassistanceSN
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceSN * _e2apRICassistanceIndication_IEs_id_RICassistanceSN;
+        /*
+        *id: id-RICassistanceHeader
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceHeader * _e2apRICassistanceIndication_IEs_id_RICassistanceHeader;
+        /*
+        *id: id-RICassistanceOutcome
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceOutcome * _e2apRICassistanceIndication_IEs_id_RICassistanceOutcome;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICassistanceIndication_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICassistanceIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceIndication_protocolIEs_element (e2ap_RICassistanceIndication_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication_protocolIEs_element (const char * name, e2ap_RICassistanceIndication_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICassistanceIndication                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceIndication_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICassistanceIndication_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceIndication_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceIndication_protocolIEs (e2ap_RICassistanceIndication_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICassistanceIndication_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICassistanceIndication_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICassistanceIndication_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication_protocolIEs (const char* name, e2ap_RICassistanceIndication_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICassistanceIndication -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICassistanceIndication {
+    e2ap_RICassistanceIndication_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICassistanceIndication;
+
+EXTERN int asn1PE_e2ap_RICassistanceIndication (OSCTXT* pctxt, e2ap_RICassistanceIndication* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceIndication (OSCTXT* pctxt, e2ap_RICassistanceIndication* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceIndication (e2ap_RICassistanceIndication* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceIndication (OSCTXT* pctxt, e2ap_RICassistanceIndication* pvalue);
+EXTERN void asn1Print_e2ap_RICassistanceIndication (const char* name, const e2ap_RICassistanceIndication* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication (const char* name, e2ap_RICassistanceIndication* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceIndication (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceIndication* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceIndication (OSCTXT* pctxt, const e2ap_RICassistanceIndication* pSrcValue, e2ap_RICassistanceIndication* pDstValue);/*****************************************/
+/*           RICassistanceHalt_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICassistanceHalt_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICassistanceHalt_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceHalt_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICassistanceHalt_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceHalt_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICassistanceHalt_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICassistanceHalt_IEs_id_RICrequestID;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICassistanceHalt_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICassistanceHalt_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceHalt_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceHalt_protocolIEs_element (e2ap_RICassistanceHalt_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceHalt_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt_protocolIEs_element (const char * name, e2ap_RICassistanceHalt_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICassistanceHalt                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceHalt_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICassistanceHalt_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceHalt_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceHalt_protocolIEs (e2ap_RICassistanceHalt_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICassistanceHalt_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICassistanceHalt_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICassistanceHalt_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt_protocolIEs (const char* name, e2ap_RICassistanceHalt_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICassistanceHalt -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICassistanceHalt {
+    e2ap_RICassistanceHalt_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICassistanceHalt;
+
+EXTERN int asn1PE_e2ap_RICassistanceHalt (OSCTXT* pctxt, e2ap_RICassistanceHalt* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceHalt (OSCTXT* pctxt, e2ap_RICassistanceHalt* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceHalt (e2ap_RICassistanceHalt* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceHalt (OSCTXT* pctxt, e2ap_RICassistanceHalt* pvalue);
+EXTERN void asn1Print_e2ap_RICassistanceHalt (const char* name, const e2ap_RICassistanceHalt* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt (const char* name, e2ap_RICassistanceHalt* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceHalt (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceHalt* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceHalt (OSCTXT* pctxt, const e2ap_RICassistanceHalt* pSrcValue, e2ap_RICassistanceHalt* pDstValue);/*****************************************/
+/*           RICassistanceMessage                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICassistanceMessage;
+EXTERN int asn1PE_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanceMessage value);
+EXTERN int asn1PD_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanceMessage* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceMessage (const char* name, e2ap_RICassistanceMessage *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceMessage (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceMessage* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceMessage (OSCTXT* pctxt, const e2ap_RICassistanceMessage* pSrcValue, e2ap_RICassistanceMessage* pDstValue);
+EXTERN int asn1Init_e2ap_RICassistanceMessage (e2ap_RICassistanceMessage* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanceMessage* pvalue);
+/******************************************************/
+/*                                                    */
+/*    RICassistanceUpdate                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_true = 0
+} e2ap_RICassistanceUpdate_Root;
+
+typedef OSUINT32 e2ap_RICassistanceUpdate;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICassistanceUpdate (OSCTXT* pctxt, e2ap_RICassistanceUpdate value);
+EXTERN int asn1PD_e2ap_RICassistanceUpdate (OSCTXT* pctxt, e2ap_RICassistanceUpdate* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICassistanceUpdate (const char* name, const e2ap_RICassistanceUpdate* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceUpdate (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceUpdate* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICassistanceUpdate (const char* name,e2ap_RICassistanceUpdate* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICassistanceUpdate_ENUMTAB[];
+#define e2ap_RICassistanceUpdate_ENUMTABSIZE 1
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICassistanceUpdate_ToString (OSUINT32 value);
+EXTERN int e2ap_RICassistanceUpdate_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICassistanceUpdate* pvalue);
+EXTERN int e2ap_RICassistanceUpdate_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICassistanceUpdate* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICassistanceUpdate (e2ap_RICassistanceUpdate* pvalue);/*****************************************/
+/*           RICassistanceUpdateNumber                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RICassistanceUpdateNumber;
+EXTERN int asn1PE_e2ap_RICassistanceUpdateNumber (OSCTXT* pctxt, e2ap_RICassistanceUpdateNumber value);
+EXTERN int asn1PD_e2ap_RICassistanceUpdateNumber (OSCTXT* pctxt, e2ap_RICassistanceUpdateNumber* pvalue);
+EXTERN int asn1Print_e2ap_RICassistanceUpdateNumber (const char* name, const e2ap_RICassistanceUpdateNumber* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceUpdateNumber (const char* name, e2ap_RICassistanceUpdateNumber* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceUpdateNumber (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceUpdateNumber* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceUpdateNumber (e2ap_RICassistanceUpdateNumber* pvalue);
+EXTERN int asn1Free_e2ap_RICassistanceUpdateNumber (OSCTXT* pctxt, e2ap_RICassistanceUpdateNumber* pvalue);
+/*****************************************/
+/*           RICassistanceRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceHeader,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceMessage,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceUpdate,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceUpdateNumber,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICassistanceRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICassistanceRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICassistanceRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RICassistanceHeader
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceHeader * _e2apRICassistanceRequest_IEs_id_RICassistanceHeader;
+        /*
+        *id: id-RICassistanceMessage
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceMessage * _e2apRICassistanceRequest_IEs_id_RICassistanceMessage;
+        /*
+        *id: id-RICassistanceUpdate
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICassistanceUpdate * _e2apRICassistanceRequest_IEs_id_RICassistanceUpdate;
+        /*
+        *id: id-RICassistanceUpdateNumber
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICassistanceUpdateNumber * _e2apRICassistanceRequest_IEs_id_RICassistanceUpdateNumber;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICassistanceRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICassistanceRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceRequest_protocolIEs_element (e2ap_RICassistanceRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest_protocolIEs_element (const char * name, e2ap_RICassistanceRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICassistanceRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICassistanceRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceRequest_protocolIEs (e2ap_RICassistanceRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICassistanceRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICassistanceRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICassistanceRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest_protocolIEs (const char* name, e2ap_RICassistanceRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICassistanceRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICassistanceRequest {
+    e2ap_RICassistanceRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICassistanceRequest;
+
+EXTERN int asn1PE_e2ap_RICassistanceRequest (OSCTXT* pctxt, e2ap_RICassistanceRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceRequest (OSCTXT* pctxt, e2ap_RICassistanceRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceRequest (e2ap_RICassistanceRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceRequest (OSCTXT* pctxt, e2ap_RICassistanceRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICassistanceRequest (const char* name, const e2ap_RICassistanceRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest (const char* name, e2ap_RICassistanceRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceRequest (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceRequest (OSCTXT* pctxt, const e2ap_RICassistanceRequest* pSrcValue, e2ap_RICassistanceRequest* pDstValue);/*****************************************/
+/*           RICassistanceResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_id_RICassistanceHeader,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_id_RICassistanceOutcome,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICassistanceResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICassistanceResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICassistanceResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICassistanceResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RICassistanceHeader
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceHeader * _e2apRICassistanceResponse_IEs_id_RICassistanceHeader;
+        /*
+        *id: id-RICassistanceOutcome
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICassistanceOutcome * _e2apRICassistanceResponse_IEs_id_RICassistanceOutcome;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICassistanceResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICassistanceResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceResponse_protocolIEs_element (e2ap_RICassistanceResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse_protocolIEs_element (const char * name, e2ap_RICassistanceResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICassistanceResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICassistanceResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceResponse_protocolIEs (e2ap_RICassistanceResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICassistanceResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICassistanceResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICassistanceResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse_protocolIEs (const char* name, e2ap_RICassistanceResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICassistanceResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICassistanceResponse {
+    e2ap_RICassistanceResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICassistanceResponse;
+
+EXTERN int asn1PE_e2ap_RICassistanceResponse (OSCTXT* pctxt, e2ap_RICassistanceResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICassistanceResponse (OSCTXT* pctxt, e2ap_RICassistanceResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICassistanceResponse (e2ap_RICassistanceResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceResponse (OSCTXT* pctxt, e2ap_RICassistanceResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICassistanceResponse (const char* name, const e2ap_RICassistanceResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse (const char* name, e2ap_RICassistanceResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceResponse (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceResponse (OSCTXT* pctxt, const e2ap_RICassistanceResponse* pSrcValue, e2ap_RICassistanceResponse* pDstValue);/*****************************************/
+/*           RICcallProcessID                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICcallProcessID;
+EXTERN int asn1PE_e2ap_RICcallProcessID (OSCTXT* pctxt, e2ap_RICcallProcessID value);
+EXTERN int asn1PD_e2ap_RICcallProcessID (OSCTXT* pctxt, e2ap_RICcallProcessID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcallProcessID (const char* name, e2ap_RICcallProcessID *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcallProcessID (OSCTXT* pctxt, const char* name, const e2ap_RICcallProcessID* pvalue);
+EXTERN int asn1Copy_e2ap_RICcallProcessID (OSCTXT* pctxt, const e2ap_RICcallProcessID* pSrcValue, e2ap_RICcallProcessID* pDstValue);
+EXTERN int asn1Init_e2ap_RICcallProcessID (e2ap_RICcallProcessID* pvalue);
+EXTERN void asn1Free_e2ap_RICcallProcessID (OSCTXT* pctxt, e2ap_RICcallProcessID* pvalue);
+/*****************************************/
+/*           RICcontrolOutcome                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICcontrolOutcome;
+EXTERN int asn1PE_e2ap_RICcontrolOutcome (OSCTXT* pctxt, e2ap_RICcontrolOutcome value);
+EXTERN int asn1PD_e2ap_RICcontrolOutcome (OSCTXT* pctxt, e2ap_RICcontrolOutcome* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolOutcome (const char* name, e2ap_RICcontrolOutcome *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolOutcome (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolOutcome* pvalue);
+EXTERN int asn1Copy_e2ap_RICcontrolOutcome (OSCTXT* pctxt, const e2ap_RICcontrolOutcome* pSrcValue, e2ap_RICcontrolOutcome* pDstValue);
+EXTERN int asn1Init_e2ap_RICcontrolOutcome (e2ap_RICcontrolOutcome* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolOutcome (OSCTXT* pctxt, e2ap_RICcontrolOutcome* pvalue);
+/*****************************************/
+/*           RICcontrolAcknowledge_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RICcallProcessID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RICcontrolOutcome,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICcontrolAcknowledge_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICcontrolAcknowledge_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICcontrolAcknowledge_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICcontrolAcknowledge_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICcontrolAcknowledge_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICcallProcessID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcallProcessID * _e2apRICcontrolAcknowledge_IEs_id_RICcallProcessID;
+        /*
+        *id: id-RICcontrolOutcome
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcontrolOutcome * _e2apRICcontrolAcknowledge_IEs_id_RICcontrolOutcome;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICcontrolAcknowledge_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICcontrolAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolAcknowledge_protocolIEs_element (e2ap_RICcontrolAcknowledge_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge_protocolIEs_element (const char * name, e2ap_RICcontrolAcknowledge_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICcontrolAcknowledge                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICcontrolAcknowledge_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolAcknowledge_protocolIEs (e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge_protocolIEs (const char* name, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICcontrolAcknowledge -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICcontrolAcknowledge {
+    e2ap_RICcontrolAcknowledge_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICcontrolAcknowledge;
+
+EXTERN int asn1PE_e2ap_RICcontrolAcknowledge (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolAcknowledge (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolAcknowledge (e2ap_RICcontrolAcknowledge* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolAcknowledge (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge* pvalue);
+EXTERN void asn1Print_e2ap_RICcontrolAcknowledge (const char* name, const e2ap_RICcontrolAcknowledge* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge (const char* name, e2ap_RICcontrolAcknowledge* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolAcknowledge (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolAcknowledge* pvalue);
+EXTERN int asn1Copy_e2ap_RICcontrolAcknowledge (OSCTXT* pctxt, const e2ap_RICcontrolAcknowledge* pSrcValue, e2ap_RICcontrolAcknowledge* pDstValue);/*****************************************/
+/*           RICcontrolFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RICcallProcessID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RICcontrolOutcome,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICcontrolFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICcontrolFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICcontrolFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICcontrolFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICcontrolFailure_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICcallProcessID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcallProcessID * _e2apRICcontrolFailure_IEs_id_RICcallProcessID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICcontrolFailure_IEs_id_Cause;
+        /*
+        *id: id-RICcontrolOutcome
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcontrolOutcome * _e2apRICcontrolFailure_IEs_id_RICcontrolOutcome;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICcontrolFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICcontrolFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICcontrolFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolFailure_protocolIEs_element (e2ap_RICcontrolFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure_protocolIEs_element (const char * name, e2ap_RICcontrolFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICcontrolFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICcontrolFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICcontrolFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolFailure_protocolIEs (e2ap_RICcontrolFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICcontrolFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICcontrolFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICcontrolFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure_protocolIEs (const char* name, e2ap_RICcontrolFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICcontrolFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICcontrolFailure {
+    e2ap_RICcontrolFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICcontrolFailure;
+
+EXTERN int asn1PE_e2ap_RICcontrolFailure (OSCTXT* pctxt, e2ap_RICcontrolFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolFailure (OSCTXT* pctxt, e2ap_RICcontrolFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolFailure (e2ap_RICcontrolFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolFailure (OSCTXT* pctxt, e2ap_RICcontrolFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICcontrolFailure (const char* name, const e2ap_RICcontrolFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure (const char* name, e2ap_RICcontrolFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolFailure (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICcontrolFailure (OSCTXT* pctxt, const e2ap_RICcontrolFailure* pSrcValue, e2ap_RICcontrolFailure* pDstValue);/*****************************************/
+/*           RICcontrolHeader                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICcontrolHeader;
+EXTERN int asn1PE_e2ap_RICcontrolHeader (OSCTXT* pctxt, e2ap_RICcontrolHeader value);
+EXTERN int asn1PD_e2ap_RICcontrolHeader (OSCTXT* pctxt, e2ap_RICcontrolHeader* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolHeader (const char* name, e2ap_RICcontrolHeader *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolHeader (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolHeader* pvalue);
+EXTERN int asn1Copy_e2ap_RICcontrolHeader (OSCTXT* pctxt, const e2ap_RICcontrolHeader* pSrcValue, e2ap_RICcontrolHeader* pDstValue);
+EXTERN int asn1Init_e2ap_RICcontrolHeader (e2ap_RICcontrolHeader* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolHeader (OSCTXT* pctxt, e2ap_RICcontrolHeader* pvalue);
+/*****************************************/
+/*           RICcontrolMessage                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICcontrolMessage;
+EXTERN int asn1PE_e2ap_RICcontrolMessage (OSCTXT* pctxt, e2ap_RICcontrolMessage value);
+EXTERN int asn1PD_e2ap_RICcontrolMessage (OSCTXT* pctxt, e2ap_RICcontrolMessage* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolMessage (const char* name, e2ap_RICcontrolMessage *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolMessage (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolMessage* pvalue);
+EXTERN int asn1Copy_e2ap_RICcontrolMessage (OSCTXT* pctxt, const e2ap_RICcontrolMessage* pSrcValue, e2ap_RICcontrolMessage* pDstValue);
+EXTERN int asn1Init_e2ap_RICcontrolMessage (e2ap_RICcontrolMessage* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolMessage (OSCTXT* pctxt, e2ap_RICcontrolMessage* pvalue);
+/******************************************************/
+/*                                                    */
+/*    RICcontrolAckRequest                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_noAck = 0,
+    e2ap_ack = 1
+} e2ap_RICcontrolAckRequest_Root;
+
+typedef OSUINT32 e2ap_RICcontrolAckRequest;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICcontrolAckRequest (OSCTXT* pctxt, e2ap_RICcontrolAckRequest value);
+EXTERN int asn1PD_e2ap_RICcontrolAckRequest (OSCTXT* pctxt, e2ap_RICcontrolAckRequest* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICcontrolAckRequest (const char* name, const e2ap_RICcontrolAckRequest* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolAckRequest (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolAckRequest* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICcontrolAckRequest (const char* name,e2ap_RICcontrolAckRequest* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICcontrolAckRequest_ENUMTAB[];
+#define e2ap_RICcontrolAckRequest_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICcontrolAckRequest_ToString (OSUINT32 value);
+EXTERN int e2ap_RICcontrolAckRequest_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICcontrolAckRequest* pvalue);
+EXTERN int e2ap_RICcontrolAckRequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICcontrolAckRequest* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICcontrolAckRequest (e2ap_RICcontrolAckRequest* pvalue);/*****************************************/
+/*           RICcontrolRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcallProcessID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcontrolHeader,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcontrolMessage,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcontrolAckRequest,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICcontrolRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICcontrolRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICcontrolRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICcontrolRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICcontrolRequest_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICcallProcessID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcallProcessID * _e2apRICcontrolRequest_IEs_id_RICcallProcessID;
+        /*
+        *id: id-RICcontrolHeader
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICcontrolHeader * _e2apRICcontrolRequest_IEs_id_RICcontrolHeader;
+        /*
+        *id: id-RICcontrolMessage
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICcontrolMessage * _e2apRICcontrolRequest_IEs_id_RICcontrolMessage;
+        /*
+        *id: id-RICcontrolAckRequest
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcontrolAckRequest * _e2apRICcontrolRequest_IEs_id_RICcontrolAckRequest;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICcontrolRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICcontrolRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolRequest_protocolIEs_element (e2ap_RICcontrolRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest_protocolIEs_element (const char * name, e2ap_RICcontrolRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICcontrolRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICcontrolRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICcontrolRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolRequest_protocolIEs (e2ap_RICcontrolRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICcontrolRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICcontrolRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICcontrolRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest_protocolIEs (const char* name, e2ap_RICcontrolRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICcontrolRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICcontrolRequest {
+    e2ap_RICcontrolRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICcontrolRequest;
+
+EXTERN int asn1PE_e2ap_RICcontrolRequest (OSCTXT* pctxt, e2ap_RICcontrolRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICcontrolRequest (OSCTXT* pctxt, e2ap_RICcontrolRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICcontrolRequest (e2ap_RICcontrolRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICcontrolRequest (OSCTXT* pctxt, e2ap_RICcontrolRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICcontrolRequest (const char* name, const e2ap_RICcontrolRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest (const char* name, e2ap_RICcontrolRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICcontrolRequest (OSCTXT* pctxt, const char* name, const e2ap_RICcontrolRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICcontrolRequest (OSCTXT* pctxt, const e2ap_RICcontrolRequest* pSrcValue, e2ap_RICcontrolRequest* pDstValue);/*****************************************/
+/*           RICactionID                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT8 e2ap_RICactionID;
+EXTERN int asn1PE_e2ap_RICactionID (OSCTXT* pctxt, e2ap_RICactionID value);
+EXTERN int asn1PD_e2ap_RICactionID (OSCTXT* pctxt, e2ap_RICactionID* pvalue);
+EXTERN int asn1Print_e2ap_RICactionID (const char* name, const e2ap_RICactionID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionID (const char* name, e2ap_RICactionID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionID (OSCTXT* pctxt, const char* name, const e2ap_RICactionID* pvalue);
+EXTERN int asn1Init_e2ap_RICactionID (e2ap_RICactionID* pvalue);
+EXTERN int asn1Free_e2ap_RICactionID (OSCTXT* pctxt, e2ap_RICactionID* pvalue);
+/*****************************************/
+/*           RICindicationSN                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT16 e2ap_RICindicationSN;
+EXTERN int asn1PE_e2ap_RICindicationSN (OSCTXT* pctxt, e2ap_RICindicationSN value);
+EXTERN int asn1PD_e2ap_RICindicationSN (OSCTXT* pctxt, e2ap_RICindicationSN* pvalue);
+EXTERN int asn1Print_e2ap_RICindicationSN (const char* name, const e2ap_RICindicationSN* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICindicationSN (const char* name, e2ap_RICindicationSN* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICindicationSN (OSCTXT* pctxt, const char* name, const e2ap_RICindicationSN* pvalue);
+EXTERN int asn1Init_e2ap_RICindicationSN (e2ap_RICindicationSN* pvalue);
+EXTERN int asn1Free_e2ap_RICindicationSN (OSCTXT* pctxt, e2ap_RICindicationSN* pvalue);
+/******************************************************/
+/*                                                    */
+/*    RICindicationType                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_report = 0,
+    e2ap_insert = 1
+} e2ap_RICindicationType_Root;
+
+typedef OSUINT32 e2ap_RICindicationType;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICindicationType (OSCTXT* pctxt, e2ap_RICindicationType value);
+EXTERN int asn1PD_e2ap_RICindicationType (OSCTXT* pctxt, e2ap_RICindicationType* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICindicationType (const char* name, const e2ap_RICindicationType* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICindicationType (OSCTXT* pctxt, const char* name, const e2ap_RICindicationType* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICindicationType (const char* name,e2ap_RICindicationType* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICindicationType_ENUMTAB[];
+#define e2ap_RICindicationType_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICindicationType_ToString (OSUINT32 value);
+EXTERN int e2ap_RICindicationType_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICindicationType* pvalue);
+EXTERN int e2ap_RICindicationType_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICindicationType* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICindicationType (e2ap_RICindicationType* pvalue);/*****************************************/
+/*           RICindicationHeader                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICindicationHeader;
+EXTERN int asn1PE_e2ap_RICindicationHeader (OSCTXT* pctxt, e2ap_RICindicationHeader value);
+EXTERN int asn1PD_e2ap_RICindicationHeader (OSCTXT* pctxt, e2ap_RICindicationHeader* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICindicationHeader (const char* name, e2ap_RICindicationHeader *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICindicationHeader (OSCTXT* pctxt, const char* name, const e2ap_RICindicationHeader* pvalue);
+EXTERN int asn1Copy_e2ap_RICindicationHeader (OSCTXT* pctxt, const e2ap_RICindicationHeader* pSrcValue, e2ap_RICindicationHeader* pDstValue);
+EXTERN int asn1Init_e2ap_RICindicationHeader (e2ap_RICindicationHeader* pvalue);
+EXTERN void asn1Free_e2ap_RICindicationHeader (OSCTXT* pctxt, e2ap_RICindicationHeader* pvalue);
+/*****************************************/
+/*           RICindicationMessage                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICindicationMessage;
+EXTERN int asn1PE_e2ap_RICindicationMessage (OSCTXT* pctxt, e2ap_RICindicationMessage value);
+EXTERN int asn1PD_e2ap_RICindicationMessage (OSCTXT* pctxt, e2ap_RICindicationMessage* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICindicationMessage (const char* name, e2ap_RICindicationMessage *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICindicationMessage (OSCTXT* pctxt, const char* name, const e2ap_RICindicationMessage* pvalue);
+EXTERN int asn1Copy_e2ap_RICindicationMessage (OSCTXT* pctxt, const e2ap_RICindicationMessage* pSrcValue, e2ap_RICindicationMessage* pDstValue);
+EXTERN int asn1Init_e2ap_RICindicationMessage (e2ap_RICindicationMessage* pvalue);
+EXTERN void asn1Free_e2ap_RICindicationMessage (OSCTXT* pctxt, e2ap_RICindicationMessage* pvalue);
+/*****************************************/
+/*           RICindication_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationSN,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationType,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationHeader,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationMessage,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICcallProcessID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICindication_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICindication_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICindication_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICindication_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICindication_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICactionID * _e2apRICindication_IEs_id_RICactionID;
+        /*
+        *id: id-RICindicationSN
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICindicationSN * _e2apRICindication_IEs_id_RICindicationSN;
+        /*
+        *id: id-RICindicationType
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICindicationType * _e2apRICindication_IEs_id_RICindicationType;
+        /*
+        *id: id-RICindicationHeader
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICindicationHeader * _e2apRICindication_IEs_id_RICindicationHeader;
+        /*
+        *id: id-RICindicationMessage
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICindicationMessage * _e2apRICindication_IEs_id_RICindicationMessage;
+        /*
+        *id: id-RICcallProcessID
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICcallProcessID * _e2apRICindication_IEs_id_RICcallProcessID;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICindication_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICindication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICindication_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICindication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICindication_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICindication_protocolIEs_element (e2ap_RICindication_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICindication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICindication_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICindication_protocolIEs_element (OSCTXT* pctxt, e2ap_RICindication_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICindication_protocolIEs_element (const char * name, e2ap_RICindication_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICindication                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICindication_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICindication_protocolIEs (OSCTXT* pctxt, e2ap_RICindication_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICindication_protocolIEs (OSCTXT* pctxt, e2ap_RICindication_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICindication_protocolIEs (e2ap_RICindication_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICindication_protocolIEs (OSCTXT* pctxt, e2ap_RICindication_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICindication_protocolIEs (OSCTXT* pctxt, e2ap_RICindication_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICindication_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICindication_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICindication_protocolIEs (const char* name, e2ap_RICindication_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICindication -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICindication {
+    e2ap_RICindication_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICindication;
+
+EXTERN int asn1PE_e2ap_RICindication (OSCTXT* pctxt, e2ap_RICindication* pvalue);
+EXTERN int asn1PD_e2ap_RICindication (OSCTXT* pctxt, e2ap_RICindication* pvalue);
+EXTERN int asn1Init_e2ap_RICindication (e2ap_RICindication* pvalue);
+EXTERN void asn1Free_e2ap_RICindication (OSCTXT* pctxt, e2ap_RICindication* pvalue);
+EXTERN void asn1Print_e2ap_RICindication (const char* name, const e2ap_RICindication* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICindication (const char* name, e2ap_RICindication* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICindication (OSCTXT* pctxt, const char* name, const e2ap_RICindication* pvalue);
+EXTERN int asn1Copy_e2ap_RICindication (OSCTXT* pctxt, const e2ap_RICindication* pSrcValue, e2ap_RICindication* pDstValue);/*****************************************/
+/*           LoadMeasurementID                */
+/*****************************************/
+//5 mau interger
+//mau 5 integer size(a .. b..) mau la nrfreqencyband
+typedef OSUINT16 e2ap_LoadMeasurementID;
+EXTERN int asn1PE_e2ap_LoadMeasurementID (OSCTXT* pctxt, e2ap_LoadMeasurementID value);
+EXTERN int asn1PD_e2ap_LoadMeasurementID (OSCTXT* pctxt, e2ap_LoadMeasurementID* pvalue);
+EXTERN int asn1Print_e2ap_LoadMeasurementID (const char* name, const e2ap_LoadMeasurementID* pvalue);
+EXTERN int asn1PrtToStr_e2ap_LoadMeasurementID (const char* name, e2ap_LoadMeasurementID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_LoadMeasurementID (OSCTXT* pctxt, const char* name, const e2ap_LoadMeasurementID* pvalue);
+EXTERN int asn1Free_e2ap_LoadMeasurementID (OSCTXT* pctxt, e2ap_LoadMeasurementID* pvalue);
+EXTERN int asn1Init_e2ap_LoadMeasurementID (e2ap_LoadMeasurementID* pvalue);
+/******************************************************/
+/*                                                    */
+/*    RegistrationRequest                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_start = 0,
+    e2ap_stop = 1,
+    e2ap_add = 2
+} e2ap_RegistrationRequest_Root;
+
+typedef OSUINT32 e2ap_RegistrationRequest;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RegistrationRequest (OSCTXT* pctxt, e2ap_RegistrationRequest value);
+EXTERN int asn1PD_e2ap_RegistrationRequest (OSCTXT* pctxt, e2ap_RegistrationRequest* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RegistrationRequest (const char* name, const e2ap_RegistrationRequest* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RegistrationRequest (OSCTXT* pctxt, const char* name, const e2ap_RegistrationRequest* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RegistrationRequest (const char* name,e2ap_RegistrationRequest* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RegistrationRequest_ENUMTAB[];
+#define e2ap_RegistrationRequest_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RegistrationRequest_ToString (OSUINT32 value);
+EXTERN int e2ap_RegistrationRequest_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RegistrationRequest* pvalue);
+EXTERN int e2ap_RegistrationRequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RegistrationRequest* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RegistrationRequest (e2ap_RegistrationRequest* pvalue);/******************************************************/
+/*                                                    */
+/*    RICloadRequest                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_true = 0
+} e2ap_RICloadRequest_Root;
+
+typedef OSUINT32 e2ap_RICloadRequest;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICloadRequest (OSCTXT* pctxt, e2ap_RICloadRequest value);
+EXTERN int asn1PD_e2ap_RICloadRequest (OSCTXT* pctxt, e2ap_RICloadRequest* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICloadRequest (const char* name, const e2ap_RICloadRequest* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICloadRequest (OSCTXT* pctxt, const char* name, const e2ap_RICloadRequest* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICloadRequest (const char* name,e2ap_RICloadRequest* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICloadRequest_ENUMTAB[];
+#define e2ap_RICloadRequest_ENUMTABSIZE 1
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICloadRequest_ToString (OSUINT32 value);
+EXTERN int e2ap_RICloadRequest_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICloadRequest* pvalue);
+EXTERN int e2ap_RICloadRequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICloadRequest* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICloadRequest (e2ap_RICloadRequest* pvalue);/*****************************************/
+/*           RICserviceLoadRequest                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICserviceLoadRequest {
+      //not primitive
+   e2ap_RICloadRequest ricServiceReportLoadRequest;
+   OSBOOL m_ricServiceReportLoadRequestPresent;      //not primitive
+   e2ap_RICloadRequest ricServiceInsertLoadRequest;
+   OSBOOL m_ricServiceInsertLoadRequestPresent;      //not primitive
+   e2ap_RICloadRequest ricServiceControlLoadRequest;
+   OSBOOL m_ricServiceControlLoadRequestPresent;      //not primitive
+   e2ap_RICloadRequest ricServicePolicyLoadRequest;
+   OSBOOL m_ricServicePolicyLoadRequestPresent;      //not primitive
+   e2ap_RICloadRequest ricServiceQueryLoadRequest;
+   OSBOOL m_ricServiceQueryLoadRequestPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadRequest;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadRequest (OSCTXT* pctxt, e2ap_RICserviceLoadRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadRequest (OSCTXT* pctxt, e2ap_RICserviceLoadRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadRequest (e2ap_RICserviceLoadRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadRequest (OSCTXT* pctxt, e2ap_RICserviceLoadRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadRequest (const char* name, const e2ap_RICserviceLoadRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadRequest (const char* name, e2ap_RICserviceLoadRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadRequest (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadRequest (OSCTXT* pctxt, const e2ap_RICserviceLoadRequest* pSrcValue, e2ap_RICserviceLoadRequest* pDstValue);/*****************************************/
+/*           RICactionLoadRequest_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICactionLoadRequest_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICloadRequest ricActionLoadRequest;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICactionLoadRequest_Item;
+
+EXTERN int asn1PE_e2ap_RICactionLoadRequest_Item (OSCTXT* pctxt, e2ap_RICactionLoadRequest_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICactionLoadRequest_Item (OSCTXT* pctxt, e2ap_RICactionLoadRequest_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICactionLoadRequest_Item (e2ap_RICactionLoadRequest_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoadRequest_Item (OSCTXT* pctxt, e2ap_RICactionLoadRequest_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICactionLoadRequest_Item (const char* name, const e2ap_RICactionLoadRequest_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionLoadRequest_Item (const char* name, e2ap_RICactionLoadRequest_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionLoadRequest_Item (OSCTXT* pctxt, const char* name, const e2ap_RICactionLoadRequest_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICactionLoadRequest_Item (OSCTXT* pctxt, const e2ap_RICactionLoadRequest_Item* pSrcValue, e2ap_RICactionLoadRequest_Item* pDstValue);/*****************************************/
+/*           RICactionLoadRequest_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICactionLoadRequest_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICactionLoadRequest_ItemIEs_id_RICactionLoadRequest_Item 
+ 
+} e2ap_RICactionLoadRequest_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICactionLoadRequest_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICactionLoadRequest_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICactionLoadRequest_Item * _e2apRICactionLoadRequest_ItemIEs_id_RICactionLoadRequest_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICactionLoadRequest_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICactionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoadRequest_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICactionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoadRequest_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICactionLoadRequest_ItemIEs (e2ap_RICactionLoadRequest_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoadRequest_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICactionLoadRequest_ItemIEs (const char * name, e2ap_RICactionLoadRequest_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactionLoadRequest_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactionLoadRequest_List;
+
+EXTERN int asn1PE_e2ap_RICactionLoadRequest_List (OSCTXT* pctxt, e2ap_RICactionLoadRequest_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactionLoadRequest_List (OSCTXT* pctxt, e2ap_RICactionLoadRequest_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactionLoadRequest_List (e2ap_RICactionLoadRequest_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoadRequest_List (OSCTXT* pctxt, e2ap_RICactionLoadRequest_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionLoadRequest_List (const char* name, e2ap_RICactionLoadRequest_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactionLoadRequest_List (OSCTXT* pctxt, const e2ap_RICactionLoadRequest_List* pSrcValue, e2ap_RICactionLoadRequest_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactionLoadRequest_List (const char *name, const e2ap_RICactionLoadRequest_List* pvalue);/*****************************************/
+/*           RICsubscriptionLoadRequest_ItemIE                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionLoadRequest_ItemIE {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RICloadRequest ricSubscriptionLoadRequest;
+   OSBOOL m_ricSubscriptionLoadRequestPresent;      //not primitive
+   e2ap_RICactionLoadRequest_List ricActionLoadRequest_list;
+   OSBOOL m_ricActionLoadRequest_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionLoadRequest_ItemIE;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionLoadRequest_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionLoadRequest_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionLoadRequest_ItemIE (e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoadRequest_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionLoadRequest_ItemIE (const char* name, const e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionLoadRequest_ItemIE (const char* name, e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionLoadRequest_ItemIE (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionLoadRequest_ItemIE* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionLoadRequest_ItemIE (OSCTXT* pctxt, const e2ap_RICsubscriptionLoadRequest_ItemIE* pSrcValue, e2ap_RICsubscriptionLoadRequest_ItemIE* pDstValue);/*****************************************/
+/*           RICsubscriptionLoadRequest_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionLoadRequest_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionLoadRequest_ItemIEs_id_RICsubscriptionLoadRequest_Item 
+ 
+} e2ap_RICsubscriptionLoadRequest_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscriptionLoadRequest_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionLoadRequest_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscriptionLoadRequest_ItemIE * _e2apRICsubscriptionLoadRequest_ItemIEs_id_RICsubscriptionLoadRequest_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionLoadRequest_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscriptionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscriptionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionLoadRequest_ItemIEs (e2ap_RICsubscriptionLoadRequest_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscriptionLoadRequest_ItemIEs (const char * name, e2ap_RICsubscriptionLoadRequest_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscriptionLoadRequest_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionLoadRequest_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionLoadRequest_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionLoadRequest_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionLoadRequest_List (e2ap_RICsubscriptionLoadRequest_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoadRequest_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoadRequest_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionLoadRequest_List (const char* name, e2ap_RICsubscriptionLoadRequest_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionLoadRequest_List (OSCTXT* pctxt, const e2ap_RICsubscriptionLoadRequest_List* pSrcValue, e2ap_RICsubscriptionLoadRequest_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionLoadRequest_List (const char *name, const e2ap_RICsubscriptionLoadRequest_List* pvalue);/*****************************************/
+/*           RANfunctionLoadRequest_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionLoadRequest_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RICloadRequest ranFunctionLoadRequest;
+   OSBOOL m_ranFunctionLoadRequestPresent;      //not primitive
+   e2ap_RICserviceLoadRequest ricServiceLoadRequest;
+   OSBOOL m_ricServiceLoadRequestPresent;      //not primitive
+   e2ap_RICsubscriptionLoadRequest_List ricSubscriptionLoadRequest_list;
+   OSBOOL m_ricSubscriptionLoadRequest_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionLoadRequest_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionLoadRequest_Item (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionLoadRequest_Item (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionLoadRequest_Item (e2ap_RANfunctionLoadRequest_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoadRequest_Item (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionLoadRequest_Item (const char* name, const e2ap_RANfunctionLoadRequest_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionLoadRequest_Item (const char* name, e2ap_RANfunctionLoadRequest_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionLoadRequest_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionLoadRequest_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionLoadRequest_Item (OSCTXT* pctxt, const e2ap_RANfunctionLoadRequest_Item* pSrcValue, e2ap_RANfunctionLoadRequest_Item* pDstValue);/*****************************************/
+/*           RANfunctionLoadRequest_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionLoadRequest_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionLoadRequest_ItemIEs_id_RANfunctionLoadRequest_Item 
+ 
+} e2ap_RANfunctionLoadRequest_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionLoadRequest_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionLoadRequest_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionLoadRequest_Item * _e2apRANfunctionLoadRequest_ItemIEs_id_RANfunctionLoadRequest_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionLoadRequest_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionLoadRequest_ItemIEs (e2ap_RANfunctionLoadRequest_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoadRequest_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionLoadRequest_ItemIEs (const char * name, e2ap_RANfunctionLoadRequest_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionLoadRequest_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionLoadRequest_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionLoadRequest_List (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionLoadRequest_List (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionLoadRequest_List (e2ap_RANfunctionLoadRequest_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoadRequest_List (OSCTXT* pctxt, e2ap_RANfunctionLoadRequest_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionLoadRequest_List (const char* name, e2ap_RANfunctionLoadRequest_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionLoadRequest_List (OSCTXT* pctxt, const e2ap_RANfunctionLoadRequest_List* pSrcValue, e2ap_RANfunctionLoadRequest_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionLoadRequest_List (const char *name, const e2ap_RANfunctionLoadRequest_List* pvalue);/******************************************************/
+/*                                                    */
+/*    ReportingPeriodicity                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_ms500 = 0,
+    e2ap_ms1000 = 1,
+    e2ap_ms2000 = 2,
+    e2ap_ms5000 = 3,
+    e2ap_ms10000 = 4
+} e2ap_ReportingPeriodicity_Root;
+
+typedef OSUINT32 e2ap_ReportingPeriodicity;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_ReportingPeriodicity (OSCTXT* pctxt, e2ap_ReportingPeriodicity value);
+EXTERN int asn1PD_e2ap_ReportingPeriodicity (OSCTXT* pctxt, e2ap_ReportingPeriodicity* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_ReportingPeriodicity (const char* name, const e2ap_ReportingPeriodicity* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_ReportingPeriodicity (OSCTXT* pctxt, const char* name, const e2ap_ReportingPeriodicity* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_ReportingPeriodicity (const char* name,e2ap_ReportingPeriodicity* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_ReportingPeriodicity_ENUMTAB[];
+#define e2ap_ReportingPeriodicity_ENUMTABSIZE 5
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_ReportingPeriodicity_ToString (OSUINT32 value);
+EXTERN int e2ap_ReportingPeriodicity_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_ReportingPeriodicity* pvalue);
+EXTERN int e2ap_ReportingPeriodicity_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_ReportingPeriodicity* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_ReportingPeriodicity (e2ap_ReportingPeriodicity* pvalue);/*****************************************/
+/*           RICserviceLoadStatusRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_RICloadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_E2nodeLoadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_RegistrationRequest,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_RANfunctionLoadRequest_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_ReportingPeriodicity,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceLoadStatusRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadStatusRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceLoadStatusRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadStatusRequest_IEs_id_RICloadMeasurementID;
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadStatusRequest_IEs_id_E2nodeLoadMeasurementID;
+        /*
+        *id: id-RegistrationRequest
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_RegistrationRequest * _e2apRICserviceLoadStatusRequest_IEs_id_RegistrationRequest;
+        /*
+        *id: id-RANfunctionLoadRequest_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionLoadRequest_List * _e2apRICserviceLoadStatusRequest_IEs_id_RANfunctionLoadRequest_List;
+        /*
+        *id: id-ReportingPeriodicity
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_ReportingPeriodicity * _e2apRICserviceLoadStatusRequest_IEs_id_ReportingPeriodicity;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceLoadStatusRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (e2ap_RICserviceLoadStatusRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (const char * name, e2ap_RICserviceLoadStatusRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceLoadStatusRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadStatusRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusRequest_protocolIEs (e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest_protocolIEs (const char* name, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceLoadStatusRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceLoadStatusRequest {
+    e2ap_RICserviceLoadStatusRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadStatusRequest;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusRequest (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusRequest (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusRequest (e2ap_RICserviceLoadStatusRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadStatusRequest (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadStatusRequest (const char* name, const e2ap_RICserviceLoadStatusRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest (const char* name, e2ap_RICserviceLoadStatusRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadStatusRequest (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadStatusRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadStatusRequest (OSCTXT* pctxt, const e2ap_RICserviceLoadStatusRequest* pSrcValue, e2ap_RICserviceLoadStatusRequest* pDstValue);/******************************************************/
+/*                                                    */
+/*    RICloadConfirm                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_true = 0
+} e2ap_RICloadConfirm_Root;
+
+typedef OSUINT32 e2ap_RICloadConfirm;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICloadConfirm (OSCTXT* pctxt, e2ap_RICloadConfirm value);
+EXTERN int asn1PD_e2ap_RICloadConfirm (OSCTXT* pctxt, e2ap_RICloadConfirm* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICloadConfirm (const char* name, const e2ap_RICloadConfirm* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICloadConfirm (OSCTXT* pctxt, const char* name, const e2ap_RICloadConfirm* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICloadConfirm (const char* name,e2ap_RICloadConfirm* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICloadConfirm_ENUMTAB[];
+#define e2ap_RICloadConfirm_ENUMTABSIZE 1
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICloadConfirm_ToString (OSUINT32 value);
+EXTERN int e2ap_RICloadConfirm_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICloadConfirm* pvalue);
+EXTERN int e2ap_RICloadConfirm_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICloadConfirm* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICloadConfirm (e2ap_RICloadConfirm* pvalue);/*****************************************/
+/*           RICserviceLoadConfirm                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICserviceLoadConfirm {
+      //not primitive
+   e2ap_RICloadConfirm ricServiceReportLoadConfirm;
+   OSBOOL m_ricServiceReportLoadConfirmPresent;      //not primitive
+   e2ap_RICloadConfirm ricServiceInsertLoadConfirm;
+   OSBOOL m_ricServiceInsertLoadConfirmPresent;      //not primitive
+   e2ap_RICloadConfirm ricServiceControlLoadConfirm;
+   OSBOOL m_ricServiceControlLoadConfirmPresent;      //not primitive
+   e2ap_RICloadConfirm ricServicePolicyLoadConfirm;
+   OSBOOL m_ricServicePolicyLoadConfirmPresent;      //not primitive
+   e2ap_RICloadConfirm ricServiceQueryLoadConfirm;
+   OSBOOL m_ricServiceQueryLoadConfirmPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadConfirm;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadConfirm (OSCTXT* pctxt, e2ap_RICserviceLoadConfirm* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadConfirm (OSCTXT* pctxt, e2ap_RICserviceLoadConfirm* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadConfirm (e2ap_RICserviceLoadConfirm* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadConfirm (OSCTXT* pctxt, e2ap_RICserviceLoadConfirm* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadConfirm (const char* name, const e2ap_RICserviceLoadConfirm* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadConfirm (const char* name, e2ap_RICserviceLoadConfirm* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadConfirm (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadConfirm* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadConfirm (OSCTXT* pctxt, const e2ap_RICserviceLoadConfirm* pSrcValue, e2ap_RICserviceLoadConfirm* pDstValue);/*****************************************/
+/*           RICactionLoadConfirm_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICactionLoadConfirm_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICloadConfirm ricActionLoadConfirm;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICactionLoadConfirm_Item;
+
+EXTERN int asn1PE_e2ap_RICactionLoadConfirm_Item (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICactionLoadConfirm_Item (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICactionLoadConfirm_Item (e2ap_RICactionLoadConfirm_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoadConfirm_Item (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICactionLoadConfirm_Item (const char* name, const e2ap_RICactionLoadConfirm_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionLoadConfirm_Item (const char* name, e2ap_RICactionLoadConfirm_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionLoadConfirm_Item (OSCTXT* pctxt, const char* name, const e2ap_RICactionLoadConfirm_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICactionLoadConfirm_Item (OSCTXT* pctxt, const e2ap_RICactionLoadConfirm_Item* pSrcValue, e2ap_RICactionLoadConfirm_Item* pDstValue);/*****************************************/
+/*           RICactionLoadConfirm_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICactionLoadConfirm_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICactionLoadConfirm_ItemIEs_id_RICactionLoadConfirm_Item 
+ 
+} e2ap_RICactionLoadConfirm_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICactionLoadConfirm_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICactionLoadConfirm_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICactionLoadConfirm_Item * _e2apRICactionLoadConfirm_ItemIEs_id_RICactionLoadConfirm_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICactionLoadConfirm_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICactionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICactionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICactionLoadConfirm_ItemIEs (e2ap_RICactionLoadConfirm_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICactionLoadConfirm_ItemIEs (const char * name, e2ap_RICactionLoadConfirm_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactionLoadConfirm_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactionLoadConfirm_List;
+
+EXTERN int asn1PE_e2ap_RICactionLoadConfirm_List (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactionLoadConfirm_List (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactionLoadConfirm_List (e2ap_RICactionLoadConfirm_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoadConfirm_List (OSCTXT* pctxt, e2ap_RICactionLoadConfirm_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionLoadConfirm_List (const char* name, e2ap_RICactionLoadConfirm_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactionLoadConfirm_List (OSCTXT* pctxt, const e2ap_RICactionLoadConfirm_List* pSrcValue, e2ap_RICactionLoadConfirm_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactionLoadConfirm_List (const char *name, const e2ap_RICactionLoadConfirm_List* pvalue);/*****************************************/
+/*           RICsubscriptionLoadConfirm_ItemIE                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionLoadConfirm_ItemIE {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RICloadConfirm ricSubscriptionLoadConfirm;
+   OSBOOL m_ricSubscriptionLoadConfirmPresent;      //not primitive
+   e2ap_RICactionLoadConfirm_List ricActionLoadConfirm_list;
+   OSBOOL m_ricActionLoadConfirm_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionLoadConfirm_ItemIE;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionLoadConfirm_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionLoadConfirm_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionLoadConfirm_ItemIE (e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoadConfirm_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionLoadConfirm_ItemIE (const char* name, const e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionLoadConfirm_ItemIE (const char* name, e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionLoadConfirm_ItemIE (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionLoadConfirm_ItemIE* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionLoadConfirm_ItemIE (OSCTXT* pctxt, const e2ap_RICsubscriptionLoadConfirm_ItemIE* pSrcValue, e2ap_RICsubscriptionLoadConfirm_ItemIE* pDstValue);/*****************************************/
+/*           RICsubscriptionLoadConfirm_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionLoadConfirm_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionLoadConfirm_ItemIEs_id_RICsubscriptionLoadConfirm_Item 
+ 
+} e2ap_RICsubscriptionLoadConfirm_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscriptionLoadConfirm_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionLoadConfirm_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscriptionLoadConfirm_ItemIE * _e2apRICsubscriptionLoadConfirm_ItemIEs_id_RICsubscriptionLoadConfirm_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionLoadConfirm_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscriptionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscriptionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionLoadConfirm_ItemIEs (e2ap_RICsubscriptionLoadConfirm_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscriptionLoadConfirm_ItemIEs (const char * name, e2ap_RICsubscriptionLoadConfirm_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscriptionLoadConfirm_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionLoadConfirm_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionLoadConfirm_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionLoadConfirm_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionLoadConfirm_List (e2ap_RICsubscriptionLoadConfirm_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoadConfirm_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoadConfirm_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionLoadConfirm_List (const char* name, e2ap_RICsubscriptionLoadConfirm_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionLoadConfirm_List (OSCTXT* pctxt, const e2ap_RICsubscriptionLoadConfirm_List* pSrcValue, e2ap_RICsubscriptionLoadConfirm_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionLoadConfirm_List (const char *name, const e2ap_RICsubscriptionLoadConfirm_List* pvalue);/*****************************************/
+/*           RANfunctionLoadConfirm_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionLoadConfirm_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RICloadConfirm ranFunctionLoadConfirm;
+   OSBOOL m_ranFunctionLoadConfirmPresent;      //not primitive
+   e2ap_RICserviceLoadConfirm ricServiceLoadConfirm;
+   OSBOOL m_ricServiceLoadConfirmPresent;      //not primitive
+   e2ap_RICsubscriptionLoadConfirm_List ricSubscriptionLoadConfirm_list;
+   OSBOOL m_ricSubscriptionLoadConfirm_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionLoadConfirm_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionLoadConfirm_Item (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionLoadConfirm_Item (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionLoadConfirm_Item (e2ap_RANfunctionLoadConfirm_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoadConfirm_Item (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionLoadConfirm_Item (const char* name, const e2ap_RANfunctionLoadConfirm_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionLoadConfirm_Item (const char* name, e2ap_RANfunctionLoadConfirm_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionLoadConfirm_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionLoadConfirm_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionLoadConfirm_Item (OSCTXT* pctxt, const e2ap_RANfunctionLoadConfirm_Item* pSrcValue, e2ap_RANfunctionLoadConfirm_Item* pDstValue);/*****************************************/
+/*           RANfunctionLoadConfirm_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionLoadConfirm_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionLoadConfirm_ItemIEs_id_RANfunctionLoadConfirm_Item 
+ 
+} e2ap_RANfunctionLoadConfirm_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionLoadConfirm_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionLoadConfirm_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionLoadConfirm_Item * _e2apRANfunctionLoadConfirm_ItemIEs_id_RANfunctionLoadConfirm_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionLoadConfirm_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionLoadConfirm_ItemIEs (e2ap_RANfunctionLoadConfirm_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoadConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionLoadConfirm_ItemIEs (const char * name, e2ap_RANfunctionLoadConfirm_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionLoadConfirm_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionLoadConfirm_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionLoadConfirm_List (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionLoadConfirm_List (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionLoadConfirm_List (e2ap_RANfunctionLoadConfirm_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoadConfirm_List (OSCTXT* pctxt, e2ap_RANfunctionLoadConfirm_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionLoadConfirm_List (const char* name, e2ap_RANfunctionLoadConfirm_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionLoadConfirm_List (OSCTXT* pctxt, const e2ap_RANfunctionLoadConfirm_List* pSrcValue, e2ap_RANfunctionLoadConfirm_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionLoadConfirm_List (const char *name, const e2ap_RANfunctionLoadConfirm_List* pvalue);/*****************************************/
+/*           RICserviceLoadStatusResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_id_RICloadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_id_E2nodeLoadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_id_RANfunctionLoadConfirm_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceLoadStatusResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadStatusResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceLoadStatusResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadStatusResponse_IEs_id_RICloadMeasurementID;
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadStatusResponse_IEs_id_E2nodeLoadMeasurementID;
+        /*
+        *id: id-RANfunctionLoadConfirm_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionLoadConfirm_List * _e2apRICserviceLoadStatusResponse_IEs_id_RANfunctionLoadConfirm_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceLoadStatusResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (e2ap_RICserviceLoadStatusResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (const char * name, e2ap_RICserviceLoadStatusResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceLoadStatusResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadStatusResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusResponse_protocolIEs (e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse_protocolIEs (const char* name, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceLoadStatusResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceLoadStatusResponse {
+    e2ap_RICserviceLoadStatusResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadStatusResponse;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusResponse (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusResponse (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusResponse (e2ap_RICserviceLoadStatusResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadStatusResponse (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadStatusResponse (const char* name, const e2ap_RICserviceLoadStatusResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse (const char* name, e2ap_RICserviceLoadStatusResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadStatusResponse (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadStatusResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadStatusResponse (OSCTXT* pctxt, const e2ap_RICserviceLoadStatusResponse* pSrcValue, e2ap_RICserviceLoadStatusResponse* pDstValue);/*****************************************/
+/*           RICserviceLoadStatusFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_RICloadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_E2nodeLoadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceLoadStatusFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadStatusFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceLoadStatusFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadStatusFailure_IEs_id_RICloadMeasurementID;
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadStatusFailure_IEs_id_E2nodeLoadMeasurementID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICserviceLoadStatusFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICserviceLoadStatusFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceLoadStatusFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (e2ap_RICserviceLoadStatusFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (const char * name, e2ap_RICserviceLoadStatusFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceLoadStatusFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadStatusFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusFailure_protocolIEs (e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure_protocolIEs (const char* name, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceLoadStatusFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceLoadStatusFailure {
+    e2ap_RICserviceLoadStatusFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadStatusFailure;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadStatusFailure (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadStatusFailure (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadStatusFailure (e2ap_RICserviceLoadStatusFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadStatusFailure (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadStatusFailure (const char* name, const e2ap_RICserviceLoadStatusFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure (const char* name, e2ap_RICserviceLoadStatusFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadStatusFailure (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadStatusFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadStatusFailure (OSCTXT* pctxt, const e2ap_RICserviceLoadStatusFailure* pSrcValue, e2ap_RICserviceLoadStatusFailure* pDstValue);/*****************************************/
+/*           RICloadInformation                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+    // Nội dung của file .h cho primitive ENUMERATED
+    //enumerated intergrate
+//metadata.parsed.primitive_id == 13
+
+typedef enum{
+    e2ap_overload = 0,   
+    e2ap_notoverload = 1   
+}e2apRICloadInformation_loadStatus_Root;
+
+typedef OSUINT32 e2ap_RICloadInformation_loadStatus;
+
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICloadInformation_loadStatus (OSCTXT* pctxt, e2ap_RICloadInformation_loadStatus value);
+EXTERN int asn1PD_e2ap_RICloadInformation_loadStatus (OSCTXT* pctxt, e2ap_RICloadInformation_loadStatus* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICloadInformation_loadStatus (const char* name, const e2ap_RICloadInformation_loadStatus* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICloadInformation_loadStatus (OSCTXT* pctxt, const char* name, const e2ap_RICloadInformation_loadStatus* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICloadInformation_loadStatus (const char* name,e2ap_RICloadInformation_loadStatus* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICloadInformation_loadStatus_ENUMTAB[];
+#define e2ap_RICloadInformation_loadStatus_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICloadInformation_loadStatus_ToString (OSUINT32 value);
+EXTERN int e2ap_RICloadInformation_loadStatus_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICloadInformation_loadStatus* pvalue);
+EXTERN int e2ap_RICloadInformation_loadStatus_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICloadInformation_loadStatus* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICloadInformation_loadStatus (e2ap_RICloadInformation_loadStatus* pvalue);
+    // Nội dung của file .h cho primitive INTEGER (0..100)
+     /*****************************************/
+/*           loadEstimate                */
+/*****************************************/
+//interger intergrate
+ //metadata.parsed.primitive_id == 6
+// mau integer size(a...b) mau la procedurecode
+typedef OSUINT8 e2ap_RICloadInformation_loadEstimate;
+EXTERN int asn1PE_e2ap_RICloadInformation_loadEstimate (OSCTXT* pctxt, e2ap_RICloadInformation_loadEstimate value);
+EXTERN int asn1PD_e2ap_RICloadInformation_loadEstimate (OSCTXT* pctxt, e2ap_RICloadInformation_loadEstimate* pvalue);
+EXTERN int asn1Print_e2ap_RICloadInformation_loadEstimate (const char* name, const e2ap_RICloadInformation_loadEstimate* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICloadInformation_loadEstimate (const char* name, e2ap_RICloadInformation_loadEstimate* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICloadInformation_loadEstimate (OSCTXT* pctxt, const char* name, const e2ap_RICloadInformation_loadEstimate* pvalue);
+EXTERN int asn1Init_e2ap_RICloadInformation_loadEstimate (e2ap_RICloadInformation_loadEstimate* pvalue);
+EXTERN int asn1Free_e2ap_RICloadInformation_loadEstimate (OSCTXT* pctxt, e2ap_RICloadInformation_loadEstimate* pvalue);
+
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICloadInformation {
+      //primitive
+   e2ap_RICloadInformation_loadStatus loadStatus;
+   OSBOOL m_loadStatusPresent;      //primitive
+   e2ap_RICloadInformation_loadEstimate loadEstimate;
+   OSBOOL m_loadEstimatePresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICloadInformation;
+
+EXTERN int asn1PE_e2ap_RICloadInformation (OSCTXT* pctxt, e2ap_RICloadInformation* pvalue);
+EXTERN int asn1PD_e2ap_RICloadInformation (OSCTXT* pctxt, e2ap_RICloadInformation* pvalue);
+EXTERN int asn1Init_e2ap_RICloadInformation (e2ap_RICloadInformation* pvalue);
+EXTERN void asn1Free_e2ap_RICloadInformation (OSCTXT* pctxt, e2ap_RICloadInformation* pvalue);
+EXTERN void asn1Print_e2ap_RICloadInformation (const char* name, const e2ap_RICloadInformation* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICloadInformation (const char* name, e2ap_RICloadInformation* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICloadInformation (OSCTXT* pctxt, const char* name, const e2ap_RICloadInformation* pvalue);
+EXTERN int asn1Copy_e2ap_RICloadInformation (OSCTXT* pctxt, const e2ap_RICloadInformation* pSrcValue, e2ap_RICloadInformation* pDstValue);/*****************************************/
+/*           RICserviceLoadInformation                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICserviceLoadInformation {
+      //not primitive
+   e2ap_RICloadInformation ricServiceReportLoadInformation;
+   OSBOOL m_ricServiceReportLoadInformationPresent;      //not primitive
+   e2ap_RICloadInformation ricServiceInsertLoadInformation;
+   OSBOOL m_ricServiceInsertLoadInformationPresent;      //not primitive
+   e2ap_RICloadInformation ricServiceControlLoadInformation;
+   OSBOOL m_ricServiceControlLoadInformationPresent;      //not primitive
+   e2ap_RICloadInformation ricServicePolicyLoadInformation;
+   OSBOOL m_ricServicePolicyLoadInformationPresent;      //not primitive
+   e2ap_RICloadInformation ricServiceQueryLoadInformation;
+   OSBOOL m_ricServiceQueryLoadInformationPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadInformation;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadInformation (OSCTXT* pctxt, e2ap_RICserviceLoadInformation* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadInformation (OSCTXT* pctxt, e2ap_RICserviceLoadInformation* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadInformation (e2ap_RICserviceLoadInformation* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadInformation (OSCTXT* pctxt, e2ap_RICserviceLoadInformation* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadInformation (const char* name, const e2ap_RICserviceLoadInformation* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadInformation (const char* name, e2ap_RICserviceLoadInformation* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadInformation (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadInformation* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadInformation (OSCTXT* pctxt, const e2ap_RICserviceLoadInformation* pSrcValue, e2ap_RICserviceLoadInformation* pDstValue);/*****************************************/
+/*           RICactionLoad_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICactionLoad_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICloadInformation ricActionLoadInformation;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICactionLoad_Item;
+
+EXTERN int asn1PE_e2ap_RICactionLoad_Item (OSCTXT* pctxt, e2ap_RICactionLoad_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICactionLoad_Item (OSCTXT* pctxt, e2ap_RICactionLoad_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICactionLoad_Item (e2ap_RICactionLoad_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoad_Item (OSCTXT* pctxt, e2ap_RICactionLoad_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICactionLoad_Item (const char* name, const e2ap_RICactionLoad_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionLoad_Item (const char* name, e2ap_RICactionLoad_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionLoad_Item (OSCTXT* pctxt, const char* name, const e2ap_RICactionLoad_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICactionLoad_Item (OSCTXT* pctxt, const e2ap_RICactionLoad_Item* pSrcValue, e2ap_RICactionLoad_Item* pDstValue);/*****************************************/
+/*           RICactionLoad_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICactionLoad_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICactionLoad_ItemIEs_id_RICactionLoad_Item 
+ 
+} e2ap_RICactionLoad_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICactionLoad_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICactionLoad_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICactionLoad_Item * _e2apRICactionLoad_ItemIEs_id_RICactionLoad_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICactionLoad_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICactionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoad_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICactionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoad_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICactionLoad_ItemIEs (e2ap_RICactionLoad_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RICactionLoad_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICactionLoad_ItemIEs (const char * name, e2ap_RICactionLoad_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactionLoad_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactionLoad_List;
+
+EXTERN int asn1PE_e2ap_RICactionLoad_List (OSCTXT* pctxt, e2ap_RICactionLoad_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactionLoad_List (OSCTXT* pctxt, e2ap_RICactionLoad_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactionLoad_List (e2ap_RICactionLoad_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactionLoad_List (OSCTXT* pctxt, e2ap_RICactionLoad_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionLoad_List (const char* name, e2ap_RICactionLoad_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactionLoad_List (OSCTXT* pctxt, const e2ap_RICactionLoad_List* pSrcValue, e2ap_RICactionLoad_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactionLoad_List (const char *name, const e2ap_RICactionLoad_List* pvalue);/*****************************************/
+/*           RICsubscriptionLoad_ItemIE                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionLoad_ItemIE {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RICloadInformation ricSubscriptionLoadInformation;
+   OSBOOL m_ricSubscriptionLoadInformationPresent;      //not primitive
+   e2ap_RICactionLoad_List ricActionLoad_list;
+   OSBOOL m_ricActionLoad_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionLoad_ItemIE;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionLoad_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_ItemIE* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionLoad_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_ItemIE* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionLoad_ItemIE (e2ap_RICsubscriptionLoad_ItemIE* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoad_ItemIE (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_ItemIE* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionLoad_ItemIE (const char* name, const e2ap_RICsubscriptionLoad_ItemIE* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionLoad_ItemIE (const char* name, e2ap_RICsubscriptionLoad_ItemIE* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionLoad_ItemIE (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionLoad_ItemIE* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionLoad_ItemIE (OSCTXT* pctxt, const e2ap_RICsubscriptionLoad_ItemIE* pSrcValue, e2ap_RICsubscriptionLoad_ItemIE* pDstValue);/*****************************************/
+/*           RICsubscriptionLoad_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionLoad_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionLoad_ItemIEs_id_RICsubscriptionLoad_Item 
+ 
+} e2ap_RICsubscriptionLoad_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscriptionLoad_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionLoad_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscriptionLoad_ItemIE * _e2apRICsubscriptionLoad_ItemIEs_id_RICsubscriptionLoad_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionLoad_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscriptionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscriptionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionLoad_ItemIEs (e2ap_RICsubscriptionLoad_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscriptionLoad_ItemIEs (const char * name, e2ap_RICsubscriptionLoad_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscriptionLoad_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionLoad_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionLoad_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionLoad_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionLoad_List (e2ap_RICsubscriptionLoad_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionLoad_List (OSCTXT* pctxt, e2ap_RICsubscriptionLoad_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionLoad_List (const char* name, e2ap_RICsubscriptionLoad_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionLoad_List (OSCTXT* pctxt, const e2ap_RICsubscriptionLoad_List* pSrcValue, e2ap_RICsubscriptionLoad_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionLoad_List (const char *name, const e2ap_RICsubscriptionLoad_List* pvalue);/*****************************************/
+/*           RANfunctionLoad_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionLoad_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RICloadInformation ranFunctionLoadInformation;
+   OSBOOL m_ranFunctionLoadInformationPresent;      //not primitive
+   e2ap_RICserviceLoadInformation ricServiceLoadInformation;
+   OSBOOL m_ricServiceLoadInformationPresent;      //not primitive
+   e2ap_RICsubscriptionLoad_List ricSubscriptionLoad_list;
+   OSBOOL m_ricSubscriptionLoad_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionLoad_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionLoad_Item (OSCTXT* pctxt, e2ap_RANfunctionLoad_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionLoad_Item (OSCTXT* pctxt, e2ap_RANfunctionLoad_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionLoad_Item (e2ap_RANfunctionLoad_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoad_Item (OSCTXT* pctxt, e2ap_RANfunctionLoad_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionLoad_Item (const char* name, const e2ap_RANfunctionLoad_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionLoad_Item (const char* name, e2ap_RANfunctionLoad_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionLoad_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionLoad_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionLoad_Item (OSCTXT* pctxt, const e2ap_RANfunctionLoad_Item* pSrcValue, e2ap_RANfunctionLoad_Item* pDstValue);/*****************************************/
+/*           RANfunctionLoad_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionLoad_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionLoad_ItemIEs_id_RANfunctionLoad_Item 
+ 
+} e2ap_RANfunctionLoad_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionLoad_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionLoad_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionLoad_Item * _e2apRANfunctionLoad_ItemIEs_id_RANfunctionLoad_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionLoad_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoad_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoad_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionLoad_ItemIEs (e2ap_RANfunctionLoad_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoad_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionLoad_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionLoad_ItemIEs (const char * name, e2ap_RANfunctionLoad_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionLoad_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionLoad_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionLoad_List (OSCTXT* pctxt, e2ap_RANfunctionLoad_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionLoad_List (OSCTXT* pctxt, e2ap_RANfunctionLoad_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionLoad_List (e2ap_RANfunctionLoad_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionLoad_List (OSCTXT* pctxt, e2ap_RANfunctionLoad_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionLoad_List (const char* name, e2ap_RANfunctionLoad_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionLoad_List (OSCTXT* pctxt, const e2ap_RANfunctionLoad_List* pSrcValue, e2ap_RANfunctionLoad_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionLoad_List (const char *name, const e2ap_RANfunctionLoad_List* pvalue);/*****************************************/
+/*           RICserviceLoadUpdate_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_id_RICloadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_id_E2nodeLoadMeasurementID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_id_RANfunctionLoad_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceLoadUpdate_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceLoadUpdate_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceLoadUpdate_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadUpdate_IEs_id_RICloadMeasurementID;
+        /*
+        *id: id-LoadMeasurementID
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_LoadMeasurementID * _e2apRICserviceLoadUpdate_IEs_id_E2nodeLoadMeasurementID;
+        /*
+        *id: id-RANfunctionLoad_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionLoad_List * _e2apRICserviceLoadUpdate_IEs_id_RANfunctionLoad_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceLoadUpdate_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadUpdate_protocolIEs_element (e2ap_RICserviceLoadUpdate_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate_protocolIEs_element (const char * name, e2ap_RICserviceLoadUpdate_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceLoadUpdate                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadUpdate_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadUpdate_protocolIEs (e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate_protocolIEs (const char* name, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceLoadUpdate -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceLoadUpdate {
+    e2ap_RICserviceLoadUpdate_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceLoadUpdate;
+
+EXTERN int asn1PE_e2ap_RICserviceLoadUpdate (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceLoadUpdate (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceLoadUpdate (e2ap_RICserviceLoadUpdate* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceLoadUpdate (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceLoadUpdate (const char* name, const e2ap_RICserviceLoadUpdate* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate (const char* name, e2ap_RICserviceLoadUpdate* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceLoadUpdate (OSCTXT* pctxt, const char* name, const e2ap_RICserviceLoadUpdate* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceLoadUpdate (OSCTXT* pctxt, const e2ap_RICserviceLoadUpdate* pSrcValue, e2ap_RICserviceLoadUpdate* pDstValue);/*****************************************/
+/*           RICserviceQuery_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceQuery_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceQuery_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceQuery_IEs_id_RANfunctionsAccepted,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceQuery_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceQuery_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceQuery_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceQuery_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apRICserviceQuery_IEs_id_TransactionID;
+        /*
+        *id: id-RANfunctionsID_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionsID_List * _e2apRICserviceQuery_IEs_id_RANfunctionsAccepted;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceQuery_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceQuery_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceQuery_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceQuery_protocolIEs_element (e2ap_RICserviceQuery_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceQuery_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceQuery_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceQuery_protocolIEs_element (const char * name, e2ap_RICserviceQuery_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceQuery                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceQuery_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceQuery_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceQuery_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceQuery_protocolIEs (e2ap_RICserviceQuery_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceQuery_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceQuery_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceQuery_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceQuery_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceQuery_protocolIEs (const char* name, e2ap_RICserviceQuery_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceQuery -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceQuery {
+    e2ap_RICserviceQuery_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceQuery;
+
+EXTERN int asn1PE_e2ap_RICserviceQuery (OSCTXT* pctxt, e2ap_RICserviceQuery* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceQuery (OSCTXT* pctxt, e2ap_RICserviceQuery* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceQuery (e2ap_RICserviceQuery* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceQuery (OSCTXT* pctxt, e2ap_RICserviceQuery* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceQuery (const char* name, const e2ap_RICserviceQuery* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceQuery (const char* name, e2ap_RICserviceQuery* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceQuery (OSCTXT* pctxt, const char* name, const e2ap_RICserviceQuery* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceQuery (OSCTXT* pctxt, const e2ap_RICserviceQuery* pSrcValue, e2ap_RICserviceQuery* pDstValue);/*****************************************/
+/*           RICserviceUpdate_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_id_RANfunctionsAdded,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_id_RANfunctionsModified,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_id_RANfunctionsDeleted,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceUpdate_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceUpdate_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceUpdate_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apRICserviceUpdate_IEs_id_TransactionID;
+        /*
+        *id: id-RANfunctions_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctions_List * _e2apRICserviceUpdate_IEs_id_RANfunctionsAdded;
+        /*
+        *id: id-RANfunctions_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctions_List * _e2apRICserviceUpdate_IEs_id_RANfunctionsModified;
+        /*
+        *id: id-RANfunctionsID_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionsID_List * _e2apRICserviceUpdate_IEs_id_RANfunctionsDeleted;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceUpdate_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdate_protocolIEs_element (e2ap_RICserviceUpdate_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate_protocolIEs_element (const char * name, e2ap_RICserviceUpdate_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceUpdate                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceUpdate_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdate_protocolIEs (e2ap_RICserviceUpdate_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceUpdate_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceUpdate_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate_protocolIEs (const char* name, e2ap_RICserviceUpdate_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceUpdate -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceUpdate {
+    e2ap_RICserviceUpdate_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceUpdate;
+
+EXTERN int asn1PE_e2ap_RICserviceUpdate (OSCTXT* pctxt, e2ap_RICserviceUpdate* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdate (OSCTXT* pctxt, e2ap_RICserviceUpdate* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdate (e2ap_RICserviceUpdate* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceUpdate (OSCTXT* pctxt, e2ap_RICserviceUpdate* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceUpdate (const char* name, const e2ap_RICserviceUpdate* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate (const char* name, e2ap_RICserviceUpdate* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceUpdate (OSCTXT* pctxt, const char* name, const e2ap_RICserviceUpdate* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceUpdate (OSCTXT* pctxt, const e2ap_RICserviceUpdate* pSrcValue, e2ap_RICserviceUpdate* pDstValue);/*****************************************/
+/*           RICserviceUpdateAcknowledge_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateAcknowledge_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateAcknowledge_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateAcknowledge_IEs_id_RANfunctionsAccepted,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateAcknowledge_IEs_id_RANfunctionsRejected,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateAcknowledge_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceUpdateAcknowledge_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceUpdateAcknowledge_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceUpdateAcknowledge_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apRICserviceUpdateAcknowledge_IEs_id_TransactionID;
+        /*
+        *id: id-RANfunctionsID_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionsID_List * _e2apRICserviceUpdateAcknowledge_IEs_id_RANfunctionsAccepted;
+        /*
+        *id: id-RANfunctionsIDcause_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RANfunctionsIDcause_List * _e2apRICserviceUpdateAcknowledge_IEs_id_RANfunctionsRejected;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceUpdateAcknowledge_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (e2ap_RICserviceUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (const char * name, e2ap_RICserviceUpdateAcknowledge_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceUpdateAcknowledge                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceUpdateAcknowledge_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdateAcknowledge_protocolIEs (e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge_protocolIEs (const char* name, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceUpdateAcknowledge -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceUpdateAcknowledge {
+    e2ap_RICserviceUpdateAcknowledge_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceUpdateAcknowledge;
+
+EXTERN int asn1PE_e2ap_RICserviceUpdateAcknowledge (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdateAcknowledge (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdateAcknowledge (e2ap_RICserviceUpdateAcknowledge* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceUpdateAcknowledge (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceUpdateAcknowledge (const char* name, const e2ap_RICserviceUpdateAcknowledge* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge (const char* name, e2ap_RICserviceUpdateAcknowledge* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceUpdateAcknowledge (OSCTXT* pctxt, const char* name, const e2ap_RICserviceUpdateAcknowledge* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceUpdateAcknowledge (OSCTXT* pctxt, const e2ap_RICserviceUpdateAcknowledge* pSrcValue, e2ap_RICserviceUpdateAcknowledge* pDstValue);/*****************************************/
+/*           RICserviceUpdateFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_TransactionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_TimeToWait,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICserviceUpdateFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICserviceUpdateFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICserviceUpdateFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-TransactionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_TransactionID * _e2apRICserviceUpdateFailure_IEs_id_TransactionID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICserviceUpdateFailure_IEs_id_Cause;
+        /*
+        *id: id-TimeToWait
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_TimeToWait * _e2apRICserviceUpdateFailure_IEs_id_TimeToWait;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICserviceUpdateFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICserviceUpdateFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICserviceUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdateFailure_protocolIEs_element (e2ap_RICserviceUpdateFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure_protocolIEs_element (const char * name, e2ap_RICserviceUpdateFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICserviceUpdateFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceUpdateFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdateFailure_protocolIEs (e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure_protocolIEs (const char* name, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICserviceUpdateFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICserviceUpdateFailure {
+    e2ap_RICserviceUpdateFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICserviceUpdateFailure;
+
+EXTERN int asn1PE_e2ap_RICserviceUpdateFailure (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICserviceUpdateFailure (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICserviceUpdateFailure (e2ap_RICserviceUpdateFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICserviceUpdateFailure (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICserviceUpdateFailure (const char* name, const e2ap_RICserviceUpdateFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure (const char* name, e2ap_RICserviceUpdateFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICserviceUpdateFailure (OSCTXT* pctxt, const char* name, const e2ap_RICserviceUpdateFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICserviceUpdateFailure (OSCTXT* pctxt, const e2ap_RICserviceUpdateFailure* pSrcValue, e2ap_RICserviceUpdateFailure* pDstValue);/*****************************************/
+/*           RICsubscriptionFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionFailure_IEs_id_RANfunctionID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICsubscriptionFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICsubscriptionFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionFailure_protocolIEs_element (e2ap_RICsubscriptionFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure_protocolIEs_element (const char * name, e2ap_RICsubscriptionFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionFailure_protocolIEs (e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure_protocolIEs (const char* name, e2ap_RICsubscriptionFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionFailure {
+    e2ap_RICsubscriptionFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionFailure;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionFailure (OSCTXT* pctxt, e2ap_RICsubscriptionFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionFailure (OSCTXT* pctxt, e2ap_RICsubscriptionFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionFailure (e2ap_RICsubscriptionFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionFailure (OSCTXT* pctxt, e2ap_RICsubscriptionFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionFailure (const char* name, const e2ap_RICsubscriptionFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure (const char* name, e2ap_RICsubscriptionFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionFailure (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionFailure (OSCTXT* pctxt, const e2ap_RICsubscriptionFailure* pSrcValue, e2ap_RICsubscriptionFailure* pDstValue);/*****************************************/
+/*           RICeventTriggerDefinition                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICeventTriggerDefinition;
+EXTERN int asn1PE_e2ap_RICeventTriggerDefinition (OSCTXT* pctxt, e2ap_RICeventTriggerDefinition value);
+EXTERN int asn1PD_e2ap_RICeventTriggerDefinition (OSCTXT* pctxt, e2ap_RICeventTriggerDefinition* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICeventTriggerDefinition (const char* name, e2ap_RICeventTriggerDefinition *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICeventTriggerDefinition (OSCTXT* pctxt, const char* name, const e2ap_RICeventTriggerDefinition* pvalue);
+EXTERN int asn1Copy_e2ap_RICeventTriggerDefinition (OSCTXT* pctxt, const e2ap_RICeventTriggerDefinition* pSrcValue, e2ap_RICeventTriggerDefinition* pDstValue);
+EXTERN int asn1Init_e2ap_RICeventTriggerDefinition (e2ap_RICeventTriggerDefinition* pvalue);
+EXTERN void asn1Free_e2ap_RICeventTriggerDefinition (OSCTXT* pctxt, e2ap_RICeventTriggerDefinition* pvalue);
+/******************************************************/
+/*                                                    */
+/*    RICactionType                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_report = 0,
+    e2ap_insert = 1,
+    e2ap_policy = 2
+} e2ap_RICactionType_Root;
+
+typedef OSUINT32 e2ap_RICactionType;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICactionType (OSCTXT* pctxt, e2ap_RICactionType value);
+EXTERN int asn1PD_e2ap_RICactionType (OSCTXT* pctxt, e2ap_RICactionType* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICactionType (const char* name, const e2ap_RICactionType* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICactionType (OSCTXT* pctxt, const char* name, const e2ap_RICactionType* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICactionType (const char* name,e2ap_RICactionType* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICactionType_ENUMTAB[];
+#define e2ap_RICactionType_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICactionType_ToString (OSUINT32 value);
+EXTERN int e2ap_RICactionType_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICactionType* pvalue);
+EXTERN int e2ap_RICactionType_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICactionType* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICactionType (e2ap_RICactionType* pvalue);/*****************************************/
+/*           RICactionDefinition                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICactionDefinition;
+EXTERN int asn1PE_e2ap_RICactionDefinition (OSCTXT* pctxt, e2ap_RICactionDefinition value);
+EXTERN int asn1PD_e2ap_RICactionDefinition (OSCTXT* pctxt, e2ap_RICactionDefinition* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionDefinition (const char* name, e2ap_RICactionDefinition *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionDefinition (OSCTXT* pctxt, const char* name, const e2ap_RICactionDefinition* pvalue);
+EXTERN int asn1Copy_e2ap_RICactionDefinition (OSCTXT* pctxt, const e2ap_RICactionDefinition* pSrcValue, e2ap_RICactionDefinition* pDstValue);
+EXTERN int asn1Init_e2ap_RICactionDefinition (e2ap_RICactionDefinition* pvalue);
+EXTERN void asn1Free_e2ap_RICactionDefinition (OSCTXT* pctxt, e2ap_RICactionDefinition* pvalue);
+/******************************************************/
+/*                                                    */
+/*    RICsubsequentActionType                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_continue = 0,
+    e2ap_wait = 1
+} e2ap_RICsubsequentActionType_Root;
+
+typedef OSUINT32 e2ap_RICsubsequentActionType;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICsubsequentActionType (OSCTXT* pctxt, e2ap_RICsubsequentActionType value);
+EXTERN int asn1PD_e2ap_RICsubsequentActionType (OSCTXT* pctxt, e2ap_RICsubsequentActionType* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICsubsequentActionType (const char* name, const e2ap_RICsubsequentActionType* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICsubsequentActionType (OSCTXT* pctxt, const char* name, const e2ap_RICsubsequentActionType* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICsubsequentActionType (const char* name,e2ap_RICsubsequentActionType* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICsubsequentActionType_ENUMTAB[];
+#define e2ap_RICsubsequentActionType_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICsubsequentActionType_ToString (OSUINT32 value);
+EXTERN int e2ap_RICsubsequentActionType_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICsubsequentActionType* pvalue);
+EXTERN int e2ap_RICsubsequentActionType_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICsubsequentActionType* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICsubsequentActionType (e2ap_RICsubsequentActionType* pvalue);/******************************************************/
+/*                                                    */
+/*    RICtimeToWait                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_w1ms = 0,
+    e2ap_w2ms = 1,
+    e2ap_w5ms = 2,
+    e2ap_w10ms = 3,
+    e2ap_w20ms = 4,
+    e2ap_w30ms = 5,
+    e2ap_w40ms = 6,
+    e2ap_w50ms = 7,
+    e2ap_w100ms = 8,
+    e2ap_w200ms = 9,
+    e2ap_w500ms = 10,
+    e2ap_w1s = 11,
+    e2ap_w2s = 12,
+    e2ap_w5s = 13,
+    e2ap_w10s = 14,
+    e2ap_w20s = 15,
+    e2ap_w60s = 16
+} e2ap_RICtimeToWait_Root;
+
+typedef OSUINT32 e2ap_RICtimeToWait;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_RICtimeToWait (OSCTXT* pctxt, e2ap_RICtimeToWait value);
+EXTERN int asn1PD_e2ap_RICtimeToWait (OSCTXT* pctxt, e2ap_RICtimeToWait* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_RICtimeToWait (const char* name, const e2ap_RICtimeToWait* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_RICtimeToWait (OSCTXT* pctxt, const char* name, const e2ap_RICtimeToWait* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_RICtimeToWait (const char* name,e2ap_RICtimeToWait* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_RICtimeToWait_ENUMTAB[];
+#define e2ap_RICtimeToWait_ENUMTABSIZE 17
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_RICtimeToWait_ToString (OSUINT32 value);
+EXTERN int e2ap_RICtimeToWait_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_RICtimeToWait* pvalue);
+EXTERN int e2ap_RICtimeToWait_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_RICtimeToWait* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_RICtimeToWait (e2ap_RICtimeToWait* pvalue);/*****************************************/
+/*           RICsubsequentAction                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubsequentAction {
+      //not primitive
+   e2ap_RICsubsequentActionType ricSubsequentActionType;
+      //not primitive
+   e2ap_RICtimeToWait ricTimeToWait;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubsequentAction;
+
+EXTERN int asn1PE_e2ap_RICsubsequentAction (OSCTXT* pctxt, e2ap_RICsubsequentAction* pvalue);
+EXTERN int asn1PD_e2ap_RICsubsequentAction (OSCTXT* pctxt, e2ap_RICsubsequentAction* pvalue);
+EXTERN int asn1Init_e2ap_RICsubsequentAction (e2ap_RICsubsequentAction* pvalue);
+EXTERN void asn1Free_e2ap_RICsubsequentAction (OSCTXT* pctxt, e2ap_RICsubsequentAction* pvalue);
+EXTERN void asn1Print_e2ap_RICsubsequentAction (const char* name, const e2ap_RICsubsequentAction* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubsequentAction (const char* name, e2ap_RICsubsequentAction* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubsequentAction (OSCTXT* pctxt, const char* name, const e2ap_RICsubsequentAction* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubsequentAction (OSCTXT* pctxt, const e2ap_RICsubsequentAction* pSrcValue, e2ap_RICsubsequentAction* pDstValue);/*****************************************/
+/*           RICactionExecutionOrder                */
+/*****************************************/
+//6 mau interger
+// mau 5 integer size(a...b) mau la procedurecode
+typedef OSUINT8 e2ap_RICactionExecutionOrder;
+EXTERN int asn1PE_e2ap_RICactionExecutionOrder (OSCTXT* pctxt, e2ap_RICactionExecutionOrder value);
+EXTERN int asn1PD_e2ap_RICactionExecutionOrder (OSCTXT* pctxt, e2ap_RICactionExecutionOrder* pvalue);
+EXTERN int asn1Print_e2ap_RICactionExecutionOrder (const char* name, const e2ap_RICactionExecutionOrder* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionExecutionOrder (const char* name, e2ap_RICactionExecutionOrder* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionExecutionOrder (OSCTXT* pctxt, const char* name, const e2ap_RICactionExecutionOrder* pvalue);
+EXTERN int asn1Init_e2ap_RICactionExecutionOrder (e2ap_RICactionExecutionOrder* pvalue);
+EXTERN int asn1Free_e2ap_RICactionExecutionOrder (OSCTXT* pctxt, e2ap_RICactionExecutionOrder* pvalue);
+/*****************************************/
+/*           RICaction_ToBeSetup_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ToBeSetup_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICactionType ricActionType;
+      //not primitive
+   e2ap_RICactionDefinition ricActionDefinition;
+   OSBOOL m_ricActionDefinitionPresent;      //not primitive
+   e2ap_RICsubsequentAction ricSubsequentAction;
+   OSBOOL m_ricSubsequentActionPresent;      //not primitive
+   e2ap_RICactionExecutionOrder ricActionExecutionOrder;
+   OSBOOL m_ricActionExecutionOrderPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ToBeSetup_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ToBeSetup_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeSetup_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ToBeSetup_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeSetup_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ToBeSetup_Item (e2ap_RICaction_ToBeSetup_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeSetup_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeSetup_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ToBeSetup_Item (const char* name, const e2ap_RICaction_ToBeSetup_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ToBeSetup_Item (const char* name, e2ap_RICaction_ToBeSetup_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ToBeSetup_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ToBeSetup_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ToBeSetup_Item (OSCTXT* pctxt, const e2ap_RICaction_ToBeSetup_Item* pSrcValue, e2ap_RICaction_ToBeSetup_Item* pDstValue);/*****************************************/
+/*           RICaction_ToBeSetup_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeSetup_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeSetup_ItemIEs_id_RICaction_ToBeSetup_Item 
+ 
+} e2ap_RICaction_ToBeSetup_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ToBeSetup_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ToBeSetup_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ToBeSetup_Item * _e2apRICaction_ToBeSetup_ItemIEs_id_RICaction_ToBeSetup_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ToBeSetup_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ToBeSetup_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeSetup_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ToBeSetup_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeSetup_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ToBeSetup_ItemIEs (e2ap_RICaction_ToBeSetup_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeSetup_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeSetup_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ToBeSetup_ItemIEs (const char * name, e2ap_RICaction_ToBeSetup_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ToBeSetup_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ToBeSetup_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ToBeSetup_List (OSCTXT* pctxt, e2ap_RICactions_ToBeSetup_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ToBeSetup_List (OSCTXT* pctxt, e2ap_RICactions_ToBeSetup_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ToBeSetup_List (e2ap_RICactions_ToBeSetup_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ToBeSetup_List (OSCTXT* pctxt, e2ap_RICactions_ToBeSetup_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ToBeSetup_List (const char* name, e2ap_RICactions_ToBeSetup_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ToBeSetup_List (OSCTXT* pctxt, const e2ap_RICactions_ToBeSetup_List* pSrcValue, e2ap_RICactions_ToBeSetup_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ToBeSetup_List (const char *name, const e2ap_RICactions_ToBeSetup_List* pvalue);/*****************************************/
+/*           RICsubscriptionDetails                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionDetails {
+      //not primitive
+   e2ap_RICeventTriggerDefinition ricEventTriggerDefinition;
+      //not primitive
+   e2ap_RICactions_ToBeSetup_List ricAction_ToBeSetup_List;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionDetails;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDetails (OSCTXT* pctxt, e2ap_RICsubscriptionDetails* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDetails (OSCTXT* pctxt, e2ap_RICsubscriptionDetails* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDetails (e2ap_RICsubscriptionDetails* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDetails (OSCTXT* pctxt, e2ap_RICsubscriptionDetails* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionDetails (const char* name, const e2ap_RICsubscriptionDetails* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDetails (const char* name, e2ap_RICsubscriptionDetails* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionDetails (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionDetails* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionDetails (OSCTXT* pctxt, const e2ap_RICsubscriptionDetails* pSrcValue, e2ap_RICsubscriptionDetails* pDstValue);/*****************************************/
+/*           RICsubscriptionTime                */
+/*****************************************/
+//type 8  mau la octet string size(n) mau la plmn_identity
+
+typedef struct EXTERN e2ap_RICsubscriptionTime {
+    OSUINT32 numocts;
+    OSOCTET data[8];
+} e2ap_RICsubscriptionTime;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionTime (OSCTXT* pctxt, e2ap_RICsubscriptionTime* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionTime (OSCTXT* pctxt, e2ap_RICsubscriptionTime* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionTime (const char* name, e2ap_RICsubscriptionTime* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionTime (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionTime* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionTime (OSCTXT* pctxt, const e2ap_RICsubscriptionTime* pSrcValue, e2ap_RICsubscriptionTime* pDstValue);
+EXTERN int asn1Init_e2ap_RICsubscriptionTime (e2ap_RICsubscriptionTime* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionTime (OSCTXT* pctxt, e2ap_RICsubscriptionTime* pvalue);
+/*****************************************/
+/*           RICsubscriptionRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RICsubscriptionDetails,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RICsubscriptionStartTime,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RICsubscriptionEndTime,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionRequest_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICsubscriptionDetails
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICsubscriptionDetails * _e2apRICsubscriptionRequest_IEs_id_RICsubscriptionDetails;
+        /*
+        *id: id-RICsubscriptionTime
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICsubscriptionTime * _e2apRICsubscriptionRequest_IEs_id_RICsubscriptionStartTime;
+        /*
+        *id: id-RICsubscriptionTime
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICsubscriptionTime * _e2apRICsubscriptionRequest_IEs_id_RICsubscriptionEndTime;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionRequest_protocolIEs_element (e2ap_RICsubscriptionRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest_protocolIEs_element (const char * name, e2ap_RICsubscriptionRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionRequest_protocolIEs (e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest_protocolIEs (const char* name, e2ap_RICsubscriptionRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionRequest {
+    e2ap_RICsubscriptionRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionRequest;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionRequest (OSCTXT* pctxt, e2ap_RICsubscriptionRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionRequest (OSCTXT* pctxt, e2ap_RICsubscriptionRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionRequest (e2ap_RICsubscriptionRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionRequest (OSCTXT* pctxt, e2ap_RICsubscriptionRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionRequest (const char* name, const e2ap_RICsubscriptionRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest (const char* name, e2ap_RICsubscriptionRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionRequest (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionRequest (OSCTXT* pctxt, const e2ap_RICsubscriptionRequest* pSrcValue, e2ap_RICsubscriptionRequest* pDstValue);/*****************************************/
+/*           RICaction_Admitted_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_Admitted_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_Admitted_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_Admitted_Item (OSCTXT* pctxt, e2ap_RICaction_Admitted_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_Admitted_Item (OSCTXT* pctxt, e2ap_RICaction_Admitted_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_Admitted_Item (e2ap_RICaction_Admitted_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_Admitted_Item (OSCTXT* pctxt, e2ap_RICaction_Admitted_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_Admitted_Item (const char* name, const e2ap_RICaction_Admitted_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_Admitted_Item (const char* name, e2ap_RICaction_Admitted_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_Admitted_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_Admitted_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_Admitted_Item (OSCTXT* pctxt, const e2ap_RICaction_Admitted_Item* pSrcValue, e2ap_RICaction_Admitted_Item* pDstValue);/*****************************************/
+/*           RICaction_Admitted_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_Admitted_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_Admitted_ItemIEs_id_RICaction_Admitted_Item 
+ 
+} e2ap_RICaction_Admitted_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_Admitted_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_Admitted_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_Admitted_Item * _e2apRICaction_Admitted_ItemIEs_id_RICaction_Admitted_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_Admitted_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_Admitted_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_Admitted_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_Admitted_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_Admitted_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_Admitted_ItemIEs (e2ap_RICaction_Admitted_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_Admitted_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_Admitted_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_Admitted_ItemIEs (const char * name, e2ap_RICaction_Admitted_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICaction_Admitted_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICaction_Admitted_List;
+
+EXTERN int asn1PE_e2ap_RICaction_Admitted_List (OSCTXT* pctxt, e2ap_RICaction_Admitted_List* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_Admitted_List (OSCTXT* pctxt, e2ap_RICaction_Admitted_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICaction_Admitted_List (e2ap_RICaction_Admitted_List* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_Admitted_List (OSCTXT* pctxt, e2ap_RICaction_Admitted_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_Admitted_List (const char* name, e2ap_RICaction_Admitted_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICaction_Admitted_List (OSCTXT* pctxt, const e2ap_RICaction_Admitted_List* pSrcValue, e2ap_RICaction_Admitted_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICaction_Admitted_List (const char *name, const e2ap_RICaction_Admitted_List* pvalue);/*****************************************/
+/*           RICaction_NotAdmitted_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_NotAdmitted_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_NotAdmitted_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_NotAdmitted_Item (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_NotAdmitted_Item (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_NotAdmitted_Item (e2ap_RICaction_NotAdmitted_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_NotAdmitted_Item (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_NotAdmitted_Item (const char* name, const e2ap_RICaction_NotAdmitted_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_NotAdmitted_Item (const char* name, e2ap_RICaction_NotAdmitted_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_NotAdmitted_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_NotAdmitted_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_NotAdmitted_Item (OSCTXT* pctxt, const e2ap_RICaction_NotAdmitted_Item* pSrcValue, e2ap_RICaction_NotAdmitted_Item* pDstValue);/*****************************************/
+/*           RICaction_NotAdmitted_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_NotAdmitted_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_NotAdmitted_ItemIEs_id_RICaction_NotAdmitted_Item 
+ 
+} e2ap_RICaction_NotAdmitted_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_NotAdmitted_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_NotAdmitted_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_NotAdmitted_Item * _e2apRICaction_NotAdmitted_ItemIEs_id_RICaction_NotAdmitted_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_NotAdmitted_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_NotAdmitted_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_NotAdmitted_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_NotAdmitted_ItemIEs (e2ap_RICaction_NotAdmitted_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_NotAdmitted_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_NotAdmitted_ItemIEs (const char * name, e2ap_RICaction_NotAdmitted_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICaction_NotAdmitted_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICaction_NotAdmitted_List;
+
+EXTERN int asn1PE_e2ap_RICaction_NotAdmitted_List (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_List* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_NotAdmitted_List (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICaction_NotAdmitted_List (e2ap_RICaction_NotAdmitted_List* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_NotAdmitted_List (OSCTXT* pctxt, e2ap_RICaction_NotAdmitted_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_NotAdmitted_List (const char* name, e2ap_RICaction_NotAdmitted_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICaction_NotAdmitted_List (OSCTXT* pctxt, const e2ap_RICaction_NotAdmitted_List* pSrcValue, e2ap_RICaction_NotAdmitted_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICaction_NotAdmitted_List (const char *name, const e2ap_RICaction_NotAdmitted_List* pvalue);/*****************************************/
+/*           RICsubscriptionResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_id_RICactions_Admitted,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_id_RICactions_NotAdmitted,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionResponse_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICaction_Admitted_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICaction_Admitted_List * _e2apRICsubscriptionResponse_IEs_id_RICactions_Admitted;
+        /*
+        *id: id-RICaction_NotAdmitted_List
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICaction_NotAdmitted_List * _e2apRICsubscriptionResponse_IEs_id_RICactions_NotAdmitted;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionResponse_protocolIEs_element (e2ap_RICsubscriptionResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse_protocolIEs_element (const char * name, e2ap_RICsubscriptionResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionResponse_protocolIEs (e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse_protocolIEs (const char* name, e2ap_RICsubscriptionResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionResponse {
+    e2ap_RICsubscriptionResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionResponse;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionResponse (OSCTXT* pctxt, e2ap_RICsubscriptionResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionResponse (OSCTXT* pctxt, e2ap_RICsubscriptionResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionResponse (e2ap_RICsubscriptionResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionResponse (OSCTXT* pctxt, e2ap_RICsubscriptionResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionResponse (const char* name, const e2ap_RICsubscriptionResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse (const char* name, e2ap_RICsubscriptionResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionResponse (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionResponse (OSCTXT* pctxt, const e2ap_RICsubscriptionResponse* pSrcValue, e2ap_RICsubscriptionResponse* pDstValue);/*****************************************/
+/*           RICsubscriptionAuditFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionAuditFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionAuditFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionAuditFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionAuditFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICsubscriptionAuditFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICsubscriptionAuditFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionAuditFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (e2ap_RICsubscriptionAuditFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (const char * name, e2ap_RICsubscriptionAuditFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionAuditFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionAuditFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditFailure_protocolIEs (e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure_protocolIEs (const char* name, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionAuditFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionAuditFailure {
+    e2ap_RICsubscriptionAuditFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionAuditFailure;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditFailure (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditFailure (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditFailure (e2ap_RICsubscriptionAuditFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditFailure (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditFailure (const char* name, const e2ap_RICsubscriptionAuditFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure (const char* name, e2ap_RICsubscriptionAuditFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionAuditFailure (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionAuditFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditFailure (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditFailure* pSrcValue, e2ap_RICsubscriptionAuditFailure* pDstValue);/******************************************************/
+/*                                                    */
+/*    ListedRecordsOnly                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_true = 0
+} e2ap_ListedRecordsOnly_Root;
+
+typedef OSUINT32 e2ap_ListedRecordsOnly;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_ListedRecordsOnly (OSCTXT* pctxt, e2ap_ListedRecordsOnly value);
+EXTERN int asn1PD_e2ap_ListedRecordsOnly (OSCTXT* pctxt, e2ap_ListedRecordsOnly* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_ListedRecordsOnly (const char* name, const e2ap_ListedRecordsOnly* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_ListedRecordsOnly (OSCTXT* pctxt, const char* name, const e2ap_ListedRecordsOnly* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_ListedRecordsOnly (const char* name,e2ap_ListedRecordsOnly* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_ListedRecordsOnly_ENUMTAB[];
+#define e2ap_ListedRecordsOnly_ENUMTABSIZE 1
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_ListedRecordsOnly_ToString (OSUINT32 value);
+EXTERN int e2ap_ListedRecordsOnly_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_ListedRecordsOnly* pvalue);
+EXTERN int e2ap_ListedRecordsOnly_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_ListedRecordsOnly* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_ListedRecordsOnly (e2ap_ListedRecordsOnly* pvalue);/*****************************************/
+/*           RICsubscriptionAuditFlag                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionAuditFlag {
+      //not primitive
+   e2ap_ListedRecordsOnly listedRecordsOnly;
+   OSBOOL m_listedRecordsOnlyPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionAuditFlag;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditFlag (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFlag* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditFlag (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFlag* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditFlag (e2ap_RICsubscriptionAuditFlag* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditFlag (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFlag* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditFlag (const char* name, const e2ap_RICsubscriptionAuditFlag* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFlag (const char* name, e2ap_RICsubscriptionAuditFlag* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionAuditFlag (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionAuditFlag* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditFlag (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditFlag* pSrcValue, e2ap_RICsubscriptionAuditFlag* pDstValue);/*****************************************/
+/*           RICsubscriptionAudit_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionAudit_Item {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionAudit_Item;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAudit_Item (OSCTXT* pctxt, e2ap_RICsubscriptionAudit_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAudit_Item (OSCTXT* pctxt, e2ap_RICsubscriptionAudit_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAudit_Item (e2ap_RICsubscriptionAudit_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAudit_Item (OSCTXT* pctxt, e2ap_RICsubscriptionAudit_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAudit_Item (const char* name, const e2ap_RICsubscriptionAudit_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAudit_Item (const char* name, e2ap_RICsubscriptionAudit_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionAudit_Item (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionAudit_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAudit_Item (OSCTXT* pctxt, const e2ap_RICsubscriptionAudit_Item* pSrcValue, e2ap_RICsubscriptionAudit_Item* pDstValue);/*****************************************/
+/*           RICsubscriptionAudit_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAudit_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAudit_ItemIEs_id_RICsubscriptionAudit_Item 
+ 
+} e2ap_RICsubscriptionAudit_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscriptionAudit_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionAudit_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscriptionAudit_Item * _e2apRICsubscriptionAudit_ItemIEs_id_RICsubscriptionAudit_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionAudit_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscriptionAudit_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAudit_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscriptionAudit_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAudit_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionAudit_ItemIEs (e2ap_RICsubscriptionAudit_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAudit_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAudit_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscriptionAudit_ItemIEs (const char * name, e2ap_RICsubscriptionAudit_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscriptionAuditList                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionAuditList;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditList (OSCTXT* pctxt, e2ap_RICsubscriptionAuditList* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditList (OSCTXT* pctxt, e2ap_RICsubscriptionAuditList* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionAuditList (e2ap_RICsubscriptionAuditList* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditList (OSCTXT* pctxt, e2ap_RICsubscriptionAuditList* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditList (const char* name, e2ap_RICsubscriptionAuditList* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditList (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditList* pSrcValue, e2ap_RICsubscriptionAuditList* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditList (const char *name, const e2ap_RICsubscriptionAuditList* pvalue);/*****************************************/
+/*           RICsubscriptionAuditRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditRequest_IEs_id_RICsubscriptionAuditFlag,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditRequest_IEs_id_RICsubscriptionAuditList,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionAuditRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionAuditRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionAuditRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionAuditRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RICsubscriptionAuditFlag
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICsubscriptionAuditFlag * _e2apRICsubscriptionAuditRequest_IEs_id_RICsubscriptionAuditFlag;
+        /*
+        *id: id-RICsubscriptionAuditList
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICsubscriptionAuditList * _e2apRICsubscriptionAuditRequest_IEs_id_RICsubscriptionAuditList;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionAuditRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (e2ap_RICsubscriptionAuditRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (const char * name, e2ap_RICsubscriptionAuditRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionAuditRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionAuditRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditRequest_protocolIEs (e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest_protocolIEs (const char* name, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionAuditRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionAuditRequest {
+    e2ap_RICsubscriptionAuditRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionAuditRequest;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditRequest (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditRequest (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditRequest (e2ap_RICsubscriptionAuditRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditRequest (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditRequest (const char* name, const e2ap_RICsubscriptionAuditRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest (const char* name, e2ap_RICsubscriptionAuditRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionAuditRequest (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionAuditRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditRequest (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditRequest* pSrcValue, e2ap_RICsubscriptionAuditRequest* pDstValue);/*****************************************/
+/*           RICsubscriptionAuditAction_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionAuditAction_Item {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RICaction_Admitted_List ricAction_Admitted_List;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionAuditAction_Item;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditAction_Item (OSCTXT* pctxt, e2ap_RICsubscriptionAuditAction_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditAction_Item (OSCTXT* pctxt, e2ap_RICsubscriptionAuditAction_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditAction_Item (e2ap_RICsubscriptionAuditAction_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditAction_Item (OSCTXT* pctxt, e2ap_RICsubscriptionAuditAction_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditAction_Item (const char* name, const e2ap_RICsubscriptionAuditAction_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditAction_Item (const char* name, e2ap_RICsubscriptionAuditAction_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionAuditAction_Item (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionAuditAction_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditAction_Item (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditAction_Item* pSrcValue, e2ap_RICsubscriptionAuditAction_Item* pDstValue);/*****************************************/
+/*           RICsubscriptionAuditAction_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditAction_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditAction_ItemIEs_id_RICsubscriptionAuditAction_Item 
+ 
+} e2ap_RICsubscriptionAuditAction_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscriptionAuditAction_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionAuditAction_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscriptionAuditAction_Item * _e2apRICsubscriptionAuditAction_ItemIEs_id_RICsubscriptionAuditAction_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionAuditAction_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscriptionAuditAction_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditAction_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscriptionAuditAction_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditAction_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionAuditAction_ItemIEs (e2ap_RICsubscriptionAuditAction_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditAction_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditAction_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscriptionAuditAction_ItemIEs (const char * name, e2ap_RICsubscriptionAuditAction_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscriptionAuditActionList                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionAuditActionList;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditActionList (OSCTXT* pctxt, e2ap_RICsubscriptionAuditActionList* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditActionList (OSCTXT* pctxt, e2ap_RICsubscriptionAuditActionList* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionAuditActionList (e2ap_RICsubscriptionAuditActionList* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditActionList (OSCTXT* pctxt, e2ap_RICsubscriptionAuditActionList* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditActionList (const char* name, e2ap_RICsubscriptionAuditActionList* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditActionList (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditActionList* pSrcValue, e2ap_RICsubscriptionAuditActionList* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditActionList (const char *name, const e2ap_RICsubscriptionAuditActionList* pvalue);/*****************************************/
+/*           RICsubscriptionAuditResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditConfirmedList,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditUnkownList,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditMissingList,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionAuditResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionAuditResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionAuditResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionAuditResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionAuditResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RICsubscriptionAuditActionList
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICsubscriptionAuditActionList * _e2apRICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditConfirmedList;
+        /*
+        *id: id-RICsubscriptionAuditList
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICsubscriptionAuditList * _e2apRICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditUnkownList;
+        /*
+        *id: id-RICsubscriptionAuditActionList
+        *criticality: reject
+        *presence: optional
+        */
+         e2ap_RICsubscriptionAuditActionList * _e2apRICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditMissingList;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionAuditResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (e2ap_RICsubscriptionAuditResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (const char * name, e2ap_RICsubscriptionAuditResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionAuditResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionAuditResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditResponse_protocolIEs (e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse_protocolIEs (const char* name, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionAuditResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionAuditResponse {
+    e2ap_RICsubscriptionAuditResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionAuditResponse;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionAuditResponse (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionAuditResponse (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionAuditResponse (e2ap_RICsubscriptionAuditResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionAuditResponse (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionAuditResponse (const char* name, const e2ap_RICsubscriptionAuditResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse (const char* name, e2ap_RICsubscriptionAuditResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionAuditResponse (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionAuditResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionAuditResponse (OSCTXT* pctxt, const e2ap_RICsubscriptionAuditResponse* pSrcValue, e2ap_RICsubscriptionAuditResponse* pDstValue);/*****************************************/
+/*           RICsubscriptionDeleteFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionDeleteFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionDeleteFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionDeleteFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionDeleteFailure_IEs_id_RANfunctionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICsubscriptionDeleteFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICsubscriptionDeleteFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionDeleteFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (e2ap_RICsubscriptionDeleteFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (const char * name, e2ap_RICsubscriptionDeleteFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionDeleteFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteFailure_protocolIEs (e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure_protocolIEs (const char* name, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionDeleteFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionDeleteFailure {
+    e2ap_RICsubscriptionDeleteFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionDeleteFailure;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteFailure (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteFailure (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteFailure (e2ap_RICsubscriptionDeleteFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteFailure (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionDeleteFailure (const char* name, const e2ap_RICsubscriptionDeleteFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure (const char* name, e2ap_RICsubscriptionDeleteFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionDeleteFailure (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionDeleteFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionDeleteFailure (OSCTXT* pctxt, const e2ap_RICsubscriptionDeleteFailure* pSrcValue, e2ap_RICsubscriptionDeleteFailure* pDstValue);/*****************************************/
+/*           RICsubscriptionDeleteRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequest_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionDeleteRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionDeleteRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionDeleteRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionDeleteRequest_IEs_id_RANfunctionID;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionDeleteRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (e2ap_RICsubscriptionDeleteRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (const char * name, e2ap_RICsubscriptionDeleteRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionDeleteRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequest_protocolIEs (e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest_protocolIEs (const char* name, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionDeleteRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionDeleteRequest {
+    e2ap_RICsubscriptionDeleteRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionDeleteRequest;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequest (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequest (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequest (e2ap_RICsubscriptionDeleteRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteRequest (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionDeleteRequest (const char* name, const e2ap_RICsubscriptionDeleteRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest (const char* name, e2ap_RICsubscriptionDeleteRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionDeleteRequest (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionDeleteRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionDeleteRequest (OSCTXT* pctxt, const e2ap_RICsubscriptionDeleteRequest* pSrcValue, e2ap_RICsubscriptionDeleteRequest* pDstValue);/*****************************************/
+/*           RICsubscriptionDeleteResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteResponse_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionDeleteResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionDeleteResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionDeleteResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionDeleteResponse_IEs_id_RANfunctionID;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionDeleteResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (e2ap_RICsubscriptionDeleteResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (const char * name, e2ap_RICsubscriptionDeleteResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionDeleteResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteResponse_protocolIEs (e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse_protocolIEs (const char* name, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionDeleteResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionDeleteResponse {
+    e2ap_RICsubscriptionDeleteResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionDeleteResponse;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteResponse (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteResponse (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteResponse (e2ap_RICsubscriptionDeleteResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteResponse (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionDeleteResponse (const char* name, const e2ap_RICsubscriptionDeleteResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse (const char* name, e2ap_RICsubscriptionDeleteResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionDeleteResponse (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionDeleteResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionDeleteResponse (OSCTXT* pctxt, const e2ap_RICsubscriptionDeleteResponse* pSrcValue, e2ap_RICsubscriptionDeleteResponse* pDstValue);/*****************************************/
+/*           RICsubscription_withCause_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscription_withCause_Item {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscription_withCause_Item;
+
+EXTERN int asn1PE_e2ap_RICsubscription_withCause_Item (OSCTXT* pctxt, e2ap_RICsubscription_withCause_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscription_withCause_Item (OSCTXT* pctxt, e2ap_RICsubscription_withCause_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscription_withCause_Item (e2ap_RICsubscription_withCause_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscription_withCause_Item (OSCTXT* pctxt, e2ap_RICsubscription_withCause_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscription_withCause_Item (const char* name, const e2ap_RICsubscription_withCause_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscription_withCause_Item (const char* name, e2ap_RICsubscription_withCause_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscription_withCause_Item (OSCTXT* pctxt, const char* name, const e2ap_RICsubscription_withCause_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscription_withCause_Item (OSCTXT* pctxt, const e2ap_RICsubscription_withCause_Item* pSrcValue, e2ap_RICsubscription_withCause_Item* pDstValue);/*****************************************/
+/*           RICsubscription_withCause_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscription_withCause_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscription_withCause_ItemIEs_id_RICsubscription_withCause_Item 
+ 
+} e2ap_RICsubscription_withCause_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscription_withCause_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscription_withCause_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscription_withCause_Item * _e2apRICsubscription_withCause_ItemIEs_id_RICsubscription_withCause_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscription_withCause_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscription_withCause_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscription_withCause_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscription_withCause_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscription_withCause_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscription_withCause_ItemIEs (e2ap_RICsubscription_withCause_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscription_withCause_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscription_withCause_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscription_withCause_ItemIEs (const char * name, e2ap_RICsubscription_withCause_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscription_List_withCause                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscription_List_withCause;
+
+EXTERN int asn1PE_e2ap_RICsubscription_List_withCause (OSCTXT* pctxt, e2ap_RICsubscription_List_withCause* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscription_List_withCause (OSCTXT* pctxt, e2ap_RICsubscription_List_withCause* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscription_List_withCause (e2ap_RICsubscription_List_withCause* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscription_List_withCause (OSCTXT* pctxt, e2ap_RICsubscription_List_withCause* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscription_List_withCause (const char* name, e2ap_RICsubscription_List_withCause* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscription_List_withCause (OSCTXT* pctxt, const e2ap_RICsubscription_List_withCause* pSrcValue, e2ap_RICsubscription_List_withCause* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscription_List_withCause (const char *name, const e2ap_RICsubscription_List_withCause* pvalue);/*****************************************/
+/*           RICsubscriptionDeleteRequired_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequired_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequired_IEs_id_RICsubscriptionToBeRemoved,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequired_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionDeleteRequired_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionDeleteRequired_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionDeleteRequired_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICsubscription_List_withCause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_RICsubscription_List_withCause * _e2apRICsubscriptionDeleteRequired_IEs_id_RICsubscriptionToBeRemoved;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionDeleteRequired_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (e2ap_RICsubscriptionDeleteRequired_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (const char * name, e2ap_RICsubscriptionDeleteRequired_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionDeleteRequired                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteRequired_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequired_protocolIEs (e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired_protocolIEs (const char* name, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionDeleteRequired -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionDeleteRequired {
+    e2ap_RICsubscriptionDeleteRequired_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionDeleteRequired;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequired (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequired (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequired (e2ap_RICsubscriptionDeleteRequired* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionDeleteRequired (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionDeleteRequired (const char* name, const e2ap_RICsubscriptionDeleteRequired* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired (const char* name, e2ap_RICsubscriptionDeleteRequired* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionDeleteRequired (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionDeleteRequired* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionDeleteRequired (OSCTXT* pctxt, const e2ap_RICsubscriptionDeleteRequired* pSrcValue, e2ap_RICsubscriptionDeleteRequired* pDstValue);/*****************************************/
+/*           RICaction_ToBeRemovedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ToBeRemovedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ToBeRemovedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ToBeRemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ToBeRemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ToBeRemovedForModification_Item (e2ap_RICaction_ToBeRemovedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeRemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeRemovedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ToBeRemovedForModification_Item (const char* name, const e2ap_RICaction_ToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ToBeRemovedForModification_Item (const char* name, e2ap_RICaction_ToBeRemovedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ToBeRemovedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ToBeRemovedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_ToBeRemovedForModification_Item* pSrcValue, e2ap_RICaction_ToBeRemovedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_ToBeRemovedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeRemovedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeRemovedForModification_ItemIEs_id_RICaction_ToBeRemovedForModification_Item 
+ 
+} e2ap_RICaction_ToBeRemovedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ToBeRemovedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ToBeRemovedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ToBeRemovedForModification_Item * _e2apRICaction_ToBeRemovedForModification_ItemIEs_id_RICaction_ToBeRemovedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ToBeRemovedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ToBeRemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ToBeRemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ToBeRemovedForModification_ItemIEs (e2ap_RICaction_ToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeRemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ToBeRemovedForModification_ItemIEs (const char * name, e2ap_RICaction_ToBeRemovedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ToBeRemovedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ToBeRemovedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ToBeRemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeRemovedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ToBeRemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeRemovedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ToBeRemovedForModification_List (e2ap_RICactions_ToBeRemovedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ToBeRemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeRemovedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ToBeRemovedForModification_List (const char* name, e2ap_RICactions_ToBeRemovedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ToBeRemovedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_ToBeRemovedForModification_List* pSrcValue, e2ap_RICactions_ToBeRemovedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ToBeRemovedForModification_List (const char *name, const e2ap_RICactions_ToBeRemovedForModification_List* pvalue);/*****************************************/
+/*           RICaction_ToBeModifiedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ToBeModifiedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICactionDefinition ricActionDefinition;
+   OSBOOL m_ricActionDefinitionPresent;      //not primitive
+   e2ap_RICactionExecutionOrder ricActionExecutionOrder;
+   OSBOOL m_ricActionExecutionOrderPresent;      //not primitive
+   e2ap_RICsubsequentAction ricSubsequentAction;
+   OSBOOL m_ricSubsequentActionPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ToBeModifiedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ToBeModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ToBeModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ToBeModifiedForModification_Item (e2ap_RICaction_ToBeModifiedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeModifiedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ToBeModifiedForModification_Item (const char* name, const e2ap_RICaction_ToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ToBeModifiedForModification_Item (const char* name, e2ap_RICaction_ToBeModifiedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ToBeModifiedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ToBeModifiedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_ToBeModifiedForModification_Item* pSrcValue, e2ap_RICaction_ToBeModifiedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_ToBeModifiedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeModifiedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeModifiedForModification_ItemIEs_id_RICaction_ToBeModifiedForModification_Item 
+ 
+} e2ap_RICaction_ToBeModifiedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ToBeModifiedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ToBeModifiedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ToBeModifiedForModification_Item * _e2apRICaction_ToBeModifiedForModification_ItemIEs_id_RICaction_ToBeModifiedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ToBeModifiedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ToBeModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ToBeModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ToBeModifiedForModification_ItemIEs (e2ap_RICaction_ToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ToBeModifiedForModification_ItemIEs (const char * name, e2ap_RICaction_ToBeModifiedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ToBeModifiedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ToBeModifiedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ToBeModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeModifiedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ToBeModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeModifiedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ToBeModifiedForModification_List (e2ap_RICactions_ToBeModifiedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ToBeModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeModifiedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ToBeModifiedForModification_List (const char* name, e2ap_RICactions_ToBeModifiedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ToBeModifiedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_ToBeModifiedForModification_List* pSrcValue, e2ap_RICactions_ToBeModifiedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ToBeModifiedForModification_List (const char *name, const e2ap_RICactions_ToBeModifiedForModification_List* pvalue);/*****************************************/
+/*           RICaction_ToBeAddedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ToBeAddedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICactionType ricActionType;
+      //not primitive
+   e2ap_RICactionDefinition ricActionDefinition;
+      //not primitive
+   e2ap_RICactionExecutionOrder ricActionExecutionOrder;
+      //not primitive
+   e2ap_RICsubsequentAction ricSubsequentAction;
+   OSBOOL m_ricSubsequentActionPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ToBeAddedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ToBeAddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeAddedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ToBeAddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeAddedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ToBeAddedForModification_Item (e2ap_RICaction_ToBeAddedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeAddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ToBeAddedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ToBeAddedForModification_Item (const char* name, const e2ap_RICaction_ToBeAddedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ToBeAddedForModification_Item (const char* name, e2ap_RICaction_ToBeAddedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ToBeAddedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ToBeAddedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ToBeAddedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_ToBeAddedForModification_Item* pSrcValue, e2ap_RICaction_ToBeAddedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_ToBeAddedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeAddedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ToBeAddedForModification_ItemIEs_id_RICaction_ToBeAddedForModification_Item 
+ 
+} e2ap_RICaction_ToBeAddedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ToBeAddedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ToBeAddedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ToBeAddedForModification_Item * _e2apRICaction_ToBeAddedForModification_ItemIEs_id_RICaction_ToBeAddedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ToBeAddedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ToBeAddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeAddedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ToBeAddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeAddedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ToBeAddedForModification_ItemIEs (e2ap_RICaction_ToBeAddedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ToBeAddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ToBeAddedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ToBeAddedForModification_ItemIEs (const char * name, e2ap_RICaction_ToBeAddedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ToBeAddedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ToBeAddedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ToBeAddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeAddedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ToBeAddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeAddedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ToBeAddedForModification_List (e2ap_RICactions_ToBeAddedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ToBeAddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ToBeAddedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ToBeAddedForModification_List (const char* name, e2ap_RICactions_ToBeAddedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ToBeAddedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_ToBeAddedForModification_List* pSrcValue, e2ap_RICactions_ToBeAddedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ToBeAddedForModification_List (const char *name, const e2ap_RICactions_ToBeAddedForModification_List* pvalue);/*****************************************/
+/*           RICsubscriptionModificationRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RICeventTriggerDefinitionToBeModified,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RICactionsToBeRemovedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RICactionsToBeModifiedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RICactionsToBeAddedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionModificationRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionModificationRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionModificationRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionModificationRequest_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICeventTriggerDefinition
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICeventTriggerDefinition * _e2apRICsubscriptionModificationRequest_IEs_id_RICeventTriggerDefinitionToBeModified;
+        /*
+        *id: id-RICactions_ToBeRemovedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_ToBeRemovedForModification_List * _e2apRICsubscriptionModificationRequest_IEs_id_RICactionsToBeRemovedForModification_List;
+        /*
+        *id: id-RICactions_ToBeModifiedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_ToBeModifiedForModification_List * _e2apRICsubscriptionModificationRequest_IEs_id_RICactionsToBeModifiedForModification_List;
+        /*
+        *id: id-RICactions_ToBeAddedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_ToBeAddedForModification_List * _e2apRICsubscriptionModificationRequest_IEs_id_RICactionsToBeAddedForModification_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionModificationRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequest_protocolIEs_element (e2ap_RICsubscriptionModificationRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest_protocolIEs_element (const char * name, e2ap_RICsubscriptionModificationRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionModificationRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequest_protocolIEs (e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest_protocolIEs (const char* name, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionModificationRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionModificationRequest {
+    e2ap_RICsubscriptionModificationRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionModificationRequest;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequest (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequest (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequest (e2ap_RICsubscriptionModificationRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationRequest (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionModificationRequest (const char* name, const e2ap_RICsubscriptionModificationRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest (const char* name, e2ap_RICsubscriptionModificationRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionModificationRequest (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionModificationRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionModificationRequest (OSCTXT* pctxt, const e2ap_RICsubscriptionModificationRequest* pSrcValue, e2ap_RICsubscriptionModificationRequest* pDstValue);/*****************************************/
+/*           RICaction_RemovedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_RemovedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_RemovedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_RemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_RemovedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_RemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_RemovedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_RemovedForModification_Item (e2ap_RICaction_RemovedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_RemovedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_RemovedForModification_Item (const char* name, const e2ap_RICaction_RemovedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_RemovedForModification_Item (const char* name, e2ap_RICaction_RemovedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_RemovedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_RemovedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_RemovedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_RemovedForModification_Item* pSrcValue, e2ap_RICaction_RemovedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_RemovedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_RemovedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_RemovedForModification_ItemIEs_id_RICaction_RemovedForModification_Item 
+ 
+} e2ap_RICaction_RemovedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_RemovedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_RemovedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_RemovedForModification_Item * _e2apRICaction_RemovedForModification_ItemIEs_id_RICaction_RemovedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_RemovedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_RemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RemovedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_RemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RemovedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_RemovedForModification_ItemIEs (e2ap_RICaction_RemovedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RemovedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_RemovedForModification_ItemIEs (const char * name, e2ap_RICaction_RemovedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_RemovedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_RemovedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_RemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_RemovedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_RemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_RemovedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_RemovedForModification_List (e2ap_RICactions_RemovedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_RemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_RemovedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_RemovedForModification_List (const char* name, e2ap_RICactions_RemovedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_RemovedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_RemovedForModification_List* pSrcValue, e2ap_RICactions_RemovedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_RemovedForModification_List (const char *name, const e2ap_RICactions_RemovedForModification_List* pvalue);/*****************************************/
+/*           RICaction_FailedToBeRemovedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_FailedToBeRemovedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_FailedToBeRemovedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_FailedToBeRemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_FailedToBeRemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_FailedToBeRemovedForModification_Item (e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_FailedToBeRemovedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_FailedToBeRemovedForModification_Item (const char* name, const e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_FailedToBeRemovedForModification_Item (const char* name, e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_FailedToBeRemovedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_FailedToBeRemovedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_FailedToBeRemovedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_FailedToBeRemovedForModification_Item* pSrcValue, e2ap_RICaction_FailedToBeRemovedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_FailedToBeRemovedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs_id_RICaction_FailedToBeRemovedForModification_Item 
+ 
+} e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_FailedToBeRemovedForModification_Item * _e2apRICaction_FailedToBeRemovedForModification_ItemIEs_id_RICaction_FailedToBeRemovedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs (e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs (const char * name, e2ap_RICaction_FailedToBeRemovedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_FailedToBeRemovedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_FailedToBeRemovedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_FailedToBeRemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeRemovedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_FailedToBeRemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeRemovedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_FailedToBeRemovedForModification_List (e2ap_RICactions_FailedToBeRemovedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_FailedToBeRemovedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeRemovedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_FailedToBeRemovedForModification_List (const char* name, e2ap_RICactions_FailedToBeRemovedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_FailedToBeRemovedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_FailedToBeRemovedForModification_List* pSrcValue, e2ap_RICactions_FailedToBeRemovedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_FailedToBeRemovedForModification_List (const char *name, const e2ap_RICactions_FailedToBeRemovedForModification_List* pvalue);/*****************************************/
+/*           RICaction_ModifiedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ModifiedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ModifiedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ModifiedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ModifiedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ModifiedForModification_Item (e2ap_RICaction_ModifiedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ModifiedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ModifiedForModification_Item (const char* name, const e2ap_RICaction_ModifiedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ModifiedForModification_Item (const char* name, e2ap_RICaction_ModifiedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ModifiedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ModifiedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ModifiedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_ModifiedForModification_Item* pSrcValue, e2ap_RICaction_ModifiedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_ModifiedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ModifiedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ModifiedForModification_ItemIEs_id_RICaction_ModifiedForModification_Item 
+ 
+} e2ap_RICaction_ModifiedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ModifiedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ModifiedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ModifiedForModification_Item * _e2apRICaction_ModifiedForModification_ItemIEs_id_RICaction_ModifiedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ModifiedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ModifiedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ModifiedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ModifiedForModification_ItemIEs (e2ap_RICaction_ModifiedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ModifiedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ModifiedForModification_ItemIEs (const char * name, e2ap_RICaction_ModifiedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ModifiedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ModifiedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ModifiedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ModifiedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ModifiedForModification_List (e2ap_RICactions_ModifiedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ModifiedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ModifiedForModification_List (const char* name, e2ap_RICactions_ModifiedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ModifiedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_ModifiedForModification_List* pSrcValue, e2ap_RICactions_ModifiedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ModifiedForModification_List (const char *name, const e2ap_RICactions_ModifiedForModification_List* pvalue);/*****************************************/
+/*           RICaction_FailedToBeModifiedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_FailedToBeModifiedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_FailedToBeModifiedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_FailedToBeModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_FailedToBeModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_FailedToBeModifiedForModification_Item (e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_FailedToBeModifiedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_FailedToBeModifiedForModification_Item (const char* name, const e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_FailedToBeModifiedForModification_Item (const char* name, e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_FailedToBeModifiedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_FailedToBeModifiedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_FailedToBeModifiedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_FailedToBeModifiedForModification_Item* pSrcValue, e2ap_RICaction_FailedToBeModifiedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_FailedToBeModifiedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs_id_RICaction_FailedToBeModifiedForModification_Item 
+ 
+} e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_FailedToBeModifiedForModification_Item * _e2apRICaction_FailedToBeModifiedForModification_ItemIEs_id_RICaction_FailedToBeModifiedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs (e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs (const char * name, e2ap_RICaction_FailedToBeModifiedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_FailedToBeModifiedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_FailedToBeModifiedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_FailedToBeModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeModifiedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_FailedToBeModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeModifiedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_FailedToBeModifiedForModification_List (e2ap_RICactions_FailedToBeModifiedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_FailedToBeModifiedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeModifiedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_FailedToBeModifiedForModification_List (const char* name, e2ap_RICactions_FailedToBeModifiedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_FailedToBeModifiedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_FailedToBeModifiedForModification_List* pSrcValue, e2ap_RICactions_FailedToBeModifiedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_FailedToBeModifiedForModification_List (const char *name, const e2ap_RICactions_FailedToBeModifiedForModification_List* pvalue);/*****************************************/
+/*           RICaction_AddedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_AddedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_AddedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_AddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_AddedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_AddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_AddedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_AddedForModification_Item (e2ap_RICaction_AddedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_AddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_AddedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_AddedForModification_Item (const char* name, const e2ap_RICaction_AddedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_AddedForModification_Item (const char* name, e2ap_RICaction_AddedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_AddedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_AddedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_AddedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_AddedForModification_Item* pSrcValue, e2ap_RICaction_AddedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_AddedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_AddedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_AddedForModification_ItemIEs_id_RICaction_AddedForModification_Item 
+ 
+} e2ap_RICaction_AddedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_AddedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_AddedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_AddedForModification_Item * _e2apRICaction_AddedForModification_ItemIEs_id_RICaction_AddedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_AddedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_AddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_AddedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_AddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_AddedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_AddedForModification_ItemIEs (e2ap_RICaction_AddedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_AddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_AddedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_AddedForModification_ItemIEs (const char * name, e2ap_RICaction_AddedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_AddedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_AddedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_AddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_AddedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_AddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_AddedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_AddedForModification_List (e2ap_RICactions_AddedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_AddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_AddedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_AddedForModification_List (const char* name, e2ap_RICactions_AddedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_AddedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_AddedForModification_List* pSrcValue, e2ap_RICactions_AddedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_AddedForModification_List (const char *name, const e2ap_RICactions_AddedForModification_List* pvalue);/*****************************************/
+/*           RICaction_FailedToBeAddedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_FailedToBeAddedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_FailedToBeAddedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_FailedToBeAddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_FailedToBeAddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_FailedToBeAddedForModification_Item (e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_FailedToBeAddedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_FailedToBeAddedForModification_Item (const char* name, const e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_FailedToBeAddedForModification_Item (const char* name, e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_FailedToBeAddedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_FailedToBeAddedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_FailedToBeAddedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_FailedToBeAddedForModification_Item* pSrcValue, e2ap_RICaction_FailedToBeAddedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_FailedToBeAddedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs_id_RICaction_FailedToBeAddedForModification_Item 
+ 
+} e2ap_RICaction_FailedToBeAddedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_FailedToBeAddedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_FailedToBeAddedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_FailedToBeAddedForModification_Item * _e2apRICaction_FailedToBeAddedForModification_ItemIEs_id_RICaction_FailedToBeAddedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_FailedToBeAddedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeAddedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeAddedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs (e2ap_RICaction_FailedToBeAddedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_FailedToBeAddedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_FailedToBeAddedForModification_ItemIEs (const char * name, e2ap_RICaction_FailedToBeAddedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_FailedToBeAddedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_FailedToBeAddedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_FailedToBeAddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeAddedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_FailedToBeAddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeAddedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_FailedToBeAddedForModification_List (e2ap_RICactions_FailedToBeAddedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_FailedToBeAddedForModification_List (OSCTXT* pctxt, e2ap_RICactions_FailedToBeAddedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_FailedToBeAddedForModification_List (const char* name, e2ap_RICactions_FailedToBeAddedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_FailedToBeAddedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_FailedToBeAddedForModification_List* pSrcValue, e2ap_RICactions_FailedToBeAddedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_FailedToBeAddedForModification_List (const char *name, const e2ap_RICactions_FailedToBeAddedForModification_List* pvalue);/*****************************************/
+/*           RICsubscriptionModificationResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICactionsRemovedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeRemovedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICactionsModifiedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeModifiedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICactionsAddedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeAddedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionModificationResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionModificationResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionModificationResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionModificationResponse_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICactions_RemovedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_RemovedForModification_List * _e2apRICsubscriptionModificationResponse_IEs_id_RICactionsRemovedForModification_List;
+        /*
+        *id: id-RICactions_FailedToBeRemovedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_FailedToBeRemovedForModification_List * _e2apRICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeRemovedForModification_List;
+        /*
+        *id: id-RICactions_ModifiedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_ModifiedForModification_List * _e2apRICsubscriptionModificationResponse_IEs_id_RICactionsModifiedForModification_List;
+        /*
+        *id: id-RICactions_FailedToBeModifiedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_FailedToBeModifiedForModification_List * _e2apRICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeModifiedForModification_List;
+        /*
+        *id: id-RICactions_AddedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_AddedForModification_List * _e2apRICsubscriptionModificationResponse_IEs_id_RICactionsAddedForModification_List;
+        /*
+        *id: id-RICactions_FailedToBeAddedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_FailedToBeAddedForModification_List * _e2apRICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeAddedForModification_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionModificationResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationResponse_protocolIEs_element (e2ap_RICsubscriptionModificationResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse_protocolIEs_element (const char * name, e2ap_RICsubscriptionModificationResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionModificationResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationResponse_protocolIEs (e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse_protocolIEs (const char* name, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionModificationResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionModificationResponse {
+    e2ap_RICsubscriptionModificationResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionModificationResponse;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationResponse (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationResponse (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationResponse (e2ap_RICsubscriptionModificationResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationResponse (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionModificationResponse (const char* name, const e2ap_RICsubscriptionModificationResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse (const char* name, e2ap_RICsubscriptionModificationResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionModificationResponse (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionModificationResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionModificationResponse (OSCTXT* pctxt, const e2ap_RICsubscriptionModificationResponse* pSrcValue, e2ap_RICsubscriptionModificationResponse* pDstValue);/*****************************************/
+/*           RICsubscriptionModificationFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionModificationFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionModificationFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionModificationFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionModificationFailure_IEs_id_RANfunctionID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICsubscriptionModificationFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICsubscriptionModificationFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionModificationFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationFailure_protocolIEs_element (e2ap_RICsubscriptionModificationFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure_protocolIEs_element (const char * name, e2ap_RICsubscriptionModificationFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionModificationFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationFailure_protocolIEs (e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure_protocolIEs (const char* name, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionModificationFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionModificationFailure {
+    e2ap_RICsubscriptionModificationFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionModificationFailure;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationFailure (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationFailure (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationFailure (e2ap_RICsubscriptionModificationFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationFailure (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionModificationFailure (const char* name, const e2ap_RICsubscriptionModificationFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure (const char* name, e2ap_RICsubscriptionModificationFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionModificationFailure (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionModificationFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionModificationFailure (OSCTXT* pctxt, const e2ap_RICsubscriptionModificationFailure* pSrcValue, e2ap_RICsubscriptionModificationFailure* pDstValue);/*****************************************/
+/*           RICaction_RequiredToBeModified_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_RequiredToBeModified_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_RICtimeToWait ricTimeToWait;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_RequiredToBeModified_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_RequiredToBeModified_Item (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeModified_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_RequiredToBeModified_Item (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeModified_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_RequiredToBeModified_Item (e2ap_RICaction_RequiredToBeModified_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RequiredToBeModified_Item (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeModified_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_RequiredToBeModified_Item (const char* name, const e2ap_RICaction_RequiredToBeModified_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_RequiredToBeModified_Item (const char* name, e2ap_RICaction_RequiredToBeModified_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_RequiredToBeModified_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_RequiredToBeModified_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_RequiredToBeModified_Item (OSCTXT* pctxt, const e2ap_RICaction_RequiredToBeModified_Item* pSrcValue, e2ap_RICaction_RequiredToBeModified_Item* pDstValue);/*****************************************/
+/*           RICaction_RequiredToBeModified_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_RequiredToBeModified_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_RequiredToBeModified_ItemIEs_id_RICaction_RequiredToBeModified_Item 
+ 
+} e2ap_RICaction_RequiredToBeModified_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_RequiredToBeModified_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_RequiredToBeModified_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_RequiredToBeModified_Item * _e2apRICaction_RequiredToBeModified_ItemIEs_id_RICaction_RequiredToBeModified_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_RequiredToBeModified_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_RequiredToBeModified_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeModified_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_RequiredToBeModified_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeModified_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_RequiredToBeModified_ItemIEs (e2ap_RICaction_RequiredToBeModified_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RequiredToBeModified_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeModified_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_RequiredToBeModified_ItemIEs (const char * name, e2ap_RICaction_RequiredToBeModified_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_RequiredToBeModified_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_RequiredToBeModified_List;
+
+EXTERN int asn1PE_e2ap_RICactions_RequiredToBeModified_List (OSCTXT* pctxt, e2ap_RICactions_RequiredToBeModified_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_RequiredToBeModified_List (OSCTXT* pctxt, e2ap_RICactions_RequiredToBeModified_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_RequiredToBeModified_List (e2ap_RICactions_RequiredToBeModified_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_RequiredToBeModified_List (OSCTXT* pctxt, e2ap_RICactions_RequiredToBeModified_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_RequiredToBeModified_List (const char* name, e2ap_RICactions_RequiredToBeModified_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_RequiredToBeModified_List (OSCTXT* pctxt, const e2ap_RICactions_RequiredToBeModified_List* pSrcValue, e2ap_RICactions_RequiredToBeModified_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_RequiredToBeModified_List (const char *name, const e2ap_RICactions_RequiredToBeModified_List* pvalue);/*****************************************/
+/*           RICaction_RequiredToBeRemoved_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_RequiredToBeRemoved_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_RequiredToBeRemoved_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_RequiredToBeRemoved_Item (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeRemoved_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_RequiredToBeRemoved_Item (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeRemoved_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_RequiredToBeRemoved_Item (e2ap_RICaction_RequiredToBeRemoved_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RequiredToBeRemoved_Item (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeRemoved_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_RequiredToBeRemoved_Item (const char* name, const e2ap_RICaction_RequiredToBeRemoved_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_RequiredToBeRemoved_Item (const char* name, e2ap_RICaction_RequiredToBeRemoved_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_RequiredToBeRemoved_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_RequiredToBeRemoved_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_RequiredToBeRemoved_Item (OSCTXT* pctxt, const e2ap_RICaction_RequiredToBeRemoved_Item* pSrcValue, e2ap_RICaction_RequiredToBeRemoved_Item* pDstValue);/*****************************************/
+/*           RICaction_RequiredToBeRemoved_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_RequiredToBeRemoved_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_RequiredToBeRemoved_ItemIEs_id_RICaction_RequiredToBeRemoved_Item 
+ 
+} e2ap_RICaction_RequiredToBeRemoved_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_RequiredToBeRemoved_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_RequiredToBeRemoved_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_RequiredToBeRemoved_Item * _e2apRICaction_RequiredToBeRemoved_ItemIEs_id_RICaction_RequiredToBeRemoved_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_RequiredToBeRemoved_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_RequiredToBeRemoved_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeRemoved_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_RequiredToBeRemoved_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeRemoved_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_RequiredToBeRemoved_ItemIEs (e2ap_RICaction_RequiredToBeRemoved_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RequiredToBeRemoved_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RequiredToBeRemoved_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_RequiredToBeRemoved_ItemIEs (const char * name, e2ap_RICaction_RequiredToBeRemoved_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_RequiredToBeRemoved_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_RequiredToBeRemoved_List;
+
+EXTERN int asn1PE_e2ap_RICactions_RequiredToBeRemoved_List (OSCTXT* pctxt, e2ap_RICactions_RequiredToBeRemoved_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_RequiredToBeRemoved_List (OSCTXT* pctxt, e2ap_RICactions_RequiredToBeRemoved_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_RequiredToBeRemoved_List (e2ap_RICactions_RequiredToBeRemoved_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_RequiredToBeRemoved_List (OSCTXT* pctxt, e2ap_RICactions_RequiredToBeRemoved_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_RequiredToBeRemoved_List (const char* name, e2ap_RICactions_RequiredToBeRemoved_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_RequiredToBeRemoved_List (OSCTXT* pctxt, const e2ap_RICactions_RequiredToBeRemoved_List* pSrcValue, e2ap_RICactions_RequiredToBeRemoved_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_RequiredToBeRemoved_List (const char *name, const e2ap_RICactions_RequiredToBeRemoved_List* pvalue);/*****************************************/
+/*           RICsubscriptionModificationRequired_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_id_RICactionsRequiredToBeModified_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_id_RICactionsRequiredToBeRemoved_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionModificationRequired_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationRequired_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionModificationRequired_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionModificationRequired_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionModificationRequired_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICactions_RequiredToBeModified_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_RequiredToBeModified_List * _e2apRICsubscriptionModificationRequired_IEs_id_RICactionsRequiredToBeModified_List;
+        /*
+        *id: id-RICactions_RequiredToBeRemoved_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_RequiredToBeRemoved_List * _e2apRICsubscriptionModificationRequired_IEs_id_RICactionsRequiredToBeRemoved_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionModificationRequired_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequired_protocolIEs_element (e2ap_RICsubscriptionModificationRequired_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired_protocolIEs_element (const char * name, e2ap_RICsubscriptionModificationRequired_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionModificationRequired                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationRequired_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequired_protocolIEs (e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired_protocolIEs (const char* name, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionModificationRequired -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionModificationRequired {
+    e2ap_RICsubscriptionModificationRequired_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionModificationRequired;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequired (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequired (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequired (e2ap_RICsubscriptionModificationRequired* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationRequired (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionModificationRequired (const char* name, const e2ap_RICsubscriptionModificationRequired* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired (const char* name, e2ap_RICsubscriptionModificationRequired* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionModificationRequired (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionModificationRequired* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionModificationRequired (OSCTXT* pctxt, const e2ap_RICsubscriptionModificationRequired* pSrcValue, e2ap_RICsubscriptionModificationRequired* pDstValue);/*****************************************/
+/*           RICaction_ConfirmedForModification_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ConfirmedForModification_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ConfirmedForModification_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ConfirmedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForModification_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ConfirmedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForModification_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ConfirmedForModification_Item (e2ap_RICaction_ConfirmedForModification_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ConfirmedForModification_Item (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForModification_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ConfirmedForModification_Item (const char* name, const e2ap_RICaction_ConfirmedForModification_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ConfirmedForModification_Item (const char* name, e2ap_RICaction_ConfirmedForModification_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ConfirmedForModification_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ConfirmedForModification_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ConfirmedForModification_Item (OSCTXT* pctxt, const e2ap_RICaction_ConfirmedForModification_Item* pSrcValue, e2ap_RICaction_ConfirmedForModification_Item* pDstValue);/*****************************************/
+/*           RICaction_ConfirmedForModification_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ConfirmedForModification_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ConfirmedForModification_ItemIEs_id_RICaction_ConfirmedForModification_Item 
+ 
+} e2ap_RICaction_ConfirmedForModification_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ConfirmedForModification_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ConfirmedForModification_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ConfirmedForModification_Item * _e2apRICaction_ConfirmedForModification_ItemIEs_id_RICaction_ConfirmedForModification_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ConfirmedForModification_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ConfirmedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ConfirmedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForModification_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ConfirmedForModification_ItemIEs (e2ap_RICaction_ConfirmedForModification_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ConfirmedForModification_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForModification_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ConfirmedForModification_ItemIEs (const char * name, e2ap_RICaction_ConfirmedForModification_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ConfirmedForModification_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ConfirmedForModification_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ConfirmedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ConfirmedForModification_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ConfirmedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ConfirmedForModification_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ConfirmedForModification_List (e2ap_RICactions_ConfirmedForModification_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ConfirmedForModification_List (OSCTXT* pctxt, e2ap_RICactions_ConfirmedForModification_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ConfirmedForModification_List (const char* name, e2ap_RICactions_ConfirmedForModification_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ConfirmedForModification_List (OSCTXT* pctxt, const e2ap_RICactions_ConfirmedForModification_List* pSrcValue, e2ap_RICactions_ConfirmedForModification_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ConfirmedForModification_List (const char *name, const e2ap_RICactions_ConfirmedForModification_List* pvalue);/*****************************************/
+/*           RICaction_RefusedToBeModified_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_RefusedToBeModified_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_RefusedToBeModified_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_RefusedToBeModified_Item (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeModified_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_RefusedToBeModified_Item (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeModified_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_RefusedToBeModified_Item (e2ap_RICaction_RefusedToBeModified_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RefusedToBeModified_Item (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeModified_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_RefusedToBeModified_Item (const char* name, const e2ap_RICaction_RefusedToBeModified_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_RefusedToBeModified_Item (const char* name, e2ap_RICaction_RefusedToBeModified_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_RefusedToBeModified_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_RefusedToBeModified_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_RefusedToBeModified_Item (OSCTXT* pctxt, const e2ap_RICaction_RefusedToBeModified_Item* pSrcValue, e2ap_RICaction_RefusedToBeModified_Item* pDstValue);/*****************************************/
+/*           RICaction_RefusedToBeModified_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_RefusedToBeModified_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_RefusedToBeModified_ItemIEs_id_RICaction_RefusedToBeModified_Item 
+ 
+} e2ap_RICaction_RefusedToBeModified_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_RefusedToBeModified_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_RefusedToBeModified_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_RefusedToBeModified_Item * _e2apRICaction_RefusedToBeModified_ItemIEs_id_RICaction_RefusedToBeModified_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_RefusedToBeModified_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_RefusedToBeModified_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeModified_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_RefusedToBeModified_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeModified_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_RefusedToBeModified_ItemIEs (e2ap_RICaction_RefusedToBeModified_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RefusedToBeModified_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeModified_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_RefusedToBeModified_ItemIEs (const char * name, e2ap_RICaction_RefusedToBeModified_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_RefusedToBeModified_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_RefusedToBeModified_List;
+
+EXTERN int asn1PE_e2ap_RICactions_RefusedToBeModified_List (OSCTXT* pctxt, e2ap_RICactions_RefusedToBeModified_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_RefusedToBeModified_List (OSCTXT* pctxt, e2ap_RICactions_RefusedToBeModified_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_RefusedToBeModified_List (e2ap_RICactions_RefusedToBeModified_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_RefusedToBeModified_List (OSCTXT* pctxt, e2ap_RICactions_RefusedToBeModified_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_RefusedToBeModified_List (const char* name, e2ap_RICactions_RefusedToBeModified_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_RefusedToBeModified_List (OSCTXT* pctxt, const e2ap_RICactions_RefusedToBeModified_List* pSrcValue, e2ap_RICactions_RefusedToBeModified_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_RefusedToBeModified_List (const char *name, const e2ap_RICactions_RefusedToBeModified_List* pvalue);/*****************************************/
+/*           RICaction_ConfirmedForRemoval_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_ConfirmedForRemoval_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_ConfirmedForRemoval_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_ConfirmedForRemoval_Item (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForRemoval_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_ConfirmedForRemoval_Item (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForRemoval_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_ConfirmedForRemoval_Item (e2ap_RICaction_ConfirmedForRemoval_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ConfirmedForRemoval_Item (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForRemoval_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_ConfirmedForRemoval_Item (const char* name, const e2ap_RICaction_ConfirmedForRemoval_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_ConfirmedForRemoval_Item (const char* name, e2ap_RICaction_ConfirmedForRemoval_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_ConfirmedForRemoval_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_ConfirmedForRemoval_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_ConfirmedForRemoval_Item (OSCTXT* pctxt, const e2ap_RICaction_ConfirmedForRemoval_Item* pSrcValue, e2ap_RICaction_ConfirmedForRemoval_Item* pDstValue);/*****************************************/
+/*           RICaction_ConfirmedForRemoval_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ConfirmedForRemoval_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ConfirmedForRemoval_ItemIEs_id_RICaction_ConfirmedForRemoval_Item 
+ 
+} e2ap_RICaction_ConfirmedForRemoval_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ConfirmedForRemoval_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ConfirmedForRemoval_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_ConfirmedForRemoval_Item * _e2apRICaction_ConfirmedForRemoval_ItemIEs_id_RICaction_ConfirmedForRemoval_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ConfirmedForRemoval_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ConfirmedForRemoval_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForRemoval_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ConfirmedForRemoval_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForRemoval_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ConfirmedForRemoval_ItemIEs (e2ap_RICaction_ConfirmedForRemoval_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ConfirmedForRemoval_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ConfirmedForRemoval_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ConfirmedForRemoval_ItemIEs (const char * name, e2ap_RICaction_ConfirmedForRemoval_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_ConfirmedForRemoval_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_ConfirmedForRemoval_List;
+
+EXTERN int asn1PE_e2ap_RICactions_ConfirmedForRemoval_List (OSCTXT* pctxt, e2ap_RICactions_ConfirmedForRemoval_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_ConfirmedForRemoval_List (OSCTXT* pctxt, e2ap_RICactions_ConfirmedForRemoval_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_ConfirmedForRemoval_List (e2ap_RICactions_ConfirmedForRemoval_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_ConfirmedForRemoval_List (OSCTXT* pctxt, e2ap_RICactions_ConfirmedForRemoval_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_ConfirmedForRemoval_List (const char* name, e2ap_RICactions_ConfirmedForRemoval_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_ConfirmedForRemoval_List (OSCTXT* pctxt, const e2ap_RICactions_ConfirmedForRemoval_List* pSrcValue, e2ap_RICactions_ConfirmedForRemoval_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_ConfirmedForRemoval_List (const char *name, const e2ap_RICactions_ConfirmedForRemoval_List* pvalue);/*****************************************/
+/*           RICaction_RefusedToBeRemoved_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICaction_RefusedToBeRemoved_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICaction_RefusedToBeRemoved_Item;
+
+EXTERN int asn1PE_e2ap_RICaction_RefusedToBeRemoved_Item (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeRemoved_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_RefusedToBeRemoved_Item (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeRemoved_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICaction_RefusedToBeRemoved_Item (e2ap_RICaction_RefusedToBeRemoved_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RefusedToBeRemoved_Item (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeRemoved_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICaction_RefusedToBeRemoved_Item (const char* name, const e2ap_RICaction_RefusedToBeRemoved_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_RefusedToBeRemoved_Item (const char* name, e2ap_RICaction_RefusedToBeRemoved_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICaction_RefusedToBeRemoved_Item (OSCTXT* pctxt, const char* name, const e2ap_RICaction_RefusedToBeRemoved_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICaction_RefusedToBeRemoved_Item (OSCTXT* pctxt, const e2ap_RICaction_RefusedToBeRemoved_Item* pSrcValue, e2ap_RICaction_RefusedToBeRemoved_Item* pDstValue);/*****************************************/
+/*           RICaction_RefusedToBeRemoved_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_RefusedToBeRemoved_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_RefusedToBeRemoved_ItemIEs_id_RICaction_RefusedToBeRemoved_Item 
+ 
+} e2ap_RICaction_RefusedToBeRemoved_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_RefusedToBeRemoved_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_RefusedToBeRemoved_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICaction_RefusedToBeRemoved_Item * _e2apRICaction_RefusedToBeRemoved_ItemIEs_id_RICaction_RefusedToBeRemoved_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_RefusedToBeRemoved_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_RefusedToBeRemoved_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeRemoved_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_RefusedToBeRemoved_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeRemoved_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_RefusedToBeRemoved_ItemIEs (e2ap_RICaction_RefusedToBeRemoved_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_RefusedToBeRemoved_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_RefusedToBeRemoved_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_RefusedToBeRemoved_ItemIEs (const char * name, e2ap_RICaction_RefusedToBeRemoved_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICactions_RefusedToBeRemoved_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICactions_RefusedToBeRemoved_List;
+
+EXTERN int asn1PE_e2ap_RICactions_RefusedToBeRemoved_List (OSCTXT* pctxt, e2ap_RICactions_RefusedToBeRemoved_List* pvalue);
+EXTERN int asn1PD_e2ap_RICactions_RefusedToBeRemoved_List (OSCTXT* pctxt, e2ap_RICactions_RefusedToBeRemoved_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICactions_RefusedToBeRemoved_List (e2ap_RICactions_RefusedToBeRemoved_List* pvalue);
+EXTERN void asn1Free_e2ap_RICactions_RefusedToBeRemoved_List (OSCTXT* pctxt, e2ap_RICactions_RefusedToBeRemoved_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactions_RefusedToBeRemoved_List (const char* name, e2ap_RICactions_RefusedToBeRemoved_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICactions_RefusedToBeRemoved_List (OSCTXT* pctxt, const e2ap_RICactions_RefusedToBeRemoved_List* pSrcValue, e2ap_RICactions_RefusedToBeRemoved_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICactions_RefusedToBeRemoved_List (const char *name, const e2ap_RICactions_RefusedToBeRemoved_List* pvalue);/*****************************************/
+/*           RICsubscriptionModificationConfirm_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RICactionsConfirmedForModification_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RICactionsRefusedToBeModified_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RICactionsConfirmedForRemoval_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RICactionsRefusedToBeRemoved_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionModificationConfirm_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationConfirm_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionModificationConfirm_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionModificationConfirm_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionModificationConfirm_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICactions_ConfirmedForModification_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_ConfirmedForModification_List * _e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsConfirmedForModification_List;
+        /*
+        *id: id-RICactions_RefusedToBeModified_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_RefusedToBeModified_List * _e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsRefusedToBeModified_List;
+        /*
+        *id: id-RICactions_ConfirmedForRemoval_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_ConfirmedForRemoval_List * _e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsConfirmedForRemoval_List;
+        /*
+        *id: id-RICactions_RefusedToBeRemoved_List
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_RICactions_RefusedToBeRemoved_List * _e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsRefusedToBeRemoved_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionModificationConfirm_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationConfirm_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationConfirm_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationConfirm_protocolIEs_element (e2ap_RICsubscriptionModificationConfirm_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationConfirm_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm_protocolIEs_element (const char * name, e2ap_RICsubscriptionModificationConfirm_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionModificationConfirm                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationConfirm_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationConfirm_protocolIEs (e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm_protocolIEs (const char* name, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionModificationConfirm -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionModificationConfirm {
+    e2ap_RICsubscriptionModificationConfirm_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionModificationConfirm;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationConfirm (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationConfirm (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationConfirm (e2ap_RICsubscriptionModificationConfirm* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationConfirm (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionModificationConfirm (const char* name, const e2ap_RICsubscriptionModificationConfirm* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm (const char* name, e2ap_RICsubscriptionModificationConfirm* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionModificationConfirm (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionModificationConfirm* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionModificationConfirm (OSCTXT* pctxt, const e2ap_RICsubscriptionModificationConfirm* pSrcValue, e2ap_RICsubscriptionModificationConfirm* pDstValue);/*****************************************/
+/*           RICsubscriptionModificationRefuse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionModificationRefuse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionModificationRefuse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionModificationRefuse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionModificationRefuse_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICsubscriptionModificationRefuse_IEs_id_RANfunctionID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICsubscriptionModificationRefuse_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICsubscriptionModificationRefuse_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionModificationRefuse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRefuse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRefuse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRefuse_protocolIEs_element (e2ap_RICsubscriptionModificationRefuse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationRefuse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse_protocolIEs_element (const char * name, e2ap_RICsubscriptionModificationRefuse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionModificationRefuse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationRefuse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRefuse_protocolIEs (e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse_protocolIEs (const char* name, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionModificationRefuse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionModificationRefuse {
+    e2ap_RICsubscriptionModificationRefuse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionModificationRefuse;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionModificationRefuse (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionModificationRefuse (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionModificationRefuse (e2ap_RICsubscriptionModificationRefuse* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionModificationRefuse (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionModificationRefuse (const char* name, const e2ap_RICsubscriptionModificationRefuse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse (const char* name, e2ap_RICsubscriptionModificationRefuse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionModificationRefuse (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionModificationRefuse* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionModificationRefuse (OSCTXT* pctxt, const e2ap_RICsubscriptionModificationRefuse* pSrcValue, e2ap_RICsubscriptionModificationRefuse* pDstValue);/*****************************************/
+/*           RICactionList_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICactionList_Item {
+      //not primitive
+   e2ap_RICactionID ricActionID;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICactionList_Item;
+
+EXTERN int asn1PE_e2ap_RICactionList_Item (OSCTXT* pctxt, e2ap_RICactionList_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICactionList_Item (OSCTXT* pctxt, e2ap_RICactionList_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICactionList_Item (e2ap_RICactionList_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICactionList_Item (OSCTXT* pctxt, e2ap_RICactionList_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICactionList_Item (const char* name, const e2ap_RICactionList_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICactionList_Item (const char* name, e2ap_RICactionList_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICactionList_Item (OSCTXT* pctxt, const char* name, const e2ap_RICactionList_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICactionList_Item (OSCTXT* pctxt, const e2ap_RICactionList_Item* pSrcValue, e2ap_RICactionList_Item* pDstValue);/*****************************************/
+/*           RICaction_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICaction_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICaction_ItemIEs_id_RICactionList_Item 
+ 
+} e2ap_RICaction_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICaction_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICaction_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICactionList_Item * _e2apRICaction_ItemIEs_id_RICactionList_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICaction_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICaction_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICaction_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICaction_ItemIEs (e2ap_RICaction_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_ItemIEs (OSCTXT* pctxt, e2ap_RICaction_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICaction_ItemIEs (const char * name, e2ap_RICaction_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICaction_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICaction_List;
+
+EXTERN int asn1PE_e2ap_RICaction_List (OSCTXT* pctxt, e2ap_RICaction_List* pvalue);
+EXTERN int asn1PD_e2ap_RICaction_List (OSCTXT* pctxt, e2ap_RICaction_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICaction_List (e2ap_RICaction_List* pvalue);
+EXTERN void asn1Free_e2ap_RICaction_List (OSCTXT* pctxt, e2ap_RICaction_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICaction_List (const char* name, e2ap_RICaction_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICaction_List (OSCTXT* pctxt, const e2ap_RICaction_List* pSrcValue, e2ap_RICaction_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICaction_List (const char *name, const e2ap_RICaction_List* pvalue);/*****************************************/
+/*           RICsubscriptionList_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RICsubscriptionList_Item {
+      //not primitive
+   e2ap_RICrequestID ricRequestID;
+      //not primitive
+   e2ap_RICaction_List ricAction_list;
+   OSBOOL m_ricAction_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionList_Item;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionList_Item (OSCTXT* pctxt, e2ap_RICsubscriptionList_Item* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionList_Item (OSCTXT* pctxt, e2ap_RICsubscriptionList_Item* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionList_Item (e2ap_RICsubscriptionList_Item* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionList_Item (OSCTXT* pctxt, e2ap_RICsubscriptionList_Item* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionList_Item (const char* name, const e2ap_RICsubscriptionList_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionList_Item (const char* name, e2ap_RICsubscriptionList_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionList_Item (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionList_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionList_Item (OSCTXT* pctxt, const e2ap_RICsubscriptionList_Item* pSrcValue, e2ap_RICsubscriptionList_Item* pDstValue);/*****************************************/
+/*           RICsubscriptionList_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionList_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionList_ItemIEs_id_RICsubscriptionList_Item 
+ 
+} e2ap_RICsubscriptionList_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RICsubscriptionList_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionList_ItemIEs_TVALUE t;
+      union {
+         e2ap_RICsubscriptionList_Item * _e2apRICsubscriptionList_ItemIEs_id_RICsubscriptionList_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionList_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RICsubscriptionList_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionList_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RICsubscriptionList_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionList_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionList_ItemIEs (e2ap_RICsubscriptionList_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionList_ItemIEs (OSCTXT* pctxt, e2ap_RICsubscriptionList_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RICsubscriptionList_ItemIEs (const char * name, e2ap_RICsubscriptionList_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RICsubscriptionToBeSuspended_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionToBeSuspended_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionToBeSuspended_List (OSCTXT* pctxt, e2ap_RICsubscriptionToBeSuspended_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionToBeSuspended_List (OSCTXT* pctxt, e2ap_RICsubscriptionToBeSuspended_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionToBeSuspended_List (e2ap_RICsubscriptionToBeSuspended_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionToBeSuspended_List (OSCTXT* pctxt, e2ap_RICsubscriptionToBeSuspended_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionToBeSuspended_List (const char* name, e2ap_RICsubscriptionToBeSuspended_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionToBeSuspended_List (OSCTXT* pctxt, const e2ap_RICsubscriptionToBeSuspended_List* pSrcValue, e2ap_RICsubscriptionToBeSuspended_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionToBeSuspended_List (const char *name, const e2ap_RICsubscriptionToBeSuspended_List* pvalue);/*****************************************/
+/*           RICsubscriptionToBeResumed_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionToBeResumed_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionToBeResumed_List (OSCTXT* pctxt, e2ap_RICsubscriptionToBeResumed_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionToBeResumed_List (OSCTXT* pctxt, e2ap_RICsubscriptionToBeResumed_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionToBeResumed_List (e2ap_RICsubscriptionToBeResumed_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionToBeResumed_List (OSCTXT* pctxt, e2ap_RICsubscriptionToBeResumed_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionToBeResumed_List (const char* name, e2ap_RICsubscriptionToBeResumed_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionToBeResumed_List (OSCTXT* pctxt, const e2ap_RICsubscriptionToBeResumed_List* pSrcValue, e2ap_RICsubscriptionToBeResumed_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionToBeResumed_List (const char *name, const e2ap_RICsubscriptionToBeResumed_List* pvalue);/*****************************************/
+/*           RANfunctionStateControl_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionStateControl_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RICsubscriptionToBeSuspended_List ricSubscriptionToBeSuspended_list;
+   OSBOOL m_ricSubscriptionToBeSuspended_listPresent;      //not primitive
+   e2ap_RICsubscriptionToBeResumed_List ricSubscriptionToBeResumed_list;
+   OSBOOL m_ricSubscriptionToBeResumed_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionStateControl_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionStateControl_Item (OSCTXT* pctxt, e2ap_RANfunctionStateControl_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionStateControl_Item (OSCTXT* pctxt, e2ap_RANfunctionStateControl_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionStateControl_Item (e2ap_RANfunctionStateControl_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionStateControl_Item (OSCTXT* pctxt, e2ap_RANfunctionStateControl_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionStateControl_Item (const char* name, const e2ap_RANfunctionStateControl_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionStateControl_Item (const char* name, e2ap_RANfunctionStateControl_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionStateControl_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionStateControl_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionStateControl_Item (OSCTXT* pctxt, const e2ap_RANfunctionStateControl_Item* pSrcValue, e2ap_RANfunctionStateControl_Item* pDstValue);/*****************************************/
+/*           RANfunctionStateControl_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionStateControl_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionStateControl_ItemIEs_id_RANfunctionStateControl_Item 
+ 
+} e2ap_RANfunctionStateControl_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionStateControl_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionStateControl_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionStateControl_Item * _e2apRANfunctionStateControl_ItemIEs_id_RANfunctionStateControl_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionStateControl_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionStateControl_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionStateControl_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionStateControl_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionStateControl_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionStateControl_ItemIEs (e2ap_RANfunctionStateControl_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionStateControl_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionStateControl_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionStateControl_ItemIEs (const char * name, e2ap_RANfunctionStateControl_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionStateControl_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionStateControl_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionStateControl_List (OSCTXT* pctxt, e2ap_RANfunctionStateControl_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionStateControl_List (OSCTXT* pctxt, e2ap_RANfunctionStateControl_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionStateControl_List (e2ap_RANfunctionStateControl_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionStateControl_List (OSCTXT* pctxt, e2ap_RANfunctionStateControl_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionStateControl_List (const char* name, e2ap_RANfunctionStateControl_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionStateControl_List (OSCTXT* pctxt, const e2ap_RANfunctionStateControl_List* pSrcValue, e2ap_RANfunctionStateControl_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionStateControl_List (const char *name, const e2ap_RANfunctionStateControl_List* pvalue);/*****************************************/
+/*           RICsubscriptionStateControlRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlRequest_IEs_id_RANfunctionStateControl_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionStateControlRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionStateControlRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionStateControlRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionStateControlRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionStateControl_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionStateControl_List * _e2apRICsubscriptionStateControlRequest_IEs_id_RANfunctionStateControl_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionStateControlRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlRequest_protocolIEs_element (e2ap_RICsubscriptionStateControlRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionStateControlRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest_protocolIEs_element (const char * name, e2ap_RICsubscriptionStateControlRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionStateControlRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionStateControlRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlRequest_protocolIEs (e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest_protocolIEs (const char* name, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionStateControlRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionStateControlRequest {
+    e2ap_RICsubscriptionStateControlRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionStateControlRequest;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlRequest (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlRequest (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlRequest (e2ap_RICsubscriptionStateControlRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionStateControlRequest (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionStateControlRequest (const char* name, const e2ap_RICsubscriptionStateControlRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest (const char* name, e2ap_RICsubscriptionStateControlRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionStateControlRequest (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionStateControlRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionStateControlRequest (OSCTXT* pctxt, const e2ap_RICsubscriptionStateControlRequest* pSrcValue, e2ap_RICsubscriptionStateControlRequest* pDstValue);/*****************************************/
+/*           RICsubscriptionSuspended_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionSuspended_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionSuspended_List (OSCTXT* pctxt, e2ap_RICsubscriptionSuspended_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionSuspended_List (OSCTXT* pctxt, e2ap_RICsubscriptionSuspended_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionSuspended_List (e2ap_RICsubscriptionSuspended_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionSuspended_List (OSCTXT* pctxt, e2ap_RICsubscriptionSuspended_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionSuspended_List (const char* name, e2ap_RICsubscriptionSuspended_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionSuspended_List (OSCTXT* pctxt, const e2ap_RICsubscriptionSuspended_List* pSrcValue, e2ap_RICsubscriptionSuspended_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionSuspended_List (const char *name, const e2ap_RICsubscriptionSuspended_List* pvalue);/*****************************************/
+/*           RICsubscriptionResumed_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RICsubscriptionResumed_List;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionResumed_List (OSCTXT* pctxt, e2ap_RICsubscriptionResumed_List* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionResumed_List (OSCTXT* pctxt, e2ap_RICsubscriptionResumed_List* ppvalue);
+EXTERN void asn1Init_e2ap_RICsubscriptionResumed_List (e2ap_RICsubscriptionResumed_List* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionResumed_List (OSCTXT* pctxt, e2ap_RICsubscriptionResumed_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResumed_List (const char* name, e2ap_RICsubscriptionResumed_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RICsubscriptionResumed_List (OSCTXT* pctxt, const e2ap_RICsubscriptionResumed_List* pSrcValue, e2ap_RICsubscriptionResumed_List* pDstValue);
+EXTERN void asn1Print_e2ap_RICsubscriptionResumed_List (const char *name, const e2ap_RICsubscriptionResumed_List* pvalue);/*****************************************/
+/*           RANfunctionStateConfirm_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_RANfunctionStateConfirm_Item {
+      //not primitive
+   e2ap_RANfunctionID ranFunctionID;
+      //not primitive
+   e2ap_RICsubscriptionSuspended_List ricSubscriptionSuspended_list;
+   OSBOOL m_ricSubscriptionSuspended_listPresent;      //not primitive
+   e2ap_RICsubscriptionResumed_List ricSubscriptionResumed_list;
+   OSBOOL m_ricSubscriptionResumed_listPresent;
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_RANfunctionStateConfirm_Item;
+
+EXTERN int asn1PE_e2ap_RANfunctionStateConfirm_Item (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_Item* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionStateConfirm_Item (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_Item* pvalue);
+EXTERN int asn1Init_e2ap_RANfunctionStateConfirm_Item (e2ap_RANfunctionStateConfirm_Item* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionStateConfirm_Item (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_Item* pvalue);
+EXTERN void asn1Print_e2ap_RANfunctionStateConfirm_Item (const char* name, const e2ap_RANfunctionStateConfirm_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionStateConfirm_Item (const char* name, e2ap_RANfunctionStateConfirm_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RANfunctionStateConfirm_Item (OSCTXT* pctxt, const char* name, const e2ap_RANfunctionStateConfirm_Item* pvalue);
+EXTERN int asn1Copy_e2ap_RANfunctionStateConfirm_Item (OSCTXT* pctxt, const e2ap_RANfunctionStateConfirm_Item* pSrcValue, e2ap_RANfunctionStateConfirm_Item* pDstValue);/*****************************************/
+/*           RANfunctionStateConfirm_ItemIEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RANfunctionStateConfirm_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RANfunctionStateConfirm_ItemIEs_id_RANfunctionStateConfirm_Item 
+ 
+} e2ap_RANfunctionStateConfirm_ItemIEs_TVALUE;
+
+/* ie thường */
+typedef struct EXTERN e2ap_RANfunctionStateConfirm_ItemIEs {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RANfunctionStateConfirm_ItemIEs_TVALUE t;
+      union {
+         e2ap_RANfunctionStateConfirm_Item * _e2apRANfunctionStateConfirm_ItemIEs_id_RANfunctionStateConfirm_Item;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RANfunctionStateConfirm_ItemIEs;
+
+EXTERN int  asn1PE_e2ap_RANfunctionStateConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_RANfunctionStateConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_RANfunctionStateConfirm_ItemIEs (e2ap_RANfunctionStateConfirm_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionStateConfirm_ItemIEs (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_RANfunctionStateConfirm_ItemIEs (const char * name, e2ap_RANfunctionStateConfirm_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+ 
+
+/*****************************************/
+/*           RANfunctionStateConfirm_List                */
+/*****************************************/
+//seq_of_single_container
+
+
+/*List of ... ITEM*/
+typedef OSRTDList e2ap_RANfunctionStateConfirm_List;
+
+EXTERN int asn1PE_e2ap_RANfunctionStateConfirm_List (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_List* pvalue);
+EXTERN int asn1PD_e2ap_RANfunctionStateConfirm_List (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_List* ppvalue);
+EXTERN void asn1Init_e2ap_RANfunctionStateConfirm_List (e2ap_RANfunctionStateConfirm_List* pvalue);
+EXTERN void asn1Free_e2ap_RANfunctionStateConfirm_List (OSCTXT* pctxt, e2ap_RANfunctionStateConfirm_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RANfunctionStateConfirm_List (const char* name, e2ap_RANfunctionStateConfirm_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_RANfunctionStateConfirm_List (OSCTXT* pctxt, const e2ap_RANfunctionStateConfirm_List* pSrcValue, e2ap_RANfunctionStateConfirm_List* pDstValue);
+EXTERN void asn1Print_e2ap_RANfunctionStateConfirm_List (const char *name, const e2ap_RANfunctionStateConfirm_List* pvalue);/*****************************************/
+/*           RICsubscriptionStateControlResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlResponse_IEs_id_RANfunctionStateConfirm_List,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionStateControlResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionStateControlResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionStateControlResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionStateControlResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionStateConfirm_List
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionStateConfirm_List * _e2apRICsubscriptionStateControlResponse_IEs_id_RANfunctionStateConfirm_List;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionStateControlResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlResponse_protocolIEs_element (e2ap_RICsubscriptionStateControlResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionStateControlResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse_protocolIEs_element (const char * name, e2ap_RICsubscriptionStateControlResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionStateControlResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionStateControlResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlResponse_protocolIEs (e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse_protocolIEs (const char* name, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionStateControlResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionStateControlResponse {
+    e2ap_RICsubscriptionStateControlResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionStateControlResponse;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlResponse (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlResponse (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlResponse (e2ap_RICsubscriptionStateControlResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionStateControlResponse (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionStateControlResponse (const char* name, const e2ap_RICsubscriptionStateControlResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse (const char* name, e2ap_RICsubscriptionStateControlResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionStateControlResponse (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionStateControlResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionStateControlResponse (OSCTXT* pctxt, const e2ap_RICsubscriptionStateControlResponse* pSrcValue, e2ap_RICsubscriptionStateControlResponse* pDstValue);/*****************************************/
+/*           RICsubscriptionStateControlFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICsubscriptionStateControlFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICsubscriptionStateControlFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICsubscriptionStateControlFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICsubscriptionStateControlFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICsubscriptionStateControlFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-Cause
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICsubscriptionStateControlFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICsubscriptionStateControlFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICsubscriptionStateControlFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlFailure_protocolIEs_element (e2ap_RICsubscriptionStateControlFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionStateControlFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure_protocolIEs_element (const char * name, e2ap_RICsubscriptionStateControlFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICsubscriptionStateControlFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionStateControlFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlFailure_protocolIEs (e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure_protocolIEs (const char* name, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICsubscriptionStateControlFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICsubscriptionStateControlFailure {
+    e2ap_RICsubscriptionStateControlFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICsubscriptionStateControlFailure;
+
+EXTERN int asn1PE_e2ap_RICsubscriptionStateControlFailure (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICsubscriptionStateControlFailure (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICsubscriptionStateControlFailure (e2ap_RICsubscriptionStateControlFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICsubscriptionStateControlFailure (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICsubscriptionStateControlFailure (const char* name, const e2ap_RICsubscriptionStateControlFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure (const char* name, e2ap_RICsubscriptionStateControlFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICsubscriptionStateControlFailure (OSCTXT* pctxt, const char* name, const e2ap_RICsubscriptionStateControlFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICsubscriptionStateControlFailure (OSCTXT* pctxt, const e2ap_RICsubscriptionStateControlFailure* pSrcValue, e2ap_RICsubscriptionStateControlFailure* pDstValue);/*****************************************/
+/*           RICqueryHeader                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICqueryHeader;
+EXTERN int asn1PE_e2ap_RICqueryHeader (OSCTXT* pctxt, e2ap_RICqueryHeader value);
+EXTERN int asn1PD_e2ap_RICqueryHeader (OSCTXT* pctxt, e2ap_RICqueryHeader* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryHeader (const char* name, e2ap_RICqueryHeader *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICqueryHeader (OSCTXT* pctxt, const char* name, const e2ap_RICqueryHeader* pvalue);
+EXTERN int asn1Copy_e2ap_RICqueryHeader (OSCTXT* pctxt, const e2ap_RICqueryHeader* pSrcValue, e2ap_RICqueryHeader* pDstValue);
+EXTERN int asn1Init_e2ap_RICqueryHeader (e2ap_RICqueryHeader* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryHeader (OSCTXT* pctxt, e2ap_RICqueryHeader* pvalue);
+/*****************************************/
+/*           RICqueryDefinition                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICqueryDefinition;
+EXTERN int asn1PE_e2ap_RICqueryDefinition (OSCTXT* pctxt, e2ap_RICqueryDefinition value);
+EXTERN int asn1PD_e2ap_RICqueryDefinition (OSCTXT* pctxt, e2ap_RICqueryDefinition* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryDefinition (const char* name, e2ap_RICqueryDefinition *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICqueryDefinition (OSCTXT* pctxt, const char* name, const e2ap_RICqueryDefinition* pvalue);
+EXTERN int asn1Copy_e2ap_RICqueryDefinition (OSCTXT* pctxt, const e2ap_RICqueryDefinition* pSrcValue, e2ap_RICqueryDefinition* pDstValue);
+EXTERN int asn1Init_e2ap_RICqueryDefinition (e2ap_RICqueryDefinition* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryDefinition (OSCTXT* pctxt, e2ap_RICqueryDefinition* pvalue);
+/*****************************************/
+/*           RICqueryRequest_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RICqueryHeader,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RICqueryDefinition,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICqueryRequest_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICqueryRequest_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICqueryRequest_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICqueryRequest_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICqueryRequest_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICqueryHeader
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICqueryHeader * _e2apRICqueryRequest_IEs_id_RICqueryHeader;
+        /*
+        *id: id-RICqueryDefinition
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICqueryDefinition * _e2apRICqueryRequest_IEs_id_RICqueryDefinition;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICqueryRequest_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICqueryRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryRequest_protocolIEs_element (e2ap_RICqueryRequest_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICqueryRequest_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryRequest_protocolIEs_element (const char * name, e2ap_RICqueryRequest_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICqueryRequest                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICqueryRequest_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICqueryRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryRequest_protocolIEs (e2ap_RICqueryRequest_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICqueryRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICqueryRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICqueryRequest_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICqueryRequest_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryRequest_protocolIEs (const char* name, e2ap_RICqueryRequest_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICqueryRequest -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICqueryRequest {
+    e2ap_RICqueryRequest_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICqueryRequest;
+
+EXTERN int asn1PE_e2ap_RICqueryRequest (OSCTXT* pctxt, e2ap_RICqueryRequest* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryRequest (OSCTXT* pctxt, e2ap_RICqueryRequest* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryRequest (e2ap_RICqueryRequest* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryRequest (OSCTXT* pctxt, e2ap_RICqueryRequest* pvalue);
+EXTERN void asn1Print_e2ap_RICqueryRequest (const char* name, const e2ap_RICqueryRequest* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryRequest (const char* name, e2ap_RICqueryRequest* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICqueryRequest (OSCTXT* pctxt, const char* name, const e2ap_RICqueryRequest* pvalue);
+EXTERN int asn1Copy_e2ap_RICqueryRequest (OSCTXT* pctxt, const e2ap_RICqueryRequest* pSrcValue, e2ap_RICqueryRequest* pDstValue);/*****************************************/
+/*           RICqueryOutcome                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICqueryOutcome;
+EXTERN int asn1PE_e2ap_RICqueryOutcome (OSCTXT* pctxt, e2ap_RICqueryOutcome value);
+EXTERN int asn1PD_e2ap_RICqueryOutcome (OSCTXT* pctxt, e2ap_RICqueryOutcome* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryOutcome (const char* name, e2ap_RICqueryOutcome *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICqueryOutcome (OSCTXT* pctxt, const char* name, const e2ap_RICqueryOutcome* pvalue);
+EXTERN int asn1Copy_e2ap_RICqueryOutcome (OSCTXT* pctxt, const e2ap_RICqueryOutcome* pSrcValue, e2ap_RICqueryOutcome* pDstValue);
+EXTERN int asn1Init_e2ap_RICqueryOutcome (e2ap_RICqueryOutcome* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryOutcome (OSCTXT* pctxt, e2ap_RICqueryOutcome* pvalue);
+/*****************************************/
+/*           RICqueryResponse_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_id_RICqueryOutcome,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICqueryResponse_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICqueryResponse_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICqueryResponse_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICqueryResponse_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICqueryResponse_IEs_id_RANfunctionID;
+        /*
+        *id: id-RICqueryOutcome
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICqueryOutcome * _e2apRICqueryResponse_IEs_id_RICqueryOutcome;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICqueryResponse_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICqueryResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryResponse_protocolIEs_element (e2ap_RICqueryResponse_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICqueryResponse_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryResponse_protocolIEs_element (const char * name, e2ap_RICqueryResponse_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICqueryResponse                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICqueryResponse_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICqueryResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryResponse_protocolIEs (e2ap_RICqueryResponse_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICqueryResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICqueryResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICqueryResponse_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICqueryResponse_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryResponse_protocolIEs (const char* name, e2ap_RICqueryResponse_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICqueryResponse -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICqueryResponse {
+    e2ap_RICqueryResponse_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICqueryResponse;
+
+EXTERN int asn1PE_e2ap_RICqueryResponse (OSCTXT* pctxt, e2ap_RICqueryResponse* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryResponse (OSCTXT* pctxt, e2ap_RICqueryResponse* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryResponse (e2ap_RICqueryResponse* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryResponse (OSCTXT* pctxt, e2ap_RICqueryResponse* pvalue);
+EXTERN void asn1Print_e2ap_RICqueryResponse (const char* name, const e2ap_RICqueryResponse* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryResponse (const char* name, e2ap_RICqueryResponse* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICqueryResponse (OSCTXT* pctxt, const char* name, const e2ap_RICqueryResponse* pvalue);
+EXTERN int asn1Copy_e2ap_RICqueryResponse (OSCTXT* pctxt, const e2ap_RICqueryResponse* pSrcValue, e2ap_RICqueryResponse* pDstValue);/*****************************************/
+/*           RICqueryFailure_IEs                */
+/*****************************************/
+/* ie.h.j2 */
+/* ie là con của msg + ie thường*/
+typedef enum {
+   T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics,
+ 
+   T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Extended_RANNodeName_
+ 
+} e2ap_RICqueryFailure_IEs_TVALUE;
+
+ /* ie là con của msg*/
+typedef struct EXTERN e2ap_RICqueryFailure_protocolIEs_element {
+   e2ap_ProtocolIE_ID id;
+   e2ap_Criticality criticality;
+   struct{
+      e2ap_RICqueryFailure_IEs_TVALUE t;
+      union {
+        /*
+        *id: id-RICrequestID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RICrequestID * _e2apRICqueryFailure_IEs_id_RICrequestID;
+        /*
+        *id: id-RANfunctionID
+        *criticality: reject
+        *presence: mandatory
+        */
+         e2ap_RANfunctionID * _e2apRICqueryFailure_IEs_id_RANfunctionID;
+        /*
+        *id: id-Cause
+        *criticality: ignore
+        *presence: mandatory
+        */
+         e2ap_Cause * _e2apRICqueryFailure_IEs_id_Cause;
+        /*
+        *id: id-CriticalityDiagnostics
+        *criticality: ignore
+        *presence: optional
+        */
+         e2ap_CriticalityDiagnostics * _e2apRICqueryFailure_IEs_id_CriticalityDiagnostics;
+
+         ASN1OpenType* extElem1;  /* extension */
+      } u;
+   }value;
+} e2ap_RICqueryFailure_protocolIEs_element;
+
+EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryFailure_protocolIEs_element (e2ap_RICqueryFailure_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (const char * name, e2ap_RICqueryFailure_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+
+ 
+
+/*****************************************/
+/*           RICqueryFailure                */
+/*****************************************/
+//2_container.h
+/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICqueryFailure_ProtocolIE;
+EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryFailure_protocolIEs (e2ap_RICqueryFailure_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apRICqueryFailure_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_RICqueryFailure_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs (const char* name, e2ap_RICqueryFailure_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+
+/*2 . RICqueryFailure -> mẫu cũ ở seq_normal*/
+
+typedef struct EXTERN e2ap_RICqueryFailure {
+    e2ap_RICqueryFailure_ProtocolIE protocolIEs;
+    OSRTDList extElem1;  /* Extension elements */
+} e2ap_RICqueryFailure;
+
+EXTERN int asn1PE_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue);
+EXTERN int asn1PD_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue);
+EXTERN int asn1Init_e2ap_RICqueryFailure (e2ap_RICqueryFailure* pvalue);
+EXTERN void asn1Free_e2ap_RICqueryFailure (OSCTXT* pctxt, e2ap_RICqueryFailure* pvalue);
+EXTERN void asn1Print_e2ap_RICqueryFailure (const char* name, const e2ap_RICqueryFailure* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICqueryFailure (const char* name, e2ap_RICqueryFailure* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICqueryFailure (OSCTXT* pctxt, const char* name, const e2ap_RICqueryFailure* pvalue);
+EXTERN int asn1Copy_e2ap_RICqueryFailure (OSCTXT* pctxt, const e2ap_RICqueryFailure* pSrcValue, e2ap_RICqueryFailure* pDstValue);
+#endif // E2AP_H
