@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - CauseTransport               */
 /************************************************/
+
+/* CauseTransport- ENUMERATED*/
  
   
 typedef enum{

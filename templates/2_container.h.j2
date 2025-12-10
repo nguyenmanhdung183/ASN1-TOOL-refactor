@@ -2,8 +2,8 @@
 /*           {{container_name}}                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_{{container_name}}_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_{{container_name}}_protocolIEs;
 EXTERN int asn1PE_e2ap_{{container_name}}_protocolIEs (OSCTXT* pctxt, e2ap_{{container_name}}_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_{{container_name}}_protocolIEs (OSCTXT* pctxt, e2ap_{{container_name}}_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_{{container_name}}_protocolIEs (e2ap_{{container_name}}_protocolIEs* pvalue);
@@ -15,7 +15,7 @@ EXTERN int asn1PrtToStr_e2ap_{{container_name}}_protocolIEs (const char* name, e
 /*2 . {{container_name}} -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_{{container_name}} {
-    e2ap_{{container_name}}_ProtocolIE protocolIEs;
+    e2ap_{{container_name}}_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_{{container_name}};
 

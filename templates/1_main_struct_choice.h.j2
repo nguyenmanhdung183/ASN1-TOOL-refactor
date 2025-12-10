@@ -10,7 +10,7 @@ typedef UInt{{f.primitive.max|stdbit}} _e2ap_{{name}}_{{f.field}};
     {# BIT STRING 2-3-4 primitive #}
     {% if f.primitive_meta.primitive_id == 2 %} {# A..B,...#} 
 typedef struct{
-    Uint{{f.primitive.max|stdbit}} numbits;
+    UInt{{f.primitive.max|stdbit}} numbits;
     UInt8* data;
 } _e2ap_{{name}}_{{f.field}}_t;//BIT STRING SIZE (A..B,...) 
 

@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - CauseProtocol               */
 /************************************************/
+
+/* CauseProtocol- ENUMERATED*/
  
   
 typedef enum{

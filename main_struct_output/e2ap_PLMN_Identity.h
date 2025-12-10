@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - PLMN_Identity               */
 /************************************************/
+
+/* PLMN_Identity- OCTET STRING (SIZE(3))*/
    
 typedef struct{
     #define PLMN_Identity_MAX_BYTES 3

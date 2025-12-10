@@ -6,7 +6,7 @@
 {{tree}}
 */
 xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
-                e2ap_{{choices[0].dad_type_name}}_t* p_{{choices[0].dad_type_name}},
+                e2ap_{{choices[0].dad_type_name}}_t* p_{{choices[0].dad_type_name}}_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
 )
@@ -38,7 +38,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_{{parent_full.Msg_3_Type}};
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to {{parent_full.Msg_3_Type}}",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_{{parent_full.Msg_3_Type}});
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}} = rtxMemAllocType(&asn1_ctx, e2ap_{{parent_full.Msg_3_Type}});
         if(GNB_PNULL==e2ap_pdu.u.{{parent_full.Msg_3_Type}}){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for {{parent_full.Msg_3_Type}}",__FUNCTION__);
             break;
@@ -57,7 +57,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
         }
 
         asn1Init_e2ap_{{choices[0].dad_type_name}}(p_{{choices[0].dad_type_name}});
-        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.u.{{parent_full.Elem_Procedure}} = p_{{choices[0].dad_type_name}};
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.u.{{parent_full.Elem_Procedure}} = p_{{choices[0].dad_type_name}}_src;
 
         /* Fill ProtocolIEs */
 {% for ie in choices %}
@@ -80,7 +80,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
             p_e2ap_protocolIEs_elem->criticality = e2ap_{{ie.critical}};
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }};
 {% if ie.alias !=-1 %} {# primitive #}
-            p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} = p_{{choices[0].dad_type_name}}->{{ie.field_name}}; //assign primitive
+            p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} = &p_{{choices[0].dad_type_name}}_src->{{ie.field_name}}; //assign primitive
 {% endif %}
 
 {% if ie.alias == -1%} {# ko phải primitive #}
@@ -97,7 +97,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
             //message_name.item_type -> type = {{ie.item_type}}
             if(XNAP_FAILURE == e2ap_compose_{{ie.item_type}}(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }},
-                                &p_{{choices[0].dad_type_name}}->{{ie.field_name}})){
+                                &p_{{choices[0].dad_type_name}}_src->{{ie.field_name}})){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{ie.item_type}}",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();

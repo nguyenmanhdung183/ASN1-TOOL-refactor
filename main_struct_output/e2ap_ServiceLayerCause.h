@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - ServiceLayerCause               */
 /************************************************/
+
+/* ServiceLayerCause- OCTET STRING*/
   
 typedef struct{
     UInt8 num_string_len; /// dungnm23 fix size

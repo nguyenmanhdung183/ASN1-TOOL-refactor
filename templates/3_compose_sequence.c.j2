@@ -30,6 +30,23 @@ xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
 }
         {% endif %} {# end BIT STRING 3+4 primitive #}
         {% if f.primitive_meta.primitive_id == 2 %}{# BIT STRING 2 primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                     OSCTXT                       *p_asn1_ctx,
+                     e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                     _e2ap_{{name}}_{{f.field}}_t              *p_src//src
+)
+{
+    p_dest->numbits = E2AP_XXX;//duugnm23 fix value
+    p_dest->data = (OSOCTET*)rtxMemAllocZ(p_asn1_ctx, {{(f.primitive_meta.max +7)//8 }});// dungnm23 check nhe E2AP_xxx_OCTET_SIZE
+    if(p_dest->data == NULL)
+    {
+        XNAP_TRACE(XNAP_ERROR, "dungnm23 %s memory allocation failed in e2ap_compose_{{name}}_{{f.field}}", __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, {{(f.primitive_meta.max +7)//8 }});
+    return XNAP_SUCCESS;
+}
+
         {% endif %} {# end BIT STRING 2 primitive #}
         {% if f.primitive_meta.primitive_id == 9 %}{# OCTET STRING primitive #}
         {% endif %} {# end OCTET STRING primitive #}

@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - {{name}}               */
 /************************************************/
+
+/* {{name}}- {{metadata.primitive_name}}*/
 {% if metadata.primitive_id ==  2%} {# BIT STRING A..B,...#}  
 typedef struct{
     #define {{name}}_OCTET_SIZE {{(metadata.max +7)//8 }}

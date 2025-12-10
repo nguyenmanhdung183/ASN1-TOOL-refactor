@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - CauseRICservice               */
 /************************************************/
+
+/* CauseRICservice- ENUMERATED*/
  
   
 typedef enum{

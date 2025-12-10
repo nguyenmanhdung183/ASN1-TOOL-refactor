@@ -10,13 +10,14 @@ MAIN_STRUCT_FILE = "MAIN_STRUCT.h"
 MAIN_C_FILE = "output_main.c"
 MAIN_H_FILE = "output_main.h"
 COMPOSE_DIR = "compose_output"
-COMPOSE_C_FILE = "MAIN_COMPOSE.c"
+COMPOSE_C_FILE = "MAIN_COMPOSE.h"
 PREFIX = "e2ap_"
 EXISTED_FILE = "existed.txt"
 text_to_insert_c_header ="#include \"output_main.h\""
 text_to_insert_h_header ="""
 #ifndef OUTPUT_MAIN_H
 #define OUTPUT_MAIN_H
+#include "stub.h"
 """
 text_to_insert_h_foter ="#endif"
 
@@ -125,6 +126,7 @@ def merge_main_struct_headers_by_parts(parts, existed_parts, skip_parts=None):
 
     with open(output_path, "w", encoding="utf-8") as out:
         out.write("#ifndef MAIN_STRUCT_H\n#define MAIN_STRUCT_H\n\n")
+        out.write("#include \"stub.h\"\n\n")
 
         for part in parts:
             if part in existed_parts or part in skip_parts:
@@ -156,6 +158,7 @@ def compose_main_file_by_parts(parts, existed_parts, skip_parts=None):
     with open(compose_out_path, "w", encoding="utf-8") as compose_out:
         compose_out.write("#include \"main_struct.h\"\n")
         compose_out.write("#include \"output_main.h\"\n\n")
+
 
         for part in parts:
             if part in existed_parts or part in skip_parts:

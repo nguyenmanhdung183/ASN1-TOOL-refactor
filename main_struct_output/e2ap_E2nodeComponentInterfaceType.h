@@ -1,6 +1,8 @@
 /************************************************/
 /*        PRIMITIVE - E2nodeComponentInterfaceType               */
 /************************************************/
+
+/* E2nodeComponentInterfaceType- ENUMERATED*/
  
   
 typedef enum{
