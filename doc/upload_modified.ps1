@@ -1,5 +1,7 @@
 # ===== Cấu hình ===== powershell -ExecutionPolicy Bypass -File .\upload_modified.ps1
 # ===== Cấu hình =====
+#  type $env:USERPROFILE\.ssh\id_rsa.pub | ssh root@192.168.135.99 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
 $source = "W:\Temp"              # thư mục gốc ở Windows
 $user = "root"
 $remoteHost = "192.168.135.99"
