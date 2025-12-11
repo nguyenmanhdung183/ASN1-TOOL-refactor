@@ -36,7 +36,11 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
       case {{(choice.tag+1)|int}}:
          RTXCTXTPUSHELEMNAME (pctxt, "{{choice.name|replace('_', '-')}}");
          {% if choice.primitive.isprimitive == False %}
+            {% if choice.alias == 5 or choice.alias == 6  or choice.alias == 13 or choice.alias == 2 or choice.alias == 9 or choice.alias == 10 %}{#not primitive but alias not pointer #}
+         stat = asn1PE_e2ap_{{choice.type}} (pctxt, *pvalue->u.{{choice.field|replace("-","_")}}); //not primitive
+            {% else %}
          stat = asn1PE_e2ap_{{choice.type}} (pctxt, pvalue->u.{{choice.field|replace("-","_")}}); //not primitive
+            {% endif %}
          {% else %}
          //primitive {{choice.primitive_meta.type}}
             {% if choice.primitive_meta.primitive_id == 3 %}
@@ -219,7 +223,11 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
       case {{(choice.tag+1)|int}}:
          RTXCTXTPUSHELEMNAME (pctxt, "{{choice.name|replace('_', '-')}}");
          {% if choice.primitive.isprimitive == False %}
+            {% if choice.alias == 5 or choice.alias == 6  or choice.alias == 13 or choice.alias == 2 or choice.alias == 9 or choice.alias == 10 %}{#not primitive but alias not pointer #}
+         stat = asn1PE_e2ap_{{choice.type}} (pctxt, *pvalue->u.{{choice.field|replace("-","_")}}); //not primitive
+            {% else %}
          stat = asn1PE_e2ap_{{choice.type}} (pctxt, pvalue->u.{{choice.field|replace("-","_")}}); //not primitive
+            {% endif %}
          {% else %}
          //primitive {{choice.primitive_meta.type}} - id = {{ choice.primitive_meta.primitive_id }}
             {% if choice.primitive_meta.primitive_id == 3 %}

@@ -137,7 +137,7 @@ xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
         {% endif %} {# end ENUMERATED primitive #}
     
     {% endif %}
-{% endfor %}{# End 1 #}
+{% endfor %}{# End 1 #}}
 
 
 /* 2 - compose sequence */
@@ -162,6 +162,10 @@ xnap_return_et e2ap_compose_{{name}}(
     if(p_{{name}}->bitmask & E2AP_{{name|camel_to_upper_snake}}_e2ap_{{f.field_name|camel_to_upper_snake}}_PRESENT)
     {% endif %}
     {  /*SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}} alias-id = {{f.alias}} - primitive = {{f.primitive.isprimitive}}*/
+    {% if f.presence == "optional" %}
+    p_e2ap_{{name}}->m_{{f.field_name}}Present = TRUE; //dungnm23 add -> check xem chuan ko nhe
+    {% endif %}
+
         {% if not (f.primitive.isprimitive == True or f.alias != -1) %}{#not primitive #}
         /* == not primitive (SEQ or CHOICE)==*/
         #if 0 

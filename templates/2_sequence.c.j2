@@ -39,7 +39,7 @@ int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
    RTXCTXTPUSHELEMNAME(pctxt, "{{f.field |replace('_', '-')}}");
    {%if f.field == "protocolIEs"%}
    stat = asn1PE_e2ap_{{name|replace('-', '_')}}_protocolIEs (pctxt, &pvalue->protocolIEs);
-   {% elif f.primitive_meta.is == True %}
+   {% elif f.primitive_meta.is == True %}{#    //primitive field in scope#}
       {% if f.primitive_meta.primitive_id == 2%}
    stat = asn1PE_e2ap_{{name}}_{{f.field}}(pctxt, pvalue->{{f.field|replace("-","_")}}); //primitive
       {% endif %}
@@ -55,8 +55,12 @@ int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
       {% if f.primitive_meta.primitive_id ==9 %}
    stat = asn1PE_e2ap_{{name}}_{{f.field}}(pctxt, pvalue->{{f.field|replace("-","_")}}); //octet string no size - mau 9
       {% endif %}  
-   {% else %}
-   stat = asn1PE_e2ap_{{f.ie_type|replace('-', '_')}} (pctxt, &pvalue->{{f.field|replace('-', '_') }});
+   {% else %}{#   // not primitive field or alias #}
+      {% if f.alias == 5 or f.alias == 6  or f.alias == 13 or f.alias == 2 or f.alias == 9 %}
+   stat = asn1PE_e2ap_{{f.ie_type|replace('-', '_')}} (pctxt, pvalue->{{f.field|replace('_', '_')}});
+      {% else %}
+   stat = asn1PE_e2ap_{{f.ie_type|replace('-', '_')}} (pctxt, &pvalue->{{f.field|replace('_', '_')}});
+      {% endif %}
    {% endif %}
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);

@@ -22,7 +22,7 @@ int asn1PE_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionU
    /*encode root elements*/   
    /* encode field tnlInformation - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "tnlInformation");
-   stat = asn1PE_e2ap_TNLinformation (pctxt, pvalue->tnlInformation);
+   stat = asn1PE_e2ap_TNLinformation (pctxt, &pvalue->tnlInformation);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

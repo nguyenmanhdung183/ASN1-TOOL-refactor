@@ -1,8 +1,0 @@
-TransactionID
-tnlAddress
-tnlPort
-TNLinformation
-TNLusage
-E2connectionUpdate-Item
-E2connectionUpdate-ItemIEs
-E2connectionUpdate-List

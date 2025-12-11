@@ -50,6 +50,7 @@
     return XNAP_SUCCESS;
 }
           
+}
 
 
 /* 2 - compose sequence */
@@ -70,6 +71,7 @@ xnap_return_et e2ap_compose_TNLinformation(
     }
     /* START COMPOSE SEQ FIELDS */
     {  /*SEQ_ELEM-1  Encode tnlAddress alias-id = -1 - primitive = True*/
+
         /*==primitive in scope==*/
         if(XNAP_FAILURE == e2ap_compose_TNLinformation_tnlAddress(p_asn1_ctx,
                                                 &p_e2ap_TNLinformation->tnlAddress,
@@ -82,6 +84,8 @@ xnap_return_et e2ap_compose_TNLinformation(
 
     if(p_TNLinformation->bitmask & E2AP_TNLINFORMATION_e2ap_TNL_PORT_PRESENT)
     {  /*SEQ_ELEM-2  Encode tnlPort alias-id = -1 - primitive = True*/
+    p_e2ap_TNLinformation->m_tnlPortPresent = TRUE; //dungnm23 add -> check xem chuan ko nhe
+
         /*==primitive in scope==*/
         if(XNAP_FAILURE == e2ap_compose_TNLinformation_tnlPort(p_asn1_ctx,
                                                 &p_e2ap_TNLinformation->tnlPort,

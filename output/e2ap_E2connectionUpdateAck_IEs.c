@@ -42,7 +42,7 @@ EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT
             case T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_TransactionID:
             {
                 RTXCTXTPUSHELEMNAME (pctxt, "id-TransactionID");
-                    stat = asn1PE_e2ap_TransactionID (pctxt, pvalue->value.u._e2ap_E2connectionUpdateAck_IEs_id_TransactionID);
+                    stat = asn1PE_e2ap_TransactionID (pctxt, *pvalue->value.u._e2ap_E2connectionUpdateAck_IEs_id_TransactionID);
                     if (stat != 0) return LOG_RTERR (pctxt, stat);
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;

@@ -22,37 +22,37 @@ EXTERN int asn1PE_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue)
    switch (pvalue->t) {
       case 1:
          RTXCTXTPUSHELEMNAME (pctxt, "ricRequest");
-         stat = asn1PE_e2ap_CauseRICrequest (pctxt, pvalue->u.ricRequest); //not primitive
+         stat = asn1PE_e2ap_CauseRICrequest (pctxt, *pvalue->u.ricRequest); //not primitive
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       case 2:
          RTXCTXTPUSHELEMNAME (pctxt, "ricService");
-         stat = asn1PE_e2ap_CauseRICservice (pctxt, pvalue->u.ricService); //not primitive
+         stat = asn1PE_e2ap_CauseRICservice (pctxt, *pvalue->u.ricService); //not primitive
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       case 3:
          RTXCTXTPUSHELEMNAME (pctxt, "e2Node");
-         stat = asn1PE_e2ap_CauseE2node (pctxt, pvalue->u.e2Node); //not primitive
+         stat = asn1PE_e2ap_CauseE2node (pctxt, *pvalue->u.e2Node); //not primitive
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       case 4:
          RTXCTXTPUSHELEMNAME (pctxt, "transport");
-         stat = asn1PE_e2ap_CauseTransport (pctxt, pvalue->u.transport); //not primitive
+         stat = asn1PE_e2ap_CauseTransport (pctxt, *pvalue->u.transport); //not primitive
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       case 5:
          RTXCTXTPUSHELEMNAME (pctxt, "protocol");
-         stat = asn1PE_e2ap_CauseProtocol (pctxt, pvalue->u.protocol); //not primitive
+         stat = asn1PE_e2ap_CauseProtocol (pctxt, *pvalue->u.protocol); //not primitive
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       case 6:
          RTXCTXTPUSHELEMNAME (pctxt, "misc");
-         stat = asn1PE_e2ap_CauseMisc (pctxt, pvalue->u.misc); //not primitive
+         stat = asn1PE_e2ap_CauseMisc (pctxt, *pvalue->u.misc); //not primitive
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;

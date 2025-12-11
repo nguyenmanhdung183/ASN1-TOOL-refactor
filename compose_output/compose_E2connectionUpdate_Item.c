@@ -3,6 +3,7 @@
 /************************************************************/
 
 /* 1- compose primitive intergrate for sequence fields */
+}
 
 
 /* 2 - compose sequence */
@@ -23,6 +24,7 @@ xnap_return_et e2ap_compose_E2connectionUpdate_Item(
     }
     /* START COMPOSE SEQ FIELDS */
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
+
         /* == not primitive (SEQ or CHOICE)==*/
         #if 0 
             /* 1.alloc mem */
@@ -46,6 +48,7 @@ xnap_return_et e2ap_compose_E2connectionUpdate_Item(
     } /* end SEQ_ELEM-1  Encode tnlInformation*/
 
     {  /*SEQ_ELEM-2  Encode tnlUsage alias-id = 13 - primitive = False*/
+
          /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_TNLusage(p_asn1_ctx,
                                                 &p_e2ap_E2connectionUpdate_Item->tnlUsage,

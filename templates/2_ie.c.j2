@@ -44,7 +44,11 @@ EXTERN int asn1PE_e2ap_{{choices[0].dad_type_name|replace('-', '_')}}_protocolIE
             case T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }}:
             {
                 RTXCTXTPUSHELEMNAME (pctxt, "{{ie.field_name|replace('_', '-')}}");
-                    stat = asn1PE_e2ap_{{ie.item_type|replace('-', '_')}} (pctxt, pvalue->value.u._e2ap_{{ ies_name }}_{{ ie.field_name|replace('-', '_') }});
+                {% if ie.alias == 5 or ie.alias == 6  or ie.alias == 13 or ie.alias == 2 or ie.alias == 9 or ie.alias == 10 %}
+                    stat = asn1PE_e2ap_{{ie.item_type|replace('-', '_')}} (pctxt, *pvalue->value.u._e2ap_{{ies_name }}_{{ ie.field_name|replace('-', '_') }});
+                {% else %}
+                    stat = asn1PE_e2ap_{{ie.item_type|replace('-', '_')}} (pctxt, pvalue->value.u._e2ap_{{ies_name }}_{{ ie.field_name|replace('-', '_') }});
+                {% endif %}
                     if (stat != 0) return LOG_RTERR (pctxt, stat);
                 RTXCTXTPOPELEMNAME (pctxt);
                 break;
