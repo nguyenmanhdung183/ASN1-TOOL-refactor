@@ -1,40 +1,41 @@
 /**************************************************/
 /* assign_value function for E2connectionUpdateAcknowledge */
 /**************************************************/
+#include "harrdcode_for_e2_con_upd_ack.h"
+#if 0
 void assign_hardcode_value_E2connectionUpdateAcknowledge(e2ap_E2connectionUpdateAcknowledge_t* p_E2connectionUpdateAcknowledge)
 {
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.TransactionID
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlAddress
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation....
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlPort
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation
+// E2connectionUpdateAcknowledge
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseE2node
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseMisc
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseProtocol
 // E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICrequest
 // E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICservice
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseE2node
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseTransport
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseProtocol
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseMisc
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer.ServiceLayerCause
 // E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs
-// E2connectionUpdateAcknowledge
-
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseTransport
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation....
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlAddress
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlPort
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.TransactionID
 
     return;
 }
-
+#endif
 
 /**************************************************/
 /*      encode_E2connectionUpdateAcknowledge                    */

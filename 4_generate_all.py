@@ -82,8 +82,10 @@ def load_bottomup():
                 if line.endswith("PrintableString\n"):
                     continue
                 text += "// " + line   # line vẫn giữ \n
+    text = sorted(text.splitlines(), key=lambda x: x.count('.'))
+    text = sorted(text, key=lambda x: tuple(x.split('.')))
 
-    return text
+    return "\n".join(text)
 
 #=============================
 

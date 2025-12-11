@@ -70,7 +70,9 @@ typedef struct{
 /*********************************************************/
 
 typedef struct{
-#define MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT 32 // dungnm23 change to 1 if needed
+//#define MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT 32 // dungnm23 change to 1 if needed
+#define MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT 1
+
   
     UInt8 id_E2connectionUpdate_Item_count;
     
@@ -264,7 +266,9 @@ typedef struct{
 /*********************************************************/
 
 typedef struct{
-#define MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT 32 // dungnm23 change to 1 if needed
+//#define MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT 32 // dungnm23 change to 1 if needed
+#define MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT 1
+
   
     UInt8 id_E2connectionSetupFailed_Item_count;
     

@@ -19,7 +19,7 @@ int main(){
 #endif
 
 
-#if 1
+#if 0
     e2ap_E2setupResponse_t e2_update;
     memset(&e2_update, 0, sizeof(e2ap_E2setupResponse_t));
 
@@ -30,6 +30,17 @@ int main(){
     );
 #endif
 
+
+#if 1
+    e2ap_E2connectionUpdateAcknowledge_t e2_update;
+    memset(&e2_update, 0, sizeof(e2ap_E2connectionUpdateAcknowledge_t));
+
+    xnap_return_et ret = e2ap_encode_E2connectionUpdateAcknowledge(
+        &e2_update,
+        asn_msg,
+        &asn_msg_len
+    );
+#endif
     
     if (ret == XNAP_OK) {
         printf("Encode thành công, chiều dài: %d\n", asn_msg_len);
