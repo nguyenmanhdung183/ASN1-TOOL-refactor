@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_RICsubscriptionAudit_Item(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionAudit_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAudit_Item->ricRequestID)
         {

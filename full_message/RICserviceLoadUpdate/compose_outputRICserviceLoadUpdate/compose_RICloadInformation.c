@@ -11,6 +11,9 @@
 )
 {
     *p_dest = (e2ap_RICloadInformation_loadStatus)*p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICloadInformation_loadStatus value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
      
@@ -22,6 +25,10 @@ xnap_return_et e2ap_compose_RICloadInformation_loadEstimate(
 )
 {
     *p_dest = (e2ap_RICloadInformation_loadEstimate)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICloadInformation value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
            

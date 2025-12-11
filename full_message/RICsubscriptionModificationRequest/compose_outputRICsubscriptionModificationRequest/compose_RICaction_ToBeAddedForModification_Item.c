@@ -61,8 +61,8 @@ xnap_return_et e2ap_compose_RICaction_ToBeAddedForModification_Item(
 
     {  /*SEQ_ELEM-5  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction)
         {

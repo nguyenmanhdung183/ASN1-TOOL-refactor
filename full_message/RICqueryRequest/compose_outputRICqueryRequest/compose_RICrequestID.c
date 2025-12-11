@@ -11,6 +11,10 @@ xnap_return_et e2ap_compose_RICrequestID_ricRequestorID(
 )
 {
     *p_dest = (e2ap_RICrequestID_ricRequestorID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICrequestID value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
            
@@ -22,6 +26,10 @@ xnap_return_et e2ap_compose_RICrequestID_ricInstanceID(
 )
 {
     *p_dest = (e2ap_RICrequestID_ricInstanceID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICrequestID value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
            

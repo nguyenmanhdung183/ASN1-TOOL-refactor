@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadConfirm_ItemIE(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID)
         {
@@ -51,8 +51,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadConfirm_ItemIE(
 
     {  /*SEQ_ELEM-3  Encode ricActionLoadConfirm_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoadConfirm_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list)
         {

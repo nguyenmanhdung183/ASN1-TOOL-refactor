@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID)
         {
@@ -40,8 +40,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
 
     {  /*SEQ_ELEM-2  Encode ricSubscriptionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation)
         {
@@ -63,8 +63,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
 
     {  /*SEQ_ELEM-3  Encode ricActionLoad_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoad_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list)
         {

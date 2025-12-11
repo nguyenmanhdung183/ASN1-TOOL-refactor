@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_GlobalngeNB_ID(
 
     {  /*SEQ_ELEM-2  Encode enb_id alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalngeNB_ID->enb_id = rtxMemAllocType(p_asn1_ctx, e2ap_ENB_ID_Choice);
         if(XNAP_P_NULL == p_e2ap_GlobalngeNB_ID->enb_id)
         {

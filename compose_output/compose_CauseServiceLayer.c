@@ -14,7 +14,14 @@ xnap_return_et e2ap_compose_CauseServiceLayer(
 {
 
 //cần alloc node
-
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_CauseServiceLayer)
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for CauseServiceLayer",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
     {  /*SEQ_ELEM-1  Encode serviceLayerCause alias-id = 9 - primitive = False*/
          /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_ServiceLayerCause(p_asn1_ctx,

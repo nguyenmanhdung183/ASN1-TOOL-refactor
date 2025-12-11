@@ -64,9 +64,12 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
 
         /* Fill ProtocolIEs */
 {% for ie in choices %}
-#if 1 // thiếu check optional bitmask
+#if 1
+        /*IE-{{loop.index}}   encode {{ie.field_name}} - presence = {{ie.presence}}*/
+{% if  ie.presence== "optional" %}
+        if(p_{{choices[0].dad_type_name}}_src->bitmask & E2AP_{{choices[0].dad_type_name|camel_to_upper_snake}}_e2ap_{{ie.field_name|camel_to_upper_snake}}_PRESENT)
+{% endif %}
         {
-            /*IE-{{loop.index}}   encode {{ie.field_name}} - presence = {{ie.presence}}*/
             rtxDListAllocNodeAndData(&asn1_ctx,
                                     e2ap_{{choices[0].dad_type_name}}_protocolIEs_element,
                                     &p_node,

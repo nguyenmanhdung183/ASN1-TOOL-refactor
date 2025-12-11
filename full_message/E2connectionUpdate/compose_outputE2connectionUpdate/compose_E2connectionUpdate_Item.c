@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_E2connectionUpdate_Item(
 
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2connectionUpdate_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionUpdate_Item->tnlInformation)
         {

@@ -14,6 +14,10 @@ xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
 )
 {
     *p_dest = (e2ap_{{name}}_{{f.field}})*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER {{name}} value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
         {% endif %} {# end INTEGER primitive #}
@@ -24,8 +28,13 @@ xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
                      _e2ap_{{name}}_{{f.field}}_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING {{name}}_{{f.field}} numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
         {% endif %} {# end BIT STRING 3+4 primitive #}
@@ -36,23 +45,81 @@ xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
                      _e2ap_{{name}}_{{f.field}}_t              *p_src//src
 )
 {
-    p_dest->numbits = E2AP_XXX;//duugnm23 fix value
-    p_dest->data = (OSOCTET*)rtxMemAllocZ(p_asn1_ctx, {{(f.primitive_meta.max +7)//8 }});// dungnm23 check nhe E2AP_xxx_OCTET_SIZE
-    if(p_dest->data == NULL)
+    p_dest->numbits = p_src->numbits;
+
+    /* kích thước tính theo số octet thực */
+    size_t num_octet = (p_src->numbits + 7) / 8;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num_octet);
+    if (!p_dest->data)
     {
-        XNAP_TRACE(XNAP_ERROR, "dungnm23 %s memory allocation failed in e2ap_compose_{{name}}_{{f.field}}", __FUNCTION__);
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s failed alloc in e2ap_compose_{{name}}_{{f.field}}",
+                   __FUNCTION__);
         return XNAP_FAILURE;
     }
-    XNAP_MEMCPY((void*)p_dest->data, p_src->data, {{(f.primitive_meta.max +7)//8 }});
+
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, num_octet);
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debugBIT STRING {{name}}_{{f.field}} numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif    
+
     return XNAP_SUCCESS;
 }
-
         {% endif %} {# end BIT STRING 2 primitive #}
         {% if f.primitive_meta.primitive_id == 9 %}{# OCTET STRING primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                        _e2ap_{{name}}_{{f.field}}_t              *p_src//src
+)
+{
+    size_t num = p_src->numocts;
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s alloc fail in e2ap_compose_{{name}}_{{f.field}}",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING {{name}}_{{f.field}} numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+    return XNAP_SUCCESS;
+}
         {% endif %} {# end OCTET STRING primitive #}
         {% if f.primitive_meta.primitive_id == 8 %}{# OCTET STRING size N primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                        _e2ap_{{name}}_{{f.field}}_t              *p_src//src
+)
+{
+    p_dest->numocts = p_src->numocts;  // hoặc {{size}}, tùy ASN
+    XNAP_MEMCPY(p_dest->data, p_src->data, p_src->numocts);
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING {{name}}_{{f.field}} numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+    return XNAP_SUCCESS;
+}
         {% endif %} {# end OCTET STRING size N primitive #}
         {% if f.primitive_meta.primitive_id == 10 %}{# Printable string primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                        _e2ap_{{name}}_{{f.field}}_t              *p_src//src
+)
+{
+    *p_dest = (e2ap_{{name}}_{{f.field}})*p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug PrintableString {{name}}_{{f.field}} string =%s", __FUNCTION__, p_dest);
+    #endif
+    return XNAP_SUCCESS;
+}
         {% endif %} {# end Printable string primitive #}
         {% if f.primitive_meta.primitive_id == 13 %}{# ENUMERATED primitive #}
 xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
@@ -62,6 +129,9 @@ xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
 )
 {
     *p_dest = (e2ap_{{name}}_{{f.field}})*p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED {{name}}_{{f.field}} value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
         {% endif %} {# end ENUMERATED primitive #}
@@ -79,13 +149,23 @@ xnap_return_et e2ap_compose_{{name}}(
 {
 
 //cần alloc node
-
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_{{name}})
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for {{name}}",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
 {% for f in fields %}
+    {% if f.presence == "optional" %}
+    if(p_{{name}}->bitmask & E2AP_{{name|camel_to_upper_snake}}_e2ap_{{f.field_name|camel_to_upper_snake}}_PRESENT)
+    {% endif %}
     {  /*SEQ_ELEM-{{loop.index}}  Encode {{f.field_name}} alias-id = {{f.alias}} - primitive = {{f.primitive.isprimitive}}*/
         {% if not (f.primitive.isprimitive == True or f.alias != -1) %}{#not primitive #}
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_{{name}}->{{f.field_name}} = rtxMemAllocType(p_asn1_ctx, e2ap_{{f.ie_type | replace("-","_")}});
         if(XNAP_P_NULL == p_e2ap_{{name}}->{{f.field_name}})
         {

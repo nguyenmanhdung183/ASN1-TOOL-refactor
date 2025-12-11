@@ -10,11 +10,17 @@
                      _e2ap_GNB_ID_Choice_gnb_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING GNB_ID_Choice_gnb_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-      
+          
+
 /* 2 - compose choice */
 xnap_return_et e2ap_compose_GNB_ID_Choice(
                 OSCTXT                        *p_asn1_ctx,

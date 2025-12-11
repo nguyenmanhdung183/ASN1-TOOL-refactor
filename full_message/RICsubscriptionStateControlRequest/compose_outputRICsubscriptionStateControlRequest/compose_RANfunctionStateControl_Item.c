@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_Item(
 
     {  /*SEQ_ELEM-2  Encode ricSubscriptionToBeSuspended_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionToBeSuspended_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list)
         {
@@ -51,8 +51,8 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_Item(
 
     {  /*SEQ_ELEM-3  Encode ricSubscriptionToBeResumed_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionToBeResumed_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list)
         {

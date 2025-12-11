@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
 
     {  /*SEQ_ELEM-2  Encode iE_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_CriticalityDiagnostics_IE_List->iE_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ProtocolIE_ID);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->iE_ID)
         {
@@ -51,8 +51,8 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
 
     {  /*SEQ_ELEM-3  Encode typeOfError alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_CriticalityDiagnostics_IE_List->typeOfError = rtxMemAllocType(p_asn1_ctx, e2ap_TypeOfError);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->typeOfError)
         {

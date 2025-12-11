@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_RICaction_RefusedToBeModified_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_RefusedToBeModified_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RefusedToBeModified_Item->cause)
         {

@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_GlobalE2node_ng_eNB_ID(
 
     {  /*SEQ_ELEM-1  Encode global_ng_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID)
         {
@@ -40,8 +40,8 @@ xnap_return_et e2ap_compose_GlobalE2node_ng_eNB_ID(
 
     {  /*SEQ_ELEM-2  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID)
         {

@@ -58,7 +58,7 @@ typedef struct{ {#/* main struct for sequence -*/#}
 {% for f in fields %}
     {% if f.presence == "optional" %}
     {% set ns.bitmask_value = ns.bitmask_value + 1 %}
-    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{f.field|camel_to_upper_snake}}_PRESENT 0x{{ '%02X' % (2 ** (ns.bitmask_value -1)) }}
+    #define E2AP_{{name|camel_to_upper_snake}}_e2ap_{{f.field_name|camel_to_upper_snake}}_PRESENT 0x{{ '%02X' % (2 ** (ns.bitmask_value -1)) }}
     {% set has_optional = true %}
     {% endif %}
     {# bit mask #}

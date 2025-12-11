@@ -1,0 +1,70 @@
+/************************************************************/
+/*      SEQUENCE {{name}}                */
+/************************************************************/
+
+/* 1- compose primitive intergrate for sequence fields */
+{% for f in fields %}{# 1 #}
+    {% if f.primitive_meta.primitive_id != -1 %} {# primitive #}
+    // id = {{f.primitive_meta.primitive_id}} - {{f.primitive.primitive_name}} - {{f.field}}
+        {% if f.primitive_meta.primitive_id == 5 or f.primitive_meta.primitive_id == 6 %}{# INTEGER primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                    OSCTXT                       *p_asn1_ctx,
+                    e2ap_{{name}}_{{f.field}}  *p_dest,//dest
+                    _e2ap_{{name}}_{{f.field}}_t  *p_src//src
+)
+{
+    *p_dest = (e2ap_{{name}}_{{f.field}})*p_src;
+    return XNAP_SUCCESS;
+}
+        {% endif %} {# end INTEGER primitive #}
+        {% if f.primitive_meta.primitive_id == 3 or f.primitive_meta.primitive_id == 4 %}{# BIT STRING 3+4primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                     OSCTXT                       *p_asn1_ctx,
+                     e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                     _e2ap_{{name}}_{{f.field}}_t              *p_src//src
+)
+{
+    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
+    p_dest->numbits = p_src->numbits;
+    return XNAP_SUCCESS;
+}
+        {% endif %} {# end BIT STRING 3+4 primitive #}
+        {% if f.primitive_meta.primitive_id == 2 %}{# BIT STRING 2 primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                     OSCTXT                       *p_asn1_ctx,
+                     e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                     _e2ap_{{name}}_{{f.field}}_t              *p_src//src
+)
+{
+    p_dest->numbits = E2AP_XXX;//duugnm23 fix value
+    p_dest->data = (OSOCTET*)rtxMemAllocZ(p_asn1_ctx, {{(f.primitive_meta.max +7)//8 }});// dungnm23 check nhe E2AP_xxx_OCTET_SIZE
+    if(p_dest->data == NULL)
+    {
+        XNAP_TRACE(XNAP_ERROR, "dungnm23 %s memory allocation failed in e2ap_compose_{{name}}_{{f.field}}", __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, {{(f.primitive_meta.max +7)//8 }});
+    return XNAP_SUCCESS;
+}
+
+        {% endif %} {# end BIT STRING 2 primitive #}
+        {% if f.primitive_meta.primitive_id == 9 %}{# OCTET STRING primitive #}
+        {% endif %} {# end OCTET STRING primitive #}
+        {% if f.primitive_meta.primitive_id == 8 %}{# OCTET STRING size N primitive #}
+        {% endif %} {# end OCTET STRING size N primitive #}
+        {% if f.primitive_meta.primitive_id == 10 %}{# Printable string primitive #}
+        {% endif %} {# end Printable string primitive #}
+        {% if f.primitive_meta.primitive_id == 13 %}{# ENUMERATED primitive #}
+xnap_return_et e2ap_compose_{{name}}_{{f.field}}(
+                OSCTXT                       *p_asn1_ctx,
+                e2ap_{{name}}_{{f.field}}                 *p_dest,//dest
+                _e2ap_{{name}}_{{f.field}}_et              *p_src//src
+)
+{
+    *p_dest = (e2ap_{{name}}_{{f.field}})*p_src;
+    return XNAP_SUCCESS;
+}
+        {% endif %} {# end ENUMERATED primitive #}
+    
+    {% endif %}
+{% endfor %}{# End 1 #}

@@ -4,6 +4,23 @@
 /******************************************/
 typedef struct{
     // thiếu bitmask
+
+{% set ns = namespace(bitmask_value_1=0) %}
+{% set has_optional = false %}
+{% set ns.bitmask_value_1 = 0%}
+{% for f in choices %}
+    {% if f.presence == "optional" %}
+    {% set ns.bitmask_value_1 = ns.bitmask_value_1 + 1 %}
+    #define E2AP_{{f.dad_type_name|camel_to_upper_snake}}_e2ap_{{f.field_name|camel_to_upper_snake}}_PRESENT 0x{{ '%02X' % (2 ** (ns.bitmask_value_1 -1)) }}
+    {% set has_optional = true %}
+    {% endif %}
+    {# bit mask #}
+    {% if has_optional == true and loop.index0 == choices|length -1 %}
+    
+    rrc_bitmask_t bitmask; /* BITMASK ^*/
+    {% endif %}
+{% endfor %}
+
     {% for d in choices %}
     _e2ap_{{d.item_type}}_t {{d.field_name}}; //e2ap_{item_type} {field_name} alias = {{d.alias}}
     {% endfor %}

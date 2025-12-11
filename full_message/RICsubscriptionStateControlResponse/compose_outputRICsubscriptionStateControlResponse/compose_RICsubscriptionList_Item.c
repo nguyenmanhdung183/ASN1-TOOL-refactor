@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_RICsubscriptionList_Item(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionList_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionList_Item->ricRequestID)
         {
@@ -40,8 +40,8 @@ xnap_return_et e2ap_compose_RICsubscriptionList_Item(
 
     {  /*SEQ_ELEM-2  Encode ricAction_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionList_Item->ricAction_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICaction_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionList_Item->ricAction_list)
         {

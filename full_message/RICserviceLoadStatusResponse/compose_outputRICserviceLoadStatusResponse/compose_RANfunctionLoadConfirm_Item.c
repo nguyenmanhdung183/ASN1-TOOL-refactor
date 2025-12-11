@@ -39,8 +39,8 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_Item(
 
     {  /*SEQ_ELEM-3  Encode ricServiceLoadConfirm alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadConfirm);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm)
         {
@@ -62,8 +62,8 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoadConfirm_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoadConfirm_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list)
         {

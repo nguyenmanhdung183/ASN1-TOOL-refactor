@@ -1,66 +1,119 @@
 #include "main_struct.h"
 #include "output_main.h"
 
+/*****************************************************/
+/*    COMPOSE PRIMITIVE TransactionID                             */
+/*****************************************************/
+/* compose primitive - id = 5 - INTEGER (0..255,...) - TransactionID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_TransactionID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_TransactionID     *p_dest,
+                        _e2ap_TransactionID_t  *p_src
+){
+    *p_dest = (e2ap_TransactionID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER TransactionID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /************************************************************/
-/*      SEQUENCE RICrequestID                */
+/*      SEQUENCE TNLinformation                */
 /************************************************************/
 
 /* 1- compose primitive intergrate for sequence fields */
-     // id = 6 - INTEGER (0..65535) - ricRequestorID
-xnap_return_et e2ap_compose_RICrequestID_ricRequestorID(
-                    OSCTXT                       *p_asn1_ctx,
-                    e2ap_RICrequestID_ricRequestorID  *p_dest,//dest
-                    _e2ap_RICrequestID_ricRequestorID_t  *p_src//src
+     // id = 2 - BIT STRING (SIZE(1..160,...)) - tnlAddress
+  xnap_return_et e2ap_compose_TNLinformation_tnlAddress(
+                     OSCTXT                       *p_asn1_ctx,
+                     e2ap_TNLinformation_tnlAddress                 *p_dest,//dest
+                     _e2ap_TNLinformation_tnlAddress_t              *p_src//src
 )
 {
-    *p_dest = (e2ap_RICrequestID_ricRequestorID)*p_src;
+    p_dest->numbits = p_src->numbits;
+
+    /* kích thước tính theo số octet thực */
+    size_t num_octet = (p_src->numbits + 7) / 8;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num_octet);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s failed alloc in e2ap_compose_TNLinformation_tnlAddress",
+                   __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, num_octet);
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debugBIT STRING TNLinformation_tnlAddress numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif    
+
     return XNAP_SUCCESS;
 }
-           
-     // id = 6 - INTEGER (0..65535) - ricInstanceID
-xnap_return_et e2ap_compose_RICrequestID_ricInstanceID(
-                    OSCTXT                       *p_asn1_ctx,
-                    e2ap_RICrequestID_ricInstanceID  *p_dest,//dest
-                    _e2ap_RICrequestID_ricInstanceID_t  *p_src//src
+         
+     // id = 3 - BIT STRING (SIZE(16)) - tnlPort
+ xnap_return_et e2ap_compose_TNLinformation_tnlPort(
+                     OSCTXT                       *p_asn1_ctx,
+                     e2ap_TNLinformation_tnlPort                 *p_dest,//dest
+                     _e2ap_TNLinformation_tnlPort_t              *p_src//src
 )
 {
-    *p_dest = (e2ap_RICrequestID_ricInstanceID)*p_src;
+    p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING TNLinformation_tnlPort numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           
+          
 
 
 /* 2 - compose sequence */
-xnap_return_et e2ap_compose_RICrequestID(
+xnap_return_et e2ap_compose_TNLinformation(
                 OSCTXT                        *p_asn1_ctx,
-                e2ap_RICrequestID                 *p_e2ap_RICrequestID, //dest
-                _e2ap_RICrequestID_t              *p_RICrequestID //src
+                e2ap_TNLinformation                 *p_e2ap_TNLinformation, //dest
+                _e2ap_TNLinformation_t              *p_TNLinformation //src
 )
 {
 
 //cần alloc node
-
-    {  /*SEQ_ELEM-1  Encode ricRequestorID alias-id = -1 - primitive = True*/
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_TNLinformation)
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for TNLinformation",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
+    {  /*SEQ_ELEM-1  Encode tnlAddress alias-id = -1 - primitive = True*/
         /*==primitive in scope==*/
-        if(XNAP_FAILURE == e2ap_compose_RICrequestID_ricRequestorID(p_asn1_ctx,
-                                                &p_e2ap_RICrequestID->ricRequestorID,
-                                                &p_RICrequestID->ricRequestorID))
+        if(XNAP_FAILURE == e2ap_compose_TNLinformation_tnlAddress(p_asn1_ctx,
+                                                &p_e2ap_TNLinformation->tnlAddress,
+                                                &p_TNLinformation->tnlAddress))
         {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestorID",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlAddress",__FUNCTION__);
             return XNAP_FAILURE;
         }
-    } /* end SEQ_ELEM-1  Encode ricRequestorID*/
+    } /* end SEQ_ELEM-1  Encode tnlAddress*/
 
-    {  /*SEQ_ELEM-2  Encode ricInstanceID alias-id = -1 - primitive = True*/
+    if(p_TNLinformation->bitmask & E2AP_TNLINFORMATION_e2ap_TNL_PORT_PRESENT)
+    {  /*SEQ_ELEM-2  Encode tnlPort alias-id = -1 - primitive = True*/
         /*==primitive in scope==*/
-        if(XNAP_FAILURE == e2ap_compose_RICrequestID_ricInstanceID(p_asn1_ctx,
-                                                &p_e2ap_RICrequestID->ricInstanceID,
-                                                &p_RICrequestID->ricInstanceID))
+        if(XNAP_FAILURE == e2ap_compose_TNLinformation_tnlPort(p_asn1_ctx,
+                                                &p_e2ap_TNLinformation->tnlPort,
+                                                &p_TNLinformation->tnlPort))
         {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricInstanceID",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlPort",__FUNCTION__);
             return XNAP_FAILURE;
         }
-    } /* end SEQ_ELEM-2  Encode ricInstanceID*/
+    } /* end SEQ_ELEM-2  Encode tnlPort*/
 
 
     // cần appendnode
@@ -68,25 +121,141 @@ xnap_return_et e2ap_compose_RICrequestID(
 }   
 
 /*****************************************************/
-/*    COMPOSE PRIMITIVE RANfunctionID                             */
+/*    COMPOSE PRIMITIVE TNLusage                             */
 /*****************************************************/
-/* compose primitive - id = 6 - INTEGER (0..4095) - RANfunctionID*/
+/* compose primitive - id = 13 - ENUMERATED - TNLusage*/
 /* ---------------------------------------------------------------------- */
-/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/*  ENUMERATED (primitive_id = 13)                                        */
 /* ---------------------------------------------------------------------- */
-xnap_return_et e2ap_compose_RANfunctionID(
+xnap_return_et e2ap_compose_TNLusage(
                         OSCTXT            *p_asn1_ctx,
-                        e2ap_RANfunctionID     *p_dest,
-                        _e2ap_RANfunctionID_t  *p_src
+                        e2ap_TNLusage     *p_dest,
+                        _e2ap_TNLusage_et *p_src
 ){
-    *p_dest = (e2ap_RANfunctionID)*p_src;
+    *p_dest = (e2ap_TNLusage)*p_src;
 
     #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
-        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RANfunctionID value=%u", __FUNCTION__, *p_dest);
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED TNLusage value=%u", __FUNCTION__, *p_dest);
     #endif
-
+    
     return XNAP_SUCCESS;
 }
+/************************************************************/
+/*      SEQUENCE E2connectionUpdate_Item                */
+/************************************************************/
+
+/* 1- compose primitive intergrate for sequence fields */
+
+
+/* 2 - compose sequence */
+xnap_return_et e2ap_compose_E2connectionUpdate_Item(
+                OSCTXT                        *p_asn1_ctx,
+                e2ap_E2connectionUpdate_Item                 *p_e2ap_E2connectionUpdate_Item, //dest
+                _e2ap_E2connectionUpdate_Item_t              *p_E2connectionUpdate_Item //src
+)
+{
+
+//cần alloc node
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_E2connectionUpdate_Item)
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for E2connectionUpdate_Item",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
+    {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
+        /* == not primitive (SEQ or CHOICE)==*/
+        #if 0 
+            /* 1.alloc mem */
+        p_e2ap_E2connectionUpdate_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
+        if(XNAP_P_NULL == p_e2ap_E2connectionUpdate_Item->tnlInformation)
+        {
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformation",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+        #endif
+            /* 2.init */
+        asn1Init_e2ap_TNLinformation(&p_e2ap_E2connectionUpdate_Item->tnlInformation);
+            /* 3.compose */
+        if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
+                                                &p_e2ap_E2connectionUpdate_Item->tnlInformation,//dest
+                                                &p_E2connectionUpdate_Item->tnlInformation)) //src
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformation",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+    } /* end SEQ_ELEM-1  Encode tnlInformation*/
+
+    {  /*SEQ_ELEM-2  Encode tnlUsage alias-id = 13 - primitive = False*/
+         /*==primitive alias== */
+        if(XNAP_FAILURE == e2ap_compose_TNLusage(p_asn1_ctx,
+                                                &p_e2ap_E2connectionUpdate_Item->tnlUsage,
+                                                &p_E2connectionUpdate_Item->tnlUsage))
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlUsage",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+    } /* end SEQ_ELEM-2  Encode tnlUsage*/
+
+
+    // cần appendnode
+    return XNAP_SUCCESS;
+}   
+
+  
+// IE thường -> IE child_of_msg ở file encode ie child of msg rồi
+// khả năng kô cần
+
+// compose single container mau ơ xnap_compose_TAISupport_list()
+xnap_return_et e2ap_compose_E2connectionUpdate_List (
+                OSCTXT                        *p_asn1_ctx,
+                OSRTDList                     *p_e2ap_E2connectionUpdate_List,
+                _e2ap_E2connectionUpdate_List_t       *p_E2connectionUpdate_List
+){
+    e2ap_E2connectionUpdate_ItemIEs   *p_E2connectionUpdate_ItemIEs = NULL;
+    OSRTDListNode                           *p_node_list = XNAP_P_NULL;
+    UInt16                                   t_count = XNAP_NULL;
+    for(t_count = 0; t_count < p_E2connectionUpdate_List->id_E2connectionUpdate_Item_count; t_count++)
+    {
+        rtxDListAllocNodeAndData(p_asn1_ctx,
+                                e2ap_E2connectionUpdate_ItemIEs,
+                                &p_node_list,
+                                &p_E2connectionUpdate_ItemIEs);
+        if(GNB_PNULL==p_node_list){
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionUpdate-ItemIEs",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+        asn1Init_e2ap_E2connectionUpdate_ItemIEs(p_E2connectionUpdate_ItemIEs);
+        p_E2connectionUpdate_ItemIEs->id = ASN1V_e2ap_id_E2connectionUpdate_Item;
+        p_E2connectionUpdate_ItemIEs->criticality = e2ap_reject;
+        p_E2connectionUpdate_ItemIEs->value.t =  T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item;
+        p_E2connectionUpdate_ItemIEs->value.u._e2apE2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item
+                = rtxMemAllocType(p_asn1_ctx, e2ap_E2connectionUpdate_ItemIEs);
+        if(GNB_PNULL==p_E2connectionUpdate_ItemIEs->value.u._e2apE2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item){
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionUpdate-ItemIEs",__FUNCTION__);
+            rtFreeContext(p_asn1_ctx);
+            return XNAP_FAILURE;
+        }        
+
+        /*ENCODE FIELD*/
+        // phải lấy thông tin sequence mà con của cái single container này :))   -> tạo các hàm bé hơn như PDU í    
+
+        //ENCODE ITEM=============
+        if(XNAP_FAILURE == e2ap_compose_E2connectionUpdate_Item(p_asn1_ctx,
+                                                p_E2connectionUpdate_ItemIEs->value.u._e2apE2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item,
+                                                &p_E2connectionUpdate_List->id_E2connectionUpdate_Item[t_count]))
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionUpdate-ItemIEs",__FUNCTION__);
+            rtFreeContext(p_asn1_ctx);
+            return XNAP_FAILURE;
+        }
+        rtxDListAppendNode(p_e2ap_E2connectionUpdate_List, p_node_list);
+    }
+    return XNAP_SUCCESS;
+}
+
+
 /*****************************************************/
 /*    COMPOSE PRIMITIVE CauseRICrequest                             */
 /*****************************************************/
@@ -255,7 +424,14 @@ xnap_return_et e2ap_compose_CauseServiceLayer(
 {
 
 //cần alloc node
-
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_CauseServiceLayer)
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for CauseServiceLayer",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
     {  /*SEQ_ELEM-1  Encode serviceLayerCause alias-id = 9 - primitive = False*/
          /*==primitive alias== */
         if(XNAP_FAILURE == e2ap_compose_ServiceLayerCause(p_asn1_ctx,
@@ -462,279 +638,166 @@ xnap_return_et e2ap_compose_Cause(
 
     }
     return retVal;
-}/*****************************************************/
-/*    COMPOSE PRIMITIVE ProcedureCode                             */
-/*****************************************************/
-/* compose primitive - id = 6 - INTEGER (0..255) - ProcedureCode*/
-/* ---------------------------------------------------------------------- */
-/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
-/* ---------------------------------------------------------------------- */
-xnap_return_et e2ap_compose_ProcedureCode(
-                        OSCTXT            *p_asn1_ctx,
-                        e2ap_ProcedureCode     *p_dest,
-                        _e2ap_ProcedureCode_t  *p_src
-){
-    *p_dest = (e2ap_ProcedureCode)*p_src;
-
-    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
-        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER ProcedureCode value=%u", __FUNCTION__, *p_dest);
-    #endif
-
-    return XNAP_SUCCESS;
-}
-/*****************************************************/
-/*    COMPOSE PRIMITIVE TriggeringMessage                             */
-/*****************************************************/
-/* compose primitive - id = 13 - ENUMERATED - TriggeringMessage*/
-/* ---------------------------------------------------------------------- */
-/*  ENUMERATED (primitive_id = 13)                                        */
-/* ---------------------------------------------------------------------- */
-xnap_return_et e2ap_compose_TriggeringMessage(
-                        OSCTXT            *p_asn1_ctx,
-                        e2ap_TriggeringMessage     *p_dest,
-                        _e2ap_TriggeringMessage_et *p_src
-){
-    *p_dest = (e2ap_TriggeringMessage)*p_src;
-
-    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
-    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED TriggeringMessage value=%u", __FUNCTION__, *p_dest);
-    #endif
-    
-    return XNAP_SUCCESS;
-}
-/*****************************************************/
-/*    COMPOSE PRIMITIVE Criticality                             */
-/*****************************************************/
-/* compose primitive - id = 13 - ENUMERATED - Criticality*/
-/* ---------------------------------------------------------------------- */
-/*  ENUMERATED (primitive_id = 13)                                        */
-/* ---------------------------------------------------------------------- */
-xnap_return_et e2ap_compose_Criticality(
-                        OSCTXT            *p_asn1_ctx,
-                        e2ap_Criticality     *p_dest,
-                        _e2ap_Criticality_et *p_src
-){
-    *p_dest = (e2ap_Criticality)*p_src;
-
-    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
-    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED Criticality value=%u", __FUNCTION__, *p_dest);
-    #endif
-    
-    return XNAP_SUCCESS;
-}
-/********************************************/
-/* File compose missing: compose_SEQUENCE.c */
-/********************************************/
-
-/************************************************************/
-/*      SEQUENCE CriticalityDiagnostics_IE_List                */
+}/************************************************************/
+/*      SEQUENCE E2connectionSetupFailed_Item                */
 /************************************************************/
 
 /* 1- compose primitive intergrate for sequence fields */
 
 
 /* 2 - compose sequence */
-xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
+xnap_return_et e2ap_compose_E2connectionSetupFailed_Item(
                 OSCTXT                        *p_asn1_ctx,
-                e2ap_CriticalityDiagnostics_IE_List                 *p_e2ap_CriticalityDiagnostics_IE_List, //dest
-                _e2ap_CriticalityDiagnostics_IE_List_t              *p_CriticalityDiagnostics_IE_List //src
+                e2ap_E2connectionSetupFailed_Item                 *p_e2ap_E2connectionSetupFailed_Item, //dest
+                _e2ap_E2connectionSetupFailed_Item_t              *p_E2connectionSetupFailed_Item //src
 )
 {
 
 //cần alloc node
-
-    {  /*SEQ_ELEM-1  Encode iECriticality alias-id = 13 - primitive = False*/
-         /*==primitive alias== */
-        if(XNAP_FAILURE == e2ap_compose_Criticality(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics_IE_List->iECriticality,
-                                                &p_CriticalityDiagnostics_IE_List->iECriticality))
-        {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field iECriticality",__FUNCTION__);
-            return XNAP_FAILURE;
-        }
-    } /* end SEQ_ELEM-1  Encode iECriticality*/
-
-    {  /*SEQ_ELEM-2  Encode iE_ID alias-id = -1 - primitive = False*/
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item)
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for E2connectionSetupFailed_Item",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
+    {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
-        p_e2ap_CriticalityDiagnostics_IE_List->iE_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ProtocolIE_ID);
-        if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->iE_ID)
+            /* 1.alloc mem */
+        p_e2ap_E2connectionSetupFailed_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
+        if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item->tnlInformation)
         {
-            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field iE_ID",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
         #endif
             /* 2.init */
-        asn1Init_e2ap_ProtocolIE_ID(&p_e2ap_CriticalityDiagnostics_IE_List->iE_ID);
+        asn1Init_e2ap_TNLinformation(&p_e2ap_E2connectionSetupFailed_Item->tnlInformation);
             /* 3.compose */
-        if(XNAP_FAILURE == e2ap_compose_ProtocolIE_ID(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics_IE_List->iE_ID,//dest
-                                                &p_CriticalityDiagnostics_IE_List->iE_ID)) //src
+        if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
+                                                &p_e2ap_E2connectionSetupFailed_Item->tnlInformation,//dest
+                                                &p_E2connectionSetupFailed_Item->tnlInformation)) //src
         {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field iE_ID",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
-    } /* end SEQ_ELEM-2  Encode iE_ID*/
+    } /* end SEQ_ELEM-1  Encode tnlInformation*/
 
-    {  /*SEQ_ELEM-3  Encode typeOfError alias-id = -1 - primitive = False*/
+    {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
-        p_e2ap_CriticalityDiagnostics_IE_List->typeOfError = rtxMemAllocType(p_asn1_ctx, e2ap_TypeOfError);
-        if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->typeOfError)
+            /* 1.alloc mem */
+        p_e2ap_E2connectionSetupFailed_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
+        if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item->cause)
         {
-            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field typeOfError",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
         #endif
             /* 2.init */
-        asn1Init_e2ap_TypeOfError(&p_e2ap_CriticalityDiagnostics_IE_List->typeOfError);
+        asn1Init_e2ap_Cause(&p_e2ap_E2connectionSetupFailed_Item->cause);
             /* 3.compose */
-        if(XNAP_FAILURE == e2ap_compose_TypeOfError(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics_IE_List->typeOfError,//dest
-                                                &p_CriticalityDiagnostics_IE_List->typeOfError)) //src
+        if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
+                                                &p_e2ap_E2connectionSetupFailed_Item->cause,//dest
+                                                &p_E2connectionSetupFailed_Item->cause)) //src
         {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field typeOfError",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
-    } /* end SEQ_ELEM-3  Encode typeOfError*/
+    } /* end SEQ_ELEM-2  Encode cause*/
 
 
     // cần appendnode
     return XNAP_SUCCESS;
 }   
 
-/************************************************************/
-/*      SEQUENCE CriticalityDiagnostics                */
-/************************************************************/
+  
+// IE thường -> IE child_of_msg ở file encode ie child of msg rồi
+// khả năng kô cần
 
-/* 1- compose primitive intergrate for sequence fields */
-
-
-/* 2 - compose sequence */
-xnap_return_et e2ap_compose_CriticalityDiagnostics(
+// compose single container mau ơ xnap_compose_TAISupport_list()
+xnap_return_et e2ap_compose_E2connectionSetupFailed_List (
                 OSCTXT                        *p_asn1_ctx,
-                e2ap_CriticalityDiagnostics                 *p_e2ap_CriticalityDiagnostics, //dest
-                _e2ap_CriticalityDiagnostics_t              *p_CriticalityDiagnostics //src
-)
-{
-
-//cần alloc node
-
-    {  /*SEQ_ELEM-1  Encode procedureCode alias-id = 6 - primitive = False*/
-         /*==primitive alias== */
-        if(XNAP_FAILURE == e2ap_compose_ProcedureCode(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->procedureCode,
-                                                &p_CriticalityDiagnostics->procedureCode))
-        {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field procedureCode",__FUNCTION__);
+                OSRTDList                     *p_e2ap_E2connectionSetupFailed_List,
+                _e2ap_E2connectionSetupFailed_List_t       *p_E2connectionSetupFailed_List
+){
+    e2ap_E2connectionSetupFailed_ItemIEs   *p_E2connectionSetupFailed_ItemIEs = NULL;
+    OSRTDListNode                           *p_node_list = XNAP_P_NULL;
+    UInt16                                   t_count = XNAP_NULL;
+    for(t_count = 0; t_count < p_E2connectionSetupFailed_List->id_E2connectionSetupFailed_Item_count; t_count++)
+    {
+        rtxDListAllocNodeAndData(p_asn1_ctx,
+                                e2ap_E2connectionSetupFailed_ItemIEs,
+                                &p_node_list,
+                                &p_E2connectionSetupFailed_ItemIEs);
+        if(GNB_PNULL==p_node_list){
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionSetupFailed-ItemIEs",__FUNCTION__);
             return XNAP_FAILURE;
         }
-    } /* end SEQ_ELEM-1  Encode procedureCode*/
+        asn1Init_e2ap_E2connectionSetupFailed_ItemIEs(p_E2connectionSetupFailed_ItemIEs);
+        p_E2connectionSetupFailed_ItemIEs->id = ASN1V_e2ap_id_E2connectionSetupFailed_Item;
+        p_E2connectionSetupFailed_ItemIEs->criticality = e2ap_reject;
+        p_E2connectionSetupFailed_ItemIEs->value.t =  T_E2AP_PDU_Contents_e2ap_E2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item;
+        p_E2connectionSetupFailed_ItemIEs->value.u._e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item
+                = rtxMemAllocType(p_asn1_ctx, e2ap_E2connectionSetupFailed_ItemIEs);
+        if(GNB_PNULL==p_E2connectionSetupFailed_ItemIEs->value.u._e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item){
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionSetupFailed-ItemIEs",__FUNCTION__);
+            rtFreeContext(p_asn1_ctx);
+            return XNAP_FAILURE;
+        }        
 
-    {  /*SEQ_ELEM-2  Encode triggeringMessage alias-id = 13 - primitive = False*/
-         /*==primitive alias== */
-        if(XNAP_FAILURE == e2ap_compose_TriggeringMessage(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->triggeringMessage,
-                                                &p_CriticalityDiagnostics->triggeringMessage))
+        /*ENCODE FIELD*/
+        // phải lấy thông tin sequence mà con của cái single container này :))   -> tạo các hàm bé hơn như PDU í    
+
+        //ENCODE ITEM=============
+        if(XNAP_FAILURE == e2ap_compose_E2connectionSetupFailed_Item(p_asn1_ctx,
+                                                p_E2connectionSetupFailed_ItemIEs->value.u._e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item,
+                                                &p_E2connectionSetupFailed_List->id_E2connectionSetupFailed_Item[t_count]))
         {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field triggeringMessage",__FUNCTION__);
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionSetupFailed-ItemIEs",__FUNCTION__);
+            rtFreeContext(p_asn1_ctx);
             return XNAP_FAILURE;
         }
-    } /* end SEQ_ELEM-2  Encode triggeringMessage*/
-
-    {  /*SEQ_ELEM-3  Encode procedureCriticality alias-id = 13 - primitive = False*/
-         /*==primitive alias== */
-        if(XNAP_FAILURE == e2ap_compose_Criticality(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->procedureCriticality,
-                                                &p_CriticalityDiagnostics->procedureCriticality))
-        {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field procedureCriticality",__FUNCTION__);
-            return XNAP_FAILURE;
-        }
-    } /* end SEQ_ELEM-3  Encode procedureCriticality*/
-
-    {  /*SEQ_ELEM-4  Encode ricRequestorID alias-id = -1 - primitive = False*/
-        /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
-        #if 0 
-        p_e2ap_CriticalityDiagnostics->ricRequestorID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
-        if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics->ricRequestorID)
-        {
-            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestorID",__FUNCTION__);
-            return XNAP_FAILURE;
-        }
-        #endif
-            /* 2.init */
-        asn1Init_e2ap_RICrequestID(&p_e2ap_CriticalityDiagnostics->ricRequestorID);
-            /* 3.compose */
-        if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->ricRequestorID,//dest
-                                                &p_CriticalityDiagnostics->ricRequestorID)) //src
-        {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestorID",__FUNCTION__);
-            return XNAP_FAILURE;
-        }
-    } /* end SEQ_ELEM-4  Encode ricRequestorID*/
-
-    {  /*SEQ_ELEM-5  Encode iEsCriticalityDiagnostics alias-id = -1 - primitive = False*/
-        /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
-        #if 0 
-        p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics = rtxMemAllocType(p_asn1_ctx, e2ap_CriticalityDiagnostics_IE_List);
-        if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics)
-        {
-            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field iEsCriticalityDiagnostics",__FUNCTION__);
-            return XNAP_FAILURE;
-        }
-        #endif
-            /* 2.init */
-        asn1Init_e2ap_CriticalityDiagnostics_IE_List(&p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics);
-            /* 3.compose */
-        if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics_IE_List(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics,//dest
-                                                &p_CriticalityDiagnostics->iEsCriticalityDiagnostics)) //src
-        {
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field iEsCriticalityDiagnostics",__FUNCTION__);
-            return XNAP_FAILURE;
-        }
-    } /* end SEQ_ELEM-5  Encode iEsCriticalityDiagnostics*/
-
-
-    // cần appendnode
+        rtxDListAppendNode(p_e2ap_E2connectionSetupFailed_List, p_node_list);
+    }
     return XNAP_SUCCESS;
-}   
+}
+
 
 /**************************************************/
-/* assign_value function for RICqueryFailure */
+/* assign_value function for E2connectionUpdateAcknowledge */
 /**************************************************/
-void assign_hardcode_value_RICqueryFailure(e2ap_RICqueryFailure_t* p_RICqueryFailure)
+void assign_hardcode_value_E2connectionUpdateAcknowledge(e2ap_E2connectionUpdateAcknowledge_t* p_E2connectionUpdateAcknowledge)
 {
-// RICqueryFailure.RICqueryFailure-IEs.RICrequestID.ricRequestorID
-// RICqueryFailure.RICqueryFailure-IEs.RICrequestID.ricInstanceID
-// RICqueryFailure.RICqueryFailure-IEs.RICrequestID
-// RICqueryFailure.RICqueryFailure-IEs.RANfunctionID
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseRICrequest
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseRICservice
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseE2node
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseTransport
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseProtocol
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseMisc
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseServiceLayer
-// RICqueryFailure.RICqueryFailure-IEs.Cause
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.Criticality
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics
-// RICqueryFailure.RICqueryFailure-IEs
-// RICqueryFailure
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.TransactionID
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlAddress
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation....
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlPort
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICrequest
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICservice
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseE2node
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseTransport
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseProtocol
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseMisc
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs
+// E2connectionUpdateAcknowledge
 
 
     return;
@@ -742,51 +805,54 @@ void assign_hardcode_value_RICqueryFailure(e2ap_RICqueryFailure_t* p_RICqueryFai
 
 
 /**************************************************/
-/*      encode_RICqueryFailure                    */
+/*      encode_E2connectionUpdateAcknowledge                    */
 /*                                                */
 /**************************************************/
 /*
-RICqueryFailure
-    RICqueryFailure-IEs
-        RICrequestID
-            ricRequestorID
-            ricInstanceID
-        RANfunctionID
-        Cause
-            CauseRICrequest
-            CauseRICservice
-            CauseE2node
-            CauseTransport
-            CauseProtocol
-            CauseMisc
-            CauseServiceLayer
-                ServiceLayerCause
-        CriticalityDiagnostics
-            ProcedureCode
-            TriggeringMessage
-            Criticality
-            RICrequestID
-                ricRequestorID
-                ricInstanceID
-            CriticalityDiagnostics-IE-List
-                SEQUENCE
+E2connectionUpdateAcknowledge
+    E2connectionUpdateAck-IEs
+        TransactionID
+        E2connectionUpdate-List
+            E2connectionUpdate-ItemIEs
+                E2connectionUpdate-Item
+                    TNLinformation
+                        tnlAddress
+                        ...
+                        tnlPort
+                    TNLusage
+        E2connectionSetupFailed-List
+            E2connectionSetupFailed-ItemIEs
+                E2connectionSetupFailed-Item
+                    TNLinformation
+                        tnlAddress
+                        ...
+                        tnlPort
+                    Cause
+                        CauseRICrequest
+                        CauseRICservice
+                        CauseE2node
+                        CauseTransport
+                        CauseProtocol
+                        CauseMisc
+                        CauseServiceLayer
+                            ServiceLayerCause
 
 */
-xnap_return_et e2ap_encode_RICqueryFailure(
-                e2ap_RICqueryFailure_t* p_RICqueryFailure_src,
+xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
+                e2ap_E2connectionUpdateAcknowledge_t* p_E2connectionUpdateAcknowledge_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
 ){
 #if 1 // hardcode
-    assign_hardcode_value_RICqueryFailure(p_RICqueryFailure_src);
+    assign_hardcode_value_E2connectionUpdateAcknowledge(p_E2connectionUpdateAcknowledge_src);
 #endif
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
     e2ap_E2AP_PDU e2ap_pdu;
     OSRTDListNode* p_node = GNB_PNULL;
-    e2ap_RICqueryFailure* p_RICqueryFailure = GNB_PNULL;
-    e2ap_RICqueryFailure_protocolIEs_element* p_e2ap_protocolIEs_elem = GNB_PNULL;
+    e2ap_E2connectionUpdateAcknowledge* p_E2connectionUpdateAcknowledge = GNB_PNULL;
+    e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* p_e2ap_protocolIEs_elem = GNB_PNULL;
     /* Initialize ASN.1 context */
     if(0!=rtInitContext(&asn1_ctx)){
         XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: ASN context initialization failed",__FUNCTION__);
@@ -795,194 +861,149 @@ xnap_return_et e2ap_encode_RICqueryFailure(
     }do{
         XNAP_MEMSET(&e2ap_pdu,0,sizeof(e2ap_E2AP_PDU));
         /*set PDU type to initing/ SSF/ USSF */
-        e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
-        XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
-        if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
-            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
+        e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
+        XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
+        if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
-        e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICquery;
-        e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
-        e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICqueryFailure;
-        p_RICqueryFailure = rtxMemAllocType(&asn1_ctx, e2ap_RICqueryFailure);
-        if(GNB_PNULL==p_RICqueryFailure){
-            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for RICqueryFailure",__FUNCTION__);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
+        e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2connectionUpdate;
+        e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
+        e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2connectionUpdateAcknowledge;
+        p_E2connectionUpdateAcknowledge = rtxMemAllocType(&asn1_ctx, e2ap_E2connectionUpdateAcknowledge);
+        if(GNB_PNULL==p_E2connectionUpdateAcknowledge){
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for E2connectionUpdateAcknowledge",__FUNCTION__);
             break;
         }else{
-            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation success for RICqueryFailure",__FUNCTION__);
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation success for E2connectionUpdateAcknowledge",__FUNCTION__);
         }
 
-        asn1Init_e2ap_RICqueryFailure(p_RICqueryFailure);
-        e2ap_pdu.u.unsuccessfulOutcome->value.u.ricQuery = p_RICqueryFailure;
+        asn1Init_e2ap_E2connectionUpdateAcknowledge(p_E2connectionUpdateAcknowledge);
+        e2ap_pdu.u.successfulOutcome->value.u.e2connectionUpdate = p_E2connectionUpdateAcknowledge;
 
         /* Fill ProtocolIEs */
-#if 1 // thiếu check optional bitmask
+#if 1
+        /*IE-1   encode id_TransactionID - presence = mandatory*/
         {
-            /*IE-1   encode id_RICrequestID - presence = mandatory*/
             rtxDListAllocNodeAndData(&asn1_ctx,
-                                    e2ap_RICqueryFailure_protocolIEs_element,
+                                    e2ap_E2connectionUpdateAcknowledge_protocolIEs_element,
                                     &p_node,
                                     &p_e2ap_protocolIEs_elem);
             if(GNB_PNULL==p_node){
                 /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_RICqueryFailure_protocolIEs_element",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionUpdateAcknowledge_protocolIEs_element",__FUNCTION__);
                 break;
             }
 
-            asn1Init_e2ap_RICqueryFailure_protocolIEs_element(p_e2ap_protocolIEs_elem);
+            asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICrequestID;
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RICrequestID;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_TransactionID;
+             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_TransactionID = &p_E2connectionUpdateAcknowledge_src->id_TransactionID; //assign primitive
 
- 
-            #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RICrequestID 
-                                = rtxMemAllocType(&asn1_ctx, e2ap_RICrequestID);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RICrequestID){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_RICrequestID",__FUNCTION__);
-                break;
-            }
-            asn1Init_e2ap_RICrequestID(p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RICrequestID);
-            #endif
-            //message_name.item_type -> type = RICrequestID
-            if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RICrequestID,
-                                &p_RICqueryFailure_src->id_RICrequestID)){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
-                rtFreeContext(&asn1_ctx);
-                //XNAP_UT_TRACE_EXIT();
-                //return XNAP_FAILURE;
-                break;
-            }else{
-            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field RICrequestID",__FUNCTION__);
-            }
             
             /* Append the node to protocolIEs list */
-            rtxDListAppendNode(&p_RICqueryFailure->protocolIEs, p_node);
+            rtxDListAppendNode(&p_E2connectionUpdateAcknowledge->protocolIEs, p_node);
             rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP PDU", &e2ap_pdu);
         }
 #endif
-#if 1 // thiếu check optional bitmask
+#if 1
+        /*IE-2   encode id_E2connectionSetup - presence = optional*/
+        if(p_E2connectionUpdateAcknowledge_src->bitmask & E2AP_E2CONNECTION_UPDATE_ACKNOWLEDGE_e2ap_ID_E2CONNECTION_SETUP_PRESENT)
         {
-            /*IE-2   encode id_RANfunctionID - presence = mandatory*/
             rtxDListAllocNodeAndData(&asn1_ctx,
-                                    e2ap_RICqueryFailure_protocolIEs_element,
+                                    e2ap_E2connectionUpdateAcknowledge_protocolIEs_element,
                                     &p_node,
                                     &p_e2ap_protocolIEs_elem);
             if(GNB_PNULL==p_node){
                 /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_RICqueryFailure_protocolIEs_element",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionUpdateAcknowledge_protocolIEs_element",__FUNCTION__);
                 break;
             }
 
-            asn1Init_e2ap_RICqueryFailure_protocolIEs_element(p_e2ap_protocolIEs_elem);
+            asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2connectionSetup;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
-            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RANfunctionID = &p_RICqueryFailure_src->id_RANfunctionID; //assign primitive
-
-            
-            /* Append the node to protocolIEs list */
-            rtxDListAppendNode(&p_RICqueryFailure->protocolIEs, p_node);
-            rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP PDU", &e2ap_pdu);
-        }
-#endif
-#if 1 // thiếu check optional bitmask
-        {
-            /*IE-3   encode id_Cause - presence = mandatory*/
-            rtxDListAllocNodeAndData(&asn1_ctx,
-                                    e2ap_RICqueryFailure_protocolIEs_element,
-                                    &p_node,
-                                    &p_e2ap_protocolIEs_elem);
-            if(GNB_PNULL==p_node){
-                /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_RICqueryFailure_protocolIEs_element",__FUNCTION__);
-                break;
-            }
-
-            asn1Init_e2ap_RICqueryFailure_protocolIEs_element(p_e2ap_protocolIEs_elem);
-            /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_Cause;
-            p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
-            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_Cause;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup;
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_Cause 
-                                = rtxMemAllocType(&asn1_ctx, e2ap_Cause);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_Cause){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_Cause",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_E2connectionUpdate_List);
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2connectionSetup",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_Cause(p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_Cause);
+            asn1Init_e2ap_E2connectionUpdate_List(p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup);
             #endif
-            //message_name.item_type -> type = Cause
-            if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_Cause,
-                                &p_RICqueryFailure_src->id_Cause)){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
+            //message_name.item_type -> type = E2connectionUpdate_List
+            if(XNAP_FAILURE == e2ap_compose_E2connectionUpdate_List(&asn1_ctx, 
+                                p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup,
+                                &p_E2connectionUpdateAcknowledge_src->id_E2connectionSetup)){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionUpdate_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
                 //return XNAP_FAILURE;
                 break;
             }else{
-            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field Cause",__FUNCTION__);
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field E2connectionUpdate_List",__FUNCTION__);
             }
             
             /* Append the node to protocolIEs list */
-            rtxDListAppendNode(&p_RICqueryFailure->protocolIEs, p_node);
+            rtxDListAppendNode(&p_E2connectionUpdateAcknowledge->protocolIEs, p_node);
             rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP PDU", &e2ap_pdu);
         }
 #endif
-#if 1 // thiếu check optional bitmask
+#if 1
+        /*IE-3   encode id_E2connectionSetupFailed - presence = optional*/
+        if(p_E2connectionUpdateAcknowledge_src->bitmask & E2AP_E2CONNECTION_UPDATE_ACKNOWLEDGE_e2ap_ID_E2CONNECTION_SETUP_FAILED_PRESENT)
         {
-            /*IE-4   encode id_CriticalityDiagnostics - presence = optional*/
             rtxDListAllocNodeAndData(&asn1_ctx,
-                                    e2ap_RICqueryFailure_protocolIEs_element,
+                                    e2ap_E2connectionUpdateAcknowledge_protocolIEs_element,
                                     &p_node,
                                     &p_e2ap_protocolIEs_elem);
             if(GNB_PNULL==p_node){
                 /* not enough memory */
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_RICqueryFailure_protocolIEs_element",__FUNCTION__);
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionUpdateAcknowledge_protocolIEs_element",__FUNCTION__);
                 break;
             }
 
-            asn1Init_e2ap_RICqueryFailure_protocolIEs_element(p_e2ap_protocolIEs_elem);
+            asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element(p_e2ap_protocolIEs_elem);
             /*fill the type of ProtocolIEs _protocolIEs_element*/
-            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_CriticalityDiagnostics;
-            p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
-            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_CriticalityDiagnostics;
+            p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2connectionSetupFailed;
+            p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
+            p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed;
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_CriticalityDiagnostics 
-                                = rtxMemAllocType(&asn1_ctx, e2ap_CriticalityDiagnostics);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_CriticalityDiagnostics){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_CriticalityDiagnostics",__FUNCTION__);
+            p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed 
+                                = rtxMemAllocType(&asn1_ctx, e2ap_E2connectionSetupFailed_List);
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2connectionSetupFailed",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_CriticalityDiagnostics(p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_CriticalityDiagnostics);
+            asn1Init_e2ap_E2connectionSetupFailed_List(p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed);
             #endif
-            //message_name.item_type -> type = CriticalityDiagnostics
-            if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
-                                p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICqueryFailure_src->id_CriticalityDiagnostics)){
-                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
+            //message_name.item_type -> type = E2connectionSetupFailed_List
+            if(XNAP_FAILURE == e2ap_compose_E2connectionSetupFailed_List(&asn1_ctx, 
+                                p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed,
+                                &p_E2connectionUpdateAcknowledge_src->id_E2connectionSetupFailed)){
+                XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionSetupFailed_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
                 //return XNAP_FAILURE;
                 break;
             }else{
-            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field CriticalityDiagnostics",__FUNCTION__);
+            XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Encoding success for field E2connectionSetupFailed_List",__FUNCTION__);
             }
             
             /* Append the node to protocolIEs list */
-            rtxDListAppendNode(&p_RICqueryFailure->protocolIEs, p_node);
+            rtxDListAppendNode(&p_E2connectionUpdateAcknowledge->protocolIEs, p_node);
             rrc_asn1PrtToStr_E2AP_PDU(XNAP_ASN, "E2AP PDU", &e2ap_pdu);
         }
 #endif

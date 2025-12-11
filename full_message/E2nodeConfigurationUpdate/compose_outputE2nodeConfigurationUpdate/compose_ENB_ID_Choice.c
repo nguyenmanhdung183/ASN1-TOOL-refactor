@@ -10,33 +10,51 @@
                      _e2ap_ENB_ID_Choice_enb_ID_macro_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_Choice_enb_ID_macro numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE(18)) - enb_ID_shortmacro
+          
+     // id = 3 - BIT STRING (SIZE(18)) - enb_ID_shortmacro
  xnap_return_et e2ap_compose_ENB_ID_Choice_enb_ID_shortmacro(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_Choice_enb_ID_shortmacro                 *p_dest,//dest
                      _e2ap_ENB_ID_Choice_enb_ID_shortmacro_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_Choice_enb_ID_shortmacro numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE(21)) - enb_ID_longmacro
+          
+     // id = 3 - BIT STRING (SIZE(21)) - enb_ID_longmacro
  xnap_return_et e2ap_compose_ENB_ID_Choice_enb_ID_longmacro(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_Choice_enb_ID_longmacro                 *p_dest,//dest
                      _e2ap_ENB_ID_Choice_enb_ID_longmacro_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_Choice_enb_ID_longmacro numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-      
+          
+
 /* 2 - compose choice */
 xnap_return_et e2ap_compose_ENB_ID_Choice(
                 OSCTXT                        *p_asn1_ctx,

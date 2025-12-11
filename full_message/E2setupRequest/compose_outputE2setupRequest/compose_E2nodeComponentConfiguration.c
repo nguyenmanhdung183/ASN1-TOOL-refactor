@@ -4,9 +4,53 @@
 
 /* 1- compose primitive intergrate for sequence fields */
      // id = 9 - OCTET STRING - e2nodeComponentRequestPart
-           
+   xnap_return_et e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentRequestPart(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart                 *p_dest,//dest
+                        _e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart_t              *p_src//src
+)
+{
+    size_t num = p_src->numocts;
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s alloc fail in e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentRequestPart",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING E2nodeComponentConfiguration_e2nodeComponentRequestPart numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+    return XNAP_SUCCESS;
+}
+        
      // id = 9 - OCTET STRING - e2nodeComponentResponsePart
-           
+   xnap_return_et e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentResponsePart(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart                 *p_dest,//dest
+                        _e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart_t              *p_src//src
+)
+{
+    size_t num = p_src->numocts;
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s alloc fail in e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentResponsePart",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING E2nodeComponentConfiguration_e2nodeComponentResponsePart numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+    return XNAP_SUCCESS;
+}
+        
 
 
 /* 2 - compose sequence */

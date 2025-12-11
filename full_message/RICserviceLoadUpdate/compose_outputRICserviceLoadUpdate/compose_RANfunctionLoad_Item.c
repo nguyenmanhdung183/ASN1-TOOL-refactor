@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
 
     {  /*SEQ_ELEM-2  Encode ranFunctionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation)
         {
@@ -51,8 +51,8 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
 
     {  /*SEQ_ELEM-3  Encode ricServiceLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadInformation);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation)
         {
@@ -74,8 +74,8 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoad_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoad_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list)
         {

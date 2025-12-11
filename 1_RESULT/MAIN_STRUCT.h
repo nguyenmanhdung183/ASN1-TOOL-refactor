@@ -4,30 +4,79 @@
 #include "stub.h"
 
 /************************************************/
-/*       SEQUENCE - RICrequestID        */
+/*        PRIMITIVE - TransactionID               */
 /************************************************/
-typedef UInt16 _e2ap_RICrequestID_ricRequestorID;
+
+/* TransactionID- INTEGER (0..255,...)*/
+
+typedef UInt8 _e2ap_TransactionID_t; // INTEGER (A..B,...) - P  OK
  
-typedef UInt16 _e2ap_RICrequestID_ricInstanceID;
+
+/************************************************/
+/*       SEQUENCE - TNLinformation        */
+/************************************************/
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[20];
+} _e2ap_TNLinformation_tnlAddress_t;//BIT STRING SIZE (A..B,...)
+ 
+ typedef struct{
+    UInt8 numbits;
+    UInt8 data[2];
+}_e2ap_TNLinformation_tnlPort_t; //BIT STRING SIZE (N)
+ 
+/* main struct for sequence */
+typedef struct{  
+    #define E2AP_TNLINFORMATION_e2ap_TNL_PORT_PRESENT 0x01
+    
+    rrc_bitmask_t bitmask; /* BITMASK ^*/
+  
+    _e2ap_TNLinformation_tnlAddress_t tnlAddress; //BIT STRING (SIZE(1..160,...))
+  
+    _e2ap_TNLinformation_tnlPort_t tnlPort; //BIT STRING (SIZE(16))
+ 
+}_e2ap_TNLinformation_t;  //SEQUENCE
+
+/************************************************/
+/*        PRIMITIVE - TNLusage               */
+/************************************************/
+
+/* TNLusage- ENUMERATED*/
+
+ 
+typedef enum{
+    
+    E2AP_TNLUSAGE_RIC_SERVICE = 0,    
+    E2AP_TNLUSAGE_SUPPORT_FUNCTION = 1,    
+    E2AP_TNLUSAGE_BOTH = 2  
+
+}_e2ap_TNLusage_et;// ENUMERATED - P  OK
+
+/************************************************/
+/*       SEQUENCE - E2connectionUpdate_Item        */
+/************************************************/
+ 
  
 /* main struct for sequence */
 typedef struct{  
   
-    _e2ap_RICrequestID_ricRequestorID_t ricRequestorID; //INTEGER (0..65535)
+     _e2ap_TNLinformation_t tnlInformation; //e2ap_{ie_type} {field_name} alias = -1
   
-    _e2ap_RICrequestID_ricInstanceID_t ricInstanceID; //INTEGER (0..65535)
- 
-}_e2ap_RICrequestID_t;  //SEQUENCE
+     _e2ap_TNLusage_et tnlUsage; //e2ap_{ie_type} {field_name}  
+}_e2ap_E2connectionUpdate_Item_t;  //SEQUENCE
 
-/************************************************/
-/*        PRIMITIVE - RANfunctionID               */
-/************************************************/
+/*********************************************************/
+/*        SINGLE CONTAINER - E2connectionUpdate_List     */
+/*********************************************************/
 
-/* RANfunctionID- INTEGER (0..4095)*/
+typedef struct{
+#define MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT 32 // dungnm23 change to 1 if needed
+  
+    UInt8 id_E2connectionUpdate_Item_count;
+    
+    _e2ap_E2connectionUpdate_Item_t id_E2connectionUpdate_Item[MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT];
 
- 
-typedef UInt16 _e2ap_RANfunctionID_t;// INTEGER (A..B) - P  OK
- 
+}_e2ap_E2connectionUpdate_List_t;  //SINGLE CONTAINER   
 
 /************************************************/
 /*        PRIMITIVE - CauseRICrequest               */
@@ -197,105 +246,49 @@ typedef struct{
 }_e2ap_Cause_t;// CHOICE   
 
 /************************************************/
-/*        PRIMITIVE - ProcedureCode               */
+/*       SEQUENCE - E2connectionSetupFailed_Item        */
 /************************************************/
-
-/* ProcedureCode- INTEGER (0..255)*/
-
- 
-typedef UInt8 _e2ap_ProcedureCode_t;// INTEGER (A..B) - P  OK
- 
-
-/************************************************/
-/*        PRIMITIVE - TriggeringMessage               */
-/************************************************/
-
-/* TriggeringMessage- ENUMERATED*/
-
- 
-typedef enum{
-    
-    E2AP_TRIGGERING_MESSAGE_INITIATING_MESSAGE = 0,    
-    E2AP_TRIGGERING_MESSAGE_SUCCESSFUL_OUTCOME = 1,    
-    E2AP_TRIGGERING_MESSAGE_UNSUCCESSFULL_OUTCOME = 2  
-
-}_e2ap_TriggeringMessage_et;// ENUMERATED - P  OK
-
-/************************************************/
-/*        PRIMITIVE - Criticality               */
-/************************************************/
-
-/* Criticality- ENUMERATED*/
-
- 
-typedef enum{
-    
-    E2AP_CRITICALITY_REJECT = 0,    
-    E2AP_CRITICALITY_IGNORE = 1,    
-    E2AP_CRITICALITY_NOTIFY = 2  
-
-}_e2ap_Criticality_et;// ENUMERATED - P  OK
-
-/************************************/
-/* File .h missing: e2ap_SEQUENCE.h */
-/************************************/
-
-/************************************************/
-/*       SEQUENCE - CriticalityDiagnostics_IE_List        */
-/************************************************/
- 
  
  
 /* main struct for sequence */
 typedef struct{  
   
-     _e2ap_Criticality_et iECriticality; //e2ap_{ie_type} {field_name}   
-     _e2ap_ProtocolIE_ID_t iE_ID; //e2ap_{ie_type} {field_name} alias = -1
+     _e2ap_TNLinformation_t tnlInformation; //e2ap_{ie_type} {field_name} alias = -1
   
-     _e2ap_TypeOfError_t typeOfError; //e2ap_{ie_type} {field_name} alias = -1
+     _e2ap_Cause_t cause; //e2ap_{ie_type} {field_name} alias = -1
  
-}_e2ap_CriticalityDiagnostics_IE_List_t;  //SEQUENCE
+}_e2ap_E2connectionSetupFailed_Item_t;  //SEQUENCE
 
-/************************************************/
-/*       SEQUENCE - CriticalityDiagnostics        */
-/************************************************/
- 
- 
- 
- 
- 
-/* main struct for sequence */
-typedef struct{  
-    #define E2AP_CRITICALITY_DIAGNOSTICS_e2ap_PROCEDURE_CODE_PRESENT 0x01
-    #define E2AP_CRITICALITY_DIAGNOSTICS_e2ap_TRIGGERING_MESSAGE_PRESENT 0x02
-    #define E2AP_CRITICALITY_DIAGNOSTICS_e2ap_PROCEDURE_CRITICALITY_PRESENT 0x04
-    #define E2AP_CRITICALITY_DIAGNOSTICS_e2ap_RIC_REQUESTOR_ID_PRESENT 0x08
-    #define E2AP_CRITICALITY_DIAGNOSTICS_e2ap_I_ES_CRITICALITY_DIAGNOSTICS_PRESENT 0x10
+/*********************************************************/
+/*        SINGLE CONTAINER - E2connectionSetupFailed_List     */
+/*********************************************************/
+
+typedef struct{
+#define MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT 32 // dungnm23 change to 1 if needed
+  
+    UInt8 id_E2connectionSetupFailed_Item_count;
     
-    rrc_bitmask_t bitmask; /* BITMASK ^*/
-  
-     _e2ap_ProcedureCode_t procedureCode; //e2ap_{ie_type} {field_name} alias = 6
-  
-     _e2ap_TriggeringMessage_et triggeringMessage; //e2ap_{ie_type} {field_name}   
-     _e2ap_Criticality_et procedureCriticality; //e2ap_{ie_type} {field_name}   
-     _e2ap_RICrequestID_t ricRequestorID; //e2ap_{ie_type} {field_name} alias = -1
-  
-     _e2ap_CriticalityDiagnostics_IE_List_t iEsCriticalityDiagnostics; //e2ap_{ie_type} {field_name} alias = -1
- 
-}_e2ap_CriticalityDiagnostics_t;  //SEQUENCE
+    _e2ap_E2connectionSetupFailed_Item_t id_E2connectionSetupFailed_Item[MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT];
+
+}_e2ap_E2connectionSetupFailed_List_t;  //SINGLE CONTAINER   
 
 /*******************************************/
-/*       IE - RICqueryFailure - (IEs)               */
+/*       IE - E2connectionUpdateAcknowledge - (IEs)               */
 /******************************************/
 typedef struct{
     // thiếu bitmask
-    _e2ap_RICrequestID_t id_RICrequestID; //e2ap_{item_type} {field_name} alias = -1
-    _e2ap_RANfunctionID_t id_RANfunctionID; //e2ap_{item_type} {field_name} alias = 6
-    _e2ap_Cause_t id_Cause; //e2ap_{item_type} {field_name} alias = -1
-    _e2ap_CriticalityDiagnostics_t id_CriticalityDiagnostics; //e2ap_{item_type} {field_name} alias = -1
-}e2ap_RICqueryFailure_t;
-/*******************************************/
-/* File .h missing: e2ap_RICqueryFailure.h */
-/*******************************************/
+
+    #define E2AP_E2CONNECTION_UPDATE_ACKNOWLEDGE_e2ap_ID_E2CONNECTION_SETUP_PRESENT 0x01
+    #define E2AP_E2CONNECTION_UPDATE_ACKNOWLEDGE_e2ap_ID_E2CONNECTION_SETUP_FAILED_PRESENT 0x02
+    
+    rrc_bitmask_t bitmask; /* BITMASK ^*/
+
+    _e2ap_TransactionID_t id_TransactionID; //e2ap_{item_type} {field_name} alias = 5
+    _e2ap_E2connectionUpdate_List_t id_E2connectionSetup; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_E2connectionSetupFailed_List_t id_E2connectionSetupFailed; //e2ap_{item_type} {field_name} alias = -1
+}e2ap_E2connectionUpdateAcknowledge_t;
+/*********************************************************/
+/* File .h missing: e2ap_E2connectionUpdateAcknowledge.h */
+/*********************************************************/
 
 #endif // MAIN_STRUCT_H

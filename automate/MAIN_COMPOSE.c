@@ -32,17 +32,28 @@ xnap_return_et e2ap_compose_TransactionID(
                      _e2ap_TNLinformation_tnlAddress_t              *p_src//src
 )
 {
-    p_dest->numbits = E2AP_XXX;//duugnm23 fix value
-    p_dest->data = (OSOCTET*)rtxMemAllocZ(p_asn1_ctx, 20);// dungnm23 check nhe E2AP_xxx_OCTET_SIZE
-    if(p_dest->data == NULL)
+    p_dest->numbits = p_src->numbits;
+
+    /* kích thước tính theo số octet thực */
+    size_t num_octet = (p_src->numbits + 7) / 8;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num_octet);
+    if (!p_dest->data)
     {
-        XNAP_TRACE(XNAP_ERROR, "dungnm23 %s memory allocation failed in e2ap_compose_TNLinformation_tnlAddress", __FUNCTION__);
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s failed alloc in e2ap_compose_TNLinformation_tnlAddress",
+                   __FUNCTION__);
         return XNAP_FAILURE;
     }
-    XNAP_MEMCPY((void*)p_dest->data, p_src->data, 20);
+
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, num_octet);
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debugBIT STRING TNLinformation_tnlAddress numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif    
+
     return XNAP_SUCCESS;
 }
-
          
      // id = 3 - BIT STRING (SIZE(16)) - tnlPort
  xnap_return_et e2ap_compose_TNLinformation_tnlPort(
@@ -51,8 +62,13 @@ xnap_return_et e2ap_compose_TransactionID(
                      _e2ap_TNLinformation_tnlPort_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING TNLinformation_tnlPort numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
           
@@ -134,8 +150,8 @@ xnap_return_et e2ap_compose_E2connectionUpdate_Item(
 
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2connectionUpdate_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionUpdate_Item->tnlInformation)
         {
@@ -243,8 +259,8 @@ xnap_return_et e2ap_compose_E2connectionUpdateRemove_Item(
 
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2connectionUpdateRemove_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionUpdateRemove_Item->tnlInformation)
         {
@@ -1020,8 +1036,8 @@ xnap_return_et e2ap_compose_E2connectionSetupFailed_Item(
 
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2connectionSetupFailed_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item->tnlInformation)
         {
@@ -1043,8 +1059,8 @@ xnap_return_et e2ap_compose_E2connectionSetupFailed_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2connectionSetupFailed_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item->cause)
         {
@@ -1482,6 +1498,10 @@ xnap_return_et e2ap_compose_RICrequestID_ricRequestorID(
 )
 {
     *p_dest = (e2ap_RICrequestID_ricRequestorID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICrequestID value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
            
@@ -1493,6 +1513,10 @@ xnap_return_et e2ap_compose_RICrequestID_ricInstanceID(
 )
 {
     *p_dest = (e2ap_RICrequestID_ricInstanceID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICrequestID value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
            
@@ -1565,8 +1589,8 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
 
     {  /*SEQ_ELEM-2  Encode iE_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_CriticalityDiagnostics_IE_List->iE_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ProtocolIE_ID);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->iE_ID)
         {
@@ -1588,8 +1612,8 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
 
     {  /*SEQ_ELEM-3  Encode typeOfError alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_CriticalityDiagnostics_IE_List->typeOfError = rtxMemAllocType(p_asn1_ctx, e2ap_TypeOfError);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->typeOfError)
         {
@@ -1666,8 +1690,8 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics(
 
     {  /*SEQ_ELEM-4  Encode ricRequestorID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_CriticalityDiagnostics->ricRequestorID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics->ricRequestorID)
         {
@@ -1689,8 +1713,8 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics(
 
     {  /*SEQ_ELEM-5  Encode iEsCriticalityDiagnostics alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics = rtxMemAllocType(p_asn1_ctx, e2ap_CriticalityDiagnostics_IE_List);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics)
         {
@@ -2031,11 +2055,17 @@ xnap_return_et e2ap_compose_PLMN_Identity(
                      _e2ap_GNB_ID_Choice_gnb_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING GNB_ID_Choice_gnb_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-      
+          
+
 /* 2 - compose choice */
 xnap_return_et e2ap_compose_GNB_ID_Choice(
                 OSCTXT                        *p_asn1_ctx,
@@ -2104,8 +2134,8 @@ xnap_return_et e2ap_compose_GlobalgNB_ID(
 
     {  /*SEQ_ELEM-2  Encode gnb_id alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalgNB_ID->gnb_id = rtxMemAllocType(p_asn1_ctx, e2ap_GNB_ID_Choice);
         if(XNAP_P_NULL == p_e2ap_GlobalgNB_ID->gnb_id)
         {
@@ -2142,11 +2172,17 @@ xnap_return_et e2ap_compose_GlobalgNB_ID(
                      _e2ap_ENGNB_ID_gNB_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENGNB_ID_gNB_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-      
+          
+
 /* 2 - compose choice */
 xnap_return_et e2ap_compose_ENGNB_ID(
                 OSCTXT                        *p_asn1_ctx,
@@ -2215,8 +2251,8 @@ xnap_return_et e2ap_compose_GlobalenGNB_ID(
 
     {  /*SEQ_ELEM-2  Encode gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalenGNB_ID->gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ENGNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalenGNB_ID->gNB_ID)
         {
@@ -2300,8 +2336,8 @@ xnap_return_et e2ap_compose_GlobalE2node_gNB_ID(
 
     {  /*SEQ_ELEM-1  Encode global_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalgNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID)
         {
@@ -2323,8 +2359,8 @@ xnap_return_et e2ap_compose_GlobalE2node_gNB_ID(
 
     {  /*SEQ_ELEM-2  Encode global_en_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalenGNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID)
         {
@@ -2390,8 +2426,8 @@ xnap_return_et e2ap_compose_GlobalE2node_en_gNB_ID(
 
     {  /*SEQ_ELEM-1  Encode global_en_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalenGNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID)
         {
@@ -2450,33 +2486,51 @@ xnap_return_et e2ap_compose_GlobalE2node_en_gNB_ID(
                      _e2ap_ENB_ID_Choice_enb_ID_macro_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_Choice_enb_ID_macro numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE(18)) - enb_ID_shortmacro
+          
+     // id = 3 - BIT STRING (SIZE(18)) - enb_ID_shortmacro
  xnap_return_et e2ap_compose_ENB_ID_Choice_enb_ID_shortmacro(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_Choice_enb_ID_shortmacro                 *p_dest,//dest
                      _e2ap_ENB_ID_Choice_enb_ID_shortmacro_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_Choice_enb_ID_shortmacro numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE(21)) - enb_ID_longmacro
+          
+     // id = 3 - BIT STRING (SIZE(21)) - enb_ID_longmacro
  xnap_return_et e2ap_compose_ENB_ID_Choice_enb_ID_longmacro(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_Choice_enb_ID_longmacro                 *p_dest,//dest
                      _e2ap_ENB_ID_Choice_enb_ID_longmacro_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_Choice_enb_ID_longmacro numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-      
+          
+
 /* 2 - compose choice */
 xnap_return_et e2ap_compose_ENB_ID_Choice(
                 OSCTXT                        *p_asn1_ctx,
@@ -2593,8 +2647,8 @@ xnap_return_et e2ap_compose_GlobalngeNB_ID(
 
     {  /*SEQ_ELEM-2  Encode enb_id alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalngeNB_ID->enb_id = rtxMemAllocType(p_asn1_ctx, e2ap_ENB_ID_Choice);
         if(XNAP_P_NULL == p_e2ap_GlobalngeNB_ID->enb_id)
         {
@@ -2631,44 +2685,68 @@ xnap_return_et e2ap_compose_GlobalngeNB_ID(
                      _e2ap_ENB_ID_macro_eNB_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_macro_eNB_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE (28)) - home_eNB_ID
+          
+     // id = 3 - BIT STRING (SIZE (28)) - home_eNB_ID
  xnap_return_et e2ap_compose_ENB_ID_home_eNB_ID(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_home_eNB_ID                 *p_dest,//dest
                      _e2ap_ENB_ID_home_eNB_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_home_eNB_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE(18)) - short_Macro_eNB_ID
+          
+     // id = 3 - BIT STRING (SIZE(18)) - short_Macro_eNB_ID
  xnap_return_et e2ap_compose_ENB_ID_short_Macro_eNB_ID(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_short_Macro_eNB_ID                 *p_dest,//dest
                      _e2ap_ENB_ID_short_Macro_eNB_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_short_Macro_eNB_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-           // id = 3 - BIT STRING (SIZE(21)) - long_Macro_eNB_ID
+          
+     // id = 3 - BIT STRING (SIZE(21)) - long_Macro_eNB_ID
  xnap_return_et e2ap_compose_ENB_ID_long_Macro_eNB_ID(
                      OSCTXT                       *p_asn1_ctx,
                      e2ap_ENB_ID_long_Macro_eNB_ID                 *p_dest,//dest
                      _e2ap_ENB_ID_long_Macro_eNB_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING ENB_ID_long_Macro_eNB_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
-      
+          
+
 /* 2 - compose choice */
 xnap_return_et e2ap_compose_ENB_ID(
                 OSCTXT                        *p_asn1_ctx,
@@ -2809,8 +2887,8 @@ xnap_return_et e2ap_compose_GlobalENB_ID(
 
     {  /*SEQ_ELEM-2  Encode eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalENB_ID->eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalENB_ID->eNB_ID)
         {
@@ -2874,8 +2952,8 @@ xnap_return_et e2ap_compose_GlobalE2node_ng_eNB_ID(
 
     {  /*SEQ_ELEM-1  Encode global_ng_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID)
         {
@@ -2897,8 +2975,8 @@ xnap_return_et e2ap_compose_GlobalE2node_ng_eNB_ID(
 
     {  /*SEQ_ELEM-2  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID)
         {
@@ -2953,8 +3031,8 @@ xnap_return_et e2ap_compose_GlobalE2node_eNB_ID(
 
     {  /*SEQ_ELEM-1  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID)
         {
@@ -3266,8 +3344,8 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceXn(
 
     {  /*SEQ_ELEM-1  Encode global_NG_RAN_Node_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalNG_RANNode_ID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID)
         {
@@ -3462,8 +3540,8 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceX2(
 
     {  /*SEQ_ELEM-1  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID)
         {
@@ -3485,8 +3563,8 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceX2(
 
     {  /*SEQ_ELEM-2  Encode global_en_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalenGNB_ID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID)
         {
@@ -3719,9 +3797,53 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
 
 /* 1- compose primitive intergrate for sequence fields */
      // id = 9 - OCTET STRING - e2nodeComponentRequestPart
-           
+   xnap_return_et e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentRequestPart(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart                 *p_dest,//dest
+                        _e2ap_E2nodeComponentConfiguration_e2nodeComponentRequestPart_t              *p_src//src
+)
+{
+    size_t num = p_src->numocts;
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s alloc fail in e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentRequestPart",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING E2nodeComponentConfiguration_e2nodeComponentRequestPart numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+    return XNAP_SUCCESS;
+}
+        
      // id = 9 - OCTET STRING - e2nodeComponentResponsePart
-           
+   xnap_return_et e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentResponsePart(
+                        OSCTXT                       *p_asn1_ctx,
+                        e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart                 *p_dest,//dest
+                        _e2ap_E2nodeComponentConfiguration_e2nodeComponentResponsePart_t              *p_src//src
+)
+{
+    size_t num = p_src->numocts;
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s alloc fail in e2ap_compose_E2nodeComponentConfiguration_e2nodeComponentResponsePart",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING E2nodeComponentConfiguration_e2nodeComponentResponsePart numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+    return XNAP_SUCCESS;
+}
+        
 
 
 /* 2 - compose sequence */
@@ -3791,8 +3913,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAddition_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID)
         {
@@ -3814,8 +3936,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAddition_Item(
 
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfiguration alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfiguration);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration)
         {
@@ -3923,8 +4045,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdate_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID)
         {
@@ -3946,8 +4068,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdate_Item(
 
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfiguration alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfiguration);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration)
         {
@@ -4055,8 +4177,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemoval_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID)
         {
@@ -4153,8 +4275,8 @@ xnap_return_et e2ap_compose_E2nodeTNLassociationRemoval_Item(
 
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation)
         {
@@ -4176,8 +4298,8 @@ xnap_return_et e2ap_compose_E2nodeTNLassociationRemoval_Item(
 
     {  /*SEQ_ELEM-2  Encode tnlInformationRIC alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC)
         {
@@ -4982,6 +5104,9 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
 )
 {
     *p_dest = (e2ap_E2nodeComponentConfigurationAck_updateOutcome)*p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED E2nodeComponentConfigurationAck_updateOutcome value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
      
@@ -5010,8 +5135,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigurationAck(
 
     {  /*SEQ_ELEM-2  Encode failureCause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigurationAck->failureCause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigurationAck->failureCause)
         {
@@ -5066,8 +5191,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAdditionAck_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID)
         {
@@ -5089,8 +5214,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAdditionAck_Item(
 
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck)
         {
@@ -5198,8 +5323,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdateAck_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID)
         {
@@ -5221,8 +5346,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdateAck_Item(
 
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck)
         {
@@ -5330,8 +5455,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID)
         {
@@ -5353,8 +5478,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_Item(
 
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck)
         {
@@ -7868,8 +7993,13 @@ xnap_return_et e2ap_encode_E2setupRequest(
                      _e2ap_GlobalRIC_ID_ric_ID_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING GlobalRIC_ID_ric_ID numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
           
@@ -8039,8 +8169,8 @@ xnap_return_et e2ap_compose_RANfunctionIDcause_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionIDcause_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RANfunctionIDcause_Item->cause)
         {
@@ -12338,8 +12468,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadRequest_ItemIE(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID)
         {
@@ -12372,8 +12502,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadRequest_ItemIE(
 
     {  /*SEQ_ELEM-3  Encode ricActionLoadRequest_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoadRequest_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list)
         {
@@ -12492,8 +12622,8 @@ xnap_return_et e2ap_compose_RANfunctionLoadRequest_Item(
 
     {  /*SEQ_ELEM-3  Encode ricServiceLoadRequest alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadRequest);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest)
         {
@@ -12515,8 +12645,8 @@ xnap_return_et e2ap_compose_RANfunctionLoadRequest_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoadRequest_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoadRequest_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list)
         {
@@ -13124,8 +13254,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadConfirm_ItemIE(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID)
         {
@@ -13158,8 +13288,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadConfirm_ItemIE(
 
     {  /*SEQ_ELEM-3  Encode ricActionLoadConfirm_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoadConfirm_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list)
         {
@@ -13278,8 +13408,8 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_Item(
 
     {  /*SEQ_ELEM-3  Encode ricServiceLoadConfirm alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadConfirm);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm)
         {
@@ -13301,8 +13431,8 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoadConfirm_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoadConfirm_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list)
         {
@@ -13916,6 +14046,9 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
 )
 {
     *p_dest = (e2ap_RICloadInformation_loadStatus)*p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICloadInformation_loadStatus value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
      
@@ -13927,6 +14060,10 @@ xnap_return_et e2ap_compose_RICloadInformation_loadEstimate(
 )
 {
     *p_dest = (e2ap_RICloadInformation_loadEstimate)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICloadInformation value=%u", __FUNCTION__, *p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
            
@@ -13988,8 +14125,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-1  Encode ricServiceReportLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation)
         {
@@ -14011,8 +14148,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-2  Encode ricServiceInsertLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation)
         {
@@ -14034,8 +14171,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-3  Encode ricServiceControlLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation)
         {
@@ -14057,8 +14194,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-4  Encode ricServicePolicyLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation)
         {
@@ -14080,8 +14217,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-5  Encode ricServiceQueryLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation)
         {
@@ -14136,8 +14273,8 @@ xnap_return_et e2ap_compose_RICactionLoad_Item(
 
     {  /*SEQ_ELEM-2  Encode ricActionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICactionLoad_Item->ricActionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICactionLoad_Item->ricActionLoadInformation)
         {
@@ -14234,8 +14371,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID)
         {
@@ -14257,8 +14394,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
 
     {  /*SEQ_ELEM-2  Encode ricSubscriptionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation)
         {
@@ -14280,8 +14417,8 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
 
     {  /*SEQ_ELEM-3  Encode ricActionLoad_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoad_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list)
         {
@@ -14389,8 +14526,8 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
 
     {  /*SEQ_ELEM-2  Encode ranFunctionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation)
         {
@@ -14412,8 +14549,8 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
 
     {  /*SEQ_ELEM-3  Encode ricServiceLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadInformation);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation)
         {
@@ -14435,8 +14572,8 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoad_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoad_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list)
         {
@@ -16346,8 +16483,8 @@ xnap_return_et e2ap_compose_RICaction_ToBeSetup_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction)
         {
@@ -16466,8 +16603,8 @@ xnap_return_et e2ap_compose_RICsubscriptionDetails(
 
     {  /*SEQ_ELEM-2  Encode ricAction_ToBeSetup_List alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List = rtxMemAllocType(p_asn1_ctx, e2ap_RICactions_ToBeSetup_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List)
         {
@@ -16933,8 +17070,8 @@ xnap_return_et e2ap_compose_RICaction_NotAdmitted_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_NotAdmitted_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_NotAdmitted_Item->cause)
         {
@@ -17670,8 +17807,8 @@ xnap_return_et e2ap_compose_RICsubscriptionAudit_Item(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionAudit_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAudit_Item->ricRequestID)
         {
@@ -18041,8 +18178,8 @@ xnap_return_et e2ap_compose_RICsubscriptionAuditAction_Item(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID)
         {
@@ -18075,8 +18212,8 @@ xnap_return_et e2ap_compose_RICsubscriptionAuditAction_Item(
 
     {  /*SEQ_ELEM-3  Encode ricAction_Admitted_List alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List = rtxMemAllocType(p_asn1_ctx, e2ap_RICaction_Admitted_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List)
         {
@@ -19175,8 +19312,8 @@ xnap_return_et e2ap_compose_RICsubscription_withCause_Item(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscription_withCause_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscription_withCause_Item->ricRequestID)
         {
@@ -19209,8 +19346,8 @@ xnap_return_et e2ap_compose_RICsubscription_withCause_Item(
 
     {  /*SEQ_ELEM-3  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscription_withCause_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICsubscription_withCause_Item->cause)
         {
@@ -19602,8 +19739,8 @@ xnap_return_et e2ap_compose_RICaction_ToBeModifiedForModification_Item(
 
     {  /*SEQ_ELEM-4  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction)
         {
@@ -19744,8 +19881,8 @@ xnap_return_et e2ap_compose_RICaction_ToBeAddedForModification_Item(
 
     {  /*SEQ_ELEM-5  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction)
         {
@@ -20332,8 +20469,8 @@ xnap_return_et e2ap_compose_RICaction_FailedToBeRemovedForModification_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause)
         {
@@ -20527,8 +20664,8 @@ xnap_return_et e2ap_compose_RICaction_FailedToBeModifiedForModification_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause)
         {
@@ -20722,8 +20859,8 @@ xnap_return_et e2ap_compose_RICaction_FailedToBeAddedForModification_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause)
         {
@@ -21798,8 +21935,8 @@ xnap_return_et e2ap_compose_RICaction_RequiredToBeRemoved_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_RequiredToBeRemoved_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RequiredToBeRemoved_Item->cause)
         {
@@ -22301,8 +22438,8 @@ xnap_return_et e2ap_compose_RICaction_RefusedToBeModified_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_RefusedToBeModified_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RefusedToBeModified_Item->cause)
         {
@@ -22496,8 +22633,8 @@ xnap_return_et e2ap_compose_RICaction_RefusedToBeRemoved_Item(
 
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICaction_RefusedToBeRemoved_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RefusedToBeRemoved_Item->cause)
         {
@@ -23422,8 +23559,8 @@ xnap_return_et e2ap_compose_RICsubscriptionList_Item(
 
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionList_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionList_Item->ricRequestID)
         {
@@ -23445,8 +23582,8 @@ xnap_return_et e2ap_compose_RICsubscriptionList_Item(
 
     {  /*SEQ_ELEM-2  Encode ricAction_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionList_Item->ricAction_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICaction_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionList_Item->ricAction_list)
         {
@@ -23603,8 +23740,8 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_Item(
 
     {  /*SEQ_ELEM-2  Encode ricSubscriptionToBeSuspended_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionToBeSuspended_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list)
         {
@@ -23626,8 +23763,8 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_Item(
 
     {  /*SEQ_ELEM-3  Encode ricSubscriptionToBeResumed_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionToBeResumed_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list)
         {
@@ -24078,8 +24215,8 @@ xnap_return_et e2ap_compose_RANfunctionStateConfirm_Item(
 
     {  /*SEQ_ELEM-2  Encode ricSubscriptionSuspended_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionSuspended_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list)
         {
@@ -24101,8 +24238,8 @@ xnap_return_et e2ap_compose_RANfunctionStateConfirm_Item(
 
     {  /*SEQ_ELEM-3  Encode ricSubscriptionResumed_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionResumed_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list)
         {

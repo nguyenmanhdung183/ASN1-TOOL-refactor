@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_Item(
 
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID)
         {
@@ -51,8 +51,8 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_Item(
 
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck)
         {

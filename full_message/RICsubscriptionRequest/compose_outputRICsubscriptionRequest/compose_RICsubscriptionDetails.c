@@ -28,8 +28,8 @@ xnap_return_et e2ap_compose_RICsubscriptionDetails(
 
     {  /*SEQ_ELEM-2  Encode ricAction_ToBeSetup_List alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List = rtxMemAllocType(p_asn1_ctx, e2ap_RICactions_ToBeSetup_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List)
         {

@@ -10,17 +10,28 @@
                      _e2ap_TNLinformation_tnlAddress_t              *p_src//src
 )
 {
-    p_dest->numbits = E2AP_XXX;//duugnm23 fix value
-    p_dest->data = (OSOCTET*)rtxMemAllocZ(p_asn1_ctx, 20);// dungnm23 check nhe E2AP_xxx_OCTET_SIZE
-    if(p_dest->data == NULL)
+    p_dest->numbits = p_src->numbits;
+
+    /* kích thước tính theo số octet thực */
+    size_t num_octet = (p_src->numbits + 7) / 8;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num_octet);
+    if (!p_dest->data)
     {
-        XNAP_TRACE(XNAP_ERROR, "dungnm23 %s memory allocation failed in e2ap_compose_TNLinformation_tnlAddress", __FUNCTION__);
+        XNAP_TRACE(XNAP_ERROR,
+                   "dungnm23 %s failed alloc in e2ap_compose_TNLinformation_tnlAddress",
+                   __FUNCTION__);
         return XNAP_FAILURE;
     }
-    XNAP_MEMCPY((void*)p_dest->data, p_src->data, 20);
+
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, num_octet);
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debugBIT STRING TNLinformation_tnlAddress numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif    
+
     return XNAP_SUCCESS;
 }
-
          
      // id = 3 - BIT STRING (SIZE(16)) - tnlPort
  xnap_return_et e2ap_compose_TNLinformation_tnlPort(
@@ -29,8 +40,13 @@
                      _e2ap_TNLinformation_tnlPort_t              *p_src//src
 )
 {
-    memcpy(p_dest->data, p_src->data, (p_src->numbits +7)/8);// bug check lại xem phải số byte ko nhé
     p_dest->numbits = p_src->numbits;
+    XNAP_MEMCPY(p_dest->data, p_src->data, sizeof(p_src->data));
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug BIT STRING TNLinformation_tnlPort numbits=%u", __FUNCTION__, p_dest->numbits);
+    #endif
+
     return XNAP_SUCCESS;
 }
           

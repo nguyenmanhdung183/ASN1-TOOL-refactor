@@ -17,8 +17,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-1  Encode ricServiceReportLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation)
         {
@@ -40,8 +40,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-2  Encode ricServiceInsertLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation)
         {
@@ -63,8 +63,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-3  Encode ricServiceControlLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation)
         {
@@ -86,8 +86,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-4  Encode ricServicePolicyLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation)
         {
@@ -109,8 +109,8 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
 
     {  /*SEQ_ELEM-5  Encode ricServiceQueryLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
-            /* 1.alloc mem */
         #if 0 
+            /* 1.alloc mem */
         p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation)
         {
