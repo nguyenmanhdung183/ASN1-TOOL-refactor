@@ -2,48 +2,54 @@
 /*       SEQUENCE - {{name}}        */
 /************************************************/
 {% for f in fields %}
-    {# integer primitive #}
-    {% if f.primitive_meta.primitive_id == 5 or  f.primitive_meta.primitive_id ==6 %}
-typedef UInt{{f.primitive.max|stdbit}} _e2ap_{{name}}_{{f.field}};
-    {% endif %}
-    {# BIT STRING 2-3-4 primitive #}
-    {% if f.primitive_meta.primitive_id == 2 %} {# A..B,...#}
+    {% if f.primitive_meta.primitive_id == 5 or  f.primitive_meta.primitive_id ==6 %}{# INTEGER #}
+typedef UInt{{f.primitive_meta.max|stdbit}} _e2ap_{{name}}_{{f.field}};
+    {% endif %}{# end INTEGER #}
+    {% if f.primitive_meta.primitive_id == 2 %}{# BIT STRING 2-3-4 primitive #}{# A..B,...#}
 typedef struct{
-    UInt{{f.primitive.max|stdbit}} numbits;
-    UInt8* data;
+    UInt{{f.primitive_meta.max |stdbit}} numbits;
+    UInt8 data[{{ (f.primitive_meta.max +7)//8 }}];
 } _e2ap_{{name}}_{{f.field}}_t;//BIT STRING SIZE (A..B,...)
     {% endif %}
     {% if f.primitive_meta.primitive_id == 4 %} {# A..B#}
 typedef struct{
-    unsigned int numbits;
-    unsigned char data[{{ (f.primitive.max +7)//8 }}];
+    UInt{{f.primitive_meta.max |stdbit}} numbits;
+    UInt8 data[{{ (f.primitive_meta.max +7)//8 }}];
 }_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (A..B)
     {% endif %}
     {% if f.primitive_meta.primitive_id == 3 %} {# A#}
 typedef struct{
-    unsigned int numbits;
-    unsigned char data[{{ (f.primitive.max +7)//8 }}];
+    UInt{{f.primitive_meta.max |stdbit}} numbits;
+    UInt8 data[{{ (f.primitive_meta.max +7)//8 }}];
 }_e2ap_{{name}}_{{f.field}}_t; //BIT STRING SIZE (N)
     {% endif %}
     {# ENUMERATED primitive #}
     {% if f.primitive_meta.primitive_id == 13 %}
 typedef enum{
     {% for enum in f.primitive_meta.enum_items %}    
-    E2AP_{{enum.name|camel_to_upper_snake}} = {{enum.value}}{% if not loop.last %},{% endif %}
+    E2AP_{{name|camel_to_upper_snake}}_{{enum.name|camel_to_upper_snake}} = {{enum.value}}{% if not loop.last %},{% endif %}
     {% endfor %}
 
 }_e2ap_{{name}}_{{f.field}}_et;
 
     {% endif %}
-    {# OCTET STRING primitive #}
-    {% if f.primitive_meta.primitive_id == 9 %}
+    {% if f.primitive_meta.primitive_id == 9 %}{# OCTET STRING primitive #}
 typedef struct{
-    unsigned int numocts;
-    const char* data;
+    UInt32 numocts;
+    UInt8 data[{{f.primitive_meta.size }}];
 }_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING
     {% endif %}
+{% if f.primitive_meta.primitive_id == 8 %}{# OCTET STRING SIZE N #}
+typedef struct{
+    UInt32 numocts;
+    UInt8 data[{{f.primitive_meta.size }}];
+}_e2ap_{{name}}_{{f.field}}_t; //OCTET STRING
+{% endif %}
+{% if f.primitive_meta.primitive_id == 10 %}{# Printable String A..B,...  ?#}
+typedef const char* _e2ap_{{name}}_{{f.field}}_t;//Printable STRING SIZE (A..B,...) - P  OK
+{% endif %} 
 {% endfor %}
-
+/* main struct for sequence */
 typedef struct{ {#/* main struct for sequence -*/#} 
 {# optional bit mask #}
 {% set ns = namespace(bitmask_value=0) %}

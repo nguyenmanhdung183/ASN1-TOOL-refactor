@@ -1,2 +1,2 @@
-tnlAddress
-tnlPort
+ricRequestorID
+ricInstanceID

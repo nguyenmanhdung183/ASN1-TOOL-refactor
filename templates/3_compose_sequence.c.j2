@@ -85,18 +85,20 @@ xnap_return_et e2ap_compose_{{name}}(
         {% if not (f.primitive.isprimitive == True or f.alias != -1) %}{#not primitive #}
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_{{name}}->{{f.field_name}} = rtxMemAllocType(p_asn1_ctx, e2ap_{{f.ie_type | replace("-","_")}});
         if(XNAP_P_NULL == p_e2ap_{{name}}->{{f.field_name}})
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field {{f.field_name}}",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_{{f.ie_type | replace("-","_")}}(&p_e2ap_{{name}}->{{f.field_name}});
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_{{f.ie_type|replace("-","_")}}(p_asn1_ctx,
-                                                &p_e2ap_{{name}}->{{f.field_name}},
-                                                &p_{{name}}->{{f.field_name}}))
+                                                &p_e2ap_{{name}}->{{f.field_name}},//dest
+                                                &p_{{name}}->{{f.field_name}})) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field {{f.field_name}}",__FUNCTION__);
             return XNAP_FAILURE;

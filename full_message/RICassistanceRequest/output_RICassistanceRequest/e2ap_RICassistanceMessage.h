@@ -1,0 +1,13 @@
+/*****************************************/
+/*           RICassistanceMessage                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_RICassistanceMessage;
+EXTERN int asn1PE_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanceMessage value);
+EXTERN int asn1PD_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanceMessage* pvalue);
+EXTERN int asn1PrtToStr_e2ap_RICassistanceMessage (const char* name, e2ap_RICassistanceMessage *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_RICassistanceMessage (OSCTXT* pctxt, const char* name, const e2ap_RICassistanceMessage* pvalue);
+EXTERN int asn1Copy_e2ap_RICassistanceMessage (OSCTXT* pctxt, const e2ap_RICassistanceMessage* pSrcValue, e2ap_RICassistanceMessage* pDstValue);
+EXTERN int asn1Init_e2ap_RICassistanceMessage (e2ap_RICassistanceMessage* pvalue);
+EXTERN void asn1Free_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanceMessage* pvalue);

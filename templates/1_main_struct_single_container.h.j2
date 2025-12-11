@@ -6,6 +6,7 @@ typedef struct{
 #define MAX_NO_{{ie_from_type.field_name|camel_to_upper_snake}}_COUNT {{max_size|int}} // dungnm23 change to 1 if needed
   
     UInt{{max_size |int |stdbit}} {{ie_from_type.field_name}}_count;
+    
     _e2ap_{{ie_from_type.ie_type}}_t {{ie_from_type.field_name}}[MAX_NO_{{ie_from_type.field_name|camel_to_upper_snake}}_COUNT];
 
 }_e2ap_{{list_name}}_t;  //SINGLE CONTAINER   

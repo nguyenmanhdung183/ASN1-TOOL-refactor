@@ -3,30 +3,34 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11
 
 # Output binary
-TARGET = stub.exe
+TARGET = main
 
 # Source files
 SRCS = main.c output_main.c
 
-# Headers (phụ, không compile)
+# Headers
 HDRS = MAIN_COMPOSE.h MAIN_STRUCT.h output_main.h stub.h
 
 # Object files
 OBJS = $(SRCS:.c=.o)
 
-# Default rule
+# Default: build + run
 all: $(TARGET)
+	./$(TARGET)
 
 # Link
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
-# Compile .c → .o
+# Build each .c
 %.o: %.c $(HDRS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean
+# Manual run
+run: $(TARGET)
+	./$(TARGET)
+
 clean:
 	rm -f $(OBJS) $(TARGET)
 
-.PHONY: all clean
+.PHONY: all clean run

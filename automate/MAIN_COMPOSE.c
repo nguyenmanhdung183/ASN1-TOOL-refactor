@@ -1,26 +1,49 @@
 #include "MAIN_COMPOSE.h"
 
 /*****************************************************/
-/*    PRIMITIVE TransactionID            */
+/*    COMPOSE PRIMITIVE TransactionID                             */
 /*****************************************************/
-// cpmpose primitive - id = 5 - INTEGER (0..255,...) - TransactionID
-  xnap_return_et e2ap_compose_TransactionID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_TransactionID  *p_dest,//dest
-                        _e2ap_TransactionID_t  *p_src//src
-)
-{
+/* compose primitive - id = 5 - INTEGER (0..255,...) - TransactionID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_TransactionID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_TransactionID     *p_dest,
+                        _e2ap_TransactionID_t  *p_src
+){
     *p_dest = (e2ap_TransactionID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER TransactionID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /************************************************************/
 /*      SEQUENCE TNLinformation                */
 /************************************************************/
 
 /* 1- compose primitive intergrate for sequence fields */
      // id = 2 - BIT STRING (SIZE(1..160,...)) - tnlAddress
-           
+  xnap_return_et e2ap_compose_TNLinformation_tnlAddress(
+                     OSCTXT                       *p_asn1_ctx,
+                     e2ap_TNLinformation_tnlAddress                 *p_dest,//dest
+                     _e2ap_TNLinformation_tnlAddress_t              *p_src//src
+)
+{
+    p_dest->numbits = E2AP_XXX;//duugnm23 fix value
+    p_dest->data = (OSOCTET*)rtxMemAllocZ(p_asn1_ctx, 20);// dungnm23 check nhe E2AP_xxx_OCTET_SIZE
+    if(p_dest->data == NULL)
+    {
+        XNAP_TRACE(XNAP_ERROR, "dungnm23 %s memory allocation failed in e2ap_compose_TNLinformation_tnlAddress", __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+    XNAP_MEMCPY((void*)p_dest->data, p_src->data, 20);
+    return XNAP_SUCCESS;
+}
+
+         
      // id = 3 - BIT STRING (SIZE(16)) - tnlPort
  xnap_return_et e2ap_compose_TNLinformation_tnlPort(
                      OSCTXT                       *p_asn1_ctx,
@@ -73,19 +96,25 @@ xnap_return_et e2ap_compose_TNLinformation(
 }   
 
 /*****************************************************/
-/*    PRIMITIVE TNLusage            */
+/*    COMPOSE PRIMITIVE TNLusage                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - TNLusage
-   xnap_return_et e2ap_compose_TNLusage( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_TNLusage  *p_dest,//dest
-                        _e2ap_TNLusage_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - TNLusage*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_TNLusage(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_TNLusage     *p_dest,
+                        _e2ap_TNLusage_et *p_src
+){
     *p_dest = (e2ap_TNLusage)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED TNLusage value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /************************************************************/
 /*      SEQUENCE E2connectionUpdate_Item                */
 /************************************************************/
@@ -106,18 +135,20 @@ xnap_return_et e2ap_compose_E2connectionUpdate_Item(
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2connectionUpdate_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionUpdate_Item->tnlInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_TNLinformation(&p_e2ap_E2connectionUpdate_Item->tnlInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
-                                                &p_e2ap_E2connectionUpdate_Item->tnlInformation,
-                                                &p_E2connectionUpdate_Item->tnlInformation))
+                                                &p_e2ap_E2connectionUpdate_Item->tnlInformation,//dest
+                                                &p_E2connectionUpdate_Item->tnlInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -213,18 +244,20 @@ xnap_return_et e2ap_compose_E2connectionUpdateRemove_Item(
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2connectionUpdateRemove_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionUpdateRemove_Item->tnlInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_TNLinformation(&p_e2ap_E2connectionUpdateRemove_Item->tnlInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
-                                                &p_e2ap_E2connectionUpdateRemove_Item->tnlInformation,
-                                                &p_E2connectionUpdateRemove_Item->tnlInformation))
+                                                &p_e2ap_E2connectionUpdateRemove_Item->tnlInformation,//dest
+                                                &p_E2connectionUpdateRemove_Item->tnlInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -290,6 +323,35 @@ xnap_return_et e2ap_compose_E2connectionUpdateRemove_List (
 
 
 /**************************************************/
+/* assign_value function for E2connectionUpdate */
+/**************************************************/
+void assign_hardcode_value_E2connectionUpdate(e2ap_E2connectionUpdate_t* p_E2connectionUpdate)
+{
+// E2connectionUpdate.E2connectionUpdate-IEs.TransactionID
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation.tnlAddress
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation....
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation.tnlPort
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs
+// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List
+// E2connectionUpdate.E2connectionUpdate-IEs
+// E2connectionUpdate
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2connectionUpdate                    */
 /*                                                */
 /**************************************************/
@@ -323,39 +385,13 @@ E2connectionUpdate
 
 */
 xnap_return_et e2ap_encode_E2connectionUpdate(
-                e2ap_E2connectionUpdate_t* p_E2connectionUpdate,
+                e2ap_E2connectionUpdate_t* p_E2connectionUpdate_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2connectionUpdate.E2connectionUpdate-IEs.TransactionID
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdate-List
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation.tnlAddress
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation....
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation.tnlPort
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item.TNLinformation
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs.E2connectionUpdateRemove-Item
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List.E2connectionUpdateRemove-ItemIEs
-// E2connectionUpdate.E2connectionUpdate-IEs.E2connectionUpdateRemove-List
-// E2connectionUpdate.E2connectionUpdate-IEs
-// E2connectionUpdate
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2connectionUpdate o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2connectionUpdate(p_E2connectionUpdate_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -373,13 +409,13 @@ xnap_return_et e2ap_encode_E2connectionUpdate(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_E2connectionUpdate;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2connectionUpdate;
@@ -413,7 +449,7 @@ xnap_return_et e2ap_encode_E2connectionUpdate(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdate_IEs_id_TransactionID = p_E2connectionUpdate->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdate_IEs_id_TransactionID = &p_E2connectionUpdate_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -453,7 +489,7 @@ xnap_return_et e2ap_encode_E2connectionUpdate(
             //message_name.item_type -> type = E2connectionUpdate_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionUpdate_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdate_IEs_id_E2connectionUpdateAdd,
-                                &p_E2connectionUpdate->id_E2connectionUpdateAdd)){
+                                &p_E2connectionUpdate_src->id_E2connectionUpdateAdd)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionUpdate_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -500,7 +536,7 @@ xnap_return_et e2ap_encode_E2connectionUpdate(
             //message_name.item_type -> type = E2connectionUpdateRemove_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionUpdateRemove_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdate_IEs_id_E2connectionUpdateRemove,
-                                &p_E2connectionUpdate->id_E2connectionUpdateRemove)){
+                                &p_E2connectionUpdate_src->id_E2connectionUpdateRemove)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionUpdateRemove_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -547,7 +583,7 @@ xnap_return_et e2ap_encode_E2connectionUpdate(
             //message_name.item_type -> type = E2connectionUpdate_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionUpdate_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdate_IEs_id_E2connectionUpdateModify,
-                                &p_E2connectionUpdate->id_E2connectionUpdateModify)){
+                                &p_E2connectionUpdate_src->id_E2connectionUpdateModify)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionUpdate_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -591,94 +627,157 @@ xnap_return_et e2ap_encode_E2connectionUpdate(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE CauseRICrequest            */
+/*    COMPOSE PRIMITIVE CauseRICrequest                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - CauseRICrequest
-   xnap_return_et e2ap_compose_CauseRICrequest( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_CauseRICrequest  *p_dest,//dest
-                        _e2ap_CauseRICrequest_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - CauseRICrequest*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_CauseRICrequest(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_CauseRICrequest     *p_dest,
+                        _e2ap_CauseRICrequest_et *p_src
+){
     *p_dest = (e2ap_CauseRICrequest)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED CauseRICrequest value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE CauseRICservice            */
+/*    COMPOSE PRIMITIVE CauseRICservice                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - CauseRICservice
-   xnap_return_et e2ap_compose_CauseRICservice( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_CauseRICservice  *p_dest,//dest
-                        _e2ap_CauseRICservice_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - CauseRICservice*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_CauseRICservice(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_CauseRICservice     *p_dest,
+                        _e2ap_CauseRICservice_et *p_src
+){
     *p_dest = (e2ap_CauseRICservice)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED CauseRICservice value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE CauseE2node            */
+/*    COMPOSE PRIMITIVE CauseE2node                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - CauseE2node
-   xnap_return_et e2ap_compose_CauseE2node( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_CauseE2node  *p_dest,//dest
-                        _e2ap_CauseE2node_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - CauseE2node*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_CauseE2node(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_CauseE2node     *p_dest,
+                        _e2ap_CauseE2node_et *p_src
+){
     *p_dest = (e2ap_CauseE2node)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED CauseE2node value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE CauseTransport            */
+/*    COMPOSE PRIMITIVE CauseTransport                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - CauseTransport
-   xnap_return_et e2ap_compose_CauseTransport( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_CauseTransport  *p_dest,//dest
-                        _e2ap_CauseTransport_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - CauseTransport*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_CauseTransport(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_CauseTransport     *p_dest,
+                        _e2ap_CauseTransport_et *p_src
+){
     *p_dest = (e2ap_CauseTransport)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED CauseTransport value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE CauseProtocol            */
+/*    COMPOSE PRIMITIVE CauseProtocol                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - CauseProtocol
-   xnap_return_et e2ap_compose_CauseProtocol( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_CauseProtocol  *p_dest,//dest
-                        _e2ap_CauseProtocol_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - CauseProtocol*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_CauseProtocol(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_CauseProtocol     *p_dest,
+                        _e2ap_CauseProtocol_et *p_src
+){
     *p_dest = (e2ap_CauseProtocol)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED CauseProtocol value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE CauseMisc            */
+/*    COMPOSE PRIMITIVE CauseMisc                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - CauseMisc
-   xnap_return_et e2ap_compose_CauseMisc( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_CauseMisc  *p_dest,//dest
-                        _e2ap_CauseMisc_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - CauseMisc*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_CauseMisc(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_CauseMisc     *p_dest,
+                        _e2ap_CauseMisc_et *p_src
+){
     *p_dest = (e2ap_CauseMisc)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED CauseMisc value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE ServiceLayerCause            */
+/*    COMPOSE PRIMITIVE ServiceLayerCause                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - ServiceLayerCause
-     
+/* compose primitive - id = 9 - OCTET STRING - ServiceLayerCause*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_ServiceLayerCause(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_ServiceLayerCause     *p_dest,
+                        _e2ap_ServiceLayerCause_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_ServiceLayerCause",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING ServiceLayerCause numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /************************************************************/
 /*      SEQUENCE CauseServiceLayer                */
 /************************************************************/
@@ -728,14 +827,24 @@ xnap_return_et e2ap_compose_Cause(
     p_e2ap_Cause->t =  p_Cause->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_Cause->t)
+    switch(p_Cause->choice_type)
     {
         /*CHOICE_INDEX-1    ricRequest*/
-        case: E2AP_CAUSE_e2ap_RIC_REQUEST:
+        case E2AP_CAUSE_e2ap_RIC_REQUEST:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_ricRequest ;
+
              /*==primitive alias== */
+            /* 1.alloc mem */
+            p_e2ap_Cause->u.ricRequest = rtxMemAllocType(p_asn1_ctx,e2ap_CauseRICrequest);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.ricRequest)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequest",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseRICrequest(p_asn1_ctx,
-                                                    &p_e2ap_Cause->ricRequest,
+                                                    p_e2ap_Cause->u.ricRequest,
                                                     &p_Cause->ricRequest))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequest",__FUNCTION__);
@@ -745,11 +854,21 @@ xnap_return_et e2ap_compose_Cause(
         }
 
         /*CHOICE_INDEX-2    ricService*/
-        case: E2AP_CAUSE_e2ap_RIC_SERVICE:
+        case E2AP_CAUSE_e2ap_RIC_SERVICE:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_ricService ;
+
              /*==primitive alias== */
+            /* 1.alloc mem */
+            p_e2ap_Cause->u.ricService = rtxMemAllocType(p_asn1_ctx,e2ap_CauseRICservice);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.ricService)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricService",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseRICservice(p_asn1_ctx,
-                                                    &p_e2ap_Cause->ricService,
+                                                    p_e2ap_Cause->u.ricService,
                                                     &p_Cause->ricService))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricService",__FUNCTION__);
@@ -759,11 +878,21 @@ xnap_return_et e2ap_compose_Cause(
         }
 
         /*CHOICE_INDEX-3    e2Node*/
-        case: E2AP_CAUSE_e2ap_E2NODE:
+        case E2AP_CAUSE_e2ap_E2NODE:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_e2Node ;
+
              /*==primitive alias== */
+            /* 1.alloc mem */
+            p_e2ap_Cause->u.e2Node = rtxMemAllocType(p_asn1_ctx,e2ap_CauseE2node);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.e2Node)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2Node",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseE2node(p_asn1_ctx,
-                                                    &p_e2ap_Cause->e2Node,
+                                                    p_e2ap_Cause->u.e2Node,
                                                     &p_Cause->e2Node))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2Node",__FUNCTION__);
@@ -773,11 +902,21 @@ xnap_return_et e2ap_compose_Cause(
         }
 
         /*CHOICE_INDEX-4    transport*/
-        case: E2AP_CAUSE_e2ap_TRANSPORT:
+        case E2AP_CAUSE_e2ap_TRANSPORT:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_transport ;
+
              /*==primitive alias== */
+            /* 1.alloc mem */
+            p_e2ap_Cause->u.transport = rtxMemAllocType(p_asn1_ctx,e2ap_CauseTransport);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.transport)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field transport",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseTransport(p_asn1_ctx,
-                                                    &p_e2ap_Cause->transport,
+                                                    p_e2ap_Cause->u.transport,
                                                     &p_Cause->transport))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field transport",__FUNCTION__);
@@ -787,11 +926,21 @@ xnap_return_et e2ap_compose_Cause(
         }
 
         /*CHOICE_INDEX-5    protocol*/
-        case: E2AP_CAUSE_e2ap_PROTOCOL:
+        case E2AP_CAUSE_e2ap_PROTOCOL:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_protocol ;
+
              /*==primitive alias== */
+            /* 1.alloc mem */
+            p_e2ap_Cause->u.protocol = rtxMemAllocType(p_asn1_ctx,e2ap_CauseProtocol);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.protocol)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field protocol",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseProtocol(p_asn1_ctx,
-                                                    &p_e2ap_Cause->protocol,
+                                                    p_e2ap_Cause->u.protocol,
                                                     &p_Cause->protocol))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field protocol",__FUNCTION__);
@@ -801,11 +950,21 @@ xnap_return_et e2ap_compose_Cause(
         }
 
         /*CHOICE_INDEX-6    misc*/
-        case: E2AP_CAUSE_e2ap_MISC:
+        case E2AP_CAUSE_e2ap_MISC:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_misc ;
+
              /*==primitive alias== */
+            /* 1.alloc mem */
+            p_e2ap_Cause->u.misc = rtxMemAllocType(p_asn1_ctx,e2ap_CauseMisc);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.misc)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field misc",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseMisc(p_asn1_ctx,
-                                                    &p_e2ap_Cause->misc,
+                                                    p_e2ap_Cause->u.misc,
                                                     &p_Cause->misc))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field misc",__FUNCTION__);
@@ -815,21 +974,23 @@ xnap_return_et e2ap_compose_Cause(
         }
 
         /*CHOICE_INDEX-7    serviceLayer*/
-        case: E2AP_CAUSE_e2ap_SERVICE_LAYER:
+        case E2AP_CAUSE_e2ap_SERVICE_LAYER:
         {
+            p_e2ap_Cause->t = T_e2ap_Cause_serviceLayer ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_Cause->serviceLayer = rtxMemAllocType(p_asn1_ctx, e2ap_CauseServiceLayer);
-            if(XNAP_P_NULL == p_e2ap_Cause->serviceLayer)
+            p_e2ap_Cause->u.serviceLayer = rtxMemAllocType(p_asn1_ctx, e2ap_CauseServiceLayer);
+            if(XNAP_P_NULL == p_e2ap_Cause->u.serviceLayer)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field serviceLayer",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_CauseServiceLayer(&p_e2ap_Cause->serviceLayer);
+            asn1Init_e2ap_CauseServiceLayer(p_e2ap_Cause->u.serviceLayer);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_CauseServiceLayer(p_asn1_ctx,
-                                                    &p_e2ap_Cause->serviceLayer,
+                                                    p_e2ap_Cause->u.serviceLayer,
                                                     &p_Cause->serviceLayer))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field serviceLayer",__FUNCTION__);
@@ -860,18 +1021,20 @@ xnap_return_et e2ap_compose_E2connectionSetupFailed_Item(
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2connectionSetupFailed_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item->tnlInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_TNLinformation(&p_e2ap_E2connectionSetupFailed_Item->tnlInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
-                                                &p_e2ap_E2connectionSetupFailed_Item->tnlInformation,
-                                                &p_E2connectionSetupFailed_Item->tnlInformation))
+                                                &p_e2ap_E2connectionSetupFailed_Item->tnlInformation,//dest
+                                                &p_E2connectionSetupFailed_Item->tnlInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -881,18 +1044,20 @@ xnap_return_et e2ap_compose_E2connectionSetupFailed_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2connectionSetupFailed_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_E2connectionSetupFailed_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_E2connectionSetupFailed_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_E2connectionSetupFailed_Item->cause,
-                                                &p_E2connectionSetupFailed_Item->cause))
+                                                &p_e2ap_E2connectionSetupFailed_Item->cause,//dest
+                                                &p_E2connectionSetupFailed_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -958,6 +1123,44 @@ xnap_return_et e2ap_compose_E2connectionSetupFailed_List (
 
 
 /**************************************************/
+/* assign_value function for E2connectionUpdateAcknowledge */
+/**************************************************/
+void assign_hardcode_value_E2connectionUpdateAcknowledge(e2ap_E2connectionUpdateAcknowledge_t* p_E2connectionUpdateAcknowledge)
+{
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.TransactionID
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlAddress
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation....
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlPort
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICrequest
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICservice
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseE2node
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseTransport
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseProtocol
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseMisc
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List
+// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs
+// E2connectionUpdateAcknowledge
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2connectionUpdateAcknowledge                    */
 /*                                                */
 /**************************************************/
@@ -992,48 +1195,13 @@ E2connectionUpdateAcknowledge
 
 */
 xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
-                e2ap_E2connectionUpdateAcknowledge_t* p_E2connectionUpdateAcknowledge,
+                e2ap_E2connectionUpdateAcknowledge_t* p_E2connectionUpdateAcknowledge_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.TransactionID
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlAddress
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation....
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation.tnlPort
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLinformation
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item.TNLusage
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs.E2connectionUpdate-Item
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List.E2connectionUpdate-ItemIEs
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionUpdate-List
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlAddress
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation....
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation.tnlPort
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.TNLinformation
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICrequest
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseRICservice
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseE2node
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseTransport
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseProtocol
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseMisc
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause.CauseServiceLayer
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item.Cause
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs.E2connectionSetupFailed-Item
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List.E2connectionSetupFailed-ItemIEs
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs.E2connectionSetupFailed-List
-// E2connectionUpdateAcknowledge.E2connectionUpdateAck-IEs
-// E2connectionUpdateAcknowledge
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2connectionUpdateAcknowledge o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2connectionUpdateAcknowledge(p_E2connectionUpdateAcknowledge_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -1051,13 +1219,13 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2connectionUpdate;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2connectionUpdateAcknowledge;
@@ -1091,7 +1259,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_TransactionID = p_E2connectionUpdateAcknowledge->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_TransactionID = &p_E2connectionUpdateAcknowledge_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -1131,7 +1299,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
             //message_name.item_type -> type = E2connectionUpdate_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionUpdate_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup,
-                                &p_E2connectionUpdateAcknowledge->id_E2connectionSetup)){
+                                &p_E2connectionUpdateAcknowledge_src->id_E2connectionSetup)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionUpdate_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -1178,7 +1346,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
             //message_name.item_type -> type = E2connectionSetupFailed_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionSetupFailed_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed,
-                                &p_E2connectionUpdateAcknowledge->id_E2connectionSetupFailed)){
+                                &p_E2connectionUpdateAcknowledge_src->id_E2connectionSetupFailed)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2connectionSetupFailed_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -1222,61 +1390,85 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE TimeToWait            */
+/*    COMPOSE PRIMITIVE TimeToWait                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - TimeToWait
-   xnap_return_et e2ap_compose_TimeToWait( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_TimeToWait  *p_dest,//dest
-                        _e2ap_TimeToWait_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - TimeToWait*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_TimeToWait(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_TimeToWait     *p_dest,
+                        _e2ap_TimeToWait_et *p_src
+){
     *p_dest = (e2ap_TimeToWait)*p_src;
-    return XNAP_SUCCESS;
-}
-   
-/*****************************************************/
-/*    PRIMITIVE ProcedureCode            */
-/*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..255) - ProcedureCode
-  xnap_return_et e2ap_compose_ProcedureCode(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_ProcedureCode  *p_dest,//dest
-                        _e2ap_ProcedureCode_t  *p_src//src
-)
-{
-    *p_dest = (e2ap_ProcedureCode)*p_src;
-    return XNAP_SUCCESS;
-}
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED TimeToWait value=%u", __FUNCTION__, *p_dest);
+    #endif
     
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE TriggeringMessage            */
+/*    COMPOSE PRIMITIVE ProcedureCode                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - TriggeringMessage
-   xnap_return_et e2ap_compose_TriggeringMessage( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_TriggeringMessage  *p_dest,//dest
-                        _e2ap_TriggeringMessage_et  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..255) - ProcedureCode*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_ProcedureCode(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_ProcedureCode     *p_dest,
+                        _e2ap_ProcedureCode_t  *p_src
+){
+    *p_dest = (e2ap_ProcedureCode)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER ProcedureCode value=%u", __FUNCTION__, *p_dest);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/*****************************************************/
+/*    COMPOSE PRIMITIVE TriggeringMessage                             */
+/*****************************************************/
+/* compose primitive - id = 13 - ENUMERATED - TriggeringMessage*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_TriggeringMessage(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_TriggeringMessage     *p_dest,
+                        _e2ap_TriggeringMessage_et *p_src
+){
     *p_dest = (e2ap_TriggeringMessage)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED TriggeringMessage value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE Criticality            */
+/*    COMPOSE PRIMITIVE Criticality                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - Criticality
-   xnap_return_et e2ap_compose_Criticality( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_Criticality  *p_dest,//dest
-                        _e2ap_Criticality_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - Criticality*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_Criticality(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_Criticality     *p_dest,
+                        _e2ap_Criticality_et *p_src
+){
     *p_dest = (e2ap_Criticality)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED Criticality value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /************************************************************/
 /*      SEQUENCE RICrequestID                */
 /************************************************************/
@@ -1374,18 +1566,20 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
     {  /*SEQ_ELEM-2  Encode iE_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_CriticalityDiagnostics_IE_List->iE_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ProtocolIE_ID);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->iE_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field iE_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_ProtocolIE_ID(&p_e2ap_CriticalityDiagnostics_IE_List->iE_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_ProtocolIE_ID(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics_IE_List->iE_ID,
-                                                &p_CriticalityDiagnostics_IE_List->iE_ID))
+                                                &p_e2ap_CriticalityDiagnostics_IE_List->iE_ID,//dest
+                                                &p_CriticalityDiagnostics_IE_List->iE_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field iE_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -1395,18 +1589,20 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics_IE_List(
     {  /*SEQ_ELEM-3  Encode typeOfError alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_CriticalityDiagnostics_IE_List->typeOfError = rtxMemAllocType(p_asn1_ctx, e2ap_TypeOfError);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics_IE_List->typeOfError)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field typeOfError",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_TypeOfError(&p_e2ap_CriticalityDiagnostics_IE_List->typeOfError);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_TypeOfError(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics_IE_List->typeOfError,
-                                                &p_CriticalityDiagnostics_IE_List->typeOfError))
+                                                &p_e2ap_CriticalityDiagnostics_IE_List->typeOfError,//dest
+                                                &p_CriticalityDiagnostics_IE_List->typeOfError)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field typeOfError",__FUNCTION__);
             return XNAP_FAILURE;
@@ -1471,18 +1667,20 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics(
     {  /*SEQ_ELEM-4  Encode ricRequestorID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_CriticalityDiagnostics->ricRequestorID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics->ricRequestorID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestorID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_CriticalityDiagnostics->ricRequestorID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->ricRequestorID,
-                                                &p_CriticalityDiagnostics->ricRequestorID))
+                                                &p_e2ap_CriticalityDiagnostics->ricRequestorID,//dest
+                                                &p_CriticalityDiagnostics->ricRequestorID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestorID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -1492,18 +1690,20 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics(
     {  /*SEQ_ELEM-5  Encode iEsCriticalityDiagnostics alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics = rtxMemAllocType(p_asn1_ctx, e2ap_CriticalityDiagnostics_IE_List);
         if(XNAP_P_NULL == p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field iEsCriticalityDiagnostics",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_CriticalityDiagnostics_IE_List(&p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics_IE_List(p_asn1_ctx,
-                                                &p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics,
-                                                &p_CriticalityDiagnostics->iEsCriticalityDiagnostics))
+                                                &p_e2ap_CriticalityDiagnostics->iEsCriticalityDiagnostics,//dest
+                                                &p_CriticalityDiagnostics->iEsCriticalityDiagnostics)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field iEsCriticalityDiagnostics",__FUNCTION__);
             return XNAP_FAILURE;
@@ -1514,6 +1714,39 @@ xnap_return_et e2ap_compose_CriticalityDiagnostics(
     // cần appendnode
     return XNAP_SUCCESS;
 }   
+
+/**************************************************/
+/* assign_value function for E2connectionUpdateFailure */
+/**************************************************/
+void assign_hardcode_value_E2connectionUpdateFailure(e2ap_E2connectionUpdateFailure_t* p_E2connectionUpdateFailure)
+{
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.TransactionID
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseRICrequest
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseRICservice
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseE2node
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseTransport
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseProtocol
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseMisc
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseServiceLayer
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.TimeToWait
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.Criticality
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics
+// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs
+// E2connectionUpdateFailure
+
+
+    return;
+}
+
 
 /**************************************************/
 /*      encode_E2connectionUpdateFailure                    */
@@ -1545,43 +1778,13 @@ E2connectionUpdateFailure
 
 */
 xnap_return_et e2ap_encode_E2connectionUpdateFailure(
-                e2ap_E2connectionUpdateFailure_t* p_E2connectionUpdateFailure,
+                e2ap_E2connectionUpdateFailure_t* p_E2connectionUpdateFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.TransactionID
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseRICrequest
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseRICservice
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseE2node
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseTransport
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseProtocol
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseMisc
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause.CauseServiceLayer
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.Cause
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.TimeToWait
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.Criticality
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs.CriticalityDiagnostics
-// E2connectionUpdateFailure.E2connectionUpdateFailure-IEs
-// E2connectionUpdateFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2connectionUpdateFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2connectionUpdateFailure(p_E2connectionUpdateFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -1599,13 +1802,13 @@ xnap_return_et e2ap_encode_E2connectionUpdateFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_E2connectionUpdate;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2connectionUpdateFailure;
@@ -1639,7 +1842,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateFailure_IEs_id_TransactionID = p_E2connectionUpdateFailure->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateFailure_IEs_id_TransactionID = &p_E2connectionUpdateFailure_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -1679,7 +1882,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateFailure_IEs_id_Cause,
-                                &p_E2connectionUpdateFailure->id_Cause)){
+                                &p_E2connectionUpdateFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -1712,7 +1915,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TimeToWait;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateFailure_IEs_id_TimeToWait;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateFailure_IEs_id_TimeToWait = p_E2connectionUpdateFailure->id_TimeToWait; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateFailure_IEs_id_TimeToWait = &p_E2connectionUpdateFailure_src->id_TimeToWait; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -1752,7 +1955,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateFailure_IEs_id_CriticalityDiagnostics,
-                                &p_E2connectionUpdateFailure->id_CriticalityDiagnostics)){
+                                &p_E2connectionUpdateFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -1796,21 +1999,26 @@ xnap_return_et e2ap_encode_E2connectionUpdateFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE PLMN_Identity            */
+/*    COMPOSE PRIMITIVE PLMN_Identity                             */
 /*****************************************************/
-// cpmpose primitive - id = 8 - OCTET STRING (SIZE(3)) - PLMN_Identity
-    xnap_return_et e2ap_compose_PLMN_Identity(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_PLMN_Identity  *p_dest,//dest
-                        _e2ap_PLMN_Identity_t  *p_src//src
-)
-{
-    p_dest->numocts = PLMN_Identity_MAX_BYTES;
-    //memcpy(p_dest->data, p_src->data, p_src->numocts);
-    XNAP_MEMCPY(p_dest->data, p_src->PLMN_Identity, PLMN_Identity_MAX_BYTES);
+/* compose primitive - id = 8 - OCTET STRING (SIZE(3)) - PLMN_Identity*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING SIZE(N) – FIXED (primitive_id = 8)                       */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_PLMN_Identity(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_PLMN_Identity     *p_dest,
+                        _e2ap_PLMN_Identity_t  *p_src
+){
+    p_dest->numocts = p_src->numocts;  // hoặc 3, tùy ASN
+    XNAP_MEMCPY(p_dest->data, p_src->data, p_src->numocts);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING PLMN_Identity numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
     return XNAP_SUCCESS;
 }
-  
 /************************************************************/
  /*      CHOICE GNB_ID_Choice                */
  /************************************************************/
@@ -1838,14 +2046,24 @@ xnap_return_et e2ap_compose_GNB_ID_Choice(
     p_e2ap_GNB_ID_Choice->t =  p_GNB_ID_Choice->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_GNB_ID_Choice->t)
+    switch(p_GNB_ID_Choice->choice_type)
     {
         /*CHOICE_INDEX-1    gnb_ID*/
-        case: E2AP_GNB_ID_CHOICE_e2ap_GNB_ID:
+        case E2AP_GNB_ID_CHOICE_e2ap_GNB_ID:
         {
+            p_e2ap_GNB_ID_Choice->t = T_e2ap_GNB_ID_Choice_gnb_ID ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_GNB_ID_Choice->u.gnb_ID = rtxMemAllocType(p_asn1_ctx,e2ap_GNB_ID_Choice_gnb_ID);
+            if(XNAP_P_NULL == p_e2ap_GNB_ID_Choice->u.gnb_ID)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gnb_ID",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_GNB_ID_Choice_gnb_ID(p_asn1_ctx,
-                                                   &p_e2ap_GNB_ID_Choice->gnb_ID,
+                                                   p_e2ap_GNB_ID_Choice->u.gnb_ID,
                                                    &p_GNB_ID_Choice->gnb_ID))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gnb_ID",__FUNCTION__);
@@ -1887,18 +2105,20 @@ xnap_return_et e2ap_compose_GlobalgNB_ID(
     {  /*SEQ_ELEM-2  Encode gnb_id alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalgNB_ID->gnb_id = rtxMemAllocType(p_asn1_ctx, e2ap_GNB_ID_Choice);
         if(XNAP_P_NULL == p_e2ap_GlobalgNB_ID->gnb_id)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gnb_id",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GNB_ID_Choice(&p_e2ap_GlobalgNB_ID->gnb_id);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GNB_ID_Choice(p_asn1_ctx,
-                                                &p_e2ap_GlobalgNB_ID->gnb_id,
-                                                &p_GlobalgNB_ID->gnb_id))
+                                                &p_e2ap_GlobalgNB_ID->gnb_id,//dest
+                                                &p_GlobalgNB_ID->gnb_id)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gnb_id",__FUNCTION__);
             return XNAP_FAILURE;
@@ -1937,14 +2157,24 @@ xnap_return_et e2ap_compose_ENGNB_ID(
     p_e2ap_ENGNB_ID->t =  p_ENGNB_ID->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_ENGNB_ID->t)
+    switch(p_ENGNB_ID->choice_type)
     {
         /*CHOICE_INDEX-1    gNB_ID*/
-        case: E2AP_ENGNB_ID_e2ap_G_NB_ID:
+        case E2AP_ENGNB_ID_e2ap_G_NB_ID:
         {
+            p_e2ap_ENGNB_ID->t = T_e2ap_ENGNB_ID_gNB_ID ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENGNB_ID->u.gNB_ID = rtxMemAllocType(p_asn1_ctx,e2ap_ENGNB_ID_gNB_ID);
+            if(XNAP_P_NULL == p_e2ap_ENGNB_ID->u.gNB_ID)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gNB_ID",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENGNB_ID_gNB_ID(p_asn1_ctx,
-                                                   &p_e2ap_ENGNB_ID->gNB_ID,
+                                                   p_e2ap_ENGNB_ID->u.gNB_ID,
                                                    &p_ENGNB_ID->gNB_ID))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gNB_ID",__FUNCTION__);
@@ -1986,18 +2216,20 @@ xnap_return_et e2ap_compose_GlobalenGNB_ID(
     {  /*SEQ_ELEM-2  Encode gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalenGNB_ID->gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ENGNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalenGNB_ID->gNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_ENGNB_ID(&p_e2ap_GlobalenGNB_ID->gNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_ENGNB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalenGNB_ID->gNB_ID,
-                                                &p_GlobalenGNB_ID->gNB_ID))
+                                                &p_e2ap_GlobalenGNB_ID->gNB_ID,//dest
+                                                &p_GlobalenGNB_ID->gNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2010,33 +2242,45 @@ xnap_return_et e2ap_compose_GlobalenGNB_ID(
 }   
 
 /*****************************************************/
-/*    PRIMITIVE GNB_CU_UP_ID            */
+/*    COMPOSE PRIMITIVE GNB_CU_UP_ID                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..68719476735) - GNB_CU_UP_ID
-  xnap_return_et e2ap_compose_GNB_CU_UP_ID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_GNB_CU_UP_ID  *p_dest,//dest
-                        _e2ap_GNB_CU_UP_ID_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..68719476735) - GNB_CU_UP_ID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_GNB_CU_UP_ID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_GNB_CU_UP_ID     *p_dest,
+                        _e2ap_GNB_CU_UP_ID_t  *p_src
+){
     *p_dest = (e2ap_GNB_CU_UP_ID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER GNB_CU_UP_ID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE GNB_DU_ID            */
+/*    COMPOSE PRIMITIVE GNB_DU_ID                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..68719476735) - GNB_DU_ID
-  xnap_return_et e2ap_compose_GNB_DU_ID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_GNB_DU_ID  *p_dest,//dest
-                        _e2ap_GNB_DU_ID_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..68719476735) - GNB_DU_ID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_GNB_DU_ID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_GNB_DU_ID     *p_dest,
+                        _e2ap_GNB_DU_ID_t  *p_src
+){
     *p_dest = (e2ap_GNB_DU_ID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER GNB_DU_ID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /************************************************************/
 /*      SEQUENCE GlobalE2node_gNB_ID                */
 /************************************************************/
@@ -2057,18 +2301,20 @@ xnap_return_et e2ap_compose_GlobalE2node_gNB_ID(
     {  /*SEQ_ELEM-1  Encode global_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalgNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalgNB_ID(&p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalgNB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID,
-                                                &p_GlobalE2node_gNB_ID->global_gNB_ID))
+                                                &p_e2ap_GlobalE2node_gNB_ID->global_gNB_ID,//dest
+                                                &p_GlobalE2node_gNB_ID->global_gNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2078,18 +2324,20 @@ xnap_return_et e2ap_compose_GlobalE2node_gNB_ID(
     {  /*SEQ_ELEM-2  Encode global_en_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalenGNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_en_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalenGNB_ID(&p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalenGNB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID,
-                                                &p_GlobalE2node_gNB_ID->global_en_gNB_ID))
+                                                &p_e2ap_GlobalE2node_gNB_ID->global_en_gNB_ID,//dest
+                                                &p_GlobalE2node_gNB_ID->global_en_gNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_en_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2143,18 +2391,20 @@ xnap_return_et e2ap_compose_GlobalE2node_en_gNB_ID(
     {  /*SEQ_ELEM-1  Encode global_en_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalenGNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_en_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalenGNB_ID(&p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalenGNB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID,
-                                                &p_GlobalE2node_en_gNB_ID->global_en_gNB_ID))
+                                                &p_e2ap_GlobalE2node_en_gNB_ID->global_en_gNB_ID,//dest
+                                                &p_GlobalE2node_en_gNB_ID->global_en_gNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_en_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2237,14 +2487,24 @@ xnap_return_et e2ap_compose_ENB_ID_Choice(
     p_e2ap_ENB_ID_Choice->t =  p_ENB_ID_Choice->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_ENB_ID_Choice->t)
+    switch(p_ENB_ID_Choice->choice_type)
     {
         /*CHOICE_INDEX-1    enb_ID_macro*/
-        case: E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_MACRO:
+        case E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_MACRO:
         {
+            p_e2ap_ENB_ID_Choice->t = T_e2ap_ENB_ID_Choice_enb_ID_macro ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID_Choice->u.enb_ID_macro = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_Choice_enb_ID_macro);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID_Choice->u.enb_ID_macro)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field enb_ID_macro",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_Choice_enb_ID_macro(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID_Choice->enb_ID_macro,
+                                                   p_e2ap_ENB_ID_Choice->u.enb_ID_macro,
                                                    &p_ENB_ID_Choice->enb_ID_macro))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field enb_ID_macro",__FUNCTION__);
@@ -2254,11 +2514,21 @@ xnap_return_et e2ap_compose_ENB_ID_Choice(
         }
 
         /*CHOICE_INDEX-2    enb_ID_shortmacro*/
-        case: E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_SHORTMACRO:
+        case E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_SHORTMACRO:
         {
+            p_e2ap_ENB_ID_Choice->t = T_e2ap_ENB_ID_Choice_enb_ID_shortmacro ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID_Choice->u.enb_ID_shortmacro = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_Choice_enb_ID_shortmacro);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID_Choice->u.enb_ID_shortmacro)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field enb_ID_shortmacro",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_Choice_enb_ID_shortmacro(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID_Choice->enb_ID_shortmacro,
+                                                   p_e2ap_ENB_ID_Choice->u.enb_ID_shortmacro,
                                                    &p_ENB_ID_Choice->enb_ID_shortmacro))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field enb_ID_shortmacro",__FUNCTION__);
@@ -2268,11 +2538,21 @@ xnap_return_et e2ap_compose_ENB_ID_Choice(
         }
 
         /*CHOICE_INDEX-3    enb_ID_longmacro*/
-        case: E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_LONGMACRO:
+        case E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_LONGMACRO:
         {
+            p_e2ap_ENB_ID_Choice->t = T_e2ap_ENB_ID_Choice_enb_ID_longmacro ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID_Choice->u.enb_ID_longmacro = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_Choice_enb_ID_longmacro);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID_Choice->u.enb_ID_longmacro)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field enb_ID_longmacro",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_Choice_enb_ID_longmacro(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID_Choice->enb_ID_longmacro,
+                                                   p_e2ap_ENB_ID_Choice->u.enb_ID_longmacro,
                                                    &p_ENB_ID_Choice->enb_ID_longmacro))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field enb_ID_longmacro",__FUNCTION__);
@@ -2314,18 +2594,20 @@ xnap_return_et e2ap_compose_GlobalngeNB_ID(
     {  /*SEQ_ELEM-2  Encode enb_id alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalngeNB_ID->enb_id = rtxMemAllocType(p_asn1_ctx, e2ap_ENB_ID_Choice);
         if(XNAP_P_NULL == p_e2ap_GlobalngeNB_ID->enb_id)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field enb_id",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_ENB_ID_Choice(&p_e2ap_GlobalngeNB_ID->enb_id);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_ENB_ID_Choice(p_asn1_ctx,
-                                                &p_e2ap_GlobalngeNB_ID->enb_id,
-                                                &p_GlobalngeNB_ID->enb_id))
+                                                &p_e2ap_GlobalngeNB_ID->enb_id,//dest
+                                                &p_GlobalngeNB_ID->enb_id)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field enb_id",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2397,14 +2679,24 @@ xnap_return_et e2ap_compose_ENB_ID(
     p_e2ap_ENB_ID->t =  p_ENB_ID->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_ENB_ID->t)
+    switch(p_ENB_ID->choice_type)
     {
         /*CHOICE_INDEX-1    macro_eNB_ID*/
-        case: E2AP_ENB_ID_e2ap_MACRO_E_NB_ID:
+        case E2AP_ENB_ID_e2ap_MACRO_E_NB_ID:
         {
+            p_e2ap_ENB_ID->t = T_e2ap_ENB_ID_macro_eNB_ID ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID->u.macro_eNB_ID = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_macro_eNB_ID);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID->u.macro_eNB_ID)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field macro_eNB_ID",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_macro_eNB_ID(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID->macro_eNB_ID,
+                                                   p_e2ap_ENB_ID->u.macro_eNB_ID,
                                                    &p_ENB_ID->macro_eNB_ID))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field macro_eNB_ID",__FUNCTION__);
@@ -2414,11 +2706,21 @@ xnap_return_et e2ap_compose_ENB_ID(
         }
 
         /*CHOICE_INDEX-2    home_eNB_ID*/
-        case: E2AP_ENB_ID_e2ap_HOME_E_NB_ID:
+        case E2AP_ENB_ID_e2ap_HOME_E_NB_ID:
         {
+            p_e2ap_ENB_ID->t = T_e2ap_ENB_ID_home_eNB_ID ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID->u.home_eNB_ID = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_home_eNB_ID);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID->u.home_eNB_ID)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field home_eNB_ID",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_home_eNB_ID(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID->home_eNB_ID,
+                                                   p_e2ap_ENB_ID->u.home_eNB_ID,
                                                    &p_ENB_ID->home_eNB_ID))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field home_eNB_ID",__FUNCTION__);
@@ -2428,11 +2730,21 @@ xnap_return_et e2ap_compose_ENB_ID(
         }
 
         /*CHOICE_INDEX-3    short_Macro_eNB_ID*/
-        case: E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID:
+        case E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID:
         {
+            p_e2ap_ENB_ID->t = T_e2ap_ENB_ID_short_Macro_eNB_ID ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID->u.short_Macro_eNB_ID = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_short_Macro_eNB_ID);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID->u.short_Macro_eNB_ID)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field short_Macro_eNB_ID",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_short_Macro_eNB_ID(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID->short_Macro_eNB_ID,
+                                                   p_e2ap_ENB_ID->u.short_Macro_eNB_ID,
                                                    &p_ENB_ID->short_Macro_eNB_ID))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field short_Macro_eNB_ID",__FUNCTION__);
@@ -2442,11 +2754,21 @@ xnap_return_et e2ap_compose_ENB_ID(
         }
 
         /*CHOICE_INDEX-4    long_Macro_eNB_ID*/
-        case: E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID:
+        case E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID:
         {
+            p_e2ap_ENB_ID->t = T_e2ap_ENB_ID_long_Macro_eNB_ID ;
+
             /*==primitive in scope==*/
+            /* 1.alloc mem */
+            p_e2ap_ENB_ID->u.long_Macro_eNB_ID = rtxMemAllocType(p_asn1_ctx,e2ap_ENB_ID_long_Macro_eNB_ID);
+            if(XNAP_P_NULL == p_e2ap_ENB_ID->u.long_Macro_eNB_ID)
+            {
+                XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field long_Macro_eNB_ID",__FUNCTION__);
+                return XNAP_FAILURE;
+            }
+            /* 2.compose */
             if(XNAP_FAILURE == e2ap_compose_ENB_ID_long_Macro_eNB_ID(p_asn1_ctx,
-                                                   &p_e2ap_ENB_ID->long_Macro_eNB_ID,
+                                                   p_e2ap_ENB_ID->u.long_Macro_eNB_ID,
                                                    &p_ENB_ID->long_Macro_eNB_ID))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field long_Macro_eNB_ID",__FUNCTION__);
@@ -2488,18 +2810,20 @@ xnap_return_et e2ap_compose_GlobalENB_ID(
     {  /*SEQ_ELEM-2  Encode eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalENB_ID->eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_ENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalENB_ID->eNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_ENB_ID(&p_e2ap_GlobalENB_ID->eNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_ENB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalENB_ID->eNB_ID,
-                                                &p_GlobalENB_ID->eNB_ID))
+                                                &p_e2ap_GlobalENB_ID->eNB_ID,//dest
+                                                &p_GlobalENB_ID->eNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2512,19 +2836,25 @@ xnap_return_et e2ap_compose_GlobalENB_ID(
 }   
 
 /*****************************************************/
-/*    PRIMITIVE NGENB_DU_ID            */
+/*    COMPOSE PRIMITIVE NGENB_DU_ID                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..68719476735) - NGENB_DU_ID
-  xnap_return_et e2ap_compose_NGENB_DU_ID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_NGENB_DU_ID  *p_dest,//dest
-                        _e2ap_NGENB_DU_ID_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..68719476735) - NGENB_DU_ID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_NGENB_DU_ID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_NGENB_DU_ID     *p_dest,
+                        _e2ap_NGENB_DU_ID_t  *p_src
+){
     *p_dest = (e2ap_NGENB_DU_ID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER NGENB_DU_ID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /************************************************************/
 /*      SEQUENCE GlobalE2node_ng_eNB_ID                */
 /************************************************************/
@@ -2545,18 +2875,20 @@ xnap_return_et e2ap_compose_GlobalE2node_ng_eNB_ID(
     {  /*SEQ_ELEM-1  Encode global_ng_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_ng_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalngeNB_ID(&p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalngeNB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID,
-                                                &p_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID))
+                                                &p_e2ap_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID,//dest
+                                                &p_GlobalE2node_ng_eNB_ID->global_ng_eNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_ng_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2566,18 +2898,20 @@ xnap_return_et e2ap_compose_GlobalE2node_ng_eNB_ID(
     {  /*SEQ_ELEM-2  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalENB_ID(&p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalENB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID,
-                                                &p_GlobalE2node_ng_eNB_ID->global_eNB_ID))
+                                                &p_e2ap_GlobalE2node_ng_eNB_ID->global_eNB_ID,//dest
+                                                &p_GlobalE2node_ng_eNB_ID->global_eNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2620,18 +2954,20 @@ xnap_return_et e2ap_compose_GlobalE2node_eNB_ID(
     {  /*SEQ_ELEM-1  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalENB_ID(&p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalENB_ID(p_asn1_ctx,
-                                                &p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID,
-                                                &p_GlobalE2node_eNB_ID->global_eNB_ID))
+                                                &p_e2ap_GlobalE2node_eNB_ID->global_eNB_ID,//dest
+                                                &p_GlobalE2node_eNB_ID->global_eNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -2659,24 +2995,26 @@ xnap_return_et e2ap_compose_GlobalE2node_ID(
     p_e2ap_GlobalE2node_ID->t =  p_GlobalE2node_ID->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_GlobalE2node_ID->t)
+    switch(p_GlobalE2node_ID->choice_type)
     {
         /*CHOICE_INDEX-1    gNB*/
-        case: E2AP_GLOBAL_E2NODE_ID_e2ap_G_NB:
+        case E2AP_GLOBAL_E2NODE_ID_e2ap_G_NB:
         {
+            p_e2ap_GlobalE2node_ID->t = T_e2ap_GlobalE2node_ID_gNB ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_GlobalE2node_ID->gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_gNB_ID);
-            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->gNB)
+            p_e2ap_GlobalE2node_ID->u.gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_gNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->u.gNB)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_GlobalE2node_gNB_ID(&p_e2ap_GlobalE2node_ID->gNB);
+            asn1Init_e2ap_GlobalE2node_gNB_ID(p_e2ap_GlobalE2node_ID->u.gNB);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_GlobalE2node_gNB_ID(p_asn1_ctx,
-                                                    &p_e2ap_GlobalE2node_ID->gNB,
+                                                    p_e2ap_GlobalE2node_ID->u.gNB,
                                                     &p_GlobalE2node_ID->gNB))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gNB",__FUNCTION__);
@@ -2686,21 +3024,23 @@ xnap_return_et e2ap_compose_GlobalE2node_ID(
         }
 
         /*CHOICE_INDEX-2    en_gNB*/
-        case: E2AP_GLOBAL_E2NODE_ID_e2ap_EN_G_NB:
+        case E2AP_GLOBAL_E2NODE_ID_e2ap_EN_G_NB:
         {
+            p_e2ap_GlobalE2node_ID->t = T_e2ap_GlobalE2node_ID_en_gNB ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_GlobalE2node_ID->en_gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_en_gNB_ID);
-            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->en_gNB)
+            p_e2ap_GlobalE2node_ID->u.en_gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_en_gNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->u.en_gNB)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field en_gNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_GlobalE2node_en_gNB_ID(&p_e2ap_GlobalE2node_ID->en_gNB);
+            asn1Init_e2ap_GlobalE2node_en_gNB_ID(p_e2ap_GlobalE2node_ID->u.en_gNB);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_GlobalE2node_en_gNB_ID(p_asn1_ctx,
-                                                    &p_e2ap_GlobalE2node_ID->en_gNB,
+                                                    p_e2ap_GlobalE2node_ID->u.en_gNB,
                                                     &p_GlobalE2node_ID->en_gNB))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field en_gNB",__FUNCTION__);
@@ -2710,21 +3050,23 @@ xnap_return_et e2ap_compose_GlobalE2node_ID(
         }
 
         /*CHOICE_INDEX-3    ng_eNB*/
-        case: E2AP_GLOBAL_E2NODE_ID_e2ap_NG_E_NB:
+        case E2AP_GLOBAL_E2NODE_ID_e2ap_NG_E_NB:
         {
+            p_e2ap_GlobalE2node_ID->t = T_e2ap_GlobalE2node_ID_ng_eNB ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_GlobalE2node_ID->ng_eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_ng_eNB_ID);
-            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->ng_eNB)
+            p_e2ap_GlobalE2node_ID->u.ng_eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_ng_eNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->u.ng_eNB)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ng_eNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_GlobalE2node_ng_eNB_ID(&p_e2ap_GlobalE2node_ID->ng_eNB);
+            asn1Init_e2ap_GlobalE2node_ng_eNB_ID(p_e2ap_GlobalE2node_ID->u.ng_eNB);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_GlobalE2node_ng_eNB_ID(p_asn1_ctx,
-                                                    &p_e2ap_GlobalE2node_ID->ng_eNB,
+                                                    p_e2ap_GlobalE2node_ID->u.ng_eNB,
                                                     &p_GlobalE2node_ID->ng_eNB))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ng_eNB",__FUNCTION__);
@@ -2734,21 +3076,23 @@ xnap_return_et e2ap_compose_GlobalE2node_ID(
         }
 
         /*CHOICE_INDEX-4    eNB*/
-        case: E2AP_GLOBAL_E2NODE_ID_e2ap_E_NB:
+        case E2AP_GLOBAL_E2NODE_ID_e2ap_E_NB:
         {
+            p_e2ap_GlobalE2node_ID->t = T_e2ap_GlobalE2node_ID_eNB ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_GlobalE2node_ID->eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_eNB_ID);
-            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->eNB)
+            p_e2ap_GlobalE2node_ID->u.eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalE2node_eNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalE2node_ID->u.eNB)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field eNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_GlobalE2node_eNB_ID(&p_e2ap_GlobalE2node_ID->eNB);
+            asn1Init_e2ap_GlobalE2node_eNB_ID(p_e2ap_GlobalE2node_ID->u.eNB);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_GlobalE2node_eNB_ID(p_asn1_ctx,
-                                                    &p_e2ap_GlobalE2node_ID->eNB,
+                                                    p_e2ap_GlobalE2node_ID->u.eNB,
                                                     &p_GlobalE2node_ID->eNB))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field eNB",__FUNCTION__);
@@ -2760,34 +3104,44 @@ xnap_return_et e2ap_compose_GlobalE2node_ID(
     }
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE E2nodeComponentInterfaceType            */
+/*    COMPOSE PRIMITIVE E2nodeComponentInterfaceType                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - E2nodeComponentInterfaceType
-   xnap_return_et e2ap_compose_E2nodeComponentInterfaceType( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_E2nodeComponentInterfaceType  *p_dest,//dest
-                        _e2ap_E2nodeComponentInterfaceType_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - E2nodeComponentInterfaceType*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_E2nodeComponentInterfaceType(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_E2nodeComponentInterfaceType     *p_dest,
+                        _e2ap_E2nodeComponentInterfaceType_et *p_src
+){
     *p_dest = (e2ap_E2nodeComponentInterfaceType)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED E2nodeComponentInterfaceType value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE AMFName            */
+/*    COMPOSE PRIMITIVE AMFName                             */
 /*****************************************************/
-// cpmpose primitive - id = 10 - PrintableString (SIZE(1..150, ...)) - AMFName
-     xnap_return_et e2ap_compose_AMFName(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_AMFName  *p_dest,//dest
-                        _e2ap_AMFName_t  *p_src//src
-)
-{
-// chưa xong
-    *p_dest = * p_src;
+/* compose primitive - id = 10 - PrintableString (SIZE(1..150, ...)) - AMFName*/
+/* ---------------------------------------------------------------------- */
+/*  PrintableString (primitive_id = 10)                                   */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_AMFName(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_AMFName     *p_dest,
+                        _e2ap_AMFName_t  *p_src
+){
+
+    *p_dest = *p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug PrintableString AMFName string =%s", __FUNCTION__, p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
- 
 /************************************************************/
 /*      SEQUENCE E2nodeComponentInterfaceNG                */
 /************************************************************/
@@ -2837,24 +3191,26 @@ xnap_return_et e2ap_compose_GlobalNG_RANNode_ID(
     p_e2ap_GlobalNG_RANNode_ID->t =  p_GlobalNG_RANNode_ID->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_GlobalNG_RANNode_ID->t)
+    switch(p_GlobalNG_RANNode_ID->choice_type)
     {
         /*CHOICE_INDEX-1    gNB*/
-        case: E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB:
+        case E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB:
         {
+            p_e2ap_GlobalNG_RANNode_ID->t = T_e2ap_GlobalNG_RANNode_ID_gNB ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_GlobalNG_RANNode_ID->gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalgNB_ID);
-            if(XNAP_P_NULL == p_e2ap_GlobalNG_RANNode_ID->gNB)
+            p_e2ap_GlobalNG_RANNode_ID->u.gNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalgNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalNG_RANNode_ID->u.gNB)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field gNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_GlobalgNB_ID(&p_e2ap_GlobalNG_RANNode_ID->gNB);
+            asn1Init_e2ap_GlobalgNB_ID(p_e2ap_GlobalNG_RANNode_ID->u.gNB);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_GlobalgNB_ID(p_asn1_ctx,
-                                                    &p_e2ap_GlobalNG_RANNode_ID->gNB,
+                                                    p_e2ap_GlobalNG_RANNode_ID->u.gNB,
                                                     &p_GlobalNG_RANNode_ID->gNB))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field gNB",__FUNCTION__);
@@ -2864,21 +3220,23 @@ xnap_return_et e2ap_compose_GlobalNG_RANNode_ID(
         }
 
         /*CHOICE_INDEX-2    ng_eNB*/
-        case: E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB:
+        case E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB:
         {
+            p_e2ap_GlobalNG_RANNode_ID->t = T_e2ap_GlobalNG_RANNode_ID_ng_eNB ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_GlobalNG_RANNode_ID->ng_eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
-            if(XNAP_P_NULL == p_e2ap_GlobalNG_RANNode_ID->ng_eNB)
+            p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalngeNB_ID);
+            if(XNAP_P_NULL == p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ng_eNB",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_GlobalngeNB_ID(&p_e2ap_GlobalNG_RANNode_ID->ng_eNB);
+            asn1Init_e2ap_GlobalngeNB_ID(p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_GlobalngeNB_ID(p_asn1_ctx,
-                                                    &p_e2ap_GlobalNG_RANNode_ID->ng_eNB,
+                                                    p_e2ap_GlobalNG_RANNode_ID->u.ng_eNB,
                                                     &p_GlobalNG_RANNode_ID->ng_eNB))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ng_eNB",__FUNCTION__);
@@ -2909,18 +3267,20 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceXn(
     {  /*SEQ_ELEM-1  Encode global_NG_RAN_Node_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalNG_RANNode_ID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_NG_RAN_Node_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalNG_RANNode_ID(&p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalNG_RANNode_ID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID,
-                                                &p_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID))
+                                                &p_e2ap_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID,//dest
+                                                &p_E2nodeComponentInterfaceXn->global_NG_RAN_Node_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_NG_RAN_Node_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3032,20 +3392,24 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceW1(
 }   
 
 /*****************************************************/
-/*    PRIMITIVE MMEname            */
+/*    COMPOSE PRIMITIVE MMEname                             */
 /*****************************************************/
-// cpmpose primitive - id = 10 - PrintableString (SIZE(1..150, ...)) - MMEname
-     xnap_return_et e2ap_compose_MMEname(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_MMEname  *p_dest,//dest
-                        _e2ap_MMEname_t  *p_src//src
-)
-{
-// chưa xong
-    *p_dest = * p_src;
+/* compose primitive - id = 10 - PrintableString (SIZE(1..150, ...)) - MMEname*/
+/* ---------------------------------------------------------------------- */
+/*  PrintableString (primitive_id = 10)                                   */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_MMEname(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_MMEname     *p_dest,
+                        _e2ap_MMEname_t  *p_src
+){
+
+    *p_dest = *p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug PrintableString MMEname string =%s", __FUNCTION__, p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
- 
 /************************************************************/
 /*      SEQUENCE E2nodeComponentInterfaceS1                */
 /************************************************************/
@@ -3099,18 +3463,20 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceX2(
     {  /*SEQ_ELEM-1  Encode global_eNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalENB_ID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalENB_ID(&p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalENB_ID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID,
-                                                &p_E2nodeComponentInterfaceX2->global_eNB_ID))
+                                                &p_e2ap_E2nodeComponentInterfaceX2->global_eNB_ID,//dest
+                                                &p_E2nodeComponentInterfaceX2->global_eNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_eNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3120,18 +3486,20 @@ xnap_return_et e2ap_compose_E2nodeComponentInterfaceX2(
     {  /*SEQ_ELEM-2  Encode global_en_gNB_ID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID = rtxMemAllocType(p_asn1_ctx, e2ap_GlobalenGNB_ID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field global_en_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_GlobalenGNB_ID(&p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_GlobalenGNB_ID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID,
-                                                &p_E2nodeComponentInterfaceX2->global_en_gNB_ID))
+                                                &p_e2ap_E2nodeComponentInterfaceX2->global_en_gNB_ID,//dest
+                                                &p_E2nodeComponentInterfaceX2->global_en_gNB_ID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field global_en_gNB_ID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3159,24 +3527,26 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
     p_e2ap_E2nodeComponentID->t =  p_E2nodeComponentID->choice_type;
     xnap_return_et retVal = XNAP_SUCCESS;
 
-    switch(p_E2nodeComponentID->t)
+    switch(p_E2nodeComponentID->choice_type)
     {
         /*CHOICE_INDEX-1    e2nodeComponentInterfaceTypeNG*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeNG ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeNG = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceNG);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeNG)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeNG = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceNG);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeNG)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeNG",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceNG(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeNG);
+            asn1Init_e2ap_E2nodeComponentInterfaceNG(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeNG);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceNG(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeNG,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeNG,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeNG))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeNG",__FUNCTION__);
@@ -3186,21 +3556,23 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
         }
 
         /*CHOICE_INDEX-2    e2nodeComponentInterfaceTypeXn*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeXn ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeXn = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceXn);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeXn)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeXn = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceXn);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeXn)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeXn",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceXn(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeXn);
+            asn1Init_e2ap_E2nodeComponentInterfaceXn(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeXn);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceXn(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeXn,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeXn,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeXn))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeXn",__FUNCTION__);
@@ -3210,21 +3582,23 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
         }
 
         /*CHOICE_INDEX-3    e2nodeComponentInterfaceTypeE1*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeE1 ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeE1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceE1);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeE1)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeE1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceE1);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeE1)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeE1",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceE1(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeE1);
+            asn1Init_e2ap_E2nodeComponentInterfaceE1(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeE1);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceE1(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeE1,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeE1,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeE1))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeE1",__FUNCTION__);
@@ -3234,21 +3608,23 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
         }
 
         /*CHOICE_INDEX-4    e2nodeComponentInterfaceTypeF1*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_F1:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_F1:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeF1 ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeF1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceF1);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeF1)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeF1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceF1);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeF1)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeF1",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceF1(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeF1);
+            asn1Init_e2ap_E2nodeComponentInterfaceF1(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeF1);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceF1(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeF1,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeF1,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeF1))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeF1",__FUNCTION__);
@@ -3258,21 +3634,23 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
         }
 
         /*CHOICE_INDEX-5    e2nodeComponentInterfaceTypeW1*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_W1:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_W1:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeW1 ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeW1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceW1);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeW1)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeW1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceW1);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeW1)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeW1",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceW1(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeW1);
+            asn1Init_e2ap_E2nodeComponentInterfaceW1(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeW1);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceW1(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeW1,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeW1,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeW1))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeW1",__FUNCTION__);
@@ -3282,21 +3660,23 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
         }
 
         /*CHOICE_INDEX-6    e2nodeComponentInterfaceTypeS1*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_S1:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_S1:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeS1 ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeS1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceS1);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeS1)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeS1 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceS1);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeS1)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeS1",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceS1(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeS1);
+            asn1Init_e2ap_E2nodeComponentInterfaceS1(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeS1);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceS1(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeS1,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeS1,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeS1))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeS1",__FUNCTION__);
@@ -3306,21 +3686,23 @@ xnap_return_et e2ap_compose_E2nodeComponentID(
         }
 
         /*CHOICE_INDEX-7    e2nodeComponentInterfaceTypeX2*/
-        case: E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_X2:
+        case E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_X2:
         {
+            p_e2ap_E2nodeComponentID->t = T_e2ap_E2nodeComponentID_e2nodeComponentInterfaceTypeX2 ;
+
             /* == not primitive (SEQ or CHOICE)==*/
                 /* 1.alloc mem */
-            p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeX2 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceX2);
-            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeX2)
+            p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeX2 = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentInterfaceX2);
+            if(XNAP_P_NULL == p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeX2)
             {
                 XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentInterfaceTypeX2",__FUNCTION__);
                 return XNAP_FAILURE;
             }
                 /* 2.init */
-            asn1Init_e2ap_E2nodeComponentInterfaceX2(&p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeX2);
+            asn1Init_e2ap_E2nodeComponentInterfaceX2(p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeX2);
                 /* 3.compose */
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentInterfaceX2(p_asn1_ctx,
-                                                    &p_e2ap_E2nodeComponentID->e2nodeComponentInterfaceTypeX2,
+                                                    p_e2ap_E2nodeComponentID->u.e2nodeComponentInterfaceTypeX2,
                                                     &p_E2nodeComponentID->e2nodeComponentInterfaceTypeX2))
             {
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentInterfaceTypeX2",__FUNCTION__);
@@ -3410,18 +3792,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAddition_Item(
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentID(&p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID,
-                                                &p_E2nodeComponentConfigAddition_Item->e2nodeComponentID))
+                                                &p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentID,//dest
+                                                &p_E2nodeComponentConfigAddition_Item->e2nodeComponentID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3431,18 +3815,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAddition_Item(
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfiguration alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfiguration);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentConfiguration",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentConfiguration(&p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfiguration(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration,
-                                                &p_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration))
+                                                &p_e2ap_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration,//dest
+                                                &p_E2nodeComponentConfigAddition_Item->e2nodeComponentConfiguration)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentConfiguration",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3538,18 +3924,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdate_Item(
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentID(&p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID,
-                                                &p_E2nodeComponentConfigUpdate_Item->e2nodeComponentID))
+                                                &p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentID,//dest
+                                                &p_E2nodeComponentConfigUpdate_Item->e2nodeComponentID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3559,18 +3947,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdate_Item(
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfiguration alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfiguration);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentConfiguration",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentConfiguration(&p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfiguration(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration,
-                                                &p_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration))
+                                                &p_e2ap_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration,//dest
+                                                &p_E2nodeComponentConfigUpdate_Item->e2nodeComponentConfiguration)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentConfiguration",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3666,18 +4056,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemoval_Item(
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentID(&p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID,
-                                                &p_E2nodeComponentConfigRemoval_Item->e2nodeComponentID))
+                                                &p_e2ap_E2nodeComponentConfigRemoval_Item->e2nodeComponentID,//dest
+                                                &p_E2nodeComponentConfigRemoval_Item->e2nodeComponentID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3762,18 +4154,20 @@ xnap_return_et e2ap_compose_E2nodeTNLassociationRemoval_Item(
     {  /*SEQ_ELEM-1  Encode tnlInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_TNLinformation(&p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
-                                                &p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation,
-                                                &p_E2nodeTNLassociationRemoval_Item->tnlInformation))
+                                                &p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformation,//dest
+                                                &p_E2nodeTNLassociationRemoval_Item->tnlInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3783,18 +4177,20 @@ xnap_return_et e2ap_compose_E2nodeTNLassociationRemoval_Item(
     {  /*SEQ_ELEM-2  Encode tnlInformationRIC alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC = rtxMemAllocType(p_asn1_ctx, e2ap_TNLinformation);
         if(XNAP_P_NULL == p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field tnlInformationRIC",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_TNLinformation(&p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_TNLinformation(p_asn1_ctx,
-                                                &p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC,
-                                                &p_E2nodeTNLassociationRemoval_Item->tnlInformationRIC))
+                                                &p_e2ap_E2nodeTNLassociationRemoval_Item->tnlInformationRIC,//dest
+                                                &p_E2nodeTNLassociationRemoval_Item->tnlInformationRIC)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field tnlInformationRIC",__FUNCTION__);
             return XNAP_FAILURE;
@@ -3856,6 +4252,192 @@ xnap_return_et e2ap_compose_E2nodeTNLassociationRemoval_List (
         rtxDListAppendNode(p_e2ap_E2nodeTNLassociationRemoval_List, p_node_list);
     }
     return XNAP_SUCCESS;
+}
+
+
+/**************************************************/
+/* assign_value function for E2nodeConfigurationUpdate */
+/**************************************************/
+void assign_hardcode_value_E2nodeConfigurationUpdate(e2ap_E2nodeConfigurationUpdate_t* p_E2nodeConfigurationUpdate)
+{
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.TransactionID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-CU-UP-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-CU-UP-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.NGENB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentInterfaceType
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentRequestPart
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentResponsePart
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentInterfaceType
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentConfiguration.e2nodeComponentRequestPart
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentConfiguration.e2nodeComponentResponsePart
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentConfiguration
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentInterfaceType
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation.tnlAddress
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation....
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation.tnlPort
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List
+// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs
+// E2nodeConfigurationUpdate
+
+
+    return;
 }
 
 
@@ -4052,196 +4634,13 @@ E2nodeConfigurationUpdate
 
 */
 xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
-                e2ap_E2nodeConfigurationUpdate_t* p_E2nodeConfigurationUpdate,
+                e2ap_E2nodeConfigurationUpdate_t* p_E2nodeConfigurationUpdate_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.TransactionID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-CU-UP-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-CU-UP-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.NGENB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID.GlobalE2node-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.GlobalE2node-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentInterfaceType
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentRequestPart
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentResponsePart
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigAddition-List
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentInterfaceType
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentConfiguration.e2nodeComponentRequestPart
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentConfiguration.e2nodeComponentResponsePart
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item.E2nodeComponentConfiguration
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs.E2nodeComponentConfigUpdate-Item
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List.E2nodeComponentConfigUpdate-ItemIEs
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigUpdate-List
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentInterfaceType
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item.E2nodeComponentID
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs.E2nodeComponentConfigRemoval-Item
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List.E2nodeComponentConfigRemoval-ItemIEs
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeComponentConfigRemoval-List
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation.tnlAddress
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation....
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation.tnlPort
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item.TNLinformation
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs.E2nodeTNLassociationRemoval-Item
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List.E2nodeTNLassociationRemoval-ItemIEs
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs.E2nodeTNLassociationRemoval-List
-// E2nodeConfigurationUpdate.E2nodeConfigurationUpdate-IEs
-// E2nodeConfigurationUpdate
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2nodeConfigurationUpdate o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2nodeConfigurationUpdate(p_E2nodeConfigurationUpdate_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -4259,13 +4658,13 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_E2nodeConfigurationUpdate;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2nodeConfigurationUpdate;
@@ -4299,7 +4698,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdate_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_TransactionID = p_E2nodeConfigurationUpdate->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_TransactionID = &p_E2nodeConfigurationUpdate_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -4339,7 +4738,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
             //message_name.item_type -> type = GlobalE2node_ID
             if(XNAP_FAILURE == e2ap_compose_GlobalE2node_ID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_GlobalE2node_ID,
-                                &p_E2nodeConfigurationUpdate->id_GlobalE2node_ID)){
+                                &p_E2nodeConfigurationUpdate_src->id_GlobalE2node_ID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field GlobalE2node_ID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -4386,7 +4785,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
             //message_name.item_type -> type = E2nodeComponentConfigAddition_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigAddition_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigAddition,
-                                &p_E2nodeConfigurationUpdate->id_E2nodeComponentConfigAddition)){
+                                &p_E2nodeConfigurationUpdate_src->id_E2nodeComponentConfigAddition)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigAddition_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -4433,7 +4832,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
             //message_name.item_type -> type = E2nodeComponentConfigUpdate_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigUpdate_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigUpdate,
-                                &p_E2nodeConfigurationUpdate->id_E2nodeComponentConfigUpdate)){
+                                &p_E2nodeConfigurationUpdate_src->id_E2nodeComponentConfigUpdate)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigUpdate_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -4480,7 +4879,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
             //message_name.item_type -> type = E2nodeComponentConfigRemoval_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigRemoval_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_E2nodeComponentConfigRemoval,
-                                &p_E2nodeConfigurationUpdate->id_E2nodeComponentConfigRemoval)){
+                                &p_E2nodeConfigurationUpdate_src->id_E2nodeComponentConfigRemoval)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigRemoval_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -4527,7 +4926,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdate(
             //message_name.item_type -> type = E2nodeTNLassociationRemoval_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeTNLassociationRemoval_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdate_IEs_id_E2nodeTNLassociationRemoval,
-                                &p_E2nodeConfigurationUpdate->id_E2nodeTNLassociationRemoval)){
+                                &p_E2nodeConfigurationUpdate_src->id_E2nodeTNLassociationRemoval)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeTNLassociationRemoval_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -4612,18 +5011,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigurationAck(
     {  /*SEQ_ELEM-2  Encode failureCause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigurationAck->failureCause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigurationAck->failureCause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field failureCause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_E2nodeComponentConfigurationAck->failureCause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigurationAck->failureCause,
-                                                &p_E2nodeComponentConfigurationAck->failureCause))
+                                                &p_e2ap_E2nodeComponentConfigurationAck->failureCause,//dest
+                                                &p_E2nodeComponentConfigurationAck->failureCause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field failureCause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -4666,18 +5067,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAdditionAck_Item(
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentID(&p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID,
-                                                &p_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID))
+                                                &p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID,//dest
+                                                &p_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -4687,18 +5090,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigAdditionAck_Item(
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentConfigurationAck",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentConfigurationAck(&p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigurationAck(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck,
-                                                &p_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck))
+                                                &p_e2ap_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck,//dest
+                                                &p_E2nodeComponentConfigAdditionAck_Item->e2nodeComponentConfigurationAck)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentConfigurationAck",__FUNCTION__);
             return XNAP_FAILURE;
@@ -4794,18 +5199,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdateAck_Item(
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentID(&p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID,
-                                                &p_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID))
+                                                &p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID,//dest
+                                                &p_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -4815,18 +5222,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigUpdateAck_Item(
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentConfigurationAck",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentConfigurationAck(&p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigurationAck(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck,
-                                                &p_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck))
+                                                &p_e2ap_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck,//dest
+                                                &p_E2nodeComponentConfigUpdateAck_Item->e2nodeComponentConfigurationAck)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentConfigurationAck",__FUNCTION__);
             return XNAP_FAILURE;
@@ -4922,18 +5331,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_Item(
     {  /*SEQ_ELEM-2  Encode e2nodeComponentID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentID);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentID(&p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentID(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID,
-                                                &p_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID))
+                                                &p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID,//dest
+                                                &p_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -4943,18 +5354,20 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_Item(
     {  /*SEQ_ELEM-3  Encode e2nodeComponentConfigurationAck alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck = rtxMemAllocType(p_asn1_ctx, e2ap_E2nodeComponentConfigurationAck);
         if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field e2nodeComponentConfigurationAck",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_E2nodeComponentConfigurationAck(&p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigurationAck(p_asn1_ctx,
-                                                &p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck,
-                                                &p_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck))
+                                                &p_e2ap_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck,//dest
+                                                &p_E2nodeComponentConfigRemovalAck_Item->e2nodeComponentConfigurationAck)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field e2nodeComponentConfigurationAck",__FUNCTION__);
             return XNAP_FAILURE;
@@ -5016,6 +5429,170 @@ xnap_return_et e2ap_compose_E2nodeComponentConfigRemovalAck_List (
         rtxDListAppendNode(p_e2ap_E2nodeComponentConfigRemovalAck_List, p_node_list);
     }
     return XNAP_SUCCESS;
+}
+
+
+/**************************************************/
+/* assign_value function for E2nodeConfigurationUpdateAcknowledge */
+/**************************************************/
+void assign_hardcode_value_E2nodeConfigurationUpdateAcknowledge(e2ap_E2nodeConfigurationUpdateAcknowledge_t* p_E2nodeConfigurationUpdateAcknowledge)
+{
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.TransactionID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentInterfaceType
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.updateOutcome
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentInterfaceType
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.updateOutcome
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentInterfaceType
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.updateOutcome
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List
+// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs
+// E2nodeConfigurationUpdateAcknowledge
+
+
+    return;
 }
 
 
@@ -5186,174 +5763,13 @@ E2nodeConfigurationUpdateAcknowledge
 
 */
 xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
-                e2ap_E2nodeConfigurationUpdateAcknowledge_t* p_E2nodeConfigurationUpdateAcknowledge,
+                e2ap_E2nodeConfigurationUpdateAcknowledge_t* p_E2nodeConfigurationUpdateAcknowledge_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.TransactionID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentInterfaceType
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.updateOutcome
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigAdditionAck-List
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentInterfaceType
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.updateOutcome
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck.Cause
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item.E2nodeComponentConfigurationAck
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs.E2nodeComponentConfigUpdateAck-Item
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List.E2nodeComponentConfigUpdateAck-ItemIEs
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigUpdateAck-List
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentInterfaceType
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentID
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.updateOutcome
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck.Cause
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item.E2nodeComponentConfigurationAck
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs.E2nodeComponentConfigRemovalAck-Item
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List.E2nodeComponentConfigRemovalAck-ItemIEs
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs.E2nodeComponentConfigRemovalAck-List
-// E2nodeConfigurationUpdateAcknowledge.E2nodeConfigurationUpdateAcknowledge-IEs
-// E2nodeConfigurationUpdateAcknowledge
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2nodeConfigurationUpdateAcknowledge o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2nodeConfigurationUpdateAcknowledge(p_E2nodeConfigurationUpdateAcknowledge_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -5371,13 +5787,13 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2nodeConfigurationUpdate;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2nodeConfigurationUpdateAcknowledge;
@@ -5411,7 +5827,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateAcknowledge_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_TransactionID = p_E2nodeConfigurationUpdateAcknowledge->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_TransactionID = &p_E2nodeConfigurationUpdateAcknowledge_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -5451,7 +5867,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
             //message_name.item_type -> type = E2nodeComponentConfigAdditionAck_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigAdditionAck_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigAdditionAck,
-                                &p_E2nodeConfigurationUpdateAcknowledge->id_E2nodeComponentConfigAdditionAck)){
+                                &p_E2nodeConfigurationUpdateAcknowledge_src->id_E2nodeComponentConfigAdditionAck)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigAdditionAck_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -5498,7 +5914,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
             //message_name.item_type -> type = E2nodeComponentConfigUpdateAck_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigUpdateAck_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigUpdateAck,
-                                &p_E2nodeConfigurationUpdateAcknowledge->id_E2nodeComponentConfigUpdateAck)){
+                                &p_E2nodeConfigurationUpdateAcknowledge_src->id_E2nodeComponentConfigUpdateAck)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigUpdateAck_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -5545,7 +5961,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
             //message_name.item_type -> type = E2nodeComponentConfigRemovalAck_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigRemovalAck_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateAcknowledge_IEs_id_E2nodeComponentConfigRemovalAck,
-                                &p_E2nodeConfigurationUpdateAcknowledge->id_E2nodeComponentConfigRemovalAck)){
+                                &p_E2nodeConfigurationUpdateAcknowledge_src->id_E2nodeComponentConfigRemovalAck)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigRemovalAck_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -5589,6 +6005,39 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateAcknowledge(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for E2nodeConfigurationUpdateFailure */
+/**************************************************/
+void assign_hardcode_value_E2nodeConfigurationUpdateFailure(e2ap_E2nodeConfigurationUpdateFailure_t* p_E2nodeConfigurationUpdateFailure)
+{
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.TransactionID
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseRICrequest
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseRICservice
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseE2node
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseTransport
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseProtocol
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseMisc
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseServiceLayer
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.TimeToWait
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.Criticality
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics
+// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs
+// E2nodeConfigurationUpdateFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2nodeConfigurationUpdateFailure                    */
 /*                                                */
 /**************************************************/
@@ -5618,43 +6067,13 @@ E2nodeConfigurationUpdateFailure
 
 */
 xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
-                e2ap_E2nodeConfigurationUpdateFailure_t* p_E2nodeConfigurationUpdateFailure,
+                e2ap_E2nodeConfigurationUpdateFailure_t* p_E2nodeConfigurationUpdateFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.TransactionID
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseRICrequest
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseRICservice
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseE2node
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseTransport
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseProtocol
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseMisc
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause.CauseServiceLayer
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.Cause
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.TimeToWait
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.Criticality
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs.CriticalityDiagnostics
-// E2nodeConfigurationUpdateFailure.E2nodeConfigurationUpdateFailure-IEs
-// E2nodeConfigurationUpdateFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2nodeConfigurationUpdateFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2nodeConfigurationUpdateFailure(p_E2nodeConfigurationUpdateFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -5672,13 +6091,13 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_E2nodeConfigurationUpdate;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2nodeConfigurationUpdateFailure;
@@ -5712,7 +6131,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateFailure_IEs_id_TransactionID = p_E2nodeConfigurationUpdateFailure->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateFailure_IEs_id_TransactionID = &p_E2nodeConfigurationUpdateFailure_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -5752,7 +6171,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateFailure_IEs_id_Cause,
-                                &p_E2nodeConfigurationUpdateFailure->id_Cause)){
+                                &p_E2nodeConfigurationUpdateFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -5785,7 +6204,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TimeToWait;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2nodeConfigurationUpdateFailure_IEs_id_TimeToWait;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateFailure_IEs_id_TimeToWait = p_E2nodeConfigurationUpdateFailure->id_TimeToWait; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateFailure_IEs_id_TimeToWait = &p_E2nodeConfigurationUpdateFailure_src->id_TimeToWait; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -5825,7 +6244,7 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2nodeConfigurationUpdateFailure_IEs_id_CriticalityDiagnostics,
-                                &p_E2nodeConfigurationUpdateFailure->id_CriticalityDiagnostics)){
+                                &p_E2nodeConfigurationUpdateFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -5869,6 +6288,20 @@ xnap_return_et e2ap_encode_E2nodeConfigurationUpdateFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for E2RemovalRequest */
+/**************************************************/
+void assign_hardcode_value_E2RemovalRequest(e2ap_E2RemovalRequest_t* p_E2RemovalRequest)
+{
+// E2RemovalRequest.E2RemovalRequestIEs.TransactionID
+// E2RemovalRequest.E2RemovalRequestIEs
+// E2RemovalRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2RemovalRequest                    */
 /*                                                */
 /**************************************************/
@@ -5879,24 +6312,13 @@ E2RemovalRequest
 
 */
 xnap_return_et e2ap_encode_E2RemovalRequest(
-                e2ap_E2RemovalRequest_t* p_E2RemovalRequest,
+                e2ap_E2RemovalRequest_t* p_E2RemovalRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2RemovalRequest.E2RemovalRequestIEs.TransactionID
-// E2RemovalRequest.E2RemovalRequestIEs
-// E2RemovalRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2RemovalRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2RemovalRequest(p_E2RemovalRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -5914,13 +6336,13 @@ xnap_return_et e2ap_encode_E2RemovalRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_E2removal;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2RemovalRequest;
@@ -5954,7 +6376,7 @@ xnap_return_et e2ap_encode_E2RemovalRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2RemovalRequestIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalRequestIEs_id_TransactionID = p_E2RemovalRequest->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalRequestIEs_id_TransactionID = &p_E2RemovalRequest_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -5991,6 +6413,29 @@ xnap_return_et e2ap_encode_E2RemovalRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for E2RemovalResponse */
+/**************************************************/
+void assign_hardcode_value_E2RemovalResponse(e2ap_E2RemovalResponse_t* p_E2RemovalResponse)
+{
+// E2RemovalResponse.E2RemovalResponseIEs.TransactionID
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.ProcedureCode
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.TriggeringMessage
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.Criticality
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.RICrequestID
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics
+// E2RemovalResponse.E2RemovalResponseIEs
+// E2RemovalResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2RemovalResponse                    */
 /*                                                */
 /**************************************************/
@@ -6010,33 +6455,13 @@ E2RemovalResponse
 
 */
 xnap_return_et e2ap_encode_E2RemovalResponse(
-                e2ap_E2RemovalResponse_t* p_E2RemovalResponse,
+                e2ap_E2RemovalResponse_t* p_E2RemovalResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2RemovalResponse.E2RemovalResponseIEs.TransactionID
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.ProcedureCode
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.TriggeringMessage
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.Criticality
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.RICrequestID
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// E2RemovalResponse.E2RemovalResponseIEs.CriticalityDiagnostics
-// E2RemovalResponse.E2RemovalResponseIEs
-// E2RemovalResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2RemovalResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2RemovalResponse(p_E2RemovalResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -6054,13 +6479,13 @@ xnap_return_et e2ap_encode_E2RemovalResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2removal;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2RemovalResponse;
@@ -6094,7 +6519,7 @@ xnap_return_et e2ap_encode_E2RemovalResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2RemovalResponseIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalResponseIEs_id_TransactionID = p_E2RemovalResponse->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalResponseIEs_id_TransactionID = &p_E2RemovalResponse_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -6134,7 +6559,7 @@ xnap_return_et e2ap_encode_E2RemovalResponse(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalResponseIEs_id_CriticalityDiagnostics,
-                                &p_E2RemovalResponse->id_CriticalityDiagnostics)){
+                                &p_E2RemovalResponse_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -6178,6 +6603,38 @@ xnap_return_et e2ap_encode_E2RemovalResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for E2RemovalFailure */
+/**************************************************/
+void assign_hardcode_value_E2RemovalFailure(e2ap_E2RemovalFailure_t* p_E2RemovalFailure)
+{
+// E2RemovalFailure.E2RemovalFailureIEs.TransactionID
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseRICrequest
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseRICservice
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseE2node
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseTransport
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseProtocol
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseMisc
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseServiceLayer.ServiceLayerCause
+// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseServiceLayer
+// E2RemovalFailure.E2RemovalFailureIEs.Cause
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.ProcedureCode
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.TriggeringMessage
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.Criticality
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.RICrequestID
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics
+// E2RemovalFailure.E2RemovalFailureIEs
+// E2RemovalFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2RemovalFailure                    */
 /*                                                */
 /**************************************************/
@@ -6206,42 +6663,13 @@ E2RemovalFailure
 
 */
 xnap_return_et e2ap_encode_E2RemovalFailure(
-                e2ap_E2RemovalFailure_t* p_E2RemovalFailure,
+                e2ap_E2RemovalFailure_t* p_E2RemovalFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2RemovalFailure.E2RemovalFailureIEs.TransactionID
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseRICrequest
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseRICservice
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseE2node
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseTransport
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseProtocol
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseMisc
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseServiceLayer.ServiceLayerCause
-// E2RemovalFailure.E2RemovalFailureIEs.Cause.CauseServiceLayer
-// E2RemovalFailure.E2RemovalFailureIEs.Cause
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.ProcedureCode
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.TriggeringMessage
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.Criticality
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.RICrequestID
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// E2RemovalFailure.E2RemovalFailureIEs.CriticalityDiagnostics
-// E2RemovalFailure.E2RemovalFailureIEs
-// E2RemovalFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2RemovalFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2RemovalFailure(p_E2RemovalFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -6259,13 +6687,13 @@ xnap_return_et e2ap_encode_E2RemovalFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_E2removal;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2RemovalFailure;
@@ -6299,7 +6727,7 @@ xnap_return_et e2ap_encode_E2RemovalFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2RemovalFailureIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalFailureIEs_id_TransactionID = p_E2RemovalFailure->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalFailureIEs_id_TransactionID = &p_E2RemovalFailure_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -6339,7 +6767,7 @@ xnap_return_et e2ap_encode_E2RemovalFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalFailureIEs_id_Cause,
-                                &p_E2RemovalFailure->id_Cause)){
+                                &p_E2RemovalFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -6386,7 +6814,7 @@ xnap_return_et e2ap_encode_E2RemovalFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2RemovalFailureIEs_id_CriticalityDiagnostics,
-                                &p_E2RemovalFailure->id_CriticalityDiagnostics)){
+                                &p_E2RemovalFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -6430,6 +6858,43 @@ xnap_return_et e2ap_encode_E2RemovalFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for E2setupFailure */
+/**************************************************/
+void assign_hardcode_value_E2setupFailure(e2ap_E2setupFailure_t* p_E2setupFailure)
+{
+// E2setupFailure.E2setupFailureIEs.TransactionID
+// E2setupFailure.E2setupFailureIEs.Cause.CauseRICrequest
+// E2setupFailure.E2setupFailureIEs.Cause.CauseRICservice
+// E2setupFailure.E2setupFailureIEs.Cause.CauseE2node
+// E2setupFailure.E2setupFailureIEs.Cause.CauseTransport
+// E2setupFailure.E2setupFailureIEs.Cause.CauseProtocol
+// E2setupFailure.E2setupFailureIEs.Cause.CauseMisc
+// E2setupFailure.E2setupFailureIEs.Cause.CauseServiceLayer.ServiceLayerCause
+// E2setupFailure.E2setupFailureIEs.Cause.CauseServiceLayer
+// E2setupFailure.E2setupFailureIEs.Cause
+// E2setupFailure.E2setupFailureIEs.TimeToWait
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.ProcedureCode
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.TriggeringMessage
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.Criticality
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.RICrequestID
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics
+// E2setupFailure.E2setupFailureIEs.TNLinformation.tnlAddress
+// E2setupFailure.E2setupFailureIEs.TNLinformation....
+// E2setupFailure.E2setupFailureIEs.TNLinformation.tnlPort
+// E2setupFailure.E2setupFailureIEs.TNLinformation
+// E2setupFailure.E2setupFailureIEs
+// E2setupFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2setupFailure                    */
 /*                                                */
 /**************************************************/
@@ -6463,47 +6928,13 @@ E2setupFailure
 
 */
 xnap_return_et e2ap_encode_E2setupFailure(
-                e2ap_E2setupFailure_t* p_E2setupFailure,
+                e2ap_E2setupFailure_t* p_E2setupFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2setupFailure.E2setupFailureIEs.TransactionID
-// E2setupFailure.E2setupFailureIEs.Cause.CauseRICrequest
-// E2setupFailure.E2setupFailureIEs.Cause.CauseRICservice
-// E2setupFailure.E2setupFailureIEs.Cause.CauseE2node
-// E2setupFailure.E2setupFailureIEs.Cause.CauseTransport
-// E2setupFailure.E2setupFailureIEs.Cause.CauseProtocol
-// E2setupFailure.E2setupFailureIEs.Cause.CauseMisc
-// E2setupFailure.E2setupFailureIEs.Cause.CauseServiceLayer.ServiceLayerCause
-// E2setupFailure.E2setupFailureIEs.Cause.CauseServiceLayer
-// E2setupFailure.E2setupFailureIEs.Cause
-// E2setupFailure.E2setupFailureIEs.TimeToWait
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.ProcedureCode
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.TriggeringMessage
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.Criticality
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.RICrequestID
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// E2setupFailure.E2setupFailureIEs.CriticalityDiagnostics
-// E2setupFailure.E2setupFailureIEs.TNLinformation.tnlAddress
-// E2setupFailure.E2setupFailureIEs.TNLinformation....
-// E2setupFailure.E2setupFailureIEs.TNLinformation.tnlPort
-// E2setupFailure.E2setupFailureIEs.TNLinformation
-// E2setupFailure.E2setupFailureIEs
-// E2setupFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2setupFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2setupFailure(p_E2setupFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -6521,13 +6952,13 @@ xnap_return_et e2ap_encode_E2setupFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_E2setup;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2setupFailure;
@@ -6561,7 +6992,7 @@ xnap_return_et e2ap_encode_E2setupFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_TransactionID = p_E2setupFailure->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_TransactionID = &p_E2setupFailure_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -6601,7 +7032,7 @@ xnap_return_et e2ap_encode_E2setupFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_Cause,
-                                &p_E2setupFailure->id_Cause)){
+                                &p_E2setupFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -6634,7 +7065,7 @@ xnap_return_et e2ap_encode_E2setupFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TimeToWait;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupFailureIEs_id_TimeToWait;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_TimeToWait = p_E2setupFailure->id_TimeToWait; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_TimeToWait = &p_E2setupFailure_src->id_TimeToWait; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -6674,7 +7105,7 @@ xnap_return_et e2ap_encode_E2setupFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_CriticalityDiagnostics,
-                                &p_E2setupFailure->id_CriticalityDiagnostics)){
+                                &p_E2setupFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -6721,7 +7152,7 @@ xnap_return_et e2ap_encode_E2setupFailure(
             //message_name.item_type -> type = TNLinformation
             if(XNAP_FAILURE == e2ap_compose_TNLinformation(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupFailureIEs_id_TNLinformation,
-                                &p_E2setupFailure->id_TNLinformation)){
+                                &p_E2setupFailure_src->id_TNLinformation)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field TNLinformation",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -6765,53 +7196,96 @@ xnap_return_et e2ap_encode_E2setupFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RANfunctionID            */
+/*    COMPOSE PRIMITIVE RANfunctionID                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..4095) - RANfunctionID
-  xnap_return_et e2ap_compose_RANfunctionID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RANfunctionID  *p_dest,//dest
-                        _e2ap_RANfunctionID_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..4095) - RANfunctionID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RANfunctionID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RANfunctionID     *p_dest,
+                        _e2ap_RANfunctionID_t  *p_src
+){
     *p_dest = (e2ap_RANfunctionID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RANfunctionID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE RANfunctionDefinition            */
+/*    COMPOSE PRIMITIVE RANfunctionDefinition                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RANfunctionDefinition
-     
+/* compose primitive - id = 9 - OCTET STRING - RANfunctionDefinition*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RANfunctionDefinition(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RANfunctionDefinition     *p_dest,
+                        _e2ap_RANfunctionDefinition_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RANfunctionDefinition",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RANfunctionDefinition numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RANfunctionRevision            */
+/*    COMPOSE PRIMITIVE RANfunctionRevision                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..4095) - RANfunctionRevision
-  xnap_return_et e2ap_compose_RANfunctionRevision(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RANfunctionRevision  *p_dest,//dest
-                        _e2ap_RANfunctionRevision_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..4095) - RANfunctionRevision*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RANfunctionRevision(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RANfunctionRevision     *p_dest,
+                        _e2ap_RANfunctionRevision_t  *p_src
+){
     *p_dest = (e2ap_RANfunctionRevision)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RANfunctionRevision value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE RANfunctionOID            */
+/*    COMPOSE PRIMITIVE RANfunctionOID                             */
 /*****************************************************/
-// cpmpose primitive - id = 10 - PrintableString (SIZE(1..1000, ...)) - RANfunctionOID
-     xnap_return_et e2ap_compose_RANfunctionOID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RANfunctionOID  *p_dest,//dest
-                        _e2ap_RANfunctionOID_t  *p_src//src
-)
-{
-// chưa xong
-    *p_dest = * p_src;
+/* compose primitive - id = 10 - PrintableString (SIZE(1..1000, ...)) - RANfunctionOID*/
+/* ---------------------------------------------------------------------- */
+/*  PrintableString (primitive_id = 10)                                   */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RANfunctionOID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RANfunctionOID     *p_dest,
+                        _e2ap_RANfunctionOID_t  *p_src
+){
+
+    *p_dest = *p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug PrintableString RANfunctionOID string =%s", __FUNCTION__, p_dest);
+    #endif
     return XNAP_SUCCESS;
 }
- 
 /************************************************************/
 /*      SEQUENCE RANfunction_Item                */
 /************************************************************/
@@ -6932,6 +7406,111 @@ xnap_return_et e2ap_compose_RANfunctions_List (
 
 
 /**************************************************/
+/* assign_value function for E2setupRequest */
+/**************************************************/
+void assign_hardcode_value_E2setupRequest(e2ap_E2setupRequest_t* p_E2setupRequest)
+{
+// E2setupRequest.E2setupRequestIEs.TransactionID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-CU-UP-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-DU-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-CU-UP-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-DU-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.NGENB-DU-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID
+// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionID
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionDefinition
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionRevision
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionOID
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs
+// E2setupRequest.E2setupRequestIEs.RANfunctions-List
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentInterfaceType
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentRequestPart
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentResponsePart
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs
+// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List
+// E2setupRequest.E2setupRequestIEs
+// E2setupRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_E2setupRequest                    */
 /*                                                */
 /**************************************************/
@@ -7036,115 +7615,13 @@ E2setupRequest
 
 */
 xnap_return_et e2ap_encode_E2setupRequest(
-                e2ap_E2setupRequest_t* p_E2setupRequest,
+                e2ap_E2setupRequest_t* p_E2setupRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2setupRequest.E2setupRequestIEs.TransactionID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalgNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID.ENGNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GlobalenGNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-CU-UP-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID.GNB-DU-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-gNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID.ENGNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GlobalenGNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-CU-UP-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID.GNB-DU-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-en-gNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalngeNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID.ENB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.GlobalENB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID.NGENB-DU-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-ng-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID.ENB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID.GlobalENB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID.GlobalE2node-eNB-ID
-// E2setupRequest.E2setupRequestIEs.GlobalE2node-ID
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionID
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionDefinition
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionRevision
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionOID
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List.RANfunction-ItemIEs
-// E2setupRequest.E2setupRequestIEs.RANfunctions-List
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentInterfaceType
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentID
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentRequestPart
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration.e2nodeComponentResponsePart
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item.E2nodeComponentConfiguration
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs.E2nodeComponentConfigAddition-Item
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List.E2nodeComponentConfigAddition-ItemIEs
-// E2setupRequest.E2setupRequestIEs.E2nodeComponentConfigAddition-List
-// E2setupRequest.E2setupRequestIEs
-// E2setupRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2setupRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2setupRequest(p_E2setupRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -7162,13 +7639,13 @@ xnap_return_et e2ap_encode_E2setupRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_E2setup;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2setupRequest;
@@ -7202,7 +7679,7 @@ xnap_return_et e2ap_encode_E2setupRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupRequestIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2setupRequestIEs_id_TransactionID = p_E2setupRequest->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2setupRequestIEs_id_TransactionID = &p_E2setupRequest_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -7242,7 +7719,7 @@ xnap_return_et e2ap_encode_E2setupRequest(
             //message_name.item_type -> type = GlobalE2node_ID
             if(XNAP_FAILURE == e2ap_compose_GlobalE2node_ID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupRequestIEs_id_GlobalE2node_ID,
-                                &p_E2setupRequest->id_GlobalE2node_ID)){
+                                &p_E2setupRequest_src->id_GlobalE2node_ID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field GlobalE2node_ID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -7289,7 +7766,7 @@ xnap_return_et e2ap_encode_E2setupRequest(
             //message_name.item_type -> type = RANfunctions_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctions_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupRequestIEs_id_RANfunctionsAdded,
-                                &p_E2setupRequest->id_RANfunctionsAdded)){
+                                &p_E2setupRequest_src->id_RANfunctionsAdded)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctions_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -7336,7 +7813,7 @@ xnap_return_et e2ap_encode_E2setupRequest(
             //message_name.item_type -> type = E2nodeComponentConfigAddition_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigAddition_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupRequestIEs_id_E2nodeComponentConfigAddition,
-                                &p_E2setupRequest->id_E2nodeComponentConfigAddition)){
+                                &p_E2setupRequest_src->id_E2nodeComponentConfigAddition)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigAddition_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -7563,18 +8040,20 @@ xnap_return_et e2ap_compose_RANfunctionIDcause_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionIDcause_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RANfunctionIDcause_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RANfunctionIDcause_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionIDcause_Item->cause,
-                                                &p_RANfunctionIDcause_Item->cause))
+                                                &p_e2ap_RANfunctionIDcause_Item->cause,//dest
+                                                &p_RANfunctionIDcause_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -7636,6 +8115,91 @@ xnap_return_et e2ap_compose_RANfunctionsIDcause_List (
         rtxDListAppendNode(p_e2ap_RANfunctionsIDcause_List, p_node_list);
     }
     return XNAP_SUCCESS;
+}
+
+
+/**************************************************/
+/* assign_value function for E2setupResponse */
+/**************************************************/
+void assign_hardcode_value_E2setupResponse(e2ap_E2setupResponse_t* p_E2setupResponse)
+{
+// E2setupResponse.E2setupResponseIEs.TransactionID
+// E2setupResponse.E2setupResponseIEs.GlobalRIC-ID.PLMN-Identity
+// E2setupResponse.E2setupResponseIEs.GlobalRIC-ID.ric-ID
+// E2setupResponse.E2setupResponseIEs.GlobalRIC-ID
+// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
+// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
+// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
+// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs
+// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.RANfunctionID
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICrequest
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICservice
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseE2node
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseTransport
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseProtocol
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseMisc
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs
+// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentInterfaceType
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.updateOutcome
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs
+// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List
+// E2setupResponse.E2setupResponseIEs
+// E2setupResponse
+
+
+    return;
 }
 
 
@@ -7723,95 +8287,13 @@ E2setupResponse
 
 */
 xnap_return_et e2ap_encode_E2setupResponse(
-                e2ap_E2setupResponse_t* p_E2setupResponse,
+                e2ap_E2setupResponse_t* p_E2setupResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// E2setupResponse.E2setupResponseIEs.TransactionID
-// E2setupResponse.E2setupResponseIEs.GlobalRIC-ID.PLMN-Identity
-// E2setupResponse.E2setupResponseIEs.GlobalRIC-ID.ric-ID
-// E2setupResponse.E2setupResponseIEs.GlobalRIC-ID
-// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
-// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
-// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
-// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List.RANfunctionID-ItemIEs
-// E2setupResponse.E2setupResponseIEs.RANfunctionsID-List
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.RANfunctionID
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICrequest
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICservice
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseE2node
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseTransport
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseProtocol
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseMisc
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs
-// E2setupResponse.E2setupResponseIEs.RANfunctionsIDcause-List
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentInterfaceType
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG.AMFName
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceNG
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.PLMN-Identity
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice.gnb-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID.GNB-ID-Choice
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalgNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.PLMN-Identity
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-macro
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-shortmacro
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice.enb-ID-longmacro
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID.ENB-ID-Choice
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID.GlobalngeNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn.GlobalNG-RANNode-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceXn
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1.GNB-CU-UP-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceE1
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1.GNB-DU-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceF1
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1.NGENB-DU-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceW1
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1.MMEname
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceS1
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.PLMN-Identity
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.macro-eNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.home-eNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.short-Macro-eNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID.long-Macro-eNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID.ENB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalENB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.PLMN-Identity
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID.gNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID.ENGNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2.GlobalenGNB-ID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID.E2nodeComponentInterfaceX2
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentID
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.updateOutcome
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICrequest
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseRICservice
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseE2node
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseTransport
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseProtocol
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseMisc
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer.ServiceLayerCause
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause.CauseServiceLayer
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck.Cause
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item.E2nodeComponentConfigurationAck
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs.E2nodeComponentConfigAdditionAck-Item
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List.E2nodeComponentConfigAdditionAck-ItemIEs
-// E2setupResponse.E2setupResponseIEs.E2nodeComponentConfigAdditionAck-List
-// E2setupResponse.E2setupResponseIEs
-// E2setupResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_E2setupResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_E2setupResponse(p_E2setupResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -7829,13 +8311,13 @@ xnap_return_et e2ap_encode_E2setupResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2setup;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2setupResponse;
@@ -7869,7 +8351,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2setupResponseIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_TransactionID = p_E2setupResponse->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_TransactionID = &p_E2setupResponse_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -7909,7 +8391,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
             //message_name.item_type -> type = GlobalRIC_ID
             if(XNAP_FAILURE == e2ap_compose_GlobalRIC_ID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_GlobalRIC_ID,
-                                &p_E2setupResponse->id_GlobalRIC_ID)){
+                                &p_E2setupResponse_src->id_GlobalRIC_ID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field GlobalRIC_ID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -7956,7 +8438,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
             //message_name.item_type -> type = RANfunctionsID_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsID_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsAccepted,
-                                &p_E2setupResponse->id_RANfunctionsAccepted)){
+                                &p_E2setupResponse_src->id_RANfunctionsAccepted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsID_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8003,7 +8485,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
             //message_name.item_type -> type = RANfunctionsIDcause_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsIDcause_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_RANfunctionsRejected,
-                                &p_E2setupResponse->id_RANfunctionsRejected)){
+                                &p_E2setupResponse_src->id_RANfunctionsRejected)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsIDcause_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8050,7 +8532,7 @@ xnap_return_et e2ap_encode_E2setupResponse(
             //message_name.item_type -> type = E2nodeComponentConfigAdditionAck_List
             if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigAdditionAck_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apE2setupResponseIEs_id_E2nodeComponentConfigAdditionAck,
-                                &p_E2setupResponse->id_E2nodeComponentConfigAdditionAck)){
+                                &p_E2setupResponse_src->id_E2nodeComponentConfigAdditionAck)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field E2nodeComponentConfigAdditionAck_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8094,6 +8576,42 @@ xnap_return_et e2ap_encode_E2setupResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for ErrorIndication */
+/**************************************************/
+void assign_hardcode_value_ErrorIndication(e2ap_ErrorIndication_t* p_ErrorIndication)
+{
+// ErrorIndication.ErrorIndication-IEs.TransactionID
+// ErrorIndication.ErrorIndication-IEs.RICrequestID.ricRequestorID
+// ErrorIndication.ErrorIndication-IEs.RICrequestID.ricInstanceID
+// ErrorIndication.ErrorIndication-IEs.RICrequestID
+// ErrorIndication.ErrorIndication-IEs.RANfunctionID
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseRICrequest
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseRICservice
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseE2node
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseTransport
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseProtocol
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseMisc
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// ErrorIndication.ErrorIndication-IEs.Cause.CauseServiceLayer
+// ErrorIndication.ErrorIndication-IEs.Cause
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.ProcedureCode
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.TriggeringMessage
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.Criticality
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.RICrequestID
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics
+// ErrorIndication.ErrorIndication-IEs
+// ErrorIndication
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_ErrorIndication                    */
 /*                                                */
 /**************************************************/
@@ -8126,46 +8644,13 @@ ErrorIndication
 
 */
 xnap_return_et e2ap_encode_ErrorIndication(
-                e2ap_ErrorIndication_t* p_ErrorIndication,
+                e2ap_ErrorIndication_t* p_ErrorIndication_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// ErrorIndication.ErrorIndication-IEs.TransactionID
-// ErrorIndication.ErrorIndication-IEs.RICrequestID.ricRequestorID
-// ErrorIndication.ErrorIndication-IEs.RICrequestID.ricInstanceID
-// ErrorIndication.ErrorIndication-IEs.RICrequestID
-// ErrorIndication.ErrorIndication-IEs.RANfunctionID
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseRICrequest
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseRICservice
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseE2node
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseTransport
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseProtocol
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseMisc
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// ErrorIndication.ErrorIndication-IEs.Cause.CauseServiceLayer
-// ErrorIndication.ErrorIndication-IEs.Cause
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.ProcedureCode
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.TriggeringMessage
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.Criticality
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.RICrequestID
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// ErrorIndication.ErrorIndication-IEs.CriticalityDiagnostics
-// ErrorIndication.ErrorIndication-IEs
-// ErrorIndication
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_ErrorIndication o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_ErrorIndication(p_ErrorIndication_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -8183,13 +8668,13 @@ xnap_return_et e2ap_encode_ErrorIndication(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_ErrorIndication;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_ignore;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_ErrorIndication;
@@ -8223,7 +8708,7 @@ xnap_return_et e2ap_encode_ErrorIndication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_TransactionID = p_ErrorIndication->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_TransactionID = &p_ErrorIndication_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -8263,7 +8748,7 @@ xnap_return_et e2ap_encode_ErrorIndication(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_RICrequestID,
-                                &p_ErrorIndication->id_RICrequestID)){
+                                &p_ErrorIndication_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8296,7 +8781,7 @@ xnap_return_et e2ap_encode_ErrorIndication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_ErrorIndication_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_RANfunctionID = p_ErrorIndication->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_RANfunctionID = &p_ErrorIndication_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -8336,7 +8821,7 @@ xnap_return_et e2ap_encode_ErrorIndication(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_Cause,
-                                &p_ErrorIndication->id_Cause)){
+                                &p_ErrorIndication_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8383,7 +8868,7 @@ xnap_return_et e2ap_encode_ErrorIndication(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apErrorIndication_IEs_id_CriticalityDiagnostics,
-                                &p_ErrorIndication->id_CriticalityDiagnostics)){
+                                &p_ErrorIndication_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8427,6 +8912,29 @@ xnap_return_et e2ap_encode_ErrorIndication(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for ResetRequest */
+/**************************************************/
+void assign_hardcode_value_ResetRequest(e2ap_ResetRequest_t* p_ResetRequest)
+{
+// ResetRequest.ResetRequestIEs.TransactionID
+// ResetRequest.ResetRequestIEs.Cause.CauseRICrequest
+// ResetRequest.ResetRequestIEs.Cause.CauseRICservice
+// ResetRequest.ResetRequestIEs.Cause.CauseE2node
+// ResetRequest.ResetRequestIEs.Cause.CauseTransport
+// ResetRequest.ResetRequestIEs.Cause.CauseProtocol
+// ResetRequest.ResetRequestIEs.Cause.CauseMisc
+// ResetRequest.ResetRequestIEs.Cause.CauseServiceLayer.ServiceLayerCause
+// ResetRequest.ResetRequestIEs.Cause.CauseServiceLayer
+// ResetRequest.ResetRequestIEs.Cause
+// ResetRequest.ResetRequestIEs
+// ResetRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_ResetRequest                    */
 /*                                                */
 /**************************************************/
@@ -8446,33 +8954,13 @@ ResetRequest
 
 */
 xnap_return_et e2ap_encode_ResetRequest(
-                e2ap_ResetRequest_t* p_ResetRequest,
+                e2ap_ResetRequest_t* p_ResetRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// ResetRequest.ResetRequestIEs.TransactionID
-// ResetRequest.ResetRequestIEs.Cause.CauseRICrequest
-// ResetRequest.ResetRequestIEs.Cause.CauseRICservice
-// ResetRequest.ResetRequestIEs.Cause.CauseE2node
-// ResetRequest.ResetRequestIEs.Cause.CauseTransport
-// ResetRequest.ResetRequestIEs.Cause.CauseProtocol
-// ResetRequest.ResetRequestIEs.Cause.CauseMisc
-// ResetRequest.ResetRequestIEs.Cause.CauseServiceLayer.ServiceLayerCause
-// ResetRequest.ResetRequestIEs.Cause.CauseServiceLayer
-// ResetRequest.ResetRequestIEs.Cause
-// ResetRequest.ResetRequestIEs
-// ResetRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_ResetRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_ResetRequest(p_ResetRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -8490,13 +8978,13 @@ xnap_return_et e2ap_encode_ResetRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_Reset;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_ResetRequest;
@@ -8530,7 +9018,7 @@ xnap_return_et e2ap_encode_ResetRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_ResetRequestIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apResetRequestIEs_id_TransactionID = p_ResetRequest->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apResetRequestIEs_id_TransactionID = &p_ResetRequest_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -8570,7 +9058,7 @@ xnap_return_et e2ap_encode_ResetRequest(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apResetRequestIEs_id_Cause,
-                                &p_ResetRequest->id_Cause)){
+                                &p_ResetRequest_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8614,6 +9102,29 @@ xnap_return_et e2ap_encode_ResetRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for ResetResponse */
+/**************************************************/
+void assign_hardcode_value_ResetResponse(e2ap_ResetResponse_t* p_ResetResponse)
+{
+// ResetResponse.ResetResponseIEs.TransactionID
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.ProcedureCode
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.TriggeringMessage
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.Criticality
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.RICrequestID
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// ResetResponse.ResetResponseIEs.CriticalityDiagnostics
+// ResetResponse.ResetResponseIEs
+// ResetResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_ResetResponse                    */
 /*                                                */
 /**************************************************/
@@ -8633,33 +9144,13 @@ ResetResponse
 
 */
 xnap_return_et e2ap_encode_ResetResponse(
-                e2ap_ResetResponse_t* p_ResetResponse,
+                e2ap_ResetResponse_t* p_ResetResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// ResetResponse.ResetResponseIEs.TransactionID
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.ProcedureCode
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.TriggeringMessage
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.Criticality
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.RICrequestID
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// ResetResponse.ResetResponseIEs.CriticalityDiagnostics
-// ResetResponse.ResetResponseIEs
-// ResetResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_ResetResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_ResetResponse(p_ResetResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -8677,13 +9168,13 @@ xnap_return_et e2ap_encode_ResetResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_Reset;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_ResetResponse;
@@ -8717,7 +9208,7 @@ xnap_return_et e2ap_encode_ResetResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_ResetResponseIEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apResetResponseIEs_id_TransactionID = p_ResetResponse->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apResetResponseIEs_id_TransactionID = &p_ResetResponse_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -8757,7 +9248,7 @@ xnap_return_et e2ap_encode_ResetResponse(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apResetResponseIEs_id_CriticalityDiagnostics,
-                                &p_ResetResponse->id_CriticalityDiagnostics)){
+                                &p_ResetResponse_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8801,6 +9292,40 @@ xnap_return_et e2ap_encode_ResetResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICassistanceFailure */
+/**************************************************/
+void assign_hardcode_value_RICassistanceFailure(e2ap_RICassistanceFailure_t* p_RICassistanceFailure)
+{
+// RICassistanceFailure.RICassistanceFailure-IEs.RICrequestID.ricRequestorID
+// RICassistanceFailure.RICassistanceFailure-IEs.RICrequestID.ricInstanceID
+// RICassistanceFailure.RICassistanceFailure-IEs.RICrequestID
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseRICrequest
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseRICservice
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseE2node
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseTransport
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseProtocol
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseMisc
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseServiceLayer
+// RICassistanceFailure.RICassistanceFailure-IEs.Cause
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.Criticality
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics
+// RICassistanceFailure.RICassistanceFailure-IEs
+// RICassistanceFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICassistanceFailure                    */
 /*                                                */
 /**************************************************/
@@ -8831,44 +9356,13 @@ RICassistanceFailure
 
 */
 xnap_return_et e2ap_encode_RICassistanceFailure(
-                e2ap_RICassistanceFailure_t* p_RICassistanceFailure,
+                e2ap_RICassistanceFailure_t* p_RICassistanceFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICassistanceFailure.RICassistanceFailure-IEs.RICrequestID.ricRequestorID
-// RICassistanceFailure.RICassistanceFailure-IEs.RICrequestID.ricInstanceID
-// RICassistanceFailure.RICassistanceFailure-IEs.RICrequestID
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseRICrequest
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseRICservice
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseE2node
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseTransport
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseProtocol
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseMisc
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause.CauseServiceLayer
-// RICassistanceFailure.RICassistanceFailure-IEs.Cause
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.Criticality
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICassistanceFailure.RICassistanceFailure-IEs.CriticalityDiagnostics
-// RICassistanceFailure.RICassistanceFailure-IEs
-// RICassistanceFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICassistanceFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICassistanceFailure(p_RICassistanceFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -8886,13 +9380,13 @@ xnap_return_et e2ap_encode_RICassistanceFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICassistance;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICassistanceFailure;
@@ -8940,7 +9434,7 @@ xnap_return_et e2ap_encode_RICassistanceFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceFailure_IEs_id_RICrequestID,
-                                &p_RICassistanceFailure->id_RICrequestID)){
+                                &p_RICassistanceFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -8987,7 +9481,7 @@ xnap_return_et e2ap_encode_RICassistanceFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceFailure_IEs_id_Cause,
-                                &p_RICassistanceFailure->id_Cause)){
+                                &p_RICassistanceFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -9034,7 +9528,7 @@ xnap_return_et e2ap_encode_RICassistanceFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICassistanceFailure->id_CriticalityDiagnostics)){
+                                &p_RICassistanceFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -9078,29 +9572,108 @@ xnap_return_et e2ap_encode_RICassistanceFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICassistanceSN            */
+/*    COMPOSE PRIMITIVE RICassistanceSN                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..65535) - RICassistanceSN
-  xnap_return_et e2ap_compose_RICassistanceSN(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICassistanceSN  *p_dest,//dest
-                        _e2ap_RICassistanceSN_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..65535) - RICassistanceSN*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICassistanceSN(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICassistanceSN     *p_dest,
+                        _e2ap_RICassistanceSN_t  *p_src
+){
     *p_dest = (e2ap_RICassistanceSN)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICassistanceSN value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE RICassistanceHeader            */
+/*    COMPOSE PRIMITIVE RICassistanceHeader                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICassistanceHeader
-     
+/* compose primitive - id = 9 - OCTET STRING - RICassistanceHeader*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICassistanceHeader(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICassistanceHeader     *p_dest,
+                        _e2ap_RICassistanceHeader_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICassistanceHeader",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICassistanceHeader numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICassistanceOutcome            */
+/*    COMPOSE PRIMITIVE RICassistanceOutcome                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICassistanceOutcome
-     
+/* compose primitive - id = 9 - OCTET STRING - RICassistanceOutcome*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICassistanceOutcome(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICassistanceOutcome     *p_dest,
+                        _e2ap_RICassistanceOutcome_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICassistanceOutcome",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICassistanceOutcome numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICassistanceIndication */
+/**************************************************/
+void assign_hardcode_value_RICassistanceIndication(e2ap_RICassistanceIndication_t* p_RICassistanceIndication)
+{
+// RICassistanceIndication.RICassistanceIndication-IEs.RICrequestID.ricRequestorID
+// RICassistanceIndication.RICassistanceIndication-IEs.RICrequestID.ricInstanceID
+// RICassistanceIndication.RICassistanceIndication-IEs.RICrequestID
+// RICassistanceIndication.RICassistanceIndication-IEs.RICassistanceSN
+// RICassistanceIndication.RICassistanceIndication-IEs.RICassistanceHeader
+// RICassistanceIndication.RICassistanceIndication-IEs.RICassistanceOutcome
+// RICassistanceIndication.RICassistanceIndication-IEs
+// RICassistanceIndication
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICassistanceIndication                    */
 /*                                                */
@@ -9117,29 +9690,13 @@ RICassistanceIndication
 
 */
 xnap_return_et e2ap_encode_RICassistanceIndication(
-                e2ap_RICassistanceIndication_t* p_RICassistanceIndication,
+                e2ap_RICassistanceIndication_t* p_RICassistanceIndication_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICassistanceIndication.RICassistanceIndication-IEs.RICrequestID.ricRequestorID
-// RICassistanceIndication.RICassistanceIndication-IEs.RICrequestID.ricInstanceID
-// RICassistanceIndication.RICassistanceIndication-IEs.RICrequestID
-// RICassistanceIndication.RICassistanceIndication-IEs.RICassistanceSN
-// RICassistanceIndication.RICassistanceIndication-IEs.RICassistanceHeader
-// RICassistanceIndication.RICassistanceIndication-IEs.RICassistanceOutcome
-// RICassistanceIndication.RICassistanceIndication-IEs
-// RICassistanceIndication
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICassistanceIndication o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICassistanceIndication(p_RICassistanceIndication_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -9157,13 +9714,13 @@ xnap_return_et e2ap_encode_RICassistanceIndication(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICassistanceIndication;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICassistanceIndication;
@@ -9211,7 +9768,7 @@ xnap_return_et e2ap_encode_RICassistanceIndication(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICrequestID,
-                                &p_RICassistanceIndication->id_RICrequestID)){
+                                &p_RICassistanceIndication_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -9244,7 +9801,7 @@ xnap_return_et e2ap_encode_RICassistanceIndication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceSN;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICassistanceSN;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICassistanceSN = p_RICassistanceIndication->id_RICassistanceSN; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICassistanceSN = &p_RICassistanceIndication_src->id_RICassistanceSN; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9270,7 +9827,7 @@ xnap_return_et e2ap_encode_RICassistanceIndication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceHeader;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICassistanceHeader;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICassistanceHeader = p_RICassistanceIndication->id_RICassistanceHeader; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICassistanceHeader = &p_RICassistanceIndication_src->id_RICassistanceHeader; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9296,7 +9853,7 @@ xnap_return_et e2ap_encode_RICassistanceIndication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceOutcome;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceIndication_IEs_id_RICassistanceOutcome;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICassistanceOutcome = p_RICassistanceIndication->id_RICassistanceOutcome; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceIndication_IEs_id_RICassistanceOutcome = &p_RICassistanceIndication_src->id_RICassistanceOutcome; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9333,6 +9890,22 @@ xnap_return_et e2ap_encode_RICassistanceIndication(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICassistanceHalt */
+/**************************************************/
+void assign_hardcode_value_RICassistanceHalt(e2ap_RICassistanceHalt_t* p_RICassistanceHalt)
+{
+// RICassistanceHalt.RICassistanceHalt-IEs.RICrequestID.ricRequestorID
+// RICassistanceHalt.RICassistanceHalt-IEs.RICrequestID.ricInstanceID
+// RICassistanceHalt.RICassistanceHalt-IEs.RICrequestID
+// RICassistanceHalt.RICassistanceHalt-IEs
+// RICassistanceHalt
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICassistanceHalt                    */
 /*                                                */
 /**************************************************/
@@ -9345,26 +9918,13 @@ RICassistanceHalt
 
 */
 xnap_return_et e2ap_encode_RICassistanceHalt(
-                e2ap_RICassistanceHalt_t* p_RICassistanceHalt,
+                e2ap_RICassistanceHalt_t* p_RICassistanceHalt_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICassistanceHalt.RICassistanceHalt-IEs.RICrequestID.ricRequestorID
-// RICassistanceHalt.RICassistanceHalt-IEs.RICrequestID.ricInstanceID
-// RICassistanceHalt.RICassistanceHalt-IEs.RICrequestID
-// RICassistanceHalt.RICassistanceHalt-IEs
-// RICassistanceHalt
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICassistanceHalt o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICassistanceHalt(p_RICassistanceHalt_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -9382,13 +9942,13 @@ xnap_return_et e2ap_encode_RICassistanceHalt(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICassistanceHalt;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICassistanceHalt;
@@ -9436,7 +9996,7 @@ xnap_return_et e2ap_encode_RICassistanceHalt(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceHalt_IEs_id_RICrequestID,
-                                &p_RICassistanceHalt->id_RICrequestID)){
+                                &p_RICassistanceHalt_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -9480,38 +10040,97 @@ xnap_return_et e2ap_encode_RICassistanceHalt(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICassistanceMessage            */
+/*    COMPOSE PRIMITIVE RICassistanceMessage                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICassistanceMessage
-     
+/* compose primitive - id = 9 - OCTET STRING - RICassistanceMessage*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICassistanceMessage(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICassistanceMessage     *p_dest,
+                        _e2ap_RICassistanceMessage_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICassistanceMessage",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICassistanceMessage numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICassistanceUpdate            */
+/*    COMPOSE PRIMITIVE RICassistanceUpdate                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICassistanceUpdate
-   xnap_return_et e2ap_compose_RICassistanceUpdate( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICassistanceUpdate  *p_dest,//dest
-                        _e2ap_RICassistanceUpdate_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICassistanceUpdate*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICassistanceUpdate(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICassistanceUpdate     *p_dest,
+                        _e2ap_RICassistanceUpdate_et *p_src
+){
     *p_dest = (e2ap_RICassistanceUpdate)*p_src;
-    return XNAP_SUCCESS;
-}
-   
-/*****************************************************/
-/*    PRIMITIVE RICassistanceUpdateNumber            */
-/*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..65535) - RICassistanceUpdateNumber
-  xnap_return_et e2ap_compose_RICassistanceUpdateNumber(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICassistanceUpdateNumber  *p_dest,//dest
-                        _e2ap_RICassistanceUpdateNumber_t  *p_src//src
-)
-{
-    *p_dest = (e2ap_RICassistanceUpdateNumber)*p_src;
-    return XNAP_SUCCESS;
-}
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICassistanceUpdate value=%u", __FUNCTION__, *p_dest);
+    #endif
     
+    return XNAP_SUCCESS;
+}
+/*****************************************************/
+/*    COMPOSE PRIMITIVE RICassistanceUpdateNumber                             */
+/*****************************************************/
+/* compose primitive - id = 6 - INTEGER (0..65535) - RICassistanceUpdateNumber*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICassistanceUpdateNumber(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICassistanceUpdateNumber     *p_dest,
+                        _e2ap_RICassistanceUpdateNumber_t  *p_src
+){
+    *p_dest = (e2ap_RICassistanceUpdateNumber)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICassistanceUpdateNumber value=%u", __FUNCTION__, *p_dest);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICassistanceRequest */
+/**************************************************/
+void assign_hardcode_value_RICassistanceRequest(e2ap_RICassistanceRequest_t* p_RICassistanceRequest)
+{
+// RICassistanceRequest.RICassistanceRequest-IEs.RICrequestID.ricRequestorID
+// RICassistanceRequest.RICassistanceRequest-IEs.RICrequestID.ricInstanceID
+// RICassistanceRequest.RICassistanceRequest-IEs.RICrequestID
+// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceHeader
+// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceMessage
+// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceUpdate
+// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceUpdateNumber
+// RICassistanceRequest.RICassistanceRequest-IEs
+// RICassistanceRequest
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICassistanceRequest                    */
 /*                                                */
@@ -9529,30 +10148,13 @@ RICassistanceRequest
 
 */
 xnap_return_et e2ap_encode_RICassistanceRequest(
-                e2ap_RICassistanceRequest_t* p_RICassistanceRequest,
+                e2ap_RICassistanceRequest_t* p_RICassistanceRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICassistanceRequest.RICassistanceRequest-IEs.RICrequestID.ricRequestorID
-// RICassistanceRequest.RICassistanceRequest-IEs.RICrequestID.ricInstanceID
-// RICassistanceRequest.RICassistanceRequest-IEs.RICrequestID
-// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceHeader
-// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceMessage
-// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceUpdate
-// RICassistanceRequest.RICassistanceRequest-IEs.RICassistanceUpdateNumber
-// RICassistanceRequest.RICassistanceRequest-IEs
-// RICassistanceRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICassistanceRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICassistanceRequest(p_RICassistanceRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -9570,13 +10172,13 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICassistance;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICassistanceRequest;
@@ -9624,7 +10226,7 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICrequestID,
-                                &p_RICassistanceRequest->id_RICrequestID)){
+                                &p_RICassistanceRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -9657,7 +10259,7 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceHeader;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceHeader;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceHeader = p_RICassistanceRequest->id_RICassistanceHeader; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceHeader = &p_RICassistanceRequest_src->id_RICassistanceHeader; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9683,7 +10285,7 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceMessage;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceMessage;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceMessage = p_RICassistanceRequest->id_RICassistanceMessage; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceMessage = &p_RICassistanceRequest_src->id_RICassistanceMessage; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9709,7 +10311,7 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceUpdate;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceUpdate;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceUpdate = p_RICassistanceRequest->id_RICassistanceUpdate; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceUpdate = &p_RICassistanceRequest_src->id_RICassistanceUpdate; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9735,7 +10337,7 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceUpdateNumber;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceRequest_IEs_id_RICassistanceUpdateNumber;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceUpdateNumber = p_RICassistanceRequest->id_RICassistanceUpdateNumber; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceRequest_IEs_id_RICassistanceUpdateNumber = &p_RICassistanceRequest_src->id_RICassistanceUpdateNumber; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9772,6 +10374,24 @@ xnap_return_et e2ap_encode_RICassistanceRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICassistanceResponse */
+/**************************************************/
+void assign_hardcode_value_RICassistanceResponse(e2ap_RICassistanceResponse_t* p_RICassistanceResponse)
+{
+// RICassistanceResponse.RICassistanceResponse-IEs.RICrequestID.ricRequestorID
+// RICassistanceResponse.RICassistanceResponse-IEs.RICrequestID.ricInstanceID
+// RICassistanceResponse.RICassistanceResponse-IEs.RICrequestID
+// RICassistanceResponse.RICassistanceResponse-IEs.RICassistanceHeader
+// RICassistanceResponse.RICassistanceResponse-IEs.RICassistanceOutcome
+// RICassistanceResponse.RICassistanceResponse-IEs
+// RICassistanceResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICassistanceResponse                    */
 /*                                                */
 /**************************************************/
@@ -9786,28 +10406,13 @@ RICassistanceResponse
 
 */
 xnap_return_et e2ap_encode_RICassistanceResponse(
-                e2ap_RICassistanceResponse_t* p_RICassistanceResponse,
+                e2ap_RICassistanceResponse_t* p_RICassistanceResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICassistanceResponse.RICassistanceResponse-IEs.RICrequestID.ricRequestorID
-// RICassistanceResponse.RICassistanceResponse-IEs.RICrequestID.ricInstanceID
-// RICassistanceResponse.RICassistanceResponse-IEs.RICrequestID
-// RICassistanceResponse.RICassistanceResponse-IEs.RICassistanceHeader
-// RICassistanceResponse.RICassistanceResponse-IEs.RICassistanceOutcome
-// RICassistanceResponse.RICassistanceResponse-IEs
-// RICassistanceResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICassistanceResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICassistanceResponse(p_RICassistanceResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -9825,13 +10430,13 @@ xnap_return_et e2ap_encode_RICassistanceResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICassistance;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICassistanceResponse;
@@ -9879,7 +10484,7 @@ xnap_return_et e2ap_encode_RICassistanceResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceResponse_IEs_id_RICrequestID,
-                                &p_RICassistanceResponse->id_RICrequestID)){
+                                &p_RICassistanceResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -9912,7 +10517,7 @@ xnap_return_et e2ap_encode_RICassistanceResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceHeader;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_id_RICassistanceHeader;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceResponse_IEs_id_RICassistanceHeader = p_RICassistanceResponse->id_RICassistanceHeader; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceResponse_IEs_id_RICassistanceHeader = &p_RICassistanceResponse_src->id_RICassistanceHeader; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9938,7 +10543,7 @@ xnap_return_et e2ap_encode_RICassistanceResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICassistanceOutcome;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICassistanceResponse_IEs_id_RICassistanceOutcome;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceResponse_IEs_id_RICassistanceOutcome = p_RICassistanceResponse->id_RICassistanceOutcome; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICassistanceResponse_IEs_id_RICassistanceOutcome = &p_RICassistanceResponse_src->id_RICassistanceOutcome; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -9975,15 +10580,88 @@ xnap_return_et e2ap_encode_RICassistanceResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICcallProcessID            */
+/*    COMPOSE PRIMITIVE RICcallProcessID                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICcallProcessID
-     
+/* compose primitive - id = 9 - OCTET STRING - RICcallProcessID*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICcallProcessID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICcallProcessID     *p_dest,
+                        _e2ap_RICcallProcessID_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICcallProcessID",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICcallProcessID numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICcontrolOutcome            */
+/*    COMPOSE PRIMITIVE RICcontrolOutcome                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICcontrolOutcome
-     
+/* compose primitive - id = 9 - OCTET STRING - RICcontrolOutcome*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICcontrolOutcome(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICcontrolOutcome     *p_dest,
+                        _e2ap_RICcontrolOutcome_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICcontrolOutcome",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICcontrolOutcome numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICcontrolAcknowledge */
+/**************************************************/
+void assign_hardcode_value_RICcontrolAcknowledge(e2ap_RICcontrolAcknowledge_t* p_RICcontrolAcknowledge)
+{
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICrequestID.ricRequestorID
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICrequestID.ricInstanceID
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICrequestID
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RANfunctionID
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICcallProcessID
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICcontrolOutcome
+// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs
+// RICcontrolAcknowledge
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICcontrolAcknowledge                    */
 /*                                                */
@@ -10000,29 +10678,13 @@ RICcontrolAcknowledge
 
 */
 xnap_return_et e2ap_encode_RICcontrolAcknowledge(
-                e2ap_RICcontrolAcknowledge_t* p_RICcontrolAcknowledge,
+                e2ap_RICcontrolAcknowledge_t* p_RICcontrolAcknowledge_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICrequestID.ricRequestorID
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICrequestID.ricInstanceID
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICrequestID
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RANfunctionID
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICcallProcessID
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs.RICcontrolOutcome
-// RICcontrolAcknowledge.RICcontrolAcknowledge-IEs
-// RICcontrolAcknowledge
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICcontrolAcknowledge o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICcontrolAcknowledge(p_RICcontrolAcknowledge_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -10040,13 +10702,13 @@ xnap_return_et e2ap_encode_RICcontrolAcknowledge(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICcontrol;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICcontrolAcknowledge;
@@ -10094,7 +10756,7 @@ xnap_return_et e2ap_encode_RICcontrolAcknowledge(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RICrequestID,
-                                &p_RICcontrolAcknowledge->id_RICrequestID)){
+                                &p_RICcontrolAcknowledge_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -10127,7 +10789,7 @@ xnap_return_et e2ap_encode_RICcontrolAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RANfunctionID = p_RICcontrolAcknowledge->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RANfunctionID = &p_RICcontrolAcknowledge_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10153,7 +10815,7 @@ xnap_return_et e2ap_encode_RICcontrolAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcallProcessID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RICcallProcessID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RICcallProcessID = p_RICcontrolAcknowledge->id_RICcallProcessID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RICcallProcessID = &p_RICcontrolAcknowledge_src->id_RICcallProcessID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10179,7 +10841,7 @@ xnap_return_et e2ap_encode_RICcontrolAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcontrolOutcome;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolAcknowledge_IEs_id_RICcontrolOutcome;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RICcontrolOutcome = p_RICcontrolAcknowledge->id_RICcontrolOutcome; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolAcknowledge_IEs_id_RICcontrolOutcome = &p_RICcontrolAcknowledge_src->id_RICcontrolOutcome; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10216,6 +10878,43 @@ xnap_return_et e2ap_encode_RICcontrolAcknowledge(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICcontrolFailure */
+/**************************************************/
+void assign_hardcode_value_RICcontrolFailure(e2ap_RICcontrolFailure_t* p_RICcontrolFailure)
+{
+// RICcontrolFailure.RICcontrolFailure-IEs.RICrequestID.ricRequestorID
+// RICcontrolFailure.RICcontrolFailure-IEs.RICrequestID.ricInstanceID
+// RICcontrolFailure.RICcontrolFailure-IEs.RICrequestID
+// RICcontrolFailure.RICcontrolFailure-IEs.RANfunctionID
+// RICcontrolFailure.RICcontrolFailure-IEs.RICcallProcessID
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseRICrequest
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseRICservice
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseE2node
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseTransport
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseProtocol
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseMisc
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseServiceLayer
+// RICcontrolFailure.RICcontrolFailure-IEs.Cause
+// RICcontrolFailure.RICcontrolFailure-IEs.RICcontrolOutcome
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.Criticality
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics
+// RICcontrolFailure.RICcontrolFailure-IEs
+// RICcontrolFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICcontrolFailure                    */
 /*                                                */
 /**************************************************/
@@ -10249,47 +10948,13 @@ RICcontrolFailure
 
 */
 xnap_return_et e2ap_encode_RICcontrolFailure(
-                e2ap_RICcontrolFailure_t* p_RICcontrolFailure,
+                e2ap_RICcontrolFailure_t* p_RICcontrolFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICcontrolFailure.RICcontrolFailure-IEs.RICrequestID.ricRequestorID
-// RICcontrolFailure.RICcontrolFailure-IEs.RICrequestID.ricInstanceID
-// RICcontrolFailure.RICcontrolFailure-IEs.RICrequestID
-// RICcontrolFailure.RICcontrolFailure-IEs.RANfunctionID
-// RICcontrolFailure.RICcontrolFailure-IEs.RICcallProcessID
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseRICrequest
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseRICservice
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseE2node
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseTransport
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseProtocol
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseMisc
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause.CauseServiceLayer
-// RICcontrolFailure.RICcontrolFailure-IEs.Cause
-// RICcontrolFailure.RICcontrolFailure-IEs.RICcontrolOutcome
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.Criticality
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICcontrolFailure.RICcontrolFailure-IEs.CriticalityDiagnostics
-// RICcontrolFailure.RICcontrolFailure-IEs
-// RICcontrolFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICcontrolFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICcontrolFailure(p_RICcontrolFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -10307,13 +10972,13 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICcontrol;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICcontrolFailure;
@@ -10361,7 +11026,7 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RICrequestID,
-                                &p_RICcontrolFailure->id_RICrequestID)){
+                                &p_RICcontrolFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -10394,7 +11059,7 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RANfunctionID = p_RICcontrolFailure->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RANfunctionID = &p_RICcontrolFailure_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10420,7 +11085,7 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcallProcessID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RICcallProcessID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RICcallProcessID = p_RICcontrolFailure->id_RICcallProcessID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RICcallProcessID = &p_RICcontrolFailure_src->id_RICcallProcessID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10460,7 +11125,7 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_Cause,
-                                &p_RICcontrolFailure->id_Cause)){
+                                &p_RICcontrolFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -10493,7 +11158,7 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcontrolOutcome;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolFailure_IEs_id_RICcontrolOutcome;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RICcontrolOutcome = p_RICcontrolFailure->id_RICcontrolOutcome; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_RICcontrolOutcome = &p_RICcontrolFailure_src->id_RICcontrolOutcome; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10533,7 +11198,7 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICcontrolFailure->id_CriticalityDiagnostics)){
+                                &p_RICcontrolFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -10577,29 +11242,110 @@ xnap_return_et e2ap_encode_RICcontrolFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICcontrolHeader            */
+/*    COMPOSE PRIMITIVE RICcontrolHeader                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICcontrolHeader
-     
-/*****************************************************/
-/*    PRIMITIVE RICcontrolMessage            */
-/*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICcontrolMessage
-     
-/*****************************************************/
-/*    PRIMITIVE RICcontrolAckRequest            */
-/*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICcontrolAckRequest
-   xnap_return_et e2ap_compose_RICcontrolAckRequest( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICcontrolAckRequest  *p_dest,//dest
-                        _e2ap_RICcontrolAckRequest_et  *p_src//src
-)
-{
-    *p_dest = (e2ap_RICcontrolAckRequest)*p_src;
+/* compose primitive - id = 9 - OCTET STRING - RICcontrolHeader*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICcontrolHeader(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICcontrolHeader     *p_dest,
+                        _e2ap_RICcontrolHeader_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICcontrolHeader",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICcontrolHeader numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
     return XNAP_SUCCESS;
 }
-   
+/*****************************************************/
+/*    COMPOSE PRIMITIVE RICcontrolMessage                             */
+/*****************************************************/
+/* compose primitive - id = 9 - OCTET STRING - RICcontrolMessage*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICcontrolMessage(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICcontrolMessage     *p_dest,
+                        _e2ap_RICcontrolMessage_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICcontrolMessage",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICcontrolMessage numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/*****************************************************/
+/*    COMPOSE PRIMITIVE RICcontrolAckRequest                             */
+/*****************************************************/
+/* compose primitive - id = 13 - ENUMERATED - RICcontrolAckRequest*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICcontrolAckRequest(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICcontrolAckRequest     *p_dest,
+                        _e2ap_RICcontrolAckRequest_et *p_src
+){
+    *p_dest = (e2ap_RICcontrolAckRequest)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICcontrolAckRequest value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICcontrolRequest */
+/**************************************************/
+void assign_hardcode_value_RICcontrolRequest(e2ap_RICcontrolRequest_t* p_RICcontrolRequest)
+{
+// RICcontrolRequest.RICcontrolRequest-IEs.RICrequestID.ricRequestorID
+// RICcontrolRequest.RICcontrolRequest-IEs.RICrequestID.ricInstanceID
+// RICcontrolRequest.RICcontrolRequest-IEs.RICrequestID
+// RICcontrolRequest.RICcontrolRequest-IEs.RANfunctionID
+// RICcontrolRequest.RICcontrolRequest-IEs.RICcallProcessID
+// RICcontrolRequest.RICcontrolRequest-IEs.RICcontrolHeader
+// RICcontrolRequest.RICcontrolRequest-IEs.RICcontrolMessage
+// RICcontrolRequest.RICcontrolRequest-IEs.RICcontrolAckRequest
+// RICcontrolRequest.RICcontrolRequest-IEs
+// RICcontrolRequest
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICcontrolRequest                    */
 /*                                                */
@@ -10618,31 +11364,13 @@ RICcontrolRequest
 
 */
 xnap_return_et e2ap_encode_RICcontrolRequest(
-                e2ap_RICcontrolRequest_t* p_RICcontrolRequest,
+                e2ap_RICcontrolRequest_t* p_RICcontrolRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICcontrolRequest.RICcontrolRequest-IEs.RICrequestID.ricRequestorID
-// RICcontrolRequest.RICcontrolRequest-IEs.RICrequestID.ricInstanceID
-// RICcontrolRequest.RICcontrolRequest-IEs.RICrequestID
-// RICcontrolRequest.RICcontrolRequest-IEs.RANfunctionID
-// RICcontrolRequest.RICcontrolRequest-IEs.RICcallProcessID
-// RICcontrolRequest.RICcontrolRequest-IEs.RICcontrolHeader
-// RICcontrolRequest.RICcontrolRequest-IEs.RICcontrolMessage
-// RICcontrolRequest.RICcontrolRequest-IEs.RICcontrolAckRequest
-// RICcontrolRequest.RICcontrolRequest-IEs
-// RICcontrolRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICcontrolRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICcontrolRequest(p_RICcontrolRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -10660,13 +11388,13 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICcontrol;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICcontrolRequest;
@@ -10714,7 +11442,7 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICrequestID,
-                                &p_RICcontrolRequest->id_RICrequestID)){
+                                &p_RICcontrolRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -10747,7 +11475,7 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RANfunctionID = p_RICcontrolRequest->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RANfunctionID = &p_RICcontrolRequest_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10773,7 +11501,7 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcallProcessID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcallProcessID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcallProcessID = p_RICcontrolRequest->id_RICcallProcessID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcallProcessID = &p_RICcontrolRequest_src->id_RICcallProcessID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10799,7 +11527,7 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcontrolHeader;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcontrolHeader;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcontrolHeader = p_RICcontrolRequest->id_RICcontrolHeader; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcontrolHeader = &p_RICcontrolRequest_src->id_RICcontrolHeader; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10825,7 +11553,7 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcontrolMessage;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcontrolMessage;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcontrolMessage = p_RICcontrolRequest->id_RICcontrolMessage; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcontrolMessage = &p_RICcontrolRequest_src->id_RICcontrolMessage; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10851,7 +11579,7 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcontrolAckRequest;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICcontrolRequest_IEs_id_RICcontrolAckRequest;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcontrolAckRequest = p_RICcontrolRequest->id_RICcontrolAckRequest; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICcontrolRequest_IEs_id_RICcontrolAckRequest = &p_RICcontrolRequest_src->id_RICcontrolAckRequest; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -10888,57 +11616,152 @@ xnap_return_et e2ap_encode_RICcontrolRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICactionID            */
+/*    COMPOSE PRIMITIVE RICactionID                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..255) - RICactionID
-  xnap_return_et e2ap_compose_RICactionID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICactionID  *p_dest,//dest
-                        _e2ap_RICactionID_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..255) - RICactionID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICactionID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICactionID     *p_dest,
+                        _e2ap_RICactionID_t  *p_src
+){
     *p_dest = (e2ap_RICactionID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICactionID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE RICindicationSN            */
+/*    COMPOSE PRIMITIVE RICindicationSN                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..65535) - RICindicationSN
-  xnap_return_et e2ap_compose_RICindicationSN(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICindicationSN  *p_dest,//dest
-                        _e2ap_RICindicationSN_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..65535) - RICindicationSN*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICindicationSN(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICindicationSN     *p_dest,
+                        _e2ap_RICindicationSN_t  *p_src
+){
     *p_dest = (e2ap_RICindicationSN)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICindicationSN value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE RICindicationType            */
+/*    COMPOSE PRIMITIVE RICindicationType                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICindicationType
-   xnap_return_et e2ap_compose_RICindicationType( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICindicationType  *p_dest,//dest
-                        _e2ap_RICindicationType_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICindicationType*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICindicationType(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICindicationType     *p_dest,
+                        _e2ap_RICindicationType_et *p_src
+){
     *p_dest = (e2ap_RICindicationType)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICindicationType value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE RICindicationHeader            */
+/*    COMPOSE PRIMITIVE RICindicationHeader                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICindicationHeader
-     
+/* compose primitive - id = 9 - OCTET STRING - RICindicationHeader*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICindicationHeader(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICindicationHeader     *p_dest,
+                        _e2ap_RICindicationHeader_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICindicationHeader",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICindicationHeader numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICindicationMessage            */
+/*    COMPOSE PRIMITIVE RICindicationMessage                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICindicationMessage
-     
+/* compose primitive - id = 9 - OCTET STRING - RICindicationMessage*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICindicationMessage(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICindicationMessage     *p_dest,
+                        _e2ap_RICindicationMessage_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICindicationMessage",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICindicationMessage numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICindication */
+/**************************************************/
+void assign_hardcode_value_RICindication(e2ap_RICindication_t* p_RICindication)
+{
+// RICindication.RICindication-IEs.RICrequestID.ricRequestorID
+// RICindication.RICindication-IEs.RICrequestID.ricInstanceID
+// RICindication.RICindication-IEs.RICrequestID
+// RICindication.RICindication-IEs.RANfunctionID
+// RICindication.RICindication-IEs.RICactionID
+// RICindication.RICindication-IEs.RICindicationSN
+// RICindication.RICindication-IEs.RICindicationType
+// RICindication.RICindication-IEs.RICindicationHeader
+// RICindication.RICindication-IEs.RICindicationMessage
+// RICindication.RICindication-IEs.RICcallProcessID
+// RICindication.RICindication-IEs
+// RICindication
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICindication                    */
 /*                                                */
@@ -10959,33 +11782,13 @@ RICindication
 
 */
 xnap_return_et e2ap_encode_RICindication(
-                e2ap_RICindication_t* p_RICindication,
+                e2ap_RICindication_t* p_RICindication_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICindication.RICindication-IEs.RICrequestID.ricRequestorID
-// RICindication.RICindication-IEs.RICrequestID.ricInstanceID
-// RICindication.RICindication-IEs.RICrequestID
-// RICindication.RICindication-IEs.RANfunctionID
-// RICindication.RICindication-IEs.RICactionID
-// RICindication.RICindication-IEs.RICindicationSN
-// RICindication.RICindication-IEs.RICindicationType
-// RICindication.RICindication-IEs.RICindicationHeader
-// RICindication.RICindication-IEs.RICindicationMessage
-// RICindication.RICindication-IEs.RICcallProcessID
-// RICindication.RICindication-IEs
-// RICindication
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICindication o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICindication(p_RICindication_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -11003,13 +11806,13 @@ xnap_return_et e2ap_encode_RICindication(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICindication;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_ignore;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICindication;
@@ -11057,7 +11860,7 @@ xnap_return_et e2ap_encode_RICindication(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICrequestID,
-                                &p_RICindication->id_RICrequestID)){
+                                &p_RICindication_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -11090,7 +11893,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RANfunctionID = p_RICindication->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RANfunctionID = &p_RICindication_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11116,7 +11919,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICactionID = p_RICindication->id_RICactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICactionID = &p_RICindication_src->id_RICactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11142,7 +11945,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICindicationSN;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationSN;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationSN = p_RICindication->id_RICindicationSN; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationSN = &p_RICindication_src->id_RICindicationSN; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11168,7 +11971,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICindicationType;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationType;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationType = p_RICindication->id_RICindicationType; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationType = &p_RICindication_src->id_RICindicationType; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11194,7 +11997,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICindicationHeader;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationHeader;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationHeader = p_RICindication->id_RICindicationHeader; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationHeader = &p_RICindication_src->id_RICindicationHeader; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11220,7 +12023,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICindicationMessage;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICindicationMessage;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationMessage = p_RICindication->id_RICindicationMessage; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICindicationMessage = &p_RICindication_src->id_RICindicationMessage; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11246,7 +12049,7 @@ xnap_return_et e2ap_encode_RICindication(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICcallProcessID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICindication_IEs_id_RICcallProcessID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICcallProcessID = p_RICindication->id_RICcallProcessID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICindication_IEs_id_RICcallProcessID = &p_RICindication_src->id_RICcallProcessID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11283,47 +12086,65 @@ xnap_return_et e2ap_encode_RICindication(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE LoadMeasurementID            */
+/*    COMPOSE PRIMITIVE LoadMeasurementID                             */
 /*****************************************************/
-// cpmpose primitive - id = 5 - INTEGER (1..4095,...) - LoadMeasurementID
-  xnap_return_et e2ap_compose_LoadMeasurementID(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_LoadMeasurementID  *p_dest,//dest
-                        _e2ap_LoadMeasurementID_t  *p_src//src
-)
-{
+/* compose primitive - id = 5 - INTEGER (1..4095,...) - LoadMeasurementID*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_LoadMeasurementID(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_LoadMeasurementID     *p_dest,
+                        _e2ap_LoadMeasurementID_t  *p_src
+){
     *p_dest = (e2ap_LoadMeasurementID)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER LoadMeasurementID value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /*****************************************************/
-/*    PRIMITIVE RegistrationRequest            */
+/*    COMPOSE PRIMITIVE RegistrationRequest                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RegistrationRequest
-   xnap_return_et e2ap_compose_RegistrationRequest( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RegistrationRequest  *p_dest,//dest
-                        _e2ap_RegistrationRequest_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RegistrationRequest*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RegistrationRequest(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RegistrationRequest     *p_dest,
+                        _e2ap_RegistrationRequest_et *p_src
+){
     *p_dest = (e2ap_RegistrationRequest)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RegistrationRequest value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE RICloadRequest            */
+/*    COMPOSE PRIMITIVE RICloadRequest                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICloadRequest
-   xnap_return_et e2ap_compose_RICloadRequest( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICloadRequest  *p_dest,//dest
-                        _e2ap_RICloadRequest_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICloadRequest*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICloadRequest(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICloadRequest     *p_dest,
+                        _e2ap_RICloadRequest_et *p_src
+){
     *p_dest = (e2ap_RICloadRequest)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICloadRequest value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /************************************************************/
 /*      SEQUENCE RICserviceLoadRequest                */
 /************************************************************/
@@ -11518,18 +12339,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadRequest_ItemIE(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID,
-                                                &p_RICsubscriptionLoadRequest_ItemIE->ricRequestID))
+                                                &p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricRequestID,//dest
+                                                &p_RICsubscriptionLoadRequest_ItemIE->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -11550,18 +12373,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadRequest_ItemIE(
     {  /*SEQ_ELEM-3  Encode ricActionLoadRequest_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoadRequest_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricActionLoadRequest_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICactionLoadRequest_List(&p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICactionLoadRequest_List(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list,
-                                                &p_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list))
+                                                &p_e2ap_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list,//dest
+                                                &p_RICsubscriptionLoadRequest_ItemIE->ricActionLoadRequest_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricActionLoadRequest_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -11668,18 +12493,20 @@ xnap_return_et e2ap_compose_RANfunctionLoadRequest_Item(
     {  /*SEQ_ELEM-3  Encode ricServiceLoadRequest alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadRequest);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceLoadRequest",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICserviceLoadRequest(&p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICserviceLoadRequest(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest,
-                                                &p_RANfunctionLoadRequest_Item->ricServiceLoadRequest))
+                                                &p_e2ap_RANfunctionLoadRequest_Item->ricServiceLoadRequest,//dest
+                                                &p_RANfunctionLoadRequest_Item->ricServiceLoadRequest)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceLoadRequest",__FUNCTION__);
             return XNAP_FAILURE;
@@ -11689,18 +12516,20 @@ xnap_return_et e2ap_compose_RANfunctionLoadRequest_Item(
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoadRequest_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoadRequest_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionLoadRequest_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionLoadRequest_List(&p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionLoadRequest_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list,
-                                                &p_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list))
+                                                &p_e2ap_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list,//dest
+                                                &p_RANfunctionLoadRequest_Item->ricSubscriptionLoadRequest_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionLoadRequest_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -11766,19 +12595,60 @@ xnap_return_et e2ap_compose_RANfunctionLoadRequest_List (
 
 
 /*****************************************************/
-/*    PRIMITIVE ReportingPeriodicity            */
+/*    COMPOSE PRIMITIVE ReportingPeriodicity                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - ReportingPeriodicity
-   xnap_return_et e2ap_compose_ReportingPeriodicity( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_ReportingPeriodicity  *p_dest,//dest
-                        _e2ap_ReportingPeriodicity_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - ReportingPeriodicity*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_ReportingPeriodicity(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_ReportingPeriodicity     *p_dest,
+                        _e2ap_ReportingPeriodicity_et *p_src
+){
     *p_dest = (e2ap_ReportingPeriodicity)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED ReportingPeriodicity value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
+/**************************************************/
+/* assign_value function for RICserviceLoadStatusRequest */
+/**************************************************/
+void assign_hardcode_value_RICserviceLoadStatusRequest(e2ap_RICserviceLoadStatusRequest_t* p_RICserviceLoadStatusRequest)
+{
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.LoadMeasurementID
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RegistrationRequest
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RANfunctionID
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICloadRequest
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICserviceLoadRequest.RICloadRequest
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICserviceLoadRequest
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICrequestID.ricRequestorID
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICrequestID.ricInstanceID
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICrequestID
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICloadRequest
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs.RICactionLoadRequest-Item.RICactionID
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs.RICactionLoadRequest-Item.RICloadRequest
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs.RICactionLoadRequest-Item
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.ReportingPeriodicity
+// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs
+// RICserviceLoadStatusRequest
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICserviceLoadStatusRequest                    */
 /*                                                */
@@ -11816,45 +12686,13 @@ RICserviceLoadStatusRequest
 
 */
 xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
-                e2ap_RICserviceLoadStatusRequest_t* p_RICserviceLoadStatusRequest,
+                e2ap_RICserviceLoadStatusRequest_t* p_RICserviceLoadStatusRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.LoadMeasurementID
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RegistrationRequest
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RANfunctionID
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICloadRequest
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICserviceLoadRequest.RICloadRequest
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICserviceLoadRequest
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICrequestID.ricRequestorID
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICrequestID.ricInstanceID
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICrequestID
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICloadRequest
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs.RICactionLoadRequest-Item.RICactionID
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs.RICactionLoadRequest-Item.RICloadRequest
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs.RICactionLoadRequest-Item
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List.RICactionLoadRequest-ItemIEs
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE.RICactionLoadRequest-List
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs.RICsubscriptionLoadRequest-ItemIE
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List.RICsubscriptionLoadRequest-ItemIEs
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item.RICsubscriptionLoadRequest-List
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs.RANfunctionLoadRequest-Item
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List.RANfunctionLoadRequest-ItemIEs
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.RANfunctionLoadRequest-List
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs.ReportingPeriodicity
-// RICserviceLoadStatusRequest.RICserviceLoadStatusRequest-IEs
-// RICserviceLoadStatusRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceLoadStatusRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceLoadStatusRequest(p_RICserviceLoadStatusRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -11872,13 +12710,13 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICserviceLoadStatus;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_ignore;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceLoadStatusRequest;
@@ -11912,7 +12750,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICloadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_RICloadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_RICloadMeasurementID = p_RICserviceLoadStatusRequest->id_RICloadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_RICloadMeasurementID = &p_RICserviceLoadStatusRequest_src->id_RICloadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11938,7 +12776,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2nodeLoadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_E2nodeLoadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_E2nodeLoadMeasurementID = p_RICserviceLoadStatusRequest->id_E2nodeLoadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_E2nodeLoadMeasurementID = &p_RICserviceLoadStatusRequest_src->id_E2nodeLoadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -11964,7 +12802,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RegistrationRequest;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_RegistrationRequest;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_RegistrationRequest = p_RICserviceLoadStatusRequest->id_RegistrationRequest; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_RegistrationRequest = &p_RICserviceLoadStatusRequest_src->id_RegistrationRequest; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -12004,7 +12842,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
             //message_name.item_type -> type = RANfunctionLoadRequest_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionLoadRequest_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_RANfunctionLoadRequest_List,
-                                &p_RICserviceLoadStatusRequest->id_RANfunctionLoadRequest_List)){
+                                &p_RICserviceLoadStatusRequest_src->id_RANfunctionLoadRequest_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionLoadRequest_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -12037,7 +12875,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_ReportingPeriodicity;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusRequest_IEs_id_ReportingPeriodicity;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_ReportingPeriodicity = p_RICserviceLoadStatusRequest->id_ReportingPeriodicity; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusRequest_IEs_id_ReportingPeriodicity = &p_RICserviceLoadStatusRequest_src->id_ReportingPeriodicity; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -12074,19 +12912,25 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICloadConfirm            */
+/*    COMPOSE PRIMITIVE RICloadConfirm                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICloadConfirm
-   xnap_return_et e2ap_compose_RICloadConfirm( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICloadConfirm  *p_dest,//dest
-                        _e2ap_RICloadConfirm_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICloadConfirm*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICloadConfirm(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICloadConfirm     *p_dest,
+                        _e2ap_RICloadConfirm_et *p_src
+){
     *p_dest = (e2ap_RICloadConfirm)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICloadConfirm value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /************************************************************/
 /*      SEQUENCE RICserviceLoadConfirm                */
 /************************************************************/
@@ -12281,18 +13125,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadConfirm_ItemIE(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID,
-                                                &p_RICsubscriptionLoadConfirm_ItemIE->ricRequestID))
+                                                &p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricRequestID,//dest
+                                                &p_RICsubscriptionLoadConfirm_ItemIE->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -12313,18 +13159,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoadConfirm_ItemIE(
     {  /*SEQ_ELEM-3  Encode ricActionLoadConfirm_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoadConfirm_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricActionLoadConfirm_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICactionLoadConfirm_List(&p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICactionLoadConfirm_List(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list,
-                                                &p_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list))
+                                                &p_e2ap_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list,//dest
+                                                &p_RICsubscriptionLoadConfirm_ItemIE->ricActionLoadConfirm_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricActionLoadConfirm_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -12431,18 +13279,20 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_Item(
     {  /*SEQ_ELEM-3  Encode ricServiceLoadConfirm alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadConfirm);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceLoadConfirm",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICserviceLoadConfirm(&p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICserviceLoadConfirm(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm,
-                                                &p_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm))
+                                                &p_e2ap_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm,//dest
+                                                &p_RANfunctionLoadConfirm_Item->ricServiceLoadConfirm)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceLoadConfirm",__FUNCTION__);
             return XNAP_FAILURE;
@@ -12452,18 +13302,20 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_Item(
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoadConfirm_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoadConfirm_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionLoadConfirm_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionLoadConfirm_List(&p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionLoadConfirm_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list,
-                                                &p_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list))
+                                                &p_e2ap_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list,//dest
+                                                &p_RANfunctionLoadConfirm_Item->ricSubscriptionLoadConfirm_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionLoadConfirm_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -12529,6 +13381,39 @@ xnap_return_et e2ap_compose_RANfunctionLoadConfirm_List (
 
 
 /**************************************************/
+/* assign_value function for RICserviceLoadStatusResponse */
+/**************************************************/
+void assign_hardcode_value_RICserviceLoadStatusResponse(e2ap_RICserviceLoadStatusResponse_t* p_RICserviceLoadStatusResponse)
+{
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.LoadMeasurementID
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RANfunctionID
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICloadConfirm
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICserviceLoadConfirm.RICloadConfirm
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICserviceLoadConfirm
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICrequestID.ricRequestorID
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICrequestID.ricInstanceID
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICrequestID
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICloadConfirm
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs.RICactionLoadConfirm-Item.RICactionID
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs.RICactionLoadConfirm-Item.RICloadConfirm
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs.RICactionLoadConfirm-Item
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List
+// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs
+// RICserviceLoadStatusResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceLoadStatusResponse                    */
 /*                                                */
 /**************************************************/
@@ -12563,43 +13448,13 @@ RICserviceLoadStatusResponse
 
 */
 xnap_return_et e2ap_encode_RICserviceLoadStatusResponse(
-                e2ap_RICserviceLoadStatusResponse_t* p_RICserviceLoadStatusResponse,
+                e2ap_RICserviceLoadStatusResponse_t* p_RICserviceLoadStatusResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.LoadMeasurementID
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RANfunctionID
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICloadConfirm
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICserviceLoadConfirm.RICloadConfirm
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICserviceLoadConfirm
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICrequestID.ricRequestorID
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICrequestID.ricInstanceID
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICrequestID
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICloadConfirm
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs.RICactionLoadConfirm-Item.RICactionID
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs.RICactionLoadConfirm-Item.RICloadConfirm
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs.RICactionLoadConfirm-Item
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List.RICactionLoadConfirm-ItemIEs
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE.RICactionLoadConfirm-List
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs.RICsubscriptionLoadConfirm-ItemIE
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List.RICsubscriptionLoadConfirm-ItemIEs
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item.RICsubscriptionLoadConfirm-List
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs.RANfunctionLoadConfirm-Item
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List.RANfunctionLoadConfirm-ItemIEs
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs.RANfunctionLoadConfirm-List
-// RICserviceLoadStatusResponse.RICserviceLoadStatusResponse-IEs
-// RICserviceLoadStatusResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceLoadStatusResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceLoadStatusResponse(p_RICserviceLoadStatusResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -12617,13 +13472,13 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICserviceLoadStatus;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_ignore;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceLoadStatusResponse;
@@ -12657,7 +13512,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICloadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_id_RICloadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusResponse_IEs_id_RICloadMeasurementID = p_RICserviceLoadStatusResponse->id_RICloadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusResponse_IEs_id_RICloadMeasurementID = &p_RICserviceLoadStatusResponse_src->id_RICloadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -12683,7 +13538,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2nodeLoadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusResponse_IEs_id_E2nodeLoadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusResponse_IEs_id_E2nodeLoadMeasurementID = p_RICserviceLoadStatusResponse->id_E2nodeLoadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusResponse_IEs_id_E2nodeLoadMeasurementID = &p_RICserviceLoadStatusResponse_src->id_E2nodeLoadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -12723,7 +13578,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusResponse(
             //message_name.item_type -> type = RANfunctionLoadConfirm_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionLoadConfirm_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusResponse_IEs_id_RANfunctionLoadConfirm_List,
-                                &p_RICserviceLoadStatusResponse->id_RANfunctionLoadConfirm_List)){
+                                &p_RICserviceLoadStatusResponse_src->id_RANfunctionLoadConfirm_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionLoadConfirm_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -12767,6 +13622,38 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICserviceLoadStatusFailure */
+/**************************************************/
+void assign_hardcode_value_RICserviceLoadStatusFailure(e2ap_RICserviceLoadStatusFailure_t* p_RICserviceLoadStatusFailure)
+{
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.LoadMeasurementID
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseRICrequest
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseRICservice
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseE2node
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseTransport
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseProtocol
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseMisc
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseServiceLayer
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.Criticality
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics
+// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs
+// RICserviceLoadStatusFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceLoadStatusFailure                    */
 /*                                                */
 /**************************************************/
@@ -12796,42 +13683,13 @@ RICserviceLoadStatusFailure
 
 */
 xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
-                e2ap_RICserviceLoadStatusFailure_t* p_RICserviceLoadStatusFailure,
+                e2ap_RICserviceLoadStatusFailure_t* p_RICserviceLoadStatusFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.LoadMeasurementID
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseRICrequest
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseRICservice
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseE2node
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseTransport
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseProtocol
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseMisc
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause.CauseServiceLayer
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.Cause
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.Criticality
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs.CriticalityDiagnostics
-// RICserviceLoadStatusFailure.RICserviceLoadStatusFailure-IEs
-// RICserviceLoadStatusFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceLoadStatusFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceLoadStatusFailure(p_RICserviceLoadStatusFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -12849,13 +13707,13 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICserviceLoadStatus;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_ignore;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceLoadStatusFailure;
@@ -12889,7 +13747,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICloadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_RICloadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusFailure_IEs_id_RICloadMeasurementID = p_RICserviceLoadStatusFailure->id_RICloadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusFailure_IEs_id_RICloadMeasurementID = &p_RICserviceLoadStatusFailure_src->id_RICloadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -12915,7 +13773,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2nodeLoadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadStatusFailure_IEs_id_E2nodeLoadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusFailure_IEs_id_E2nodeLoadMeasurementID = p_RICserviceLoadStatusFailure->id_E2nodeLoadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusFailure_IEs_id_E2nodeLoadMeasurementID = &p_RICserviceLoadStatusFailure_src->id_E2nodeLoadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -12955,7 +13813,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusFailure_IEs_id_Cause,
-                                &p_RICserviceLoadStatusFailure->id_Cause)){
+                                &p_RICserviceLoadStatusFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -13002,7 +13860,7 @@ xnap_return_et e2ap_encode_RICserviceLoadStatusFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadStatusFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICserviceLoadStatusFailure->id_CriticalityDiagnostics)){
+                                &p_RICserviceLoadStatusFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -13131,18 +13989,20 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
     {  /*SEQ_ELEM-1  Encode ricServiceReportLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceReportLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation,
-                                                &p_RICserviceLoadInformation->ricServiceReportLoadInformation))
+                                                &p_e2ap_RICserviceLoadInformation->ricServiceReportLoadInformation,//dest
+                                                &p_RICserviceLoadInformation->ricServiceReportLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceReportLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13152,18 +14012,20 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
     {  /*SEQ_ELEM-2  Encode ricServiceInsertLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceInsertLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation,
-                                                &p_RICserviceLoadInformation->ricServiceInsertLoadInformation))
+                                                &p_e2ap_RICserviceLoadInformation->ricServiceInsertLoadInformation,//dest
+                                                &p_RICserviceLoadInformation->ricServiceInsertLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceInsertLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13173,18 +14035,20 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
     {  /*SEQ_ELEM-3  Encode ricServiceControlLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceControlLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation,
-                                                &p_RICserviceLoadInformation->ricServiceControlLoadInformation))
+                                                &p_e2ap_RICserviceLoadInformation->ricServiceControlLoadInformation,//dest
+                                                &p_RICserviceLoadInformation->ricServiceControlLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceControlLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13194,18 +14058,20 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
     {  /*SEQ_ELEM-4  Encode ricServicePolicyLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServicePolicyLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation,
-                                                &p_RICserviceLoadInformation->ricServicePolicyLoadInformation))
+                                                &p_e2ap_RICserviceLoadInformation->ricServicePolicyLoadInformation,//dest
+                                                &p_RICserviceLoadInformation->ricServicePolicyLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServicePolicyLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13215,18 +14081,20 @@ xnap_return_et e2ap_compose_RICserviceLoadInformation(
     {  /*SEQ_ELEM-5  Encode ricServiceQueryLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceQueryLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation,
-                                                &p_RICserviceLoadInformation->ricServiceQueryLoadInformation))
+                                                &p_e2ap_RICserviceLoadInformation->ricServiceQueryLoadInformation,//dest
+                                                &p_RICserviceLoadInformation->ricServiceQueryLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceQueryLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13269,18 +14137,20 @@ xnap_return_et e2ap_compose_RICactionLoad_Item(
     {  /*SEQ_ELEM-2  Encode ricActionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICactionLoad_Item->ricActionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICactionLoad_Item->ricActionLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricActionLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICactionLoad_Item->ricActionLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICactionLoad_Item->ricActionLoadInformation,
-                                                &p_RICactionLoad_Item->ricActionLoadInformation))
+                                                &p_e2ap_RICactionLoad_Item->ricActionLoadInformation,//dest
+                                                &p_RICactionLoad_Item->ricActionLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricActionLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13365,18 +14235,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID,
-                                                &p_RICsubscriptionLoad_ItemIE->ricRequestID))
+                                                &p_e2ap_RICsubscriptionLoad_ItemIE->ricRequestID,//dest
+                                                &p_RICsubscriptionLoad_ItemIE->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13386,18 +14258,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
     {  /*SEQ_ELEM-2  Encode ricSubscriptionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation,
-                                                &p_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation))
+                                                &p_e2ap_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation,//dest
+                                                &p_RICsubscriptionLoad_ItemIE->ricSubscriptionLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13407,18 +14281,20 @@ xnap_return_et e2ap_compose_RICsubscriptionLoad_ItemIE(
     {  /*SEQ_ELEM-3  Encode ricActionLoad_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICactionLoad_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricActionLoad_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICactionLoad_List(&p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICactionLoad_List(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list,
-                                                &p_RICsubscriptionLoad_ItemIE->ricActionLoad_list))
+                                                &p_e2ap_RICsubscriptionLoad_ItemIE->ricActionLoad_list,//dest
+                                                &p_RICsubscriptionLoad_ItemIE->ricActionLoad_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricActionLoad_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13514,18 +14390,20 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
     {  /*SEQ_ELEM-2  Encode ranFunctionLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICloadInformation);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ranFunctionLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICloadInformation(&p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICloadInformation(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation,
-                                                &p_RANfunctionLoad_Item->ranFunctionLoadInformation))
+                                                &p_e2ap_RANfunctionLoad_Item->ranFunctionLoadInformation,//dest
+                                                &p_RANfunctionLoad_Item->ranFunctionLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ranFunctionLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13535,18 +14413,20 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
     {  /*SEQ_ELEM-3  Encode ricServiceLoadInformation alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation = rtxMemAllocType(p_asn1_ctx, e2ap_RICserviceLoadInformation);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricServiceLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICserviceLoadInformation(&p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICserviceLoadInformation(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation,
-                                                &p_RANfunctionLoad_Item->ricServiceLoadInformation))
+                                                &p_e2ap_RANfunctionLoad_Item->ricServiceLoadInformation,//dest
+                                                &p_RANfunctionLoad_Item->ricServiceLoadInformation)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricServiceLoadInformation",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13556,18 +14436,20 @@ xnap_return_et e2ap_compose_RANfunctionLoad_Item(
     {  /*SEQ_ELEM-4  Encode ricSubscriptionLoad_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionLoad_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionLoad_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionLoad_List(&p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionLoad_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list,
-                                                &p_RANfunctionLoad_Item->ricSubscriptionLoad_list))
+                                                &p_e2ap_RANfunctionLoad_Item->ricSubscriptionLoad_list,//dest
+                                                &p_RANfunctionLoad_Item->ricSubscriptionLoad_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionLoad_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -13633,6 +14515,47 @@ xnap_return_et e2ap_compose_RANfunctionLoad_List (
 
 
 /**************************************************/
+/* assign_value function for RICserviceLoadUpdate */
+/**************************************************/
+void assign_hardcode_value_RICserviceLoadUpdate(e2ap_RICserviceLoadUpdate_t* p_RICserviceLoadUpdate)
+{
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.LoadMeasurementID
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RANfunctionID
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICloadInformation.loadStatus
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICloadInformation.loadEstimate
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICloadInformation
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation.RICloadInformation.loadStatus
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation.RICloadInformation.loadEstimate
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation.RICloadInformation
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICrequestID.ricRequestorID
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICrequestID.ricInstanceID
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICrequestID
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICloadInformation.loadStatus
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICloadInformation.loadEstimate
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICloadInformation
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICactionID
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICloadInformation.loadStatus
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICloadInformation.loadEstimate
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICloadInformation
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List
+// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs
+// RICserviceLoadUpdate
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceLoadUpdate                    */
 /*                                                */
 /**************************************************/
@@ -13683,51 +14606,13 @@ RICserviceLoadUpdate
 
 */
 xnap_return_et e2ap_encode_RICserviceLoadUpdate(
-                e2ap_RICserviceLoadUpdate_t* p_RICserviceLoadUpdate,
+                e2ap_RICserviceLoadUpdate_t* p_RICserviceLoadUpdate_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.LoadMeasurementID
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RANfunctionID
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICloadInformation.loadStatus
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICloadInformation.loadEstimate
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICloadInformation
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation.RICloadInformation.loadStatus
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation.RICloadInformation.loadEstimate
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation.RICloadInformation
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICserviceLoadInformation
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICrequestID.ricRequestorID
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICrequestID.ricInstanceID
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICrequestID
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICloadInformation.loadStatus
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICloadInformation.loadEstimate
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICloadInformation
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICactionID
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICloadInformation.loadStatus
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICloadInformation.loadEstimate
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item.RICloadInformation
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs.RICactionLoad-Item
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List.RICactionLoad-ItemIEs
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE.RICactionLoad-List
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs.RICsubscriptionLoad-ItemIE
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List.RICsubscriptionLoad-ItemIEs
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item.RICsubscriptionLoad-List
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs.RANfunctionLoad-Item
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List.RANfunctionLoad-ItemIEs
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs.RANfunctionLoad-List
-// RICserviceLoadUpdate.RICserviceLoadUpdate-IEs
-// RICserviceLoadUpdate
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceLoadUpdate o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceLoadUpdate(p_RICserviceLoadUpdate_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -13745,13 +14630,13 @@ xnap_return_et e2ap_encode_RICserviceLoadUpdate(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICserviceLoadUpdate;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_ignore;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceLoadUpdate;
@@ -13785,7 +14670,7 @@ xnap_return_et e2ap_encode_RICserviceLoadUpdate(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICloadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_id_RICloadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadUpdate_IEs_id_RICloadMeasurementID = p_RICserviceLoadUpdate->id_RICloadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadUpdate_IEs_id_RICloadMeasurementID = &p_RICserviceLoadUpdate_src->id_RICloadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -13811,7 +14696,7 @@ xnap_return_et e2ap_encode_RICserviceLoadUpdate(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_E2nodeLoadMeasurementID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceLoadUpdate_IEs_id_E2nodeLoadMeasurementID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadUpdate_IEs_id_E2nodeLoadMeasurementID = p_RICserviceLoadUpdate->id_E2nodeLoadMeasurementID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadUpdate_IEs_id_E2nodeLoadMeasurementID = &p_RICserviceLoadUpdate_src->id_E2nodeLoadMeasurementID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -13851,7 +14736,7 @@ xnap_return_et e2ap_encode_RICserviceLoadUpdate(
             //message_name.item_type -> type = RANfunctionLoad_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionLoad_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceLoadUpdate_IEs_id_RANfunctionLoad_List,
-                                &p_RICserviceLoadUpdate->id_RANfunctionLoad_List)){
+                                &p_RICserviceLoadUpdate_src->id_RANfunctionLoad_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionLoad_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -13895,6 +14780,25 @@ xnap_return_et e2ap_encode_RICserviceLoadUpdate(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICserviceQuery */
+/**************************************************/
+void assign_hardcode_value_RICserviceQuery(e2ap_RICserviceQuery_t* p_RICserviceQuery)
+{
+// RICserviceQuery.RICserviceQuery-IEs.TransactionID
+// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
+// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
+// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
+// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs
+// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List
+// RICserviceQuery.RICserviceQuery-IEs
+// RICserviceQuery
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceQuery                    */
 /*                                                */
 /**************************************************/
@@ -13910,29 +14814,13 @@ RICserviceQuery
 
 */
 xnap_return_et e2ap_encode_RICserviceQuery(
-                e2ap_RICserviceQuery_t* p_RICserviceQuery,
+                e2ap_RICserviceQuery_t* p_RICserviceQuery_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceQuery.RICserviceQuery-IEs.TransactionID
-// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
-// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
-// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
-// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs
-// RICserviceQuery.RICserviceQuery-IEs.RANfunctionsID-List
-// RICserviceQuery.RICserviceQuery-IEs
-// RICserviceQuery
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceQuery o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceQuery(p_RICserviceQuery_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -13950,13 +14838,13 @@ xnap_return_et e2ap_encode_RICserviceQuery(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICserviceQuery;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_ignore;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceQuery;
@@ -13990,7 +14878,7 @@ xnap_return_et e2ap_encode_RICserviceQuery(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceQuery_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceQuery_IEs_id_TransactionID = p_RICserviceQuery->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceQuery_IEs_id_TransactionID = &p_RICserviceQuery_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -14030,7 +14918,7 @@ xnap_return_et e2ap_encode_RICserviceQuery(
             //message_name.item_type -> type = RANfunctionsID_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsID_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceQuery_IEs_id_RANfunctionsAccepted,
-                                &p_RICserviceQuery->id_RANfunctionsAccepted)){
+                                &p_RICserviceQuery_src->id_RANfunctionsAccepted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsID_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14074,6 +14962,32 @@ xnap_return_et e2ap_encode_RICserviceQuery(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICserviceUpdate */
+/**************************************************/
+void assign_hardcode_value_RICserviceUpdate(e2ap_RICserviceUpdate_t* p_RICserviceUpdate)
+{
+// RICserviceUpdate.RICserviceUpdate-IEs.TransactionID
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionID
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionDefinition
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionRevision
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionOID
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs
+// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List
+// RICserviceUpdate.RICserviceUpdate-IEs
+// RICserviceUpdate
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceUpdate                    */
 /*                                                */
 /**************************************************/
@@ -14105,36 +15019,13 @@ RICserviceUpdate
 
 */
 xnap_return_et e2ap_encode_RICserviceUpdate(
-                e2ap_RICserviceUpdate_t* p_RICserviceUpdate,
+                e2ap_RICserviceUpdate_t* p_RICserviceUpdate_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceUpdate.RICserviceUpdate-IEs.TransactionID
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionID
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionDefinition
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionRevision
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item.RANfunctionOID
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs.RANfunction-Item
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List.RANfunction-ItemIEs
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctions-List
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs
-// RICserviceUpdate.RICserviceUpdate-IEs.RANfunctionsID-List
-// RICserviceUpdate.RICserviceUpdate-IEs
-// RICserviceUpdate
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceUpdate o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceUpdate(p_RICserviceUpdate_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -14152,13 +15043,13 @@ xnap_return_et e2ap_encode_RICserviceUpdate(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICserviceUpdate;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceUpdate;
@@ -14192,7 +15083,7 @@ xnap_return_et e2ap_encode_RICserviceUpdate(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceUpdate_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdate_IEs_id_TransactionID = p_RICserviceUpdate->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdate_IEs_id_TransactionID = &p_RICserviceUpdate_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -14232,7 +15123,7 @@ xnap_return_et e2ap_encode_RICserviceUpdate(
             //message_name.item_type -> type = RANfunctions_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctions_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdate_IEs_id_RANfunctionsAdded,
-                                &p_RICserviceUpdate->id_RANfunctionsAdded)){
+                                &p_RICserviceUpdate_src->id_RANfunctionsAdded)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctions_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14279,7 +15170,7 @@ xnap_return_et e2ap_encode_RICserviceUpdate(
             //message_name.item_type -> type = RANfunctions_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctions_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdate_IEs_id_RANfunctionsModified,
-                                &p_RICserviceUpdate->id_RANfunctionsModified)){
+                                &p_RICserviceUpdate_src->id_RANfunctionsModified)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctions_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14326,7 +15217,7 @@ xnap_return_et e2ap_encode_RICserviceUpdate(
             //message_name.item_type -> type = RANfunctionsID_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsID_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdate_IEs_id_RANfunctionsDeleted,
-                                &p_RICserviceUpdate->id_RANfunctionsDeleted)){
+                                &p_RICserviceUpdate_src->id_RANfunctionsDeleted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsID_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14370,6 +15261,38 @@ xnap_return_et e2ap_encode_RICserviceUpdate(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICserviceUpdateAcknowledge */
+/**************************************************/
+void assign_hardcode_value_RICserviceUpdateAcknowledge(e2ap_RICserviceUpdateAcknowledge_t* p_RICserviceUpdateAcknowledge)
+{
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.TransactionID
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.RANfunctionID
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICrequest
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICservice
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseE2node
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseTransport
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseProtocol
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseMisc
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List
+// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs
+// RICserviceUpdateAcknowledge
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceUpdateAcknowledge                    */
 /*                                                */
 /**************************************************/
@@ -14398,42 +15321,13 @@ RICserviceUpdateAcknowledge
 
 */
 xnap_return_et e2ap_encode_RICserviceUpdateAcknowledge(
-                e2ap_RICserviceUpdateAcknowledge_t* p_RICserviceUpdateAcknowledge,
+                e2ap_RICserviceUpdateAcknowledge_t* p_RICserviceUpdateAcknowledge_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.TransactionID
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionID
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item.RANfunctionRevision
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs.RANfunctionID-Item
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List.RANfunctionID-ItemIEs
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsID-List
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.RANfunctionID
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICrequest
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseRICservice
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseE2node
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseTransport
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseProtocol
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseMisc
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause.CauseServiceLayer
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item.Cause
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs.RANfunctionIDcause-Item
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List.RANfunctionIDcause-ItemIEs
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs.RANfunctionsIDcause-List
-// RICserviceUpdateAcknowledge.RICserviceUpdateAcknowledge-IEs
-// RICserviceUpdateAcknowledge
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceUpdateAcknowledge o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceUpdateAcknowledge(p_RICserviceUpdateAcknowledge_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -14451,13 +15345,13 @@ xnap_return_et e2ap_encode_RICserviceUpdateAcknowledge(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICserviceUpdate;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceUpdateAcknowledge;
@@ -14491,7 +15385,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceUpdateAcknowledge_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateAcknowledge_IEs_id_TransactionID = p_RICserviceUpdateAcknowledge->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateAcknowledge_IEs_id_TransactionID = &p_RICserviceUpdateAcknowledge_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -14531,7 +15425,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateAcknowledge(
             //message_name.item_type -> type = RANfunctionsID_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsID_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateAcknowledge_IEs_id_RANfunctionsAccepted,
-                                &p_RICserviceUpdateAcknowledge->id_RANfunctionsAccepted)){
+                                &p_RICserviceUpdateAcknowledge_src->id_RANfunctionsAccepted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsID_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14578,7 +15472,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateAcknowledge(
             //message_name.item_type -> type = RANfunctionsIDcause_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionsIDcause_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateAcknowledge_IEs_id_RANfunctionsRejected,
-                                &p_RICserviceUpdateAcknowledge->id_RANfunctionsRejected)){
+                                &p_RICserviceUpdateAcknowledge_src->id_RANfunctionsRejected)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionsIDcause_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14622,6 +15516,39 @@ xnap_return_et e2ap_encode_RICserviceUpdateAcknowledge(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICserviceUpdateFailure */
+/**************************************************/
+void assign_hardcode_value_RICserviceUpdateFailure(e2ap_RICserviceUpdateFailure_t* p_RICserviceUpdateFailure)
+{
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.TransactionID
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseRICrequest
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseRICservice
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseE2node
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseTransport
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseProtocol
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseMisc
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseServiceLayer
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.TimeToWait
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.Criticality
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics
+// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs
+// RICserviceUpdateFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICserviceUpdateFailure                    */
 /*                                                */
 /**************************************************/
@@ -14651,43 +15578,13 @@ RICserviceUpdateFailure
 
 */
 xnap_return_et e2ap_encode_RICserviceUpdateFailure(
-                e2ap_RICserviceUpdateFailure_t* p_RICserviceUpdateFailure,
+                e2ap_RICserviceUpdateFailure_t* p_RICserviceUpdateFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.TransactionID
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseRICrequest
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseRICservice
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseE2node
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseTransport
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseProtocol
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseMisc
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause.CauseServiceLayer
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.Cause
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.TimeToWait
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.Criticality
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs.CriticalityDiagnostics
-// RICserviceUpdateFailure.RICserviceUpdateFailure-IEs
-// RICserviceUpdateFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICserviceUpdateFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICserviceUpdateFailure(p_RICserviceUpdateFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -14705,13 +15602,13 @@ xnap_return_et e2ap_encode_RICserviceUpdateFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICserviceUpdate;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICserviceUpdateFailure;
@@ -14745,7 +15642,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateFailure_IEs_id_TransactionID = p_RICserviceUpdateFailure->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateFailure_IEs_id_TransactionID = &p_RICserviceUpdateFailure_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -14785,7 +15682,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateFailure_IEs_id_Cause,
-                                &p_RICserviceUpdateFailure->id_Cause)){
+                                &p_RICserviceUpdateFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14818,7 +15715,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TimeToWait;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICserviceUpdateFailure_IEs_id_TimeToWait;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateFailure_IEs_id_TimeToWait = p_RICserviceUpdateFailure->id_TimeToWait; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateFailure_IEs_id_TimeToWait = &p_RICserviceUpdateFailure_src->id_TimeToWait; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -14858,7 +15755,7 @@ xnap_return_et e2ap_encode_RICserviceUpdateFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICserviceUpdateFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICserviceUpdateFailure->id_CriticalityDiagnostics)){
+                                &p_RICserviceUpdateFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -14902,6 +15799,41 @@ xnap_return_et e2ap_encode_RICserviceUpdateFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionFailure */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionFailure(e2ap_RICsubscriptionFailure_t* p_RICsubscriptionFailure)
+{
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RICrequestID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RANfunctionID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseRICrequest
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseRICservice
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseE2node
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseTransport
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseProtocol
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseMisc
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseServiceLayer
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.Criticality
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics
+// RICsubscriptionFailure.RICsubscriptionFailure-IEs
+// RICsubscriptionFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionFailure                    */
 /*                                                */
 /**************************************************/
@@ -14933,45 +15865,13 @@ RICsubscriptionFailure
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionFailure(
-                e2ap_RICsubscriptionFailure_t* p_RICsubscriptionFailure,
+                e2ap_RICsubscriptionFailure_t* p_RICsubscriptionFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RICrequestID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.RANfunctionID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseRICrequest
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseRICservice
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseE2node
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseTransport
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseProtocol
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseMisc
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause.CauseServiceLayer
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.Cause
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.Criticality
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs.CriticalityDiagnostics
-// RICsubscriptionFailure.RICsubscriptionFailure-IEs
-// RICsubscriptionFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionFailure(p_RICsubscriptionFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -14989,13 +15889,13 @@ xnap_return_et e2ap_encode_RICsubscriptionFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscription;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionFailure;
@@ -15043,7 +15943,7 @@ xnap_return_et e2ap_encode_RICsubscriptionFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionFailure_IEs_id_RICrequestID,
-                                &p_RICsubscriptionFailure->id_RICrequestID)){
+                                &p_RICsubscriptionFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -15076,7 +15976,7 @@ xnap_return_et e2ap_encode_RICsubscriptionFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionFailure_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionFailure_IEs_id_RANfunctionID = p_RICsubscriptionFailure->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionFailure_IEs_id_RANfunctionID = &p_RICsubscriptionFailure_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -15116,7 +16016,7 @@ xnap_return_et e2ap_encode_RICsubscriptionFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionFailure_IEs_id_Cause,
-                                &p_RICsubscriptionFailure->id_Cause)){
+                                &p_RICsubscriptionFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -15163,7 +16063,7 @@ xnap_return_et e2ap_encode_RICsubscriptionFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICsubscriptionFailure->id_CriticalityDiagnostics)){
+                                &p_RICsubscriptionFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -15207,57 +16107,129 @@ xnap_return_et e2ap_encode_RICsubscriptionFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICeventTriggerDefinition            */
+/*    COMPOSE PRIMITIVE RICeventTriggerDefinition                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICeventTriggerDefinition
-     
+/* compose primitive - id = 9 - OCTET STRING - RICeventTriggerDefinition*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICeventTriggerDefinition(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICeventTriggerDefinition     *p_dest,
+                        _e2ap_RICeventTriggerDefinition_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICeventTriggerDefinition",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICeventTriggerDefinition numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICactionType            */
+/*    COMPOSE PRIMITIVE RICactionType                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICactionType
-   xnap_return_et e2ap_compose_RICactionType( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICactionType  *p_dest,//dest
-                        _e2ap_RICactionType_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICactionType*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICactionType(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICactionType     *p_dest,
+                        _e2ap_RICactionType_et *p_src
+){
     *p_dest = (e2ap_RICactionType)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICactionType value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE RICactionDefinition            */
+/*    COMPOSE PRIMITIVE RICactionDefinition                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICactionDefinition
-     
+/* compose primitive - id = 9 - OCTET STRING - RICactionDefinition*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICactionDefinition(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICactionDefinition     *p_dest,
+                        _e2ap_RICactionDefinition_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICactionDefinition",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICactionDefinition numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICsubsequentActionType            */
+/*    COMPOSE PRIMITIVE RICsubsequentActionType                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICsubsequentActionType
-   xnap_return_et e2ap_compose_RICsubsequentActionType( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICsubsequentActionType  *p_dest,//dest
-                        _e2ap_RICsubsequentActionType_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICsubsequentActionType*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICsubsequentActionType(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICsubsequentActionType     *p_dest,
+                        _e2ap_RICsubsequentActionType_et *p_src
+){
     *p_dest = (e2ap_RICsubsequentActionType)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICsubsequentActionType value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /*****************************************************/
-/*    PRIMITIVE RICtimeToWait            */
+/*    COMPOSE PRIMITIVE RICtimeToWait                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - RICtimeToWait
-   xnap_return_et e2ap_compose_RICtimeToWait( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICtimeToWait  *p_dest,//dest
-                        _e2ap_RICtimeToWait_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - RICtimeToWait*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICtimeToWait(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICtimeToWait     *p_dest,
+                        _e2ap_RICtimeToWait_et *p_src
+){
     *p_dest = (e2ap_RICtimeToWait)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED RICtimeToWait value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /************************************************************/
 /*      SEQUENCE RICsubsequentAction                */
 /************************************************************/
@@ -15303,19 +16275,25 @@ xnap_return_et e2ap_compose_RICsubsequentAction(
 }   
 
 /*****************************************************/
-/*    PRIMITIVE RICactionExecutionOrder            */
+/*    COMPOSE PRIMITIVE RICactionExecutionOrder                             */
 /*****************************************************/
-// cpmpose primitive - id = 6 - INTEGER (0..255) - RICactionExecutionOrder
-  xnap_return_et e2ap_compose_RICactionExecutionOrder(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICactionExecutionOrder  *p_dest,//dest
-                        _e2ap_RICactionExecutionOrder_t  *p_src//src
-)
-{
+/* compose primitive - id = 6 - INTEGER (0..255) - RICactionExecutionOrder*/
+/* ---------------------------------------------------------------------- */
+/*  INTEGER A..B hoặc integer N bits (primitive_id = 5,6)                 */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICactionExecutionOrder(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICactionExecutionOrder     *p_dest,
+                        _e2ap_RICactionExecutionOrder_t  *p_src
+){
     *p_dest = (e2ap_RICactionExecutionOrder)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+        XNAP_TRACE(XNAP_INFO, "%s: dungnm23_compose_debug INTEGER RICactionExecutionOrder value=%u", __FUNCTION__, *p_dest);
+    #endif
+
     return XNAP_SUCCESS;
 }
-    
 /************************************************************/
 /*      SEQUENCE RICaction_ToBeSetup_Item                */
 /************************************************************/
@@ -15369,18 +16347,20 @@ xnap_return_et e2ap_compose_RICaction_ToBeSetup_Item(
     {  /*SEQ_ELEM-4  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubsequentAction",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubsequentAction(&p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubsequentAction(p_asn1_ctx,
-                                                &p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction,
-                                                &p_RICaction_ToBeSetup_Item->ricSubsequentAction))
+                                                &p_e2ap_RICaction_ToBeSetup_Item->ricSubsequentAction,//dest
+                                                &p_RICaction_ToBeSetup_Item->ricSubsequentAction)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubsequentAction",__FUNCTION__);
             return XNAP_FAILURE;
@@ -15487,18 +16467,20 @@ xnap_return_et e2ap_compose_RICsubscriptionDetails(
     {  /*SEQ_ELEM-2  Encode ricAction_ToBeSetup_List alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List = rtxMemAllocType(p_asn1_ctx, e2ap_RICactions_ToBeSetup_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricAction_ToBeSetup_List",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICactions_ToBeSetup_List(&p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICactions_ToBeSetup_List(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List,
-                                                &p_RICsubscriptionDetails->ricAction_ToBeSetup_List))
+                                                &p_e2ap_RICsubscriptionDetails->ricAction_ToBeSetup_List,//dest
+                                                &p_RICsubscriptionDetails->ricAction_ToBeSetup_List)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricAction_ToBeSetup_List",__FUNCTION__);
             return XNAP_FAILURE;
@@ -15511,21 +16493,56 @@ xnap_return_et e2ap_compose_RICsubscriptionDetails(
 }   
 
 /*****************************************************/
-/*    PRIMITIVE RICsubscriptionTime            */
+/*    COMPOSE PRIMITIVE RICsubscriptionTime                             */
 /*****************************************************/
-// cpmpose primitive - id = 8 - OCTET STRING (SIZE(8)) - RICsubscriptionTime
-    xnap_return_et e2ap_compose_RICsubscriptionTime(
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_RICsubscriptionTime  *p_dest,//dest
-                        _e2ap_RICsubscriptionTime_t  *p_src//src
-)
-{
-    p_dest->numocts = RICsubscriptionTime_MAX_BYTES;
-    //memcpy(p_dest->data, p_src->data, p_src->numocts);
-    XNAP_MEMCPY(p_dest->data, p_src->RICsubscriptionTime, RICsubscriptionTime_MAX_BYTES);
+/* compose primitive - id = 8 - OCTET STRING (SIZE(8)) - RICsubscriptionTime*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING SIZE(N) – FIXED (primitive_id = 8)                       */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICsubscriptionTime(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICsubscriptionTime     *p_dest,
+                        _e2ap_RICsubscriptionTime_t  *p_src
+){
+    p_dest->numocts = p_src->numocts;  // hoặc 8, tùy ASN
+    XNAP_MEMCPY(p_dest->data, p_src->data, p_src->numocts);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICsubscriptionTime numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
     return XNAP_SUCCESS;
 }
-  
+/**************************************************/
+/* assign_value function for RICsubscriptionRequest */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionRequest(e2ap_RICsubscriptionRequest_t* p_RICsubscriptionRequest)
+{
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICrequestID
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RANfunctionID
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICeventTriggerDefinition
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionID
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionType
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionDefinition
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICsubsequentAction.RICsubsequentActionType
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICsubsequentAction.RICtimeToWait
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICsubsequentAction
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionExecutionOrder
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionTime
+// RICsubscriptionRequest.RICsubscriptionRequest-IEs
+// RICsubscriptionRequest
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICsubscriptionRequest                    */
 /*                                                */
@@ -15554,40 +16571,13 @@ RICsubscriptionRequest
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionRequest(
-                e2ap_RICsubscriptionRequest_t* p_RICsubscriptionRequest,
+                e2ap_RICsubscriptionRequest_t* p_RICsubscriptionRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICrequestID
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RANfunctionID
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICeventTriggerDefinition
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionID
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionType
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionDefinition
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICsubsequentAction.RICsubsequentActionType
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICsubsequentAction.RICtimeToWait
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICsubsequentAction
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item.RICactionExecutionOrder
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs.RICaction-ToBeSetup-Item
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List.RICaction-ToBeSetup-ItemIEs
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails.RICactions-ToBeSetup-List
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionDetails
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs.RICsubscriptionTime
-// RICsubscriptionRequest.RICsubscriptionRequest-IEs
-// RICsubscriptionRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionRequest(p_RICsubscriptionRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -15605,13 +16595,13 @@ xnap_return_et e2ap_encode_RICsubscriptionRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscription;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionRequest;
@@ -15659,7 +16649,7 @@ xnap_return_et e2ap_encode_RICsubscriptionRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RICrequestID,
-                                &p_RICsubscriptionRequest->id_RICrequestID)){
+                                &p_RICsubscriptionRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -15692,7 +16682,7 @@ xnap_return_et e2ap_encode_RICsubscriptionRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RANfunctionID = p_RICsubscriptionRequest->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RANfunctionID = &p_RICsubscriptionRequest_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -15732,7 +16722,7 @@ xnap_return_et e2ap_encode_RICsubscriptionRequest(
             //message_name.item_type -> type = RICsubscriptionDetails
             if(XNAP_FAILURE == e2ap_compose_RICsubscriptionDetails(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RICsubscriptionDetails,
-                                &p_RICsubscriptionRequest->id_RICsubscriptionDetails)){
+                                &p_RICsubscriptionRequest_src->id_RICsubscriptionDetails)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscriptionDetails",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -15765,7 +16755,7 @@ xnap_return_et e2ap_encode_RICsubscriptionRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICsubscriptionStartTime;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RICsubscriptionStartTime;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RICsubscriptionStartTime = p_RICsubscriptionRequest->id_RICsubscriptionStartTime; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RICsubscriptionStartTime = &p_RICsubscriptionRequest_src->id_RICsubscriptionStartTime; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -15791,7 +16781,7 @@ xnap_return_et e2ap_encode_RICsubscriptionRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICsubscriptionEndTime;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionRequest_IEs_id_RICsubscriptionEndTime;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RICsubscriptionEndTime = p_RICsubscriptionRequest->id_RICsubscriptionEndTime; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionRequest_IEs_id_RICsubscriptionEndTime = &p_RICsubscriptionRequest_src->id_RICsubscriptionEndTime; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -15944,18 +16934,20 @@ xnap_return_et e2ap_compose_RICaction_NotAdmitted_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_NotAdmitted_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_NotAdmitted_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_NotAdmitted_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_NotAdmitted_Item->cause,
-                                                &p_RICaction_NotAdmitted_Item->cause))
+                                                &p_e2ap_RICaction_NotAdmitted_Item->cause,//dest
+                                                &p_RICaction_NotAdmitted_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -16021,6 +17013,40 @@ xnap_return_et e2ap_compose_RICaction_NotAdmitted_List (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionResponse */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionResponse(e2ap_RICsubscriptionResponse_t* p_RICsubscriptionResponse)
+{
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICrequestID
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RANfunctionID
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item.RICactionID
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List.RICaction-Admitted-ItemIEs
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.RICactionID
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseRICrequest
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseRICservice
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseE2node
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseTransport
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseProtocol
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseMisc
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseServiceLayer
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List
+// RICsubscriptionResponse.RICsubscriptionResponse-IEs
+// RICsubscriptionResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionResponse                    */
 /*                                                */
 /**************************************************/
@@ -16051,44 +17077,13 @@ RICsubscriptionResponse
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionResponse(
-                e2ap_RICsubscriptionResponse_t* p_RICsubscriptionResponse,
+                e2ap_RICsubscriptionResponse_t* p_RICsubscriptionResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICrequestID
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RANfunctionID
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item.RICactionID
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List.RICaction-Admitted-ItemIEs
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-Admitted-List
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.RICactionID
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseRICrequest
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseRICservice
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseE2node
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseTransport
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseProtocol
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseMisc
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause.CauseServiceLayer
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item.Cause
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs.RICaction-NotAdmitted-Item
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List.RICaction-NotAdmitted-ItemIEs
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs.RICaction-NotAdmitted-List
-// RICsubscriptionResponse.RICsubscriptionResponse-IEs
-// RICsubscriptionResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionResponse(p_RICsubscriptionResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -16106,13 +17101,13 @@ xnap_return_et e2ap_encode_RICsubscriptionResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscription;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionResponse;
@@ -16160,7 +17155,7 @@ xnap_return_et e2ap_encode_RICsubscriptionResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionResponse_IEs_id_RICrequestID,
-                                &p_RICsubscriptionResponse->id_RICrequestID)){
+                                &p_RICsubscriptionResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16193,7 +17188,7 @@ xnap_return_et e2ap_encode_RICsubscriptionResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionResponse_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionResponse_IEs_id_RANfunctionID = p_RICsubscriptionResponse->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionResponse_IEs_id_RANfunctionID = &p_RICsubscriptionResponse_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -16233,7 +17228,7 @@ xnap_return_et e2ap_encode_RICsubscriptionResponse(
             //message_name.item_type -> type = RICaction_Admitted_List
             if(XNAP_FAILURE == e2ap_compose_RICaction_Admitted_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionResponse_IEs_id_RICactions_Admitted,
-                                &p_RICsubscriptionResponse->id_RICactions_Admitted)){
+                                &p_RICsubscriptionResponse_src->id_RICactions_Admitted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICaction_Admitted_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16280,7 +17275,7 @@ xnap_return_et e2ap_encode_RICsubscriptionResponse(
             //message_name.item_type -> type = RICaction_NotAdmitted_List
             if(XNAP_FAILURE == e2ap_compose_RICaction_NotAdmitted_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionResponse_IEs_id_RICactions_NotAdmitted,
-                                &p_RICsubscriptionResponse->id_RICactions_NotAdmitted)){
+                                &p_RICsubscriptionResponse_src->id_RICactions_NotAdmitted)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICaction_NotAdmitted_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16324,6 +17319,40 @@ xnap_return_et e2ap_encode_RICsubscriptionResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionAuditFailure */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionAuditFailure(e2ap_RICsubscriptionAuditFailure_t* p_RICsubscriptionAuditFailure)
+{
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.RICrequestID
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseRICrequest
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseRICservice
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseE2node
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseTransport
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseProtocol
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseMisc
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseServiceLayer
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.Criticality
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics
+// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs
+// RICsubscriptionAuditFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionAuditFailure                    */
 /*                                                */
 /**************************************************/
@@ -16354,44 +17383,13 @@ RICsubscriptionAuditFailure
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionAuditFailure(
-                e2ap_RICsubscriptionAuditFailure_t* p_RICsubscriptionAuditFailure,
+                e2ap_RICsubscriptionAuditFailure_t* p_RICsubscriptionAuditFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.RICrequestID
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseRICrequest
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseRICservice
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseE2node
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseTransport
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseProtocol
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseMisc
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause.CauseServiceLayer
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.Cause
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.Criticality
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs.CriticalityDiagnostics
-// RICsubscriptionAuditFailure.RICsubscriptionAuditFailure-IEs
-// RICsubscriptionAuditFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionAuditFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionAuditFailure(p_RICsubscriptionAuditFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -16409,13 +17407,13 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionAudit;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionAuditFailure;
@@ -16463,7 +17461,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditFailure_IEs_id_RICrequestID,
-                                &p_RICsubscriptionAuditFailure->id_RICrequestID)){
+                                &p_RICsubscriptionAuditFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16510,7 +17508,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditFailure_IEs_id_Cause,
-                                &p_RICsubscriptionAuditFailure->id_Cause)){
+                                &p_RICsubscriptionAuditFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16557,7 +17555,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICsubscriptionAuditFailure->id_CriticalityDiagnostics)){
+                                &p_RICsubscriptionAuditFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16601,19 +17599,25 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE ListedRecordsOnly            */
+/*    COMPOSE PRIMITIVE ListedRecordsOnly                             */
 /*****************************************************/
-// cpmpose primitive - id = 13 - ENUMERATED - ListedRecordsOnly
-   xnap_return_et e2ap_compose_ListedRecordsOnly( // compose primitive enum
-                        OSCTXT                        *p_asn1_ctx,
-                        e2ap_ListedRecordsOnly  *p_dest,//dest
-                        _e2ap_ListedRecordsOnly_et  *p_src//src
-)
-{
+/* compose primitive - id = 13 - ENUMERATED - ListedRecordsOnly*/
+/* ---------------------------------------------------------------------- */
+/*  ENUMERATED (primitive_id = 13)                                        */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_ListedRecordsOnly(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_ListedRecordsOnly     *p_dest,
+                        _e2ap_ListedRecordsOnly_et *p_src
+){
     *p_dest = (e2ap_ListedRecordsOnly)*p_src;
+
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED ListedRecordsOnly value=%u", __FUNCTION__, *p_dest);
+    #endif
+    
     return XNAP_SUCCESS;
 }
-   
 /************************************************************/
 /*      SEQUENCE RICsubscriptionAuditFlag                */
 /************************************************************/
@@ -16667,18 +17671,20 @@ xnap_return_et e2ap_compose_RICsubscriptionAudit_Item(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionAudit_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAudit_Item->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscriptionAudit_Item->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionAudit_Item->ricRequestID,
-                                                &p_RICsubscriptionAudit_Item->ricRequestID))
+                                                &p_e2ap_RICsubscriptionAudit_Item->ricRequestID,//dest
+                                                &p_RICsubscriptionAudit_Item->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -16755,6 +17761,31 @@ xnap_return_et e2ap_compose_RICsubscriptionAuditList (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionAuditRequest */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionAuditRequest(e2ap_RICsubscriptionAuditRequest_t* p_RICsubscriptionAuditRequest)
+{
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICrequestID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditFlag.ListedRecordsOnly
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditFlag
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricRequestorID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricInstanceID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RANfunctionID
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList
+// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs
+// RICsubscriptionAuditRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionAuditRequest                    */
 /*                                                */
 /**************************************************/
@@ -16776,35 +17807,13 @@ RICsubscriptionAuditRequest
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionAuditRequest(
-                e2ap_RICsubscriptionAuditRequest_t* p_RICsubscriptionAuditRequest,
+                e2ap_RICsubscriptionAuditRequest_t* p_RICsubscriptionAuditRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICrequestID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditFlag.ListedRecordsOnly
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditFlag
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricRequestorID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricInstanceID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RANfunctionID
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs.RICsubscriptionAuditList
-// RICsubscriptionAuditRequest.RICsubscriptionAuditRequest-IEs
-// RICsubscriptionAuditRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionAuditRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionAuditRequest(p_RICsubscriptionAuditRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -16822,13 +17831,13 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscriptionAudit;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionAuditRequest;
@@ -16876,7 +17885,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditRequest_IEs_id_RICrequestID,
-                                &p_RICsubscriptionAuditRequest->id_RICrequestID)){
+                                &p_RICsubscriptionAuditRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16923,7 +17932,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditRequest(
             //message_name.item_type -> type = RICsubscriptionAuditFlag
             if(XNAP_FAILURE == e2ap_compose_RICsubscriptionAuditFlag(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditRequest_IEs_id_RICsubscriptionAuditFlag,
-                                &p_RICsubscriptionAuditRequest->id_RICsubscriptionAuditFlag)){
+                                &p_RICsubscriptionAuditRequest_src->id_RICsubscriptionAuditFlag)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscriptionAuditFlag",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -16970,7 +17979,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditRequest(
             //message_name.item_type -> type = RICsubscriptionAuditList
             if(XNAP_FAILURE == e2ap_compose_RICsubscriptionAuditList(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditRequest_IEs_id_RICsubscriptionAuditList,
-                                &p_RICsubscriptionAuditRequest->id_RICsubscriptionAuditList)){
+                                &p_RICsubscriptionAuditRequest_src->id_RICsubscriptionAuditList)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscriptionAuditList",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17033,18 +18042,20 @@ xnap_return_et e2ap_compose_RICsubscriptionAuditAction_Item(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID,
-                                                &p_RICsubscriptionAuditAction_Item->ricRequestID))
+                                                &p_e2ap_RICsubscriptionAuditAction_Item->ricRequestID,//dest
+                                                &p_RICsubscriptionAuditAction_Item->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -17065,18 +18076,20 @@ xnap_return_et e2ap_compose_RICsubscriptionAuditAction_Item(
     {  /*SEQ_ELEM-3  Encode ricAction_Admitted_List alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List = rtxMemAllocType(p_asn1_ctx, e2ap_RICaction_Admitted_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricAction_Admitted_List",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICaction_Admitted_List(&p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICaction_Admitted_List(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List,
-                                                &p_RICsubscriptionAuditAction_Item->ricAction_Admitted_List))
+                                                &p_e2ap_RICsubscriptionAuditAction_Item->ricAction_Admitted_List,//dest
+                                                &p_RICsubscriptionAuditAction_Item->ricAction_Admitted_List)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricAction_Admitted_List",__FUNCTION__);
             return XNAP_FAILURE;
@@ -17142,6 +18155,40 @@ xnap_return_et e2ap_compose_RICsubscriptionAuditActionList (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionAuditResponse */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionAuditResponse(e2ap_RICsubscriptionAuditResponse_t* p_RICsubscriptionAuditResponse)
+{
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICrequestID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICrequestID.ricRequestorID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICrequestID.ricInstanceID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICrequestID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RANfunctionID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item.RICactionID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List.RICaction-Admitted-ItemIEs
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricRequestorID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricInstanceID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RANfunctionID
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList
+// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs
+// RICsubscriptionAuditResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionAuditResponse                    */
 /*                                                */
 /**************************************************/
@@ -17183,44 +18230,13 @@ RICsubscriptionAuditResponse
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
-                e2ap_RICsubscriptionAuditResponse_t* p_RICsubscriptionAuditResponse,
+                e2ap_RICsubscriptionAuditResponse_t* p_RICsubscriptionAuditResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICrequestID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICrequestID.ricRequestorID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICrequestID.ricInstanceID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICrequestID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RANfunctionID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item.RICactionID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List.RICaction-Admitted-ItemIEs.RICaction-Admitted-Item
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List.RICaction-Admitted-ItemIEs
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item.RICaction-Admitted-List
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs.RICsubscriptionAuditAction-Item
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList.RICsubscriptionAuditAction-ItemIEs
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditActionList
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricRequestorID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID.ricInstanceID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RICrequestID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item.RANfunctionID
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs.RICsubscriptionAudit-Item
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList.RICsubscriptionAudit-ItemIEs
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs.RICsubscriptionAuditList
-// RICsubscriptionAuditResponse.RICsubscriptionAuditResponse-IEs
-// RICsubscriptionAuditResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionAuditResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionAuditResponse(p_RICsubscriptionAuditResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -17238,13 +18254,13 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionAudit;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionAuditResponse;
@@ -17292,7 +18308,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditResponse_IEs_id_RICrequestID,
-                                &p_RICsubscriptionAuditResponse->id_RICrequestID)){
+                                &p_RICsubscriptionAuditResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17339,7 +18355,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
             //message_name.item_type -> type = RICsubscriptionAuditActionList
             if(XNAP_FAILURE == e2ap_compose_RICsubscriptionAuditActionList(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditConfirmedList,
-                                &p_RICsubscriptionAuditResponse->id_RICsubscriptionAuditConfirmedList)){
+                                &p_RICsubscriptionAuditResponse_src->id_RICsubscriptionAuditConfirmedList)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscriptionAuditActionList",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17386,7 +18402,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
             //message_name.item_type -> type = RICsubscriptionAuditList
             if(XNAP_FAILURE == e2ap_compose_RICsubscriptionAuditList(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditUnkownList,
-                                &p_RICsubscriptionAuditResponse->id_RICsubscriptionAuditUnkownList)){
+                                &p_RICsubscriptionAuditResponse_src->id_RICsubscriptionAuditUnkownList)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscriptionAuditList",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17433,7 +18449,7 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
             //message_name.item_type -> type = RICsubscriptionAuditActionList
             if(XNAP_FAILURE == e2ap_compose_RICsubscriptionAuditActionList(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionAuditResponse_IEs_id_RICsubscriptionAuditMissingList,
-                                &p_RICsubscriptionAuditResponse->id_RICsubscriptionAuditMissingList)){
+                                &p_RICsubscriptionAuditResponse_src->id_RICsubscriptionAuditMissingList)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscriptionAuditActionList",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17477,6 +18493,41 @@ xnap_return_et e2ap_encode_RICsubscriptionAuditResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionDeleteFailure */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionDeleteFailure(e2ap_RICsubscriptionDeleteFailure_t* p_RICsubscriptionDeleteFailure)
+{
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RICrequestID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RANfunctionID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseRICrequest
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseRICservice
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseE2node
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseTransport
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseProtocol
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseMisc
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseServiceLayer
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.Criticality
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics
+// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs
+// RICsubscriptionDeleteFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionDeleteFailure                    */
 /*                                                */
 /**************************************************/
@@ -17508,45 +18559,13 @@ RICsubscriptionDeleteFailure
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
-                e2ap_RICsubscriptionDeleteFailure_t* p_RICsubscriptionDeleteFailure,
+                e2ap_RICsubscriptionDeleteFailure_t* p_RICsubscriptionDeleteFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RICrequestID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.RANfunctionID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseRICrequest
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseRICservice
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseE2node
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseTransport
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseProtocol
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseMisc
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause.CauseServiceLayer
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.Cause
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.Criticality
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs.CriticalityDiagnostics
-// RICsubscriptionDeleteFailure.RICsubscriptionDeleteFailure-IEs
-// RICsubscriptionDeleteFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionDeleteFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionDeleteFailure(p_RICsubscriptionDeleteFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -17564,13 +18583,13 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionDelete;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionDeleteFailure;
@@ -17618,7 +18637,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteFailure_IEs_id_RICrequestID,
-                                &p_RICsubscriptionDeleteFailure->id_RICrequestID)){
+                                &p_RICsubscriptionDeleteFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17651,7 +18670,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteFailure_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteFailure_IEs_id_RANfunctionID = p_RICsubscriptionDeleteFailure->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteFailure_IEs_id_RANfunctionID = &p_RICsubscriptionDeleteFailure_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -17691,7 +18710,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteFailure_IEs_id_Cause,
-                                &p_RICsubscriptionDeleteFailure->id_Cause)){
+                                &p_RICsubscriptionDeleteFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17738,7 +18757,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICsubscriptionDeleteFailure->id_CriticalityDiagnostics)){
+                                &p_RICsubscriptionDeleteFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17782,6 +18801,23 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionDeleteRequest */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionDeleteRequest(e2ap_RICsubscriptionDeleteRequest_t* p_RICsubscriptionDeleteRequest)
+{
+// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RICrequestID
+// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RANfunctionID
+// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs
+// RICsubscriptionDeleteRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionDeleteRequest                    */
 /*                                                */
 /**************************************************/
@@ -17795,27 +18831,13 @@ RICsubscriptionDeleteRequest
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionDeleteRequest(
-                e2ap_RICsubscriptionDeleteRequest_t* p_RICsubscriptionDeleteRequest,
+                e2ap_RICsubscriptionDeleteRequest_t* p_RICsubscriptionDeleteRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RICrequestID
-// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs.RANfunctionID
-// RICsubscriptionDeleteRequest.RICsubscriptionDeleteRequest-IEs
-// RICsubscriptionDeleteRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionDeleteRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionDeleteRequest(p_RICsubscriptionDeleteRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -17833,13 +18855,13 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscriptionDelete;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionDeleteRequest;
@@ -17887,7 +18909,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteRequest_IEs_id_RICrequestID,
-                                &p_RICsubscriptionDeleteRequest->id_RICrequestID)){
+                                &p_RICsubscriptionDeleteRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -17920,7 +18942,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteRequest_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteRequest_IEs_id_RANfunctionID = p_RICsubscriptionDeleteRequest->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteRequest_IEs_id_RANfunctionID = &p_RICsubscriptionDeleteRequest_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -17957,6 +18979,23 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionDeleteResponse */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionDeleteResponse(e2ap_RICsubscriptionDeleteResponse_t* p_RICsubscriptionDeleteResponse)
+{
+// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RICrequestID
+// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RANfunctionID
+// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs
+// RICsubscriptionDeleteResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionDeleteResponse                    */
 /*                                                */
 /**************************************************/
@@ -17970,27 +19009,13 @@ RICsubscriptionDeleteResponse
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionDeleteResponse(
-                e2ap_RICsubscriptionDeleteResponse_t* p_RICsubscriptionDeleteResponse,
+                e2ap_RICsubscriptionDeleteResponse_t* p_RICsubscriptionDeleteResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RICrequestID
-// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs.RANfunctionID
-// RICsubscriptionDeleteResponse.RICsubscriptionDeleteResponse-IEs
-// RICsubscriptionDeleteResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionDeleteResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionDeleteResponse(p_RICsubscriptionDeleteResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -18008,13 +19033,13 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionDelete;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionDeleteResponse;
@@ -18062,7 +19087,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteResponse_IEs_id_RICrequestID,
-                                &p_RICsubscriptionDeleteResponse->id_RICrequestID)){
+                                &p_RICsubscriptionDeleteResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -18095,7 +19120,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionDeleteResponse_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteResponse_IEs_id_RANfunctionID = p_RICsubscriptionDeleteResponse->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteResponse_IEs_id_RANfunctionID = &p_RICsubscriptionDeleteResponse_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -18151,18 +19176,20 @@ xnap_return_et e2ap_compose_RICsubscription_withCause_Item(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscription_withCause_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscription_withCause_Item->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscription_withCause_Item->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscription_withCause_Item->ricRequestID,
-                                                &p_RICsubscription_withCause_Item->ricRequestID))
+                                                &p_e2ap_RICsubscription_withCause_Item->ricRequestID,//dest
+                                                &p_RICsubscription_withCause_Item->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -18183,18 +19210,20 @@ xnap_return_et e2ap_compose_RICsubscription_withCause_Item(
     {  /*SEQ_ELEM-3  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscription_withCause_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICsubscription_withCause_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICsubscription_withCause_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICsubscription_withCause_Item->cause,
-                                                &p_RICsubscription_withCause_Item->cause))
+                                                &p_e2ap_RICsubscription_withCause_Item->cause,//dest
+                                                &p_RICsubscription_withCause_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -18260,6 +19289,35 @@ xnap_return_et e2ap_compose_RICsubscription_List_withCause (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionDeleteRequired */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionDeleteRequired(e2ap_RICsubscriptionDeleteRequired_t* p_RICsubscriptionDeleteRequired)
+{
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RICrequestID.ricRequestorID
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RICrequestID.ricInstanceID
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RICrequestID
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RANfunctionID
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseRICrequest
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseRICservice
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseE2node
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseTransport
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseProtocol
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseMisc
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseServiceLayer
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause
+// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs
+// RICsubscriptionDeleteRequired
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionDeleteRequired                    */
 /*                                                */
 /**************************************************/
@@ -18285,39 +19343,13 @@ RICsubscriptionDeleteRequired
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionDeleteRequired(
-                e2ap_RICsubscriptionDeleteRequired_t* p_RICsubscriptionDeleteRequired,
+                e2ap_RICsubscriptionDeleteRequired_t* p_RICsubscriptionDeleteRequired_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RICrequestID.ricRequestorID
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RICrequestID.ricInstanceID
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RICrequestID
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.RANfunctionID
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseRICrequest
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseRICservice
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseE2node
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseTransport
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseProtocol
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseMisc
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause.CauseServiceLayer
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item.Cause
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs.RICsubscription-withCause-Item
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause.RICsubscription-withCause-ItemIEs
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs.RICsubscription-List-withCause
-// RICsubscriptionDeleteRequired.RICsubscriptionDeleteRequired-IEs
-// RICsubscriptionDeleteRequired
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionDeleteRequired o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionDeleteRequired(p_RICsubscriptionDeleteRequired_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -18335,13 +19367,13 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteRequired(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscriptionDeleteRequired;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_ignore;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionDeleteRequired;
@@ -18389,7 +19421,7 @@ xnap_return_et e2ap_encode_RICsubscriptionDeleteRequired(
             //message_name.item_type -> type = RICsubscription_List_withCause
             if(XNAP_FAILURE == e2ap_compose_RICsubscription_List_withCause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionDeleteRequired_IEs_id_RICsubscriptionToBeRemoved,
-                                &p_RICsubscriptionDeleteRequired->id_RICsubscriptionToBeRemoved)){
+                                &p_RICsubscriptionDeleteRequired_src->id_RICsubscriptionToBeRemoved)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICsubscription_List_withCause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -18571,18 +19603,20 @@ xnap_return_et e2ap_compose_RICaction_ToBeModifiedForModification_Item(
     {  /*SEQ_ELEM-4  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubsequentAction",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubsequentAction(&p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubsequentAction(p_asn1_ctx,
-                                                &p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction,
-                                                &p_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction))
+                                                &p_e2ap_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction,//dest
+                                                &p_RICaction_ToBeModifiedForModification_Item->ricSubsequentAction)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubsequentAction",__FUNCTION__);
             return XNAP_FAILURE;
@@ -18711,18 +19745,20 @@ xnap_return_et e2ap_compose_RICaction_ToBeAddedForModification_Item(
     {  /*SEQ_ELEM-5  Encode ricSubsequentAction alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubsequentAction);
         if(XNAP_P_NULL == p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubsequentAction",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubsequentAction(&p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubsequentAction(p_asn1_ctx,
-                                                &p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction,
-                                                &p_RICaction_ToBeAddedForModification_Item->ricSubsequentAction))
+                                                &p_e2ap_RICaction_ToBeAddedForModification_Item->ricSubsequentAction,//dest
+                                                &p_RICaction_ToBeAddedForModification_Item->ricSubsequentAction)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubsequentAction",__FUNCTION__);
             return XNAP_FAILURE;
@@ -18788,6 +19824,47 @@ xnap_return_et e2ap_compose_RICactions_ToBeAddedForModification_List (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionModificationRequest */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionModificationRequest(e2ap_RICsubscriptionModificationRequest_t* p_RICsubscriptionModificationRequest)
+{
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICrequestID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RANfunctionID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICeventTriggerDefinition
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List.RICaction-ToBeRemovedForModification-ItemIEs.RICaction-ToBeRemovedForModification-Item.RICactionID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List.RICaction-ToBeRemovedForModification-ItemIEs.RICaction-ToBeRemovedForModification-Item
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List.RICaction-ToBeRemovedForModification-ItemIEs
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICactionID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICactionDefinition
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICactionExecutionOrder
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICsubsequentAction.RICsubsequentActionType
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICsubsequentAction.RICtimeToWait
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICsubsequentAction
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionID
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionType
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionDefinition
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionExecutionOrder
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICsubsequentAction.RICsubsequentActionType
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICsubsequentAction.RICtimeToWait
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICsubsequentAction
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List
+// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs
+// RICsubscriptionModificationRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionModificationRequest                    */
 /*                                                */
 /**************************************************/
@@ -18825,51 +19902,13 @@ RICsubscriptionModificationRequest
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
-                e2ap_RICsubscriptionModificationRequest_t* p_RICsubscriptionModificationRequest,
+                e2ap_RICsubscriptionModificationRequest_t* p_RICsubscriptionModificationRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICrequestID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RANfunctionID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICeventTriggerDefinition
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List.RICaction-ToBeRemovedForModification-ItemIEs.RICaction-ToBeRemovedForModification-Item.RICactionID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List.RICaction-ToBeRemovedForModification-ItemIEs.RICaction-ToBeRemovedForModification-Item
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List.RICaction-ToBeRemovedForModification-ItemIEs
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeRemovedForModification-List
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICactionID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICactionDefinition
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICactionExecutionOrder
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICsubsequentAction.RICsubsequentActionType
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICsubsequentAction.RICtimeToWait
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item.RICsubsequentAction
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs.RICaction-ToBeModifiedForModification-Item
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List.RICaction-ToBeModifiedForModification-ItemIEs
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeModifiedForModification-List
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionID
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionType
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionDefinition
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICactionExecutionOrder
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICsubsequentAction.RICsubsequentActionType
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICsubsequentAction.RICtimeToWait
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item.RICsubsequentAction
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs.RICaction-ToBeAddedForModification-Item
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List.RICaction-ToBeAddedForModification-ItemIEs
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs.RICactions-ToBeAddedForModification-List
-// RICsubscriptionModificationRequest.RICsubscriptionModificationRequest-IEs
-// RICsubscriptionModificationRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionModificationRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionModificationRequest(p_RICsubscriptionModificationRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -18887,13 +19926,13 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscriptionModification;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionModificationRequest;
@@ -18941,7 +19980,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RICrequestID,
-                                &p_RICsubscriptionModificationRequest->id_RICrequestID)){
+                                &p_RICsubscriptionModificationRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -18974,7 +20013,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RANfunctionID = p_RICsubscriptionModificationRequest->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RANfunctionID = &p_RICsubscriptionModificationRequest_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -19000,7 +20039,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICeventTriggerDefinitionToBeModified;
             p_e2ap_protocolIEs_elem->criticality = e2ap_ignore;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequest_IEs_id_RICeventTriggerDefinitionToBeModified;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RICeventTriggerDefinitionToBeModified = p_RICsubscriptionModificationRequest->id_RICeventTriggerDefinitionToBeModified; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RICeventTriggerDefinitionToBeModified = &p_RICsubscriptionModificationRequest_src->id_RICeventTriggerDefinitionToBeModified; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -19040,7 +20079,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
             //message_name.item_type -> type = RICactions_ToBeRemovedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_ToBeRemovedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RICactionsToBeRemovedForModification_List,
-                                &p_RICsubscriptionModificationRequest->id_RICactionsToBeRemovedForModification_List)){
+                                &p_RICsubscriptionModificationRequest_src->id_RICactionsToBeRemovedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_ToBeRemovedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -19087,7 +20126,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
             //message_name.item_type -> type = RICactions_ToBeModifiedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_ToBeModifiedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RICactionsToBeModifiedForModification_List,
-                                &p_RICsubscriptionModificationRequest->id_RICactionsToBeModifiedForModification_List)){
+                                &p_RICsubscriptionModificationRequest_src->id_RICactionsToBeModifiedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_ToBeModifiedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -19134,7 +20173,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequest(
             //message_name.item_type -> type = RICactions_ToBeAddedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_ToBeAddedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequest_IEs_id_RICactionsToBeAddedForModification_List,
-                                &p_RICsubscriptionModificationRequest->id_RICactionsToBeAddedForModification_List)){
+                                &p_RICsubscriptionModificationRequest_src->id_RICactionsToBeAddedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_ToBeAddedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -19294,18 +20333,20 @@ xnap_return_et e2ap_compose_RICaction_FailedToBeRemovedForModification_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause,
-                                                &p_RICaction_FailedToBeRemovedForModification_Item->cause))
+                                                &p_e2ap_RICaction_FailedToBeRemovedForModification_Item->cause,//dest
+                                                &p_RICaction_FailedToBeRemovedForModification_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -19487,18 +20528,20 @@ xnap_return_et e2ap_compose_RICaction_FailedToBeModifiedForModification_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause,
-                                                &p_RICaction_FailedToBeModifiedForModification_Item->cause))
+                                                &p_e2ap_RICaction_FailedToBeModifiedForModification_Item->cause,//dest
+                                                &p_RICaction_FailedToBeModifiedForModification_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -19680,18 +20723,20 @@ xnap_return_et e2ap_compose_RICaction_FailedToBeAddedForModification_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause,
-                                                &p_RICaction_FailedToBeAddedForModification_Item->cause))
+                                                &p_e2ap_RICaction_FailedToBeAddedForModification_Item->cause,//dest
+                                                &p_RICaction_FailedToBeAddedForModification_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -19753,6 +20798,74 @@ xnap_return_et e2ap_compose_RICactions_FailedToBeAddedForModification_List (
         rtxDListAppendNode(p_e2ap_RICactions_FailedToBeAddedForModification_List, p_node_list);
     }
     return XNAP_SUCCESS;
+}
+
+
+/**************************************************/
+/* assign_value function for RICsubscriptionModificationResponse */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionModificationResponse(e2ap_RICsubscriptionModificationResponse_t* p_RICsubscriptionModificationResponse)
+{
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICrequestID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RANfunctionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List.RICaction-RemovedForModification-ItemIEs.RICaction-RemovedForModification-Item.RICactionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List.RICaction-RemovedForModification-ItemIEs.RICaction-RemovedForModification-Item
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List.RICaction-RemovedForModification-ItemIEs
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.RICactionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseRICrequest
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseRICservice
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseE2node
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseTransport
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseProtocol
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseMisc
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseServiceLayer
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List.RICaction-ModifiedForModification-ItemIEs.RICaction-ModifiedForModification-Item.RICactionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List.RICaction-ModifiedForModification-ItemIEs.RICaction-ModifiedForModification-Item
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List.RICaction-ModifiedForModification-ItemIEs
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.RICactionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseRICrequest
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseRICservice
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseE2node
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseTransport
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseProtocol
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseMisc
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseServiceLayer
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List.RICaction-AddedForModification-ItemIEs.RICaction-AddedForModification-Item.RICactionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List.RICaction-AddedForModification-ItemIEs.RICaction-AddedForModification-Item
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List.RICaction-AddedForModification-ItemIEs
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.RICactionID
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseRICrequest
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseRICservice
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseE2node
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseTransport
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseProtocol
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseMisc
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseServiceLayer
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List
+// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs
+// RICsubscriptionModificationResponse
+
+
+    return;
 }
 
 
@@ -19821,78 +20934,13 @@ RICsubscriptionModificationResponse
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
-                e2ap_RICsubscriptionModificationResponse_t* p_RICsubscriptionModificationResponse,
+                e2ap_RICsubscriptionModificationResponse_t* p_RICsubscriptionModificationResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICrequestID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RANfunctionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List.RICaction-RemovedForModification-ItemIEs.RICaction-RemovedForModification-Item.RICactionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List.RICaction-RemovedForModification-ItemIEs.RICaction-RemovedForModification-Item
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List.RICaction-RemovedForModification-ItemIEs
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-RemovedForModification-List
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.RICactionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseRICrequest
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseRICservice
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseE2node
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseTransport
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseProtocol
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseMisc
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause.CauseServiceLayer
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item.Cause
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs.RICaction-FailedToBeRemovedForModification-Item
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List.RICaction-FailedToBeRemovedForModification-ItemIEs
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeRemovedForModification-List
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List.RICaction-ModifiedForModification-ItemIEs.RICaction-ModifiedForModification-Item.RICactionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List.RICaction-ModifiedForModification-ItemIEs.RICaction-ModifiedForModification-Item
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List.RICaction-ModifiedForModification-ItemIEs
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-ModifiedForModification-List
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.RICactionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseRICrequest
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseRICservice
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseE2node
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseTransport
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseProtocol
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseMisc
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause.CauseServiceLayer
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item.Cause
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs.RICaction-FailedToBeModifiedForModification-Item
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List.RICaction-FailedToBeModifiedForModification-ItemIEs
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeModifiedForModification-List
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List.RICaction-AddedForModification-ItemIEs.RICaction-AddedForModification-Item.RICactionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List.RICaction-AddedForModification-ItemIEs.RICaction-AddedForModification-Item
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List.RICaction-AddedForModification-ItemIEs
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-AddedForModification-List
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.RICactionID
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseRICrequest
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseRICservice
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseE2node
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseTransport
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseProtocol
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseMisc
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause.CauseServiceLayer
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item.Cause
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs.RICaction-FailedToBeAddedForModification-Item
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List.RICaction-FailedToBeAddedForModification-ItemIEs
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs.RICactions-FailedToBeAddedForModification-List
-// RICsubscriptionModificationResponse.RICsubscriptionModificationResponse-IEs
-// RICsubscriptionModificationResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionModificationResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionModificationResponse(p_RICsubscriptionModificationResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -19910,13 +20958,13 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionModification;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionModificationResponse;
@@ -19964,7 +21012,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICrequestID,
-                                &p_RICsubscriptionModificationResponse->id_RICrequestID)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -19997,7 +21045,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationResponse_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RANfunctionID = p_RICsubscriptionModificationResponse->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RANfunctionID = &p_RICsubscriptionModificationResponse_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -20037,7 +21085,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICactions_RemovedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_RemovedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICactionsRemovedForModification_List,
-                                &p_RICsubscriptionModificationResponse->id_RICactionsRemovedForModification_List)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICactionsRemovedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_RemovedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20084,7 +21132,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICactions_FailedToBeRemovedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_FailedToBeRemovedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeRemovedForModification_List,
-                                &p_RICsubscriptionModificationResponse->id_RICactionsFailedToBeRemovedForModification_List)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICactionsFailedToBeRemovedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_FailedToBeRemovedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20131,7 +21179,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICactions_ModifiedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_ModifiedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICactionsModifiedForModification_List,
-                                &p_RICsubscriptionModificationResponse->id_RICactionsModifiedForModification_List)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICactionsModifiedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_ModifiedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20178,7 +21226,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICactions_FailedToBeModifiedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_FailedToBeModifiedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeModifiedForModification_List,
-                                &p_RICsubscriptionModificationResponse->id_RICactionsFailedToBeModifiedForModification_List)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICactionsFailedToBeModifiedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_FailedToBeModifiedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20225,7 +21273,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICactions_AddedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_AddedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICactionsAddedForModification_List,
-                                &p_RICsubscriptionModificationResponse->id_RICactionsAddedForModification_List)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICactionsAddedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_AddedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20272,7 +21320,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
             //message_name.item_type -> type = RICactions_FailedToBeAddedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_FailedToBeAddedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationResponse_IEs_id_RICactionsFailedToBeAddedForModification_List,
-                                &p_RICsubscriptionModificationResponse->id_RICactionsFailedToBeAddedForModification_List)){
+                                &p_RICsubscriptionModificationResponse_src->id_RICactionsFailedToBeAddedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_FailedToBeAddedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20316,6 +21364,41 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionModificationFailure */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionModificationFailure(e2ap_RICsubscriptionModificationFailure_t* p_RICsubscriptionModificationFailure)
+{
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RICrequestID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RANfunctionID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseRICrequest
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseRICservice
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseE2node
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseTransport
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseProtocol
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseMisc
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseServiceLayer
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.Criticality
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics
+// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs
+// RICsubscriptionModificationFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionModificationFailure                    */
 /*                                                */
 /**************************************************/
@@ -20347,45 +21430,13 @@ RICsubscriptionModificationFailure
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionModificationFailure(
-                e2ap_RICsubscriptionModificationFailure_t* p_RICsubscriptionModificationFailure,
+                e2ap_RICsubscriptionModificationFailure_t* p_RICsubscriptionModificationFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RICrequestID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.RANfunctionID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseRICrequest
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseRICservice
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseE2node
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseTransport
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseProtocol
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseMisc
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause.CauseServiceLayer
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.Cause
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.Criticality
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs.CriticalityDiagnostics
-// RICsubscriptionModificationFailure.RICsubscriptionModificationFailure-IEs
-// RICsubscriptionModificationFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionModificationFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionModificationFailure(p_RICsubscriptionModificationFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -20403,13 +21454,13 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionModification;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionModificationFailure;
@@ -20457,7 +21508,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationFailure_IEs_id_RICrequestID,
-                                &p_RICsubscriptionModificationFailure->id_RICrequestID)){
+                                &p_RICsubscriptionModificationFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20490,7 +21541,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationFailure_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationFailure_IEs_id_RANfunctionID = p_RICsubscriptionModificationFailure->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationFailure_IEs_id_RANfunctionID = &p_RICsubscriptionModificationFailure_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -20530,7 +21581,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationFailure_IEs_id_Cause,
-                                &p_RICsubscriptionModificationFailure->id_Cause)){
+                                &p_RICsubscriptionModificationFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20577,7 +21628,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICsubscriptionModificationFailure->id_CriticalityDiagnostics)){
+                                &p_RICsubscriptionModificationFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20748,18 +21799,20 @@ xnap_return_et e2ap_compose_RICaction_RequiredToBeRemoved_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_RequiredToBeRemoved_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RequiredToBeRemoved_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_RequiredToBeRemoved_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_RequiredToBeRemoved_Item->cause,
-                                                &p_RICaction_RequiredToBeRemoved_Item->cause))
+                                                &p_e2ap_RICaction_RequiredToBeRemoved_Item->cause,//dest
+                                                &p_RICaction_RequiredToBeRemoved_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -20825,6 +21878,41 @@ xnap_return_et e2ap_compose_RICactions_RequiredToBeRemoved_List (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionModificationRequired */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionModificationRequired(e2ap_RICsubscriptionModificationRequired_t* p_RICsubscriptionModificationRequired)
+{
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICrequestID
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RANfunctionID
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs.RICaction-RequiredToBeModified-Item.RICactionID
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs.RICaction-RequiredToBeModified-Item.RICtimeToWait
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs.RICaction-RequiredToBeModified-Item
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.RICactionID
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseRICrequest
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseRICservice
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseE2node
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseTransport
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseProtocol
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseMisc
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseServiceLayer
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List
+// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs
+// RICsubscriptionModificationRequired
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionModificationRequired                    */
 /*                                                */
 /**************************************************/
@@ -20856,45 +21944,13 @@ RICsubscriptionModificationRequired
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionModificationRequired(
-                e2ap_RICsubscriptionModificationRequired_t* p_RICsubscriptionModificationRequired,
+                e2ap_RICsubscriptionModificationRequired_t* p_RICsubscriptionModificationRequired_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICrequestID
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RANfunctionID
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs.RICaction-RequiredToBeModified-Item.RICactionID
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs.RICaction-RequiredToBeModified-Item.RICtimeToWait
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs.RICaction-RequiredToBeModified-Item
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List.RICaction-RequiredToBeModified-ItemIEs
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeModified-List
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.RICactionID
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseRICrequest
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseRICservice
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseE2node
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseTransport
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseProtocol
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseMisc
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause.CauseServiceLayer
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item.Cause
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs.RICaction-RequiredToBeRemoved-Item
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List.RICaction-RequiredToBeRemoved-ItemIEs
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs.RICactions-RequiredToBeRemoved-List
-// RICsubscriptionModificationRequired.RICsubscriptionModificationRequired-IEs
-// RICsubscriptionModificationRequired
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionModificationRequired o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionModificationRequired(p_RICsubscriptionModificationRequired_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -20912,13 +21968,13 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequired(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscriptionModificationRequired;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionModificationRequired;
@@ -20966,7 +22022,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequired(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequired_IEs_id_RICrequestID,
-                                &p_RICsubscriptionModificationRequired->id_RICrequestID)){
+                                &p_RICsubscriptionModificationRequired_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -20999,7 +22055,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequired(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRequired_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequired_IEs_id_RANfunctionID = p_RICsubscriptionModificationRequired->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequired_IEs_id_RANfunctionID = &p_RICsubscriptionModificationRequired_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -21039,7 +22095,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequired(
             //message_name.item_type -> type = RICactions_RequiredToBeModified_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_RequiredToBeModified_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequired_IEs_id_RICactionsRequiredToBeModified_List,
-                                &p_RICsubscriptionModificationRequired->id_RICactionsRequiredToBeModified_List)){
+                                &p_RICsubscriptionModificationRequired_src->id_RICactionsRequiredToBeModified_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_RequiredToBeModified_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21086,7 +22142,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRequired(
             //message_name.item_type -> type = RICactions_RequiredToBeRemoved_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_RequiredToBeRemoved_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRequired_IEs_id_RICactionsRequiredToBeRemoved_List,
-                                &p_RICsubscriptionModificationRequired->id_RICactionsRequiredToBeRemoved_List)){
+                                &p_RICsubscriptionModificationRequired_src->id_RICactionsRequiredToBeRemoved_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_RequiredToBeRemoved_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21246,18 +22302,20 @@ xnap_return_et e2ap_compose_RICaction_RefusedToBeModified_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_RefusedToBeModified_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RefusedToBeModified_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_RefusedToBeModified_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_RefusedToBeModified_Item->cause,
-                                                &p_RICaction_RefusedToBeModified_Item->cause))
+                                                &p_e2ap_RICaction_RefusedToBeModified_Item->cause,//dest
+                                                &p_RICaction_RefusedToBeModified_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -21439,18 +22497,20 @@ xnap_return_et e2ap_compose_RICaction_RefusedToBeRemoved_Item(
     {  /*SEQ_ELEM-2  Encode cause alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICaction_RefusedToBeRemoved_Item->cause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
         if(XNAP_P_NULL == p_e2ap_RICaction_RefusedToBeRemoved_Item->cause)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_Cause(&p_e2ap_RICaction_RefusedToBeRemoved_Item->cause);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
-                                                &p_e2ap_RICaction_RefusedToBeRemoved_Item->cause,
-                                                &p_RICaction_RefusedToBeRemoved_Item->cause))
+                                                &p_e2ap_RICaction_RefusedToBeRemoved_Item->cause,//dest
+                                                &p_RICaction_RefusedToBeRemoved_Item->cause)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field cause",__FUNCTION__);
             return XNAP_FAILURE;
@@ -21516,6 +22576,57 @@ xnap_return_et e2ap_compose_RICactions_RefusedToBeRemoved_List (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionModificationConfirm */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionModificationConfirm(e2ap_RICsubscriptionModificationConfirm_t* p_RICsubscriptionModificationConfirm)
+{
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICrequestID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RANfunctionID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List.RICaction-ConfirmedForModification-ItemIEs.RICaction-ConfirmedForModification-Item.RICactionID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List.RICaction-ConfirmedForModification-ItemIEs.RICaction-ConfirmedForModification-Item
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List.RICaction-ConfirmedForModification-ItemIEs
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.RICactionID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseRICrequest
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseRICservice
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseE2node
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseTransport
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseProtocol
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseMisc
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseServiceLayer
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List.RICaction-ConfirmedForRemoval-ItemIEs.RICaction-ConfirmedForRemoval-Item.RICactionID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List.RICaction-ConfirmedForRemoval-ItemIEs.RICaction-ConfirmedForRemoval-Item
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List.RICaction-ConfirmedForRemoval-ItemIEs
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.RICactionID
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseRICrequest
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseRICservice
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseE2node
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseTransport
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseProtocol
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseMisc
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseServiceLayer
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List
+// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs
+// RICsubscriptionModificationConfirm
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionModificationConfirm                    */
 /*                                                */
 /**************************************************/
@@ -21563,61 +22674,13 @@ RICsubscriptionModificationConfirm
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
-                e2ap_RICsubscriptionModificationConfirm_t* p_RICsubscriptionModificationConfirm,
+                e2ap_RICsubscriptionModificationConfirm_t* p_RICsubscriptionModificationConfirm_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICrequestID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RANfunctionID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List.RICaction-ConfirmedForModification-ItemIEs.RICaction-ConfirmedForModification-Item.RICactionID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List.RICaction-ConfirmedForModification-ItemIEs.RICaction-ConfirmedForModification-Item
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List.RICaction-ConfirmedForModification-ItemIEs
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForModification-List
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.RICactionID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseRICrequest
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseRICservice
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseE2node
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseTransport
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseProtocol
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseMisc
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause.CauseServiceLayer
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item.Cause
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs.RICaction-RefusedToBeModified-Item
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List.RICaction-RefusedToBeModified-ItemIEs
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeModified-List
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List.RICaction-ConfirmedForRemoval-ItemIEs.RICaction-ConfirmedForRemoval-Item.RICactionID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List.RICaction-ConfirmedForRemoval-ItemIEs.RICaction-ConfirmedForRemoval-Item
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List.RICaction-ConfirmedForRemoval-ItemIEs
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-ConfirmedForRemoval-List
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.RICactionID
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseRICrequest
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseRICservice
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseE2node
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseTransport
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseProtocol
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseMisc
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause.CauseServiceLayer
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item.Cause
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs.RICaction-RefusedToBeRemoved-Item
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List.RICaction-RefusedToBeRemoved-ItemIEs
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs.RICactions-RefusedToBeRemoved-List
-// RICsubscriptionModificationConfirm.RICsubscriptionModificationConfirm-IEs
-// RICsubscriptionModificationConfirm
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionModificationConfirm o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionModificationConfirm(p_RICsubscriptionModificationConfirm_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -21635,13 +22698,13 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionModificationRequired;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionModificationConfirm;
@@ -21689,7 +22752,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RICrequestID,
-                                &p_RICsubscriptionModificationConfirm->id_RICrequestID)){
+                                &p_RICsubscriptionModificationConfirm_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21722,7 +22785,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationConfirm_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RANfunctionID = p_RICsubscriptionModificationConfirm->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RANfunctionID = &p_RICsubscriptionModificationConfirm_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -21762,7 +22825,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
             //message_name.item_type -> type = RICactions_ConfirmedForModification_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_ConfirmedForModification_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsConfirmedForModification_List,
-                                &p_RICsubscriptionModificationConfirm->id_RICactionsConfirmedForModification_List)){
+                                &p_RICsubscriptionModificationConfirm_src->id_RICactionsConfirmedForModification_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_ConfirmedForModification_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21809,7 +22872,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
             //message_name.item_type -> type = RICactions_RefusedToBeModified_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_RefusedToBeModified_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsRefusedToBeModified_List,
-                                &p_RICsubscriptionModificationConfirm->id_RICactionsRefusedToBeModified_List)){
+                                &p_RICsubscriptionModificationConfirm_src->id_RICactionsRefusedToBeModified_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_RefusedToBeModified_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21856,7 +22919,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
             //message_name.item_type -> type = RICactions_ConfirmedForRemoval_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_ConfirmedForRemoval_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsConfirmedForRemoval_List,
-                                &p_RICsubscriptionModificationConfirm->id_RICactionsConfirmedForRemoval_List)){
+                                &p_RICsubscriptionModificationConfirm_src->id_RICactionsConfirmedForRemoval_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_ConfirmedForRemoval_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21903,7 +22966,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
             //message_name.item_type -> type = RICactions_RefusedToBeRemoved_List
             if(XNAP_FAILURE == e2ap_compose_RICactions_RefusedToBeRemoved_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationConfirm_IEs_id_RICactionsRefusedToBeRemoved_List,
-                                &p_RICsubscriptionModificationConfirm->id_RICactionsRefusedToBeRemoved_List)){
+                                &p_RICsubscriptionModificationConfirm_src->id_RICactionsRefusedToBeRemoved_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICactions_RefusedToBeRemoved_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -21947,6 +23010,41 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationConfirm(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionModificationRefuse */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionModificationRefuse(e2ap_RICsubscriptionModificationRefuse_t* p_RICsubscriptionModificationRefuse)
+{
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RICrequestID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RANfunctionID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseRICrequest
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseRICservice
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseE2node
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseTransport
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseProtocol
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseMisc
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseServiceLayer
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.ProcedureCode
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.Criticality
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.RICrequestID
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics
+// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs
+// RICsubscriptionModificationRefuse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionModificationRefuse                    */
 /*                                                */
 /**************************************************/
@@ -21978,45 +23076,13 @@ RICsubscriptionModificationRefuse
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionModificationRefuse(
-                e2ap_RICsubscriptionModificationRefuse_t* p_RICsubscriptionModificationRefuse,
+                e2ap_RICsubscriptionModificationRefuse_t* p_RICsubscriptionModificationRefuse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RICrequestID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.RANfunctionID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseRICrequest
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseRICservice
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseE2node
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseTransport
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseProtocol
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseMisc
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause.CauseServiceLayer
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.Cause
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.ProcedureCode
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.Criticality
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.RICrequestID
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs.CriticalityDiagnostics
-// RICsubscriptionModificationRefuse.RICsubscriptionModificationRefuse-IEs
-// RICsubscriptionModificationRefuse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionModificationRefuse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionModificationRefuse(p_RICsubscriptionModificationRefuse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -22034,13 +23100,13 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRefuse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionModificationRequired;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionModificationRefuse;
@@ -22088,7 +23154,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRefuse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRefuse_IEs_id_RICrequestID,
-                                &p_RICsubscriptionModificationRefuse->id_RICrequestID)){
+                                &p_RICsubscriptionModificationRefuse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -22121,7 +23187,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRefuse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICsubscriptionModificationRefuse_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRefuse_IEs_id_RANfunctionID = p_RICsubscriptionModificationRefuse->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRefuse_IEs_id_RANfunctionID = &p_RICsubscriptionModificationRefuse_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -22161,7 +23227,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRefuse(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRefuse_IEs_id_Cause,
-                                &p_RICsubscriptionModificationRefuse->id_Cause)){
+                                &p_RICsubscriptionModificationRefuse_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -22208,7 +23274,7 @@ xnap_return_et e2ap_encode_RICsubscriptionModificationRefuse(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionModificationRefuse_IEs_id_CriticalityDiagnostics,
-                                &p_RICsubscriptionModificationRefuse->id_CriticalityDiagnostics)){
+                                &p_RICsubscriptionModificationRefuse_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -22357,18 +23423,20 @@ xnap_return_et e2ap_compose_RICsubscriptionList_Item(
     {  /*SEQ_ELEM-1  Encode ricRequestID alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionList_Item->ricRequestID = rtxMemAllocType(p_asn1_ctx, e2ap_RICrequestID);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionList_Item->ricRequestID)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICrequestID(&p_e2ap_RICsubscriptionList_Item->ricRequestID);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICrequestID(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionList_Item->ricRequestID,
-                                                &p_RICsubscriptionList_Item->ricRequestID))
+                                                &p_e2ap_RICsubscriptionList_Item->ricRequestID,//dest
+                                                &p_RICsubscriptionList_Item->ricRequestID)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricRequestID",__FUNCTION__);
             return XNAP_FAILURE;
@@ -22378,18 +23446,20 @@ xnap_return_et e2ap_compose_RICsubscriptionList_Item(
     {  /*SEQ_ELEM-2  Encode ricAction_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RICsubscriptionList_Item->ricAction_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICaction_List);
         if(XNAP_P_NULL == p_e2ap_RICsubscriptionList_Item->ricAction_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricAction_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICaction_List(&p_e2ap_RICsubscriptionList_Item->ricAction_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICaction_List(p_asn1_ctx,
-                                                &p_e2ap_RICsubscriptionList_Item->ricAction_list,
-                                                &p_RICsubscriptionList_Item->ricAction_list))
+                                                &p_e2ap_RICsubscriptionList_Item->ricAction_list,//dest
+                                                &p_RICsubscriptionList_Item->ricAction_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricAction_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -22534,18 +23604,20 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_Item(
     {  /*SEQ_ELEM-2  Encode ricSubscriptionToBeSuspended_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionToBeSuspended_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionToBeSuspended_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionToBeSuspended_List(&p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionToBeSuspended_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list,
-                                                &p_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list))
+                                                &p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list,//dest
+                                                &p_RANfunctionStateControl_Item->ricSubscriptionToBeSuspended_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionToBeSuspended_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -22555,18 +23627,20 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_Item(
     {  /*SEQ_ELEM-3  Encode ricSubscriptionToBeResumed_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionToBeResumed_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionToBeResumed_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionToBeResumed_List(&p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionToBeResumed_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list,
-                                                &p_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list))
+                                                &p_e2ap_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list,//dest
+                                                &p_RANfunctionStateControl_Item->ricSubscriptionToBeResumed_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionToBeResumed_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -22632,6 +23706,46 @@ xnap_return_et e2ap_compose_RANfunctionStateControl_List (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionStateControlRequest */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionStateControlRequest(e2ap_RICsubscriptionStateControlRequest_t* p_RICsubscriptionStateControlRequest)
+{
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RICrequestID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RANfunctionID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List
+// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs
+// RICsubscriptionStateControlRequest
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionStateControlRequest                    */
 /*                                                */
 /**************************************************/
@@ -22668,50 +23782,13 @@ RICsubscriptionStateControlRequest
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionStateControlRequest(
-                e2ap_RICsubscriptionStateControlRequest_t* p_RICsubscriptionStateControlRequest,
+                e2ap_RICsubscriptionStateControlRequest_t* p_RICsubscriptionStateControlRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RICrequestID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RANfunctionID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List.RICsubscriptionList-ItemIEs
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeSuspended-List
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List.RICsubscriptionList-ItemIEs
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item.RICsubscriptionToBeResumed-List
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs.RANfunctionStateControl-Item
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List.RANfunctionStateControl-ItemIEs
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs.RANfunctionStateControl-List
-// RICsubscriptionStateControlRequest.RICsubscriptionStateControlRequest-IEs
-// RICsubscriptionStateControlRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionStateControlRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionStateControlRequest(p_RICsubscriptionStateControlRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -22729,13 +23806,13 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICsubscriptionStateControl;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionStateControlRequest;
@@ -22783,7 +23860,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlRequest_IEs_id_RICrequestID,
-                                &p_RICsubscriptionStateControlRequest->id_RICrequestID)){
+                                &p_RICsubscriptionStateControlRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -22830,7 +23907,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlRequest(
             //message_name.item_type -> type = RANfunctionStateControl_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionStateControl_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlRequest_IEs_id_RANfunctionStateControl_List,
-                                &p_RICsubscriptionStateControlRequest->id_RANfunctionStateControl_List)){
+                                &p_RICsubscriptionStateControlRequest_src->id_RANfunctionStateControl_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionStateControl_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23002,18 +24079,20 @@ xnap_return_et e2ap_compose_RANfunctionStateConfirm_Item(
     {  /*SEQ_ELEM-2  Encode ricSubscriptionSuspended_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionSuspended_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionSuspended_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionSuspended_List(&p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionSuspended_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list,
-                                                &p_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list))
+                                                &p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list,//dest
+                                                &p_RANfunctionStateConfirm_Item->ricSubscriptionSuspended_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionSuspended_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -23023,18 +24102,20 @@ xnap_return_et e2ap_compose_RANfunctionStateConfirm_Item(
     {  /*SEQ_ELEM-3  Encode ricSubscriptionResumed_list alias-id = -1 - primitive = False*/
         /* == not primitive (SEQ or CHOICE)==*/
             /* 1.alloc mem */
+        #if 0 
         p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list = rtxMemAllocType(p_asn1_ctx, e2ap_RICsubscriptionResumed_List);
         if(XNAP_P_NULL == p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list)
         {
             XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field ricSubscriptionResumed_list",__FUNCTION__);
             return XNAP_FAILURE;
         }
+        #endif
             /* 2.init */
         asn1Init_e2ap_RICsubscriptionResumed_List(&p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list);
             /* 3.compose */
         if(XNAP_FAILURE == e2ap_compose_RICsubscriptionResumed_List(p_asn1_ctx,
-                                                &p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list,
-                                                &p_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list))
+                                                &p_e2ap_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list,//dest
+                                                &p_RANfunctionStateConfirm_Item->ricSubscriptionResumed_list)) //src
         {
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field ricSubscriptionResumed_list",__FUNCTION__);
             return XNAP_FAILURE;
@@ -23100,6 +24181,46 @@ xnap_return_et e2ap_compose_RANfunctionStateConfirm_List (
 
 
 /**************************************************/
+/* assign_value function for RICsubscriptionStateControlResponse */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionStateControlResponse(e2ap_RICsubscriptionStateControlResponse_t* p_RICsubscriptionStateControlResponse)
+{
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RICrequestID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RANfunctionID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List
+// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs
+// RICsubscriptionStateControlResponse
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionStateControlResponse                    */
 /*                                                */
 /**************************************************/
@@ -23136,50 +24257,13 @@ RICsubscriptionStateControlResponse
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionStateControlResponse(
-                e2ap_RICsubscriptionStateControlResponse_t* p_RICsubscriptionStateControlResponse,
+                e2ap_RICsubscriptionStateControlResponse_t* p_RICsubscriptionStateControlResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RICrequestID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RANfunctionID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List.RICsubscriptionList-ItemIEs
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionSuspended-List
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICrequestID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item.RICactionID
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs.RICactionList-Item
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List.RICaction-ItemIEs
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item.RICaction-List
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs.RICsubscriptionList-Item
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List.RICsubscriptionList-ItemIEs
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item.RICsubscriptionResumed-List
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs.RANfunctionStateConfirm-Item
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List.RANfunctionStateConfirm-ItemIEs
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs.RANfunctionStateConfirm-List
-// RICsubscriptionStateControlResponse.RICsubscriptionStateControlResponse-IEs
-// RICsubscriptionStateControlResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionStateControlResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionStateControlResponse(p_RICsubscriptionStateControlResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -23197,13 +24281,13 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionStateControl;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionStateControlResponse;
@@ -23251,7 +24335,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlResponse_IEs_id_RICrequestID,
-                                &p_RICsubscriptionStateControlResponse->id_RICrequestID)){
+                                &p_RICsubscriptionStateControlResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23298,7 +24382,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlResponse(
             //message_name.item_type -> type = RANfunctionStateConfirm_List
             if(XNAP_FAILURE == e2ap_compose_RANfunctionStateConfirm_List(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlResponse_IEs_id_RANfunctionStateConfirm_List,
-                                &p_RICsubscriptionStateControlResponse->id_RANfunctionStateConfirm_List)){
+                                &p_RICsubscriptionStateControlResponse_src->id_RANfunctionStateConfirm_List)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RANfunctionStateConfirm_List",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23342,6 +24426,40 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICsubscriptionStateControlFailure */
+/**************************************************/
+void assign_hardcode_value_RICsubscriptionStateControlFailure(e2ap_RICsubscriptionStateControlFailure_t* p_RICsubscriptionStateControlFailure)
+{
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.RICrequestID
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseRICrequest
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseRICservice
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseE2node
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseTransport
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseProtocol
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseMisc
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseServiceLayer
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.Criticality
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics
+// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs
+// RICsubscriptionStateControlFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICsubscriptionStateControlFailure                    */
 /*                                                */
 /**************************************************/
@@ -23372,44 +24490,13 @@ RICsubscriptionStateControlFailure
 
 */
 xnap_return_et e2ap_encode_RICsubscriptionStateControlFailure(
-                e2ap_RICsubscriptionStateControlFailure_t* p_RICsubscriptionStateControlFailure,
+                e2ap_RICsubscriptionStateControlFailure_t* p_RICsubscriptionStateControlFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.RICrequestID
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseRICrequest
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseRICservice
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseE2node
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseTransport
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseProtocol
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseMisc
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause.CauseServiceLayer
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.Cause
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.Criticality
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs.CriticalityDiagnostics
-// RICsubscriptionStateControlFailure.RICsubscriptionStateControlFailure-IEs
-// RICsubscriptionStateControlFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICsubscriptionStateControlFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICsubscriptionStateControlFailure(p_RICsubscriptionStateControlFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -23427,13 +24514,13 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICsubscriptionStateControl;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICsubscriptionStateControlFailure;
@@ -23481,7 +24568,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlFailure_IEs_id_RICrequestID,
-                                &p_RICsubscriptionStateControlFailure->id_RICrequestID)){
+                                &p_RICsubscriptionStateControlFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23528,7 +24615,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlFailure_IEs_id_Cause,
-                                &p_RICsubscriptionStateControlFailure->id_Cause)){
+                                &p_RICsubscriptionStateControlFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23575,7 +24662,7 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICsubscriptionStateControlFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICsubscriptionStateControlFailure->id_CriticalityDiagnostics)){
+                                &p_RICsubscriptionStateControlFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23619,15 +24706,88 @@ xnap_return_et e2ap_encode_RICsubscriptionStateControlFailure(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICqueryHeader            */
+/*    COMPOSE PRIMITIVE RICqueryHeader                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICqueryHeader
-     
+/* compose primitive - id = 9 - OCTET STRING - RICqueryHeader*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICqueryHeader(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICqueryHeader     *p_dest,
+                        _e2ap_RICqueryHeader_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICqueryHeader",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICqueryHeader numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
 /*****************************************************/
-/*    PRIMITIVE RICqueryDefinition            */
+/*    COMPOSE PRIMITIVE RICqueryDefinition                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICqueryDefinition
-     
+/* compose primitive - id = 9 - OCTET STRING - RICqueryDefinition*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICqueryDefinition(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICqueryDefinition     *p_dest,
+                        _e2ap_RICqueryDefinition_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICqueryDefinition",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICqueryDefinition numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICqueryRequest */
+/**************************************************/
+void assign_hardcode_value_RICqueryRequest(e2ap_RICqueryRequest_t* p_RICqueryRequest)
+{
+// RICqueryRequest.RICqueryRequest-IEs.RICrequestID.ricRequestorID
+// RICqueryRequest.RICqueryRequest-IEs.RICrequestID.ricInstanceID
+// RICqueryRequest.RICqueryRequest-IEs.RICrequestID
+// RICqueryRequest.RICqueryRequest-IEs.RANfunctionID
+// RICqueryRequest.RICqueryRequest-IEs.RICqueryHeader
+// RICqueryRequest.RICqueryRequest-IEs.RICqueryDefinition
+// RICqueryRequest.RICqueryRequest-IEs
+// RICqueryRequest
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICqueryRequest                    */
 /*                                                */
@@ -23644,29 +24804,13 @@ RICqueryRequest
 
 */
 xnap_return_et e2ap_encode_RICqueryRequest(
-                e2ap_RICqueryRequest_t* p_RICqueryRequest,
+                e2ap_RICqueryRequest_t* p_RICqueryRequest_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICqueryRequest.RICqueryRequest-IEs.RICrequestID.ricRequestorID
-// RICqueryRequest.RICqueryRequest-IEs.RICrequestID.ricInstanceID
-// RICqueryRequest.RICqueryRequest-IEs.RICrequestID
-// RICqueryRequest.RICqueryRequest-IEs.RANfunctionID
-// RICqueryRequest.RICqueryRequest-IEs.RICqueryHeader
-// RICqueryRequest.RICqueryRequest-IEs.RICqueryDefinition
-// RICqueryRequest.RICqueryRequest-IEs
-// RICqueryRequest
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICqueryRequest o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICqueryRequest(p_RICqueryRequest_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -23684,13 +24828,13 @@ xnap_return_et e2ap_encode_RICqueryRequest(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_initiatingMessage;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to initiatingMessage",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_initiatingMessage);
+        e2ap_pdu.u.initiatingMessage = rtxMemAllocType(&asn1_ctx, e2ap_InitiatingMessage);
         if(GNB_PNULL==e2ap_pdu.u.initiatingMessage){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for initiatingMessage",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_initiatingMessage(e2ap_pdu.u.initiatingMessage);
+        asn1Init_e2ap_InitiatingMessage(e2ap_pdu.u.initiatingMessage);
         e2ap_pdu.u.initiatingMessage->procedureCode = ASN1V_e2ap_id_RICquery;
         e2ap_pdu.u.initiatingMessage->criticality = e2ap_reject;
         e2ap_pdu.u.initiatingMessage->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICqueryRequest;
@@ -23738,7 +24882,7 @@ xnap_return_et e2ap_encode_RICqueryRequest(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RICrequestID,
-                                &p_RICqueryRequest->id_RICrequestID)){
+                                &p_RICqueryRequest_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -23771,7 +24915,7 @@ xnap_return_et e2ap_encode_RICqueryRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RANfunctionID = p_RICqueryRequest->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RANfunctionID = &p_RICqueryRequest_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -23797,7 +24941,7 @@ xnap_return_et e2ap_encode_RICqueryRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICqueryHeader;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RICqueryHeader;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RICqueryHeader = p_RICqueryRequest->id_RICqueryHeader; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RICqueryHeader = &p_RICqueryRequest_src->id_RICqueryHeader; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -23823,7 +24967,7 @@ xnap_return_et e2ap_encode_RICqueryRequest(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICqueryDefinition;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryRequest_IEs_id_RICqueryDefinition;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RICqueryDefinition = p_RICqueryRequest->id_RICqueryDefinition; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryRequest_IEs_id_RICqueryDefinition = &p_RICqueryRequest_src->id_RICqueryDefinition; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -23860,10 +25004,55 @@ xnap_return_et e2ap_encode_RICqueryRequest(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/*****************************************************/
-/*    PRIMITIVE RICqueryOutcome            */
+/*    COMPOSE PRIMITIVE RICqueryOutcome                             */
 /*****************************************************/
-// cpmpose primitive - id = 9 - OCTET STRING - RICqueryOutcome
-     
+/* compose primitive - id = 9 - OCTET STRING - RICqueryOutcome*/
+/* ---------------------------------------------------------------------- */
+/*  OCTET STRING – dynamic (primitive_id = 9)                             */
+/* ---------------------------------------------------------------------- */
+xnap_return_et e2ap_compose_RICqueryOutcome(
+                        OSCTXT            *p_asn1_ctx,
+                        e2ap_RICqueryOutcome     *p_dest,
+                        _e2ap_RICqueryOutcome_t  *p_src
+){
+    size_t num = p_src->numocts;
+
+    p_dest->data = (OSOCTET*) rtxMemAllocZ(p_asn1_ctx, num);
+    if (!p_dest->data)
+    {
+        XNAP_TRACE(XNAP_ERROR,
+                   "%s alloc fail in e2ap_compose_RICqueryOutcome",
+                    __FUNCTION__);
+        return XNAP_FAILURE;
+    }
+
+    p_dest->numocts = num;
+    XNAP_MEMCPY(p_dest->data, p_src->data, num);
+
+    #ifdef  E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug OCTET STRING RICqueryOutcome numocts=%u", __FUNCTION__, p_dest->numocts);
+    #endif
+
+    return XNAP_SUCCESS;
+}
+/**************************************************/
+/* assign_value function for RICqueryResponse */
+/**************************************************/
+void assign_hardcode_value_RICqueryResponse(e2ap_RICqueryResponse_t* p_RICqueryResponse)
+{
+// RICqueryResponse.RICqueryResponse-IEs.RICrequestID.ricRequestorID
+// RICqueryResponse.RICqueryResponse-IEs.RICrequestID.ricInstanceID
+// RICqueryResponse.RICqueryResponse-IEs.RICrequestID
+// RICqueryResponse.RICqueryResponse-IEs.RANfunctionID
+// RICqueryResponse.RICqueryResponse-IEs.RICqueryOutcome
+// RICqueryResponse.RICqueryResponse-IEs
+// RICqueryResponse
+
+
+    return;
+}
+
+
 /**************************************************/
 /*      encode_RICqueryResponse                    */
 /*                                                */
@@ -23879,28 +25068,13 @@ RICqueryResponse
 
 */
 xnap_return_et e2ap_encode_RICqueryResponse(
-                e2ap_RICqueryResponse_t* p_RICqueryResponse,
+                e2ap_RICqueryResponse_t* p_RICqueryResponse_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICqueryResponse.RICqueryResponse-IEs.RICrequestID.ricRequestorID
-// RICqueryResponse.RICqueryResponse-IEs.RICrequestID.ricInstanceID
-// RICqueryResponse.RICqueryResponse-IEs.RICrequestID
-// RICqueryResponse.RICqueryResponse-IEs.RANfunctionID
-// RICqueryResponse.RICqueryResponse-IEs.RICqueryOutcome
-// RICqueryResponse.RICqueryResponse-IEs
-// RICqueryResponse
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICqueryResponse o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICqueryResponse(p_RICqueryResponse_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -23918,13 +25092,13 @@ xnap_return_et e2ap_encode_RICqueryResponse(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_successfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to successfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_successfulOutcome);
+        e2ap_pdu.u.successfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_SuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.successfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for successfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_successfulOutcome(e2ap_pdu.u.successfulOutcome);
+        asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_RICquery;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICqueryResponse;
@@ -23972,7 +25146,7 @@ xnap_return_et e2ap_encode_RICqueryResponse(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICqueryResponse_IEs_id_RICrequestID,
-                                &p_RICqueryResponse->id_RICrequestID)){
+                                &p_RICqueryResponse_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -24005,7 +25179,7 @@ xnap_return_et e2ap_encode_RICqueryResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryResponse_IEs_id_RANfunctionID = p_RICqueryResponse->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryResponse_IEs_id_RANfunctionID = &p_RICqueryResponse_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -24031,7 +25205,7 @@ xnap_return_et e2ap_encode_RICqueryResponse(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RICqueryOutcome;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryResponse_IEs_id_RICqueryOutcome;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryResponse_IEs_id_RICqueryOutcome = p_RICqueryResponse->id_RICqueryOutcome; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryResponse_IEs_id_RICqueryOutcome = &p_RICqueryResponse_src->id_RICqueryOutcome; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -24068,6 +25242,41 @@ xnap_return_et e2ap_encode_RICqueryResponse(
     XNAP_UT_TRACE_EXIT();
     return retVal;
 }/**************************************************/
+/* assign_value function for RICqueryFailure */
+/**************************************************/
+void assign_hardcode_value_RICqueryFailure(e2ap_RICqueryFailure_t* p_RICqueryFailure)
+{
+// RICqueryFailure.RICqueryFailure-IEs.RICrequestID.ricRequestorID
+// RICqueryFailure.RICqueryFailure-IEs.RICrequestID.ricInstanceID
+// RICqueryFailure.RICqueryFailure-IEs.RICrequestID
+// RICqueryFailure.RICqueryFailure-IEs.RANfunctionID
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseRICrequest
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseRICservice
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseE2node
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseTransport
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseProtocol
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseMisc
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
+// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseServiceLayer
+// RICqueryFailure.RICqueryFailure-IEs.Cause
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.ProcedureCode
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.TriggeringMessage
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.Criticality
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
+// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics
+// RICqueryFailure.RICqueryFailure-IEs
+// RICqueryFailure
+
+
+    return;
+}
+
+
+/**************************************************/
 /*      encode_RICqueryFailure                    */
 /*                                                */
 /**************************************************/
@@ -24099,45 +25308,13 @@ RICqueryFailure
 
 */
 xnap_return_et e2ap_encode_RICqueryFailure(
-                e2ap_RICqueryFailure_t* p_RICqueryFailure,
+                e2ap_RICqueryFailure_t* p_RICqueryFailure_src,
                 UInt8 *p_asn_msg, 
                 UInt16* p_asn_msg_len
-)
-{
-
-/*
-// RICqueryFailure.RICqueryFailure-IEs.RICrequestID.ricRequestorID
-// RICqueryFailure.RICqueryFailure-IEs.RICrequestID.ricInstanceID
-// RICqueryFailure.RICqueryFailure-IEs.RICrequestID
-// RICqueryFailure.RICqueryFailure-IEs.RANfunctionID
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseRICrequest
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseRICservice
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseE2node
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseTransport
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseProtocol
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseMisc
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseServiceLayer.ServiceLayerCause
-// RICqueryFailure.RICqueryFailure-IEs.Cause.CauseServiceLayer
-// RICqueryFailure.RICqueryFailure-IEs.Cause
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.ProcedureCode
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.TriggeringMessage
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.Criticality
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID.ricRequestorID
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID.ricInstanceID
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.RICrequestID
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List.SEQUENCE
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics.CriticalityDiagnostics-IE-List
-// RICqueryFailure.RICqueryFailure-IEs.CriticalityDiagnostics
-// RICqueryFailure.RICqueryFailure-IEs
-// RICqueryFailure
-
-*/
-#if 0 // hardcode
-    /* gan gi tri cho p_RICqueryFailure o day*/
-
-
+){
+#if 1 // hardcode
+    assign_hardcode_value_RICqueryFailure(p_RICqueryFailure_src);
 #endif
-
 
     xnap_return_et retVal = XNAP_FAILURE;
     OSCTXT asn1_ctx;
@@ -24155,13 +25332,13 @@ xnap_return_et e2ap_encode_RICqueryFailure(
         /*set PDU type to initing/ SSF/ USSF */
         e2ap_pdu.t = T_e2ap_E2AP_PDU_unsuccessfulOutcome;
         XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: PDU type set to unsuccessfulOutcome",__FUNCTION__);
-        e2ap_pdu.u. = rtxMemAllocType(&asn1_ctx, e2ap_unsuccessfulOutcome);
+        e2ap_pdu.u.unsuccessfulOutcome = rtxMemAllocType(&asn1_ctx, e2ap_UnsuccessfulOutcome);
         if(GNB_PNULL==e2ap_pdu.u.unsuccessfulOutcome){
             XNAP_TRACE(XNAP_INFO,"dungnm23 - %s: Memory allocation failed for unsuccessfulOutcome",__FUNCTION__);
             break;
         }
 
-        asn1Init_e2ap_unsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
+        asn1Init_e2ap_UnsuccessfulOutcome(e2ap_pdu.u.unsuccessfulOutcome);
         e2ap_pdu.u.unsuccessfulOutcome->procedureCode = ASN1V_e2ap_id_RICquery;
         e2ap_pdu.u.unsuccessfulOutcome->criticality = e2ap_reject;
         e2ap_pdu.u.unsuccessfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_RICqueryFailure;
@@ -24209,7 +25386,7 @@ xnap_return_et e2ap_encode_RICqueryFailure(
             //message_name.item_type -> type = RICrequestID
             if(XNAP_FAILURE == e2ap_compose_RICrequestID(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RICrequestID,
-                                &p_RICqueryFailure->id_RICrequestID)){
+                                &p_RICqueryFailure_src->id_RICrequestID)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field RICrequestID",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -24242,7 +25419,7 @@ xnap_return_et e2ap_encode_RICqueryFailure(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_RANfunctionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_RICqueryFailure_IEs_id_RANfunctionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RANfunctionID = p_RICqueryFailure->id_RANfunctionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_RANfunctionID = &p_RICqueryFailure_src->id_RANfunctionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -24282,7 +25459,7 @@ xnap_return_et e2ap_encode_RICqueryFailure(
             //message_name.item_type -> type = Cause
             if(XNAP_FAILURE == e2ap_compose_Cause(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_Cause,
-                                &p_RICqueryFailure->id_Cause)){
+                                &p_RICqueryFailure_src->id_Cause)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field Cause",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();
@@ -24329,7 +25506,7 @@ xnap_return_et e2ap_encode_RICqueryFailure(
             //message_name.item_type -> type = CriticalityDiagnostics
             if(XNAP_FAILURE == e2ap_compose_CriticalityDiagnostics(&asn1_ctx, 
                                 p_e2ap_protocolIEs_elem->value.u._e2apRICqueryFailure_IEs_id_CriticalityDiagnostics,
-                                &p_RICqueryFailure->id_CriticalityDiagnostics)){
+                                &p_RICqueryFailure_src->id_CriticalityDiagnostics)){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field CriticalityDiagnostics",__FUNCTION__);
                 rtFreeContext(&asn1_ctx);
                 //XNAP_UT_TRACE_EXIT();

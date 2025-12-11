@@ -8,7 +8,7 @@
 
 typedef enum {
 {% for item in items %}
-    e2ap_{{ item.name | replace('-', '_') }} = {{ item.value }}{% if not loop.last %},{% endif %}
+    e2ap_{{name}}_{{ item.name | replace('-', '_') }} = {{ item.value }}{% if not loop.last %},{% endif %}
 
 {% endfor %}
 } e2ap_{{name}}_Root;

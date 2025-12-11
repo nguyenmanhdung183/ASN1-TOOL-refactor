@@ -811,7 +811,23 @@ def gen_ie_outputs():
                 safe_write(os.path.join(COMPOSE_DIR, f"compose_{ies_name}.c"), env.get_template("3_compose_ie.c.j2").render(data))
 
             if child_msg_parent and child_msg_type == ies_name: #encode_XXX -> IE là con của message
-                data = {"ies_name": ies_name_raw.replace("-", "_"), "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}", "bottom_up": load_bottomup(), "tree": load_tree()}
+                msg_3_alias = {
+                    "initiatingMessage": "InitiatingMessage",
+                    "successfulOutcome": "SuccessfulOutcome",
+                    "unsuccessfulOutcome": "UnsuccessfulOutcome"
+                }
+                msg_3_type_value = parent_full.get("Msg_3_Type")
+                if isinstance(msg_3_type_value, dict):
+                    msg_3_type_alias = msg_3_alias.get(
+                        msg_3_type_value.get(child_msg_type, child_msg_type),
+                        child_msg_type
+                    )
+                elif isinstance(msg_3_type_value, str):
+                    msg_3_type_alias = msg_3_alias.get(msg_3_type_value, child_msg_type)
+                else:
+                    msg_3_type_alias = child_msg_type
+
+                data = {"ies_name": ies_name_raw.replace("-", "_"), "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}", "bottom_up": load_bottomup(), "tree": load_tree(), "msg_3_type_alias": msg_3_type_alias}
                 compose_name = child_msg_parent.replace("-", "_")  # ví dụ: E2connectionUpdate
                 safe_write(os.path.join(COMPOSE_DIR, f"compose_{compose_name}.c"),env.get_template("3_encode_ie_child_of_msg.c.j2").render(data))
             
@@ -1011,12 +1027,18 @@ def gen_container_outputs():
                 }
             })
 
+        msg_3_type_alias = {
+            "initiatingMessage": "InitiatingMessage",
+            "successfulOutcome": "SuccessfulOutcome",
+            "unsuccessfulOutcome": "UnsuccessfulOutcome"
+        }
         data = {
             "container_name": container_name,
             "ies": ies_list,
             "extensible": extensible,
             "includes": sorted(list(includes)),
             "msg_3_type": msg_3_type,
+            "msg_3_type_alias": msg_3_type_alias.get(msg_3_type, None),
             "msg_critical": msg_critical,
             "msg_procedure_code": msg_procedure_code,
             "elem_procedure": elem_procedure

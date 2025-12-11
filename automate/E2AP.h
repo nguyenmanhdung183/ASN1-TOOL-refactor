@@ -1,7 +1,12 @@
 #ifndef E2AP_H
 #define E2AP_H
 
+#include<stdio.h>
 
+void XNAP_TRACE(int level, const char* fmt, ...){
+    return;
+
+}
 /*****************************************/
 /*           TransactionID                */
 /*****************************************/
@@ -77,9 +82,9 @@ EXTERN int asn1Copy_e2ap_TNLinformation (OSCTXT* pctxt, const e2ap_TNLinformatio
 //enumerated
 
 typedef enum {
-    e2ap_ric_service = 0,
-    e2ap_support_function = 1,
-    e2ap_both = 2
+    e2ap_TNLusage_ric_service = 0,
+    e2ap_TNLusage_support_function = 1,
+    e2ap_TNLusage_both = 2
 } e2ap_TNLusage_Root;
 
 typedef OSUINT32 e2ap_TNLusage;
@@ -313,8 +318,8 @@ EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs_element (const char 
 /*           E2connectionUpdate                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2connectionUpdate_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2connectionUpdate_protocolIEs;
 EXTERN int asn1PE_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2connectionUpdate_protocolIEs (e2ap_E2connectionUpdate_protocolIEs* pvalue);
@@ -326,7 +331,7 @@ EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs (const char* name, e
 /*2 . E2connectionUpdate -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2connectionUpdate {
-    e2ap_E2connectionUpdate_ProtocolIE protocolIEs;
+    e2ap_E2connectionUpdate_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2connectionUpdate;
 
@@ -345,26 +350,26 @@ EXTERN int asn1Copy_e2ap_E2connectionUpdate (OSCTXT* pctxt, const e2ap_E2connect
 //enumerated
 
 typedef enum {
-    e2ap_ran_function_id_invalid = 0,
-    e2ap_action_not_supported = 1,
-    e2ap_excessive_actions = 2,
-    e2ap_duplicate_action = 3,
-    e2ap_duplicate_event_trigger = 4,
-    e2ap_function_resource_limit = 5,
-    e2ap_request_id_unknown = 6,
-    e2ap_inconsistent_action_subsequent_action_sequence = 7,
-    e2ap_control_message_invalid = 8,
-    e2ap_ric_call_process_id_invalid = 9,
-    e2ap_control_timer_expired = 10,
-    e2ap_control_failed_to_execute = 11,
-    e2ap_system_not_ready = 12,
-    e2ap_unspecified = 13,
-    e2ap_ric_subscription_end_time_expired = 14,
-    e2ap_ric_subscription_end_time_invalid = 15,
-    e2ap_duplicate_ric_request_id = 16,
-    e2ap_eventTriggerNotSupported = 17,
-    e2ap_requested_information_unavailable = 18,
-    e2ap_invalid_information_request = 19
+    e2ap_CauseRICrequest_ran_function_id_invalid = 0,
+    e2ap_CauseRICrequest_action_not_supported = 1,
+    e2ap_CauseRICrequest_excessive_actions = 2,
+    e2ap_CauseRICrequest_duplicate_action = 3,
+    e2ap_CauseRICrequest_duplicate_event_trigger = 4,
+    e2ap_CauseRICrequest_function_resource_limit = 5,
+    e2ap_CauseRICrequest_request_id_unknown = 6,
+    e2ap_CauseRICrequest_inconsistent_action_subsequent_action_sequence = 7,
+    e2ap_CauseRICrequest_control_message_invalid = 8,
+    e2ap_CauseRICrequest_ric_call_process_id_invalid = 9,
+    e2ap_CauseRICrequest_control_timer_expired = 10,
+    e2ap_CauseRICrequest_control_failed_to_execute = 11,
+    e2ap_CauseRICrequest_system_not_ready = 12,
+    e2ap_CauseRICrequest_unspecified = 13,
+    e2ap_CauseRICrequest_ric_subscription_end_time_expired = 14,
+    e2ap_CauseRICrequest_ric_subscription_end_time_invalid = 15,
+    e2ap_CauseRICrequest_duplicate_ric_request_id = 16,
+    e2ap_CauseRICrequest_eventTriggerNotSupported = 17,
+    e2ap_CauseRICrequest_requested_information_unavailable = 18,
+    e2ap_CauseRICrequest_invalid_information_request = 19
 } e2ap_CauseRICrequest_Root;
 
 typedef OSUINT32 e2ap_CauseRICrequest;
@@ -399,9 +404,9 @@ EXTERN int asn1Init_e2ap_CauseRICrequest (e2ap_CauseRICrequest* pvalue);/*******
 //enumerated
 
 typedef enum {
-    e2ap_ran_function_not_supported = 0,
-    e2ap_excessive_functions = 1,
-    e2ap_ric_resource_limit = 2
+    e2ap_CauseRICservice_ran_function_not_supported = 0,
+    e2ap_CauseRICservice_excessive_functions = 1,
+    e2ap_CauseRICservice_ric_resource_limit = 2
 } e2ap_CauseRICservice_Root;
 
 typedef OSUINT32 e2ap_CauseRICservice;
@@ -436,7 +441,7 @@ EXTERN int asn1Init_e2ap_CauseRICservice (e2ap_CauseRICservice* pvalue);/*******
 //enumerated
 
 typedef enum {
-    e2ap_e2node_component_unknown = 0
+    e2ap_CauseE2node_e2node_component_unknown = 0
 } e2ap_CauseE2node_Root;
 
 typedef OSUINT32 e2ap_CauseE2node;
@@ -471,8 +476,8 @@ EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue);/***************
 //enumerated
 
 typedef enum {
-    e2ap_unspecified = 0,
-    e2ap_transport_resource_unavailable = 1
+    e2ap_CauseTransport_unspecified = 0,
+    e2ap_CauseTransport_transport_resource_unavailable = 1
 } e2ap_CauseTransport_Root;
 
 typedef OSUINT32 e2ap_CauseTransport;
@@ -507,13 +512,13 @@ EXTERN int asn1Init_e2ap_CauseTransport (e2ap_CauseTransport* pvalue);/*********
 //enumerated
 
 typedef enum {
-    e2ap_transfer_syntax_error = 0,
-    e2ap_abstract_syntax_error_reject = 1,
-    e2ap_abstract_syntax_error_ignore_and_notify = 2,
-    e2ap_message_not_compatible_with_receiver_state = 3,
-    e2ap_semantic_error = 4,
-    e2ap_abstract_syntax_error_falsely_constructed_message = 5,
-    e2ap_unspecified = 6
+    e2ap_CauseProtocol_transfer_syntax_error = 0,
+    e2ap_CauseProtocol_abstract_syntax_error_reject = 1,
+    e2ap_CauseProtocol_abstract_syntax_error_ignore_and_notify = 2,
+    e2ap_CauseProtocol_message_not_compatible_with_receiver_state = 3,
+    e2ap_CauseProtocol_semantic_error = 4,
+    e2ap_CauseProtocol_abstract_syntax_error_falsely_constructed_message = 5,
+    e2ap_CauseProtocol_unspecified = 6
 } e2ap_CauseProtocol_Root;
 
 typedef OSUINT32 e2ap_CauseProtocol;
@@ -548,10 +553,10 @@ EXTERN int asn1Init_e2ap_CauseProtocol (e2ap_CauseProtocol* pvalue);/***********
 //enumerated
 
 typedef enum {
-    e2ap_control_processing_overload = 0,
-    e2ap_hardware_failure = 1,
-    e2ap_om_intervention = 2,
-    e2ap_unspecified = 3
+    e2ap_CauseMisc_control_processing_overload = 0,
+    e2ap_CauseMisc_hardware_failure = 1,
+    e2ap_CauseMisc_om_intervention = 2,
+    e2ap_CauseMisc_unspecified = 3
 } e2ap_CauseMisc_Root;
 
 typedef OSUINT32 e2ap_CauseMisc;
@@ -792,8 +797,8 @@ EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (
 /*           E2connectionUpdateAcknowledge                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2connectionUpdateAcknowledge_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2connectionUpdateAcknowledge_protocolIEs;
 EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs (e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
@@ -805,7 +810,7 @@ EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs (const ch
 /*2 . E2connectionUpdateAcknowledge -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge {
-    e2ap_E2connectionUpdateAcknowledge_ProtocolIE protocolIEs;
+    e2ap_E2connectionUpdateAcknowledge_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2connectionUpdateAcknowledge;
 
@@ -824,12 +829,12 @@ EXTERN int asn1Copy_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, const e2a
 //enumerated
 
 typedef enum {
-    e2ap_v1s = 0,
-    e2ap_v2s = 1,
-    e2ap_v5s = 2,
-    e2ap_v10s = 3,
-    e2ap_v20s = 4,
-    e2ap_v60s = 5
+    e2ap_TimeToWait_v1s = 0,
+    e2ap_TimeToWait_v2s = 1,
+    e2ap_TimeToWait_v5s = 2,
+    e2ap_TimeToWait_v10s = 3,
+    e2ap_TimeToWait_v20s = 4,
+    e2ap_TimeToWait_v60s = 5
 } e2ap_TimeToWait_Root;
 
 typedef OSUINT32 e2ap_TimeToWait;
@@ -877,9 +882,9 @@ EXTERN int asn1Free_e2ap_ProcedureCode (OSCTXT* pctxt, e2ap_ProcedureCode* pvalu
 //enumerated
 
 typedef enum {
-    e2ap_initiating_message = 0,
-    e2ap_successful_outcome = 1,
-    e2ap_unsuccessfull_outcome = 2
+    e2ap_TriggeringMessage_initiating_message = 0,
+    e2ap_TriggeringMessage_successful_outcome = 1,
+    e2ap_TriggeringMessage_unsuccessfull_outcome = 2
 } e2ap_TriggeringMessage_Root;
 
 typedef OSUINT32 e2ap_TriggeringMessage;
@@ -914,9 +919,9 @@ EXTERN int asn1Init_e2ap_TriggeringMessage (e2ap_TriggeringMessage* pvalue);/***
 //enumerated
 
 typedef enum {
-    e2ap_reject = 0,
-    e2ap_ignore = 1,
-    e2ap_notify = 2
+    e2ap_Criticality_reject = 0,
+    e2ap_Criticality_ignore = 1,
+    e2ap_Criticality_notify = 2
 } e2ap_Criticality_Root;
 
 typedef OSUINT32 e2ap_Criticality;
@@ -1121,8 +1126,8 @@ EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure_protocolIEs_element (cons
 /*           E2connectionUpdateFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2connectionUpdateFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2connectionUpdateFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_E2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2connectionUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2connectionUpdateFailure_protocolIEs (e2ap_E2connectionUpdateFailure_protocolIEs* pvalue);
@@ -1134,7 +1139,7 @@ EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateFailure_protocolIEs (const char* 
 /*2 . E2connectionUpdateFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2connectionUpdateFailure {
-    e2ap_E2connectionUpdateFailure_ProtocolIE protocolIEs;
+    e2ap_E2connectionUpdateFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2connectionUpdateFailure;
 
@@ -1729,13 +1734,13 @@ EXTERN void asn1Free_e2ap_GlobalE2node_ID (OSCTXT* pctxt, e2ap_GlobalE2node_ID* 
 //enumerated
 
 typedef enum {
-    e2ap_ng = 0,
-    e2ap_xn = 1,
-    e2ap_e1 = 2,
-    e2ap_f1 = 3,
-    e2ap_w1 = 4,
-    e2ap_s1 = 5,
-    e2ap_x2 = 6
+    e2ap_E2nodeComponentInterfaceType_ng = 0,
+    e2ap_E2nodeComponentInterfaceType_xn = 1,
+    e2ap_E2nodeComponentInterfaceType_e1 = 2,
+    e2ap_E2nodeComponentInterfaceType_f1 = 3,
+    e2ap_E2nodeComponentInterfaceType_w1 = 4,
+    e2ap_E2nodeComponentInterfaceType_s1 = 5,
+    e2ap_E2nodeComponentInterfaceType_x2 = 6
 } e2ap_E2nodeComponentInterfaceType_Root;
 
 typedef OSUINT32 e2ap_E2nodeComponentInterfaceType;
@@ -2454,8 +2459,8 @@ EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate_protocolIEs_element (cons
 /*           E2nodeConfigurationUpdate                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2nodeConfigurationUpdate_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2nodeConfigurationUpdate_protocolIEs;
 EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdate_protocolIEs (e2ap_E2nodeConfigurationUpdate_protocolIEs* pvalue);
@@ -2467,7 +2472,7 @@ EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdate_protocolIEs (const char* 
 /*2 . E2nodeConfigurationUpdate -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2nodeConfigurationUpdate {
-    e2ap_E2nodeConfigurationUpdate_ProtocolIE protocolIEs;
+    e2ap_E2nodeConfigurationUpdate_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2nodeConfigurationUpdate;
 
@@ -2821,8 +2826,8 @@ EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs_el
 /*           E2nodeConfigurationUpdateAcknowledge                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2nodeConfigurationUpdateAcknowledge_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs;
 EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs* pvalue);
@@ -2834,7 +2839,7 @@ EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs (c
 /*2 . E2nodeConfigurationUpdateAcknowledge -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2nodeConfigurationUpdateAcknowledge {
-    e2ap_E2nodeConfigurationUpdateAcknowledge_ProtocolIE protocolIEs;
+    e2ap_E2nodeConfigurationUpdateAcknowledge_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2nodeConfigurationUpdateAcknowledge;
 
@@ -2914,8 +2919,8 @@ EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs_elemen
 /*           E2nodeConfigurationUpdateFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2nodeConfigurationUpdateFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2nodeConfigurationUpdateFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (e2ap_E2nodeConfigurationUpdateFailure_protocolIEs* pvalue);
@@ -2927,7 +2932,7 @@ EXTERN int asn1PrtToStr_e2ap_E2nodeConfigurationUpdateFailure_protocolIEs (const
 /*2 . E2nodeConfigurationUpdateFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2nodeConfigurationUpdateFailure {
-    e2ap_E2nodeConfigurationUpdateFailure_ProtocolIE protocolIEs;
+    e2ap_E2nodeConfigurationUpdateFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2nodeConfigurationUpdateFailure;
 
@@ -2983,8 +2988,8 @@ EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest_protocolIEs_element (const char * 
 /*           E2RemovalRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2RemovalRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2RemovalRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_E2RemovalRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2RemovalRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2RemovalRequest_protocolIEs (e2ap_E2RemovalRequest_protocolIEs* pvalue);
@@ -2996,7 +3001,7 @@ EXTERN int asn1PrtToStr_e2ap_E2RemovalRequest_protocolIEs (const char* name, e2a
 /*2 . E2RemovalRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2RemovalRequest {
-    e2ap_E2RemovalRequest_ProtocolIE protocolIEs;
+    e2ap_E2RemovalRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2RemovalRequest;
 
@@ -3060,8 +3065,8 @@ EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse_protocolIEs_element (const char *
 /*           E2RemovalResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2RemovalResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2RemovalResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_E2RemovalResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2RemovalResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2RemovalResponse_protocolIEs (e2ap_E2RemovalResponse_protocolIEs* pvalue);
@@ -3073,7 +3078,7 @@ EXTERN int asn1PrtToStr_e2ap_E2RemovalResponse_protocolIEs (const char* name, e2
 /*2 . E2RemovalResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2RemovalResponse {
-    e2ap_E2RemovalResponse_ProtocolIE protocolIEs;
+    e2ap_E2RemovalResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2RemovalResponse;
 
@@ -3145,8 +3150,8 @@ EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure_protocolIEs_element (const char * 
 /*           E2RemovalFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2RemovalFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2RemovalFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_E2RemovalFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2RemovalFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2RemovalFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2RemovalFailure_protocolIEs (e2ap_E2RemovalFailure_protocolIEs* pvalue);
@@ -3158,7 +3163,7 @@ EXTERN int asn1PrtToStr_e2ap_E2RemovalFailure_protocolIEs (const char* name, e2a
 /*2 . E2RemovalFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2RemovalFailure {
-    e2ap_E2RemovalFailure_ProtocolIE protocolIEs;
+    e2ap_E2RemovalFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2RemovalFailure;
 
@@ -3246,8 +3251,8 @@ EXTERN int asn1PrtToStr_e2ap_E2setupFailure_protocolIEs_element (const char * na
 /*           E2setupFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2setupFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2setupFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_E2setupFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2setupFailure_protocolIEs (OSCTXT* pctxt, e2ap_E2setupFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2setupFailure_protocolIEs (e2ap_E2setupFailure_protocolIEs* pvalue);
@@ -3259,7 +3264,7 @@ EXTERN int asn1PrtToStr_e2ap_E2setupFailure_protocolIEs (const char* name, e2ap_
 /*2 . E2setupFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2setupFailure {
-    e2ap_E2setupFailure_ProtocolIE protocolIEs;
+    e2ap_E2setupFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2setupFailure;
 
@@ -3469,8 +3474,8 @@ EXTERN int asn1PrtToStr_e2ap_E2setupRequest_protocolIEs_element (const char * na
 /*           E2setupRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2setupRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2setupRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_E2setupRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2setupRequest_protocolIEs (OSCTXT* pctxt, e2ap_E2setupRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2setupRequest_protocolIEs (e2ap_E2setupRequest_protocolIEs* pvalue);
@@ -3482,7 +3487,7 @@ EXTERN int asn1PrtToStr_e2ap_E2setupRequest_protocolIEs (const char* name, e2ap_
 /*2 . E2setupRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2setupRequest {
-    e2ap_E2setupRequest_ProtocolIE protocolIEs;
+    e2ap_E2setupRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2setupRequest;
 
@@ -3750,8 +3755,8 @@ EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs_element (const char * n
 /*           E2setupResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2setupResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_E2setupResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_E2setupResponse_protocolIEs (OSCTXT* pctxt, e2ap_E2setupResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_E2setupResponse_protocolIEs (e2ap_E2setupResponse_protocolIEs* pvalue);
@@ -3763,7 +3768,7 @@ EXTERN int asn1PrtToStr_e2ap_E2setupResponse_protocolIEs (const char* name, e2ap
 /*2 . E2setupResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_E2setupResponse {
-    e2ap_E2setupResponse_ProtocolIE protocolIEs;
+    e2ap_E2setupResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_E2setupResponse;
 
@@ -3851,8 +3856,8 @@ EXTERN int asn1PrtToStr_e2ap_ErrorIndication_protocolIEs_element (const char * n
 /*           ErrorIndication                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_ErrorIndication_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_ErrorIndication_protocolIEs;
 EXTERN int asn1PE_e2ap_ErrorIndication_protocolIEs (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_ErrorIndication_protocolIEs (OSCTXT* pctxt, e2ap_ErrorIndication_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_ErrorIndication_protocolIEs (e2ap_ErrorIndication_protocolIEs* pvalue);
@@ -3864,7 +3869,7 @@ EXTERN int asn1PrtToStr_e2ap_ErrorIndication_protocolIEs (const char* name, e2ap
 /*2 . ErrorIndication -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_ErrorIndication {
-    e2ap_ErrorIndication_ProtocolIE protocolIEs;
+    e2ap_ErrorIndication_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_ErrorIndication;
 
@@ -3928,8 +3933,8 @@ EXTERN int asn1PrtToStr_e2ap_ResetRequest_protocolIEs_element (const char * name
 /*           ResetRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_ResetRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_ResetRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_ResetRequest_protocolIEs (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_ResetRequest_protocolIEs (OSCTXT* pctxt, e2ap_ResetRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_ResetRequest_protocolIEs (e2ap_ResetRequest_protocolIEs* pvalue);
@@ -3941,7 +3946,7 @@ EXTERN int asn1PrtToStr_e2ap_ResetRequest_protocolIEs (const char* name, e2ap_Re
 /*2 . ResetRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_ResetRequest {
-    e2ap_ResetRequest_ProtocolIE protocolIEs;
+    e2ap_ResetRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_ResetRequest;
 
@@ -4005,8 +4010,8 @@ EXTERN int asn1PrtToStr_e2ap_ResetResponse_protocolIEs_element (const char * nam
 /*           ResetResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_ResetResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_ResetResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_ResetResponse_protocolIEs (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_ResetResponse_protocolIEs (OSCTXT* pctxt, e2ap_ResetResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_ResetResponse_protocolIEs (e2ap_ResetResponse_protocolIEs* pvalue);
@@ -4018,7 +4023,7 @@ EXTERN int asn1PrtToStr_e2ap_ResetResponse_protocolIEs (const char* name, e2ap_R
 /*2 . ResetResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_ResetResponse {
-    e2ap_ResetResponse_ProtocolIE protocolIEs;
+    e2ap_ResetResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_ResetResponse;
 
@@ -4090,8 +4095,8 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure_protocolIEs_element (const cha
 /*           RICassistanceFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICassistanceFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICassistanceFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICassistanceFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICassistanceFailure_protocolIEs (e2ap_RICassistanceFailure_protocolIEs* pvalue);
@@ -4103,7 +4108,7 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceFailure_protocolIEs (const char* name,
 /*2 . RICassistanceFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICassistanceFailure {
-    e2ap_RICassistanceFailure_ProtocolIE protocolIEs;
+    e2ap_RICassistanceFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICassistanceFailure;
 
@@ -4222,8 +4227,8 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication_protocolIEs_element (const 
 /*           RICassistanceIndication                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICassistanceIndication_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceIndication_protocolIEs;
 EXTERN int asn1PE_e2ap_RICassistanceIndication_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICassistanceIndication_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceIndication_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICassistanceIndication_protocolIEs (e2ap_RICassistanceIndication_protocolIEs* pvalue);
@@ -4235,7 +4240,7 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceIndication_protocolIEs (const char* na
 /*2 . RICassistanceIndication -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICassistanceIndication {
-    e2ap_RICassistanceIndication_ProtocolIE protocolIEs;
+    e2ap_RICassistanceIndication_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICassistanceIndication;
 
@@ -4291,8 +4296,8 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt_protocolIEs_element (const char *
 /*           RICassistanceHalt                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICassistanceHalt_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceHalt_protocolIEs;
 EXTERN int asn1PE_e2ap_RICassistanceHalt_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICassistanceHalt_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceHalt_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICassistanceHalt_protocolIEs (e2ap_RICassistanceHalt_protocolIEs* pvalue);
@@ -4304,7 +4309,7 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceHalt_protocolIEs (const char* name, e2
 /*2 . RICassistanceHalt -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICassistanceHalt {
-    e2ap_RICassistanceHalt_ProtocolIE protocolIEs;
+    e2ap_RICassistanceHalt_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICassistanceHalt;
 
@@ -4336,7 +4341,7 @@ EXTERN void asn1Free_e2ap_RICassistanceMessage (OSCTXT* pctxt, e2ap_RICassistanc
 //enumerated
 
 typedef enum {
-    e2ap_true = 0
+    e2ap_RICassistanceUpdate_true = 0
 } e2ap_RICassistanceUpdate_Root;
 
 typedef OSUINT32 e2ap_RICassistanceUpdate;
@@ -4453,8 +4458,8 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest_protocolIEs_element (const cha
 /*           RICassistanceRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICassistanceRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICassistanceRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICassistanceRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICassistanceRequest_protocolIEs (e2ap_RICassistanceRequest_protocolIEs* pvalue);
@@ -4466,7 +4471,7 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceRequest_protocolIEs (const char* name,
 /*2 . RICassistanceRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICassistanceRequest {
-    e2ap_RICassistanceRequest_ProtocolIE protocolIEs;
+    e2ap_RICassistanceRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICassistanceRequest;
 
@@ -4538,8 +4543,8 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse_protocolIEs_element (const ch
 /*           RICassistanceResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICassistanceResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICassistanceResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICassistanceResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICassistanceResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICassistanceResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICassistanceResponse_protocolIEs (e2ap_RICassistanceResponse_protocolIEs* pvalue);
@@ -4551,7 +4556,7 @@ EXTERN int asn1PrtToStr_e2ap_RICassistanceResponse_protocolIEs (const char* name
 /*2 . RICassistanceResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICassistanceResponse {
-    e2ap_RICassistanceResponse_ProtocolIE protocolIEs;
+    e2ap_RICassistanceResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICassistanceResponse;
 
@@ -4657,8 +4662,8 @@ EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge_protocolIEs_element (const ch
 /*           RICcontrolAcknowledge                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICcontrolAcknowledge_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICcontrolAcknowledge_protocolIEs;
 EXTERN int asn1PE_e2ap_RICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICcontrolAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICcontrolAcknowledge_protocolIEs (e2ap_RICcontrolAcknowledge_protocolIEs* pvalue);
@@ -4670,7 +4675,7 @@ EXTERN int asn1PrtToStr_e2ap_RICcontrolAcknowledge_protocolIEs (const char* name
 /*2 . RICcontrolAcknowledge -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICcontrolAcknowledge {
-    e2ap_RICcontrolAcknowledge_ProtocolIE protocolIEs;
+    e2ap_RICcontrolAcknowledge_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICcontrolAcknowledge;
 
@@ -4766,8 +4771,8 @@ EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure_protocolIEs_element (const char *
 /*           RICcontrolFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICcontrolFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICcontrolFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICcontrolFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICcontrolFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICcontrolFailure_protocolIEs (e2ap_RICcontrolFailure_protocolIEs* pvalue);
@@ -4779,7 +4784,7 @@ EXTERN int asn1PrtToStr_e2ap_RICcontrolFailure_protocolIEs (const char* name, e2
 /*2 . RICcontrolFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICcontrolFailure {
-    e2ap_RICcontrolFailure_ProtocolIE protocolIEs;
+    e2ap_RICcontrolFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICcontrolFailure;
 
@@ -4824,8 +4829,8 @@ EXTERN void asn1Free_e2ap_RICcontrolMessage (OSCTXT* pctxt, e2ap_RICcontrolMessa
 //enumerated
 
 typedef enum {
-    e2ap_noAck = 0,
-    e2ap_ack = 1
+    e2ap_RICcontrolAckRequest_noAck = 0,
+    e2ap_RICcontrolAckRequest_ack = 1
 } e2ap_RICcontrolAckRequest_Root;
 
 typedef OSUINT32 e2ap_RICcontrolAckRequest;
@@ -4937,8 +4942,8 @@ EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest_protocolIEs_element (const char *
 /*           RICcontrolRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICcontrolRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICcontrolRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICcontrolRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICcontrolRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICcontrolRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICcontrolRequest_protocolIEs (e2ap_RICcontrolRequest_protocolIEs* pvalue);
@@ -4950,7 +4955,7 @@ EXTERN int asn1PrtToStr_e2ap_RICcontrolRequest_protocolIEs (const char* name, e2
 /*2 . RICcontrolRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICcontrolRequest {
-    e2ap_RICcontrolRequest_ProtocolIE protocolIEs;
+    e2ap_RICcontrolRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICcontrolRequest;
 
@@ -4995,8 +5000,8 @@ EXTERN int asn1Free_e2ap_RICindicationSN (OSCTXT* pctxt, e2ap_RICindicationSN* p
 //enumerated
 
 typedef enum {
-    e2ap_report = 0,
-    e2ap_insert = 1
+    e2ap_RICindicationType_report = 0,
+    e2ap_RICindicationType_insert = 1
 } e2ap_RICindicationType_Root;
 
 typedef OSUINT32 e2ap_RICindicationType;
@@ -5150,8 +5155,8 @@ EXTERN int asn1PrtToStr_e2ap_RICindication_protocolIEs_element (const char * nam
 /*           RICindication                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICindication_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICindication_protocolIEs;
 EXTERN int asn1PE_e2ap_RICindication_protocolIEs (OSCTXT* pctxt, e2ap_RICindication_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICindication_protocolIEs (OSCTXT* pctxt, e2ap_RICindication_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICindication_protocolIEs (e2ap_RICindication_protocolIEs* pvalue);
@@ -5163,7 +5168,7 @@ EXTERN int asn1PrtToStr_e2ap_RICindication_protocolIEs (const char* name, e2ap_R
 /*2 . RICindication -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICindication {
-    e2ap_RICindication_ProtocolIE protocolIEs;
+    e2ap_RICindication_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICindication;
 
@@ -5195,9 +5200,9 @@ EXTERN int asn1Init_e2ap_LoadMeasurementID (e2ap_LoadMeasurementID* pvalue);
 //enumerated
 
 typedef enum {
-    e2ap_start = 0,
-    e2ap_stop = 1,
-    e2ap_add = 2
+    e2ap_RegistrationRequest_start = 0,
+    e2ap_RegistrationRequest_stop = 1,
+    e2ap_RegistrationRequest_add = 2
 } e2ap_RegistrationRequest_Root;
 
 typedef OSUINT32 e2ap_RegistrationRequest;
@@ -5232,7 +5237,7 @@ EXTERN int asn1Init_e2ap_RegistrationRequest (e2ap_RegistrationRequest* pvalue);
 //enumerated
 
 typedef enum {
-    e2ap_true = 0
+    e2ap_RICloadRequest_true = 0
 } e2ap_RICloadRequest_Root;
 
 typedef OSUINT32 e2ap_RICloadRequest;
@@ -5512,11 +5517,11 @@ EXTERN void asn1Print_e2ap_RANfunctionLoadRequest_List (const char *name, const 
 //enumerated
 
 typedef enum {
-    e2ap_ms500 = 0,
-    e2ap_ms1000 = 1,
-    e2ap_ms2000 = 2,
-    e2ap_ms5000 = 3,
-    e2ap_ms10000 = 4
+    e2ap_ReportingPeriodicity_ms500 = 0,
+    e2ap_ReportingPeriodicity_ms1000 = 1,
+    e2ap_ReportingPeriodicity_ms2000 = 2,
+    e2ap_ReportingPeriodicity_ms5000 = 3,
+    e2ap_ReportingPeriodicity_ms10000 = 4
 } e2ap_ReportingPeriodicity_Root;
 
 typedef OSUINT32 e2ap_ReportingPeriodicity;
@@ -5620,8 +5625,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest_protocolIEs_element (co
 /*           RICserviceLoadStatusRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceLoadStatusRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadStatusRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceLoadStatusRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceLoadStatusRequest_protocolIEs (e2ap_RICserviceLoadStatusRequest_protocolIEs* pvalue);
@@ -5633,7 +5638,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusRequest_protocolIEs (const char
 /*2 . RICserviceLoadStatusRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceLoadStatusRequest {
-    e2ap_RICserviceLoadStatusRequest_ProtocolIE protocolIEs;
+    e2ap_RICserviceLoadStatusRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceLoadStatusRequest;
 
@@ -5652,7 +5657,7 @@ EXTERN int asn1Copy_e2ap_RICserviceLoadStatusRequest (OSCTXT* pctxt, const e2ap_
 //enumerated
 
 typedef enum {
-    e2ap_true = 0
+    e2ap_RICloadConfirm_true = 0
 } e2ap_RICloadConfirm_Root;
 
 typedef OSUINT32 e2ap_RICloadConfirm;
@@ -5985,8 +5990,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse_protocolIEs_element (c
 /*           RICserviceLoadStatusResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceLoadStatusResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadStatusResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceLoadStatusResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceLoadStatusResponse_protocolIEs (e2ap_RICserviceLoadStatusResponse_protocolIEs* pvalue);
@@ -5998,7 +6003,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusResponse_protocolIEs (const cha
 /*2 . RICserviceLoadStatusResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceLoadStatusResponse {
-    e2ap_RICserviceLoadStatusResponse_ProtocolIE protocolIEs;
+    e2ap_RICserviceLoadStatusResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceLoadStatusResponse;
 
@@ -6078,8 +6083,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure_protocolIEs_element (co
 /*           RICserviceLoadStatusFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceLoadStatusFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadStatusFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceLoadStatusFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceLoadStatusFailure_protocolIEs (e2ap_RICserviceLoadStatusFailure_protocolIEs* pvalue);
@@ -6091,7 +6096,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadStatusFailure_protocolIEs (const char
 /*2 . RICserviceLoadStatusFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceLoadStatusFailure {
-    e2ap_RICserviceLoadStatusFailure_ProtocolIE protocolIEs;
+    e2ap_RICserviceLoadStatusFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceLoadStatusFailure;
 
@@ -6482,8 +6487,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate_protocolIEs_element (const cha
 /*           RICserviceLoadUpdate                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceLoadUpdate_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceLoadUpdate_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceLoadUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceLoadUpdate_protocolIEs (e2ap_RICserviceLoadUpdate_protocolIEs* pvalue);
@@ -6495,7 +6500,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceLoadUpdate_protocolIEs (const char* name,
 /*2 . RICserviceLoadUpdate -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceLoadUpdate {
-    e2ap_RICserviceLoadUpdate_ProtocolIE protocolIEs;
+    e2ap_RICserviceLoadUpdate_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceLoadUpdate;
 
@@ -6559,8 +6564,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceQuery_protocolIEs_element (const char * n
 /*           RICserviceQuery                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceQuery_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceQuery_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceQuery_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceQuery_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceQuery_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceQuery_protocolIEs (e2ap_RICserviceQuery_protocolIEs* pvalue);
@@ -6572,7 +6577,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceQuery_protocolIEs (const char* name, e2ap
 /*2 . RICserviceQuery -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceQuery {
-    e2ap_RICserviceQuery_ProtocolIE protocolIEs;
+    e2ap_RICserviceQuery_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceQuery;
 
@@ -6652,8 +6657,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate_protocolIEs_element (const char * 
 /*           RICserviceUpdate                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceUpdate_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceUpdate_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceUpdate_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdate_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceUpdate_protocolIEs (e2ap_RICserviceUpdate_protocolIEs* pvalue);
@@ -6665,7 +6670,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceUpdate_protocolIEs (const char* name, e2a
 /*2 . RICserviceUpdate -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceUpdate {
-    e2ap_RICserviceUpdate_ProtocolIE protocolIEs;
+    e2ap_RICserviceUpdate_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceUpdate;
 
@@ -6737,8 +6742,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge_protocolIEs_element (co
 /*           RICserviceUpdateAcknowledge                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceUpdateAcknowledge_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceUpdateAcknowledge_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceUpdateAcknowledge_protocolIEs (e2ap_RICserviceUpdateAcknowledge_protocolIEs* pvalue);
@@ -6750,7 +6755,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateAcknowledge_protocolIEs (const char
 /*2 . RICserviceUpdateAcknowledge -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceUpdateAcknowledge {
-    e2ap_RICserviceUpdateAcknowledge_ProtocolIE protocolIEs;
+    e2ap_RICserviceUpdateAcknowledge_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceUpdateAcknowledge;
 
@@ -6830,8 +6835,8 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure_protocolIEs_element (const 
 /*           RICserviceUpdateFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICserviceUpdateFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICserviceUpdateFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICserviceUpdateFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICserviceUpdateFailure_protocolIEs (e2ap_RICserviceUpdateFailure_protocolIEs* pvalue);
@@ -6843,7 +6848,7 @@ EXTERN int asn1PrtToStr_e2ap_RICserviceUpdateFailure_protocolIEs (const char* na
 /*2 . RICserviceUpdateFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICserviceUpdateFailure {
-    e2ap_RICserviceUpdateFailure_ProtocolIE protocolIEs;
+    e2ap_RICserviceUpdateFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICserviceUpdateFailure;
 
@@ -6923,8 +6928,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure_protocolIEs_element (const c
 /*           RICsubscriptionFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionFailure_protocolIEs (e2ap_RICsubscriptionFailure_protocolIEs* pvalue);
@@ -6936,7 +6941,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionFailure_protocolIEs (const char* nam
 /*2 . RICsubscriptionFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionFailure {
-    e2ap_RICsubscriptionFailure_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionFailure;
 
@@ -6968,9 +6973,9 @@ EXTERN void asn1Free_e2ap_RICeventTriggerDefinition (OSCTXT* pctxt, e2ap_RICeven
 //enumerated
 
 typedef enum {
-    e2ap_report = 0,
-    e2ap_insert = 1,
-    e2ap_policy = 2
+    e2ap_RICactionType_report = 0,
+    e2ap_RICactionType_insert = 1,
+    e2ap_RICactionType_policy = 2
 } e2ap_RICactionType_Root;
 
 typedef OSUINT32 e2ap_RICactionType;
@@ -7018,8 +7023,8 @@ EXTERN void asn1Free_e2ap_RICactionDefinition (OSCTXT* pctxt, e2ap_RICactionDefi
 //enumerated
 
 typedef enum {
-    e2ap_continue = 0,
-    e2ap_wait = 1
+    e2ap_RICsubsequentActionType_continue = 0,
+    e2ap_RICsubsequentActionType_wait = 1
 } e2ap_RICsubsequentActionType_Root;
 
 typedef OSUINT32 e2ap_RICsubsequentActionType;
@@ -7054,23 +7059,23 @@ EXTERN int asn1Init_e2ap_RICsubsequentActionType (e2ap_RICsubsequentActionType* 
 //enumerated
 
 typedef enum {
-    e2ap_w1ms = 0,
-    e2ap_w2ms = 1,
-    e2ap_w5ms = 2,
-    e2ap_w10ms = 3,
-    e2ap_w20ms = 4,
-    e2ap_w30ms = 5,
-    e2ap_w40ms = 6,
-    e2ap_w50ms = 7,
-    e2ap_w100ms = 8,
-    e2ap_w200ms = 9,
-    e2ap_w500ms = 10,
-    e2ap_w1s = 11,
-    e2ap_w2s = 12,
-    e2ap_w5s = 13,
-    e2ap_w10s = 14,
-    e2ap_w20s = 15,
-    e2ap_w60s = 16
+    e2ap_RICtimeToWait_w1ms = 0,
+    e2ap_RICtimeToWait_w2ms = 1,
+    e2ap_RICtimeToWait_w5ms = 2,
+    e2ap_RICtimeToWait_w10ms = 3,
+    e2ap_RICtimeToWait_w20ms = 4,
+    e2ap_RICtimeToWait_w30ms = 5,
+    e2ap_RICtimeToWait_w40ms = 6,
+    e2ap_RICtimeToWait_w50ms = 7,
+    e2ap_RICtimeToWait_w100ms = 8,
+    e2ap_RICtimeToWait_w200ms = 9,
+    e2ap_RICtimeToWait_w500ms = 10,
+    e2ap_RICtimeToWait_w1s = 11,
+    e2ap_RICtimeToWait_w2s = 12,
+    e2ap_RICtimeToWait_w5s = 13,
+    e2ap_RICtimeToWait_w10s = 14,
+    e2ap_RICtimeToWait_w20s = 15,
+    e2ap_RICtimeToWait_w60s = 16
 } e2ap_RICtimeToWait_Root;
 
 typedef OSUINT32 e2ap_RICtimeToWait;
@@ -7326,8 +7331,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest_protocolIEs_element (const c
 /*           RICsubscriptionRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionRequest_protocolIEs (e2ap_RICsubscriptionRequest_protocolIEs* pvalue);
@@ -7339,7 +7344,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionRequest_protocolIEs (const char* nam
 /*2 . RICsubscriptionRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionRequest {
-    e2ap_RICsubscriptionRequest_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionRequest;
 
@@ -7557,8 +7562,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse_protocolIEs_element (const 
 /*           RICsubscriptionResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionResponse_protocolIEs (e2ap_RICsubscriptionResponse_protocolIEs* pvalue);
@@ -7570,7 +7575,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionResponse_protocolIEs (const char* na
 /*2 . RICsubscriptionResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionResponse {
-    e2ap_RICsubscriptionResponse_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionResponse;
 
@@ -7642,8 +7647,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure_protocolIEs_element (co
 /*           RICsubscriptionAuditFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionAuditFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionAuditFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionAuditFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionAuditFailure_protocolIEs (e2ap_RICsubscriptionAuditFailure_protocolIEs* pvalue);
@@ -7655,7 +7660,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditFailure_protocolIEs (const char
 /*2 . RICsubscriptionAuditFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionAuditFailure {
-    e2ap_RICsubscriptionAuditFailure_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionAuditFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionAuditFailure;
 
@@ -7674,7 +7679,7 @@ EXTERN int asn1Copy_e2ap_RICsubscriptionAuditFailure (OSCTXT* pctxt, const e2ap_
 //enumerated
 
 typedef enum {
-    e2ap_true = 0
+    e2ap_ListedRecordsOnly_true = 0
 } e2ap_ListedRecordsOnly_Root;
 
 typedef OSUINT32 e2ap_ListedRecordsOnly;
@@ -7853,8 +7858,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest_protocolIEs_element (co
 /*           RICsubscriptionAuditRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionAuditRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionAuditRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionAuditRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionAuditRequest_protocolIEs (e2ap_RICsubscriptionAuditRequest_protocolIEs* pvalue);
@@ -7866,7 +7871,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditRequest_protocolIEs (const char
 /*2 . RICsubscriptionAuditRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionAuditRequest {
-    e2ap_RICsubscriptionAuditRequest_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionAuditRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionAuditRequest;
 
@@ -8018,8 +8023,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse_protocolIEs_element (c
 /*           RICsubscriptionAuditResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionAuditResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionAuditResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionAuditResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionAuditResponse_protocolIEs (e2ap_RICsubscriptionAuditResponse_protocolIEs* pvalue);
@@ -8031,7 +8036,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionAuditResponse_protocolIEs (const cha
 /*2 . RICsubscriptionAuditResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionAuditResponse {
-    e2ap_RICsubscriptionAuditResponse_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionAuditResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionAuditResponse;
 
@@ -8111,8 +8116,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure_protocolIEs_element (c
 /*           RICsubscriptionDeleteFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionDeleteFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionDeleteFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionDeleteFailure_protocolIEs (e2ap_RICsubscriptionDeleteFailure_protocolIEs* pvalue);
@@ -8124,7 +8129,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteFailure_protocolIEs (const cha
 /*2 . RICsubscriptionDeleteFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionDeleteFailure {
-    e2ap_RICsubscriptionDeleteFailure_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionDeleteFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionDeleteFailure;
 
@@ -8188,8 +8193,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest_protocolIEs_element (c
 /*           RICsubscriptionDeleteRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionDeleteRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequest_protocolIEs (e2ap_RICsubscriptionDeleteRequest_protocolIEs* pvalue);
@@ -8201,7 +8206,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequest_protocolIEs (const cha
 /*2 . RICsubscriptionDeleteRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionDeleteRequest {
-    e2ap_RICsubscriptionDeleteRequest_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionDeleteRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionDeleteRequest;
 
@@ -8265,8 +8270,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse_protocolIEs_element (
 /*           RICsubscriptionDeleteResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionDeleteResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionDeleteResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionDeleteResponse_protocolIEs (e2ap_RICsubscriptionDeleteResponse_protocolIEs* pvalue);
@@ -8278,7 +8283,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteResponse_protocolIEs (const ch
 /*2 . RICsubscriptionDeleteResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionDeleteResponse {
-    e2ap_RICsubscriptionDeleteResponse_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionDeleteResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionDeleteResponse;
 
@@ -8406,8 +8411,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired_protocolIEs_element (
 /*           RICsubscriptionDeleteRequired                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionDeleteRequired_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionDeleteRequired_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionDeleteRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionDeleteRequired_protocolIEs (e2ap_RICsubscriptionDeleteRequired_protocolIEs* pvalue);
@@ -8419,7 +8424,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionDeleteRequired_protocolIEs (const ch
 /*2 . RICsubscriptionDeleteRequired -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionDeleteRequired {
-    e2ap_RICsubscriptionDeleteRequired_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionDeleteRequired_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionDeleteRequired;
 
@@ -8733,8 +8738,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest_protocolIEs_elem
 /*           RICsubscriptionModificationRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionModificationRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequest_protocolIEs (e2ap_RICsubscriptionModificationRequest_protocolIEs* pvalue);
@@ -8746,7 +8751,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequest_protocolIEs (con
 /*2 . RICsubscriptionModificationRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionModificationRequest {
-    e2ap_RICsubscriptionModificationRequest_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionModificationRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionModificationRequest;
 
@@ -9272,8 +9277,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse_protocolIEs_ele
 /*           RICsubscriptionModificationResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionModificationResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionModificationResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionModificationResponse_protocolIEs (e2ap_RICsubscriptionModificationResponse_protocolIEs* pvalue);
@@ -9285,7 +9290,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationResponse_protocolIEs (co
 /*2 . RICsubscriptionModificationResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionModificationResponse {
-    e2ap_RICsubscriptionModificationResponse_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionModificationResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionModificationResponse;
 
@@ -9365,8 +9370,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure_protocolIEs_elem
 /*           RICsubscriptionModificationFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionModificationFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionModificationFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionModificationFailure_protocolIEs (e2ap_RICsubscriptionModificationFailure_protocolIEs* pvalue);
@@ -9378,7 +9383,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationFailure_protocolIEs (con
 /*2 . RICsubscriptionModificationFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionModificationFailure {
-    e2ap_RICsubscriptionModificationFailure_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionModificationFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionModificationFailure;
 
@@ -9598,8 +9603,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired_protocolIEs_ele
 /*           RICsubscriptionModificationRequired                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionModificationRequired_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationRequired_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionModificationRequired_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionModificationRequired_protocolIEs (e2ap_RICsubscriptionModificationRequired_protocolIEs* pvalue);
@@ -9611,7 +9616,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRequired_protocolIEs (co
 /*2 . RICsubscriptionModificationRequired -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionModificationRequired {
-    e2ap_RICsubscriptionModificationRequired_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionModificationRequired_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionModificationRequired;
 
@@ -9983,8 +9988,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm_protocolIEs_elem
 /*           RICsubscriptionModificationConfirm                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionModificationConfirm_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationConfirm_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionModificationConfirm_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionModificationConfirm_protocolIEs (e2ap_RICsubscriptionModificationConfirm_protocolIEs* pvalue);
@@ -9996,7 +10001,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationConfirm_protocolIEs (con
 /*2 . RICsubscriptionModificationConfirm -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionModificationConfirm {
-    e2ap_RICsubscriptionModificationConfirm_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionModificationConfirm_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionModificationConfirm;
 
@@ -10076,8 +10081,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse_protocolIEs_eleme
 /*           RICsubscriptionModificationRefuse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionModificationRefuse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionModificationRefuse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionModificationRefuse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionModificationRefuse_protocolIEs (e2ap_RICsubscriptionModificationRefuse_protocolIEs* pvalue);
@@ -10089,7 +10094,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionModificationRefuse_protocolIEs (cons
 /*2 . RICsubscriptionModificationRefuse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionModificationRefuse {
-    e2ap_RICsubscriptionModificationRefuse_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionModificationRefuse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionModificationRefuse;
 
@@ -10378,8 +10383,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest_protocolIEs_elem
 /*           RICsubscriptionStateControlRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionStateControlRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionStateControlRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionStateControlRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionStateControlRequest_protocolIEs (e2ap_RICsubscriptionStateControlRequest_protocolIEs* pvalue);
@@ -10391,7 +10396,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlRequest_protocolIEs (con
 /*2 . RICsubscriptionStateControlRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionStateControlRequest {
-    e2ap_RICsubscriptionStateControlRequest_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionStateControlRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionStateControlRequest;
 
@@ -10557,8 +10562,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse_protocolIEs_ele
 /*           RICsubscriptionStateControlResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionStateControlResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionStateControlResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionStateControlResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionStateControlResponse_protocolIEs (e2ap_RICsubscriptionStateControlResponse_protocolIEs* pvalue);
@@ -10570,7 +10575,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlResponse_protocolIEs (co
 /*2 . RICsubscriptionStateControlResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionStateControlResponse {
-    e2ap_RICsubscriptionStateControlResponse_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionStateControlResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionStateControlResponse;
 
@@ -10642,8 +10647,8 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure_protocolIEs_elem
 /*           RICsubscriptionStateControlFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICsubscriptionStateControlFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICsubscriptionStateControlFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICsubscriptionStateControlFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICsubscriptionStateControlFailure_protocolIEs (e2ap_RICsubscriptionStateControlFailure_protocolIEs* pvalue);
@@ -10655,7 +10660,7 @@ EXTERN int asn1PrtToStr_e2ap_RICsubscriptionStateControlFailure_protocolIEs (con
 /*2 . RICsubscriptionStateControlFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICsubscriptionStateControlFailure {
-    e2ap_RICsubscriptionStateControlFailure_ProtocolIE protocolIEs;
+    e2ap_RICsubscriptionStateControlFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICsubscriptionStateControlFailure;
 
@@ -10761,8 +10766,8 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryRequest_protocolIEs_element (const char * n
 /*           RICqueryRequest                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICqueryRequest_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICqueryRequest_protocolIEs;
 EXTERN int asn1PE_e2ap_RICqueryRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICqueryRequest_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryRequest_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICqueryRequest_protocolIEs (e2ap_RICqueryRequest_protocolIEs* pvalue);
@@ -10774,7 +10779,7 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryRequest_protocolIEs (const char* name, e2ap
 /*2 . RICqueryRequest -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICqueryRequest {
-    e2ap_RICqueryRequest_ProtocolIE protocolIEs;
+    e2ap_RICqueryRequest_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICqueryRequest;
 
@@ -10859,8 +10864,8 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryResponse_protocolIEs_element (const char * 
 /*           RICqueryResponse                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICqueryResponse_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICqueryResponse_protocolIEs;
 EXTERN int asn1PE_e2ap_RICqueryResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICqueryResponse_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryResponse_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICqueryResponse_protocolIEs (e2ap_RICqueryResponse_protocolIEs* pvalue);
@@ -10872,7 +10877,7 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryResponse_protocolIEs (const char* name, e2a
 /*2 . RICqueryResponse -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICqueryResponse {
-    e2ap_RICqueryResponse_ProtocolIE protocolIEs;
+    e2ap_RICqueryResponse_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICqueryResponse;
 
@@ -10952,8 +10957,8 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs_element (const char * n
 /*           RICqueryFailure                */
 /*****************************************/
 //2_container.h
-/* 1. xxx_ProtocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_RICqueryFailure_ProtocolIE;
+/* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
+typedef  OSRTDList e2ap_RICqueryFailure_protocolIEs;
 EXTERN int asn1PE_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue);
 EXTERN int asn1PD_e2ap_RICqueryFailure_protocolIEs (OSCTXT* pctxt, e2ap_RICqueryFailure_protocolIEs* pvalue);
 EXTERN int asn1Init_e2ap_RICqueryFailure_protocolIEs (e2ap_RICqueryFailure_protocolIEs* pvalue);
@@ -10965,7 +10970,7 @@ EXTERN int asn1PrtToStr_e2ap_RICqueryFailure_protocolIEs (const char* name, e2ap
 /*2 . RICqueryFailure -> mẫu cũ ở seq_normal*/
 
 typedef struct EXTERN e2ap_RICqueryFailure {
-    e2ap_RICqueryFailure_ProtocolIE protocolIEs;
+    e2ap_RICqueryFailure_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
 } e2ap_RICqueryFailure;
 
