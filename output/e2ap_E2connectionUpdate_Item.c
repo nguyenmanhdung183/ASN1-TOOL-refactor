@@ -22,14 +22,14 @@ int asn1PE_e2ap_E2connectionUpdate_Item (OSCTXT* pctxt, e2ap_E2connectionUpdate_
    /*encode root elements*/   
    /* encode field tnlInformation - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "tnlInformation");
-   stat = asn1PE_e2ap_TNLinformation (pctxt, pvalue->tnlInformation);
+   stat = asn1PE_e2ap_TNLinformation (pctxt, &pvalue->tnlInformation);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
 
    /* encode field tnlUsage - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "tnlUsage");
-   stat = asn1PE_e2ap_TNLusage (pctxt, pvalue->tnlUsage);
+   stat = asn1PE_e2ap_TNLusage (pctxt, &pvalue->tnlUsage);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

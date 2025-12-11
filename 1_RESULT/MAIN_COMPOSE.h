@@ -649,7 +649,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
             p_e2ap_protocolIEs_elem->id = ASN1V_e2ap_id_TransactionID;
             p_e2ap_protocolIEs_elem->criticality = e2ap_reject;
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_TransactionID;
-             p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_TransactionID = &p_E2connectionUpdateAcknowledge_src->id_TransactionID; //assign primitive
+             p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_TransactionID = &p_E2connectionUpdateAcknowledge_src->id_TransactionID; //assign primitive
 
             
             /* Append the node to protocolIEs list */
@@ -685,7 +685,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2connectionSetup",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_E2connectionUpdate_List(p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup);
+            asn1Init_e2ap_E2connectionUpdate_List(p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup);
             #endif
             //message_name.item_type -> type = E2connectionUpdate_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionUpdate_List(&asn1_ctx, 
@@ -733,7 +733,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2connectionSetupFailed",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_E2connectionSetupFailed_List(p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed);
+            asn1Init_e2ap_E2connectionSetupFailed_List(p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed);
             #endif
             //message_name.item_type -> type = E2connectionSetupFailed_List
             if(XNAP_FAILURE == e2ap_compose_E2connectionSetupFailed_List(&asn1_ctx, 

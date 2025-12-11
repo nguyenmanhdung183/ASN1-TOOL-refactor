@@ -1,3 +1,14 @@
+MAIN STRUCT -> gNB_CU/cu_cp/l3/common/utils/inc/Xn_asn_enc_intf.h
+MAIN_COMPOSE -> gNB_CU/cu_cp/l3/common/xnap_encdec_src/Xn_asn_enc_wrapper.c -> khai báo thêm ở .h
+output_main.h -> common/asn/inc/e2ap_asn_enc_dec_3gpp.h
+output_main.c -> common/asn/src/e2ap_asn_enc_dec_3gpp.c
+
+gọi hàm encode_XXX ở gNB_CU/cu_cp/l3/xnap/fsm/src/xnap_evtdlr.c
+
+dungnm23 struct/compose/main_h/main_c XXX
+
+
+
 ============CÁCH CHẠY=================
 -> cái bản tin to nó sễ chèn protocol vào trước cái IE sau đó thêm element-> gen message
 -> bản tin về IE nó sẽ chỉ chèn protocol vào trước cái IE thôi

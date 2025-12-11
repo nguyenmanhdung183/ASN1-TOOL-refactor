@@ -27,19 +27,19 @@ typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge_protocolIEs_element {
         *criticality: reject
         *presence: mandatory
         */
-         e2ap_TransactionID * _e2apE2connectionUpdateAck_IEs_id_TransactionID;
+         e2ap_TransactionID * _e2ap_E2connectionUpdateAck_IEs_id_TransactionID;
         /*
         *id: id-E2connectionUpdate_List
         *criticality: reject
         *presence: optional
         */
-         e2ap_E2connectionUpdate_List * _e2apE2connectionUpdateAck_IEs_id_E2connectionSetup;
+         e2ap_E2connectionUpdate_List * _e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup;
         /*
         *id: id-E2connectionSetupFailed_List
         *criticality: reject
         *presence: optional
         */
-         e2ap_E2connectionSetupFailed_List * _e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed;
+         e2ap_E2connectionSetupFailed_List * _e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed;
 
          ASN1OpenType* extElem1;  /* extension */
       } u;

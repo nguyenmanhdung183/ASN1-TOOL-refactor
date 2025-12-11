@@ -88,7 +88,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
             p_e2ap_protocolIEs_elem->criticality = e2ap_{{ie.critical}};
             p_e2ap_protocolIEs_elem->value.t = T_E2AP_PDU_Contents_e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }};
 {% if ie.alias !=-1 %} {# primitive #}
-            p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} = &p_{{choices[0].dad_type_name}}_src->{{ie.field_name}}; //assign primitive
+            p_e2ap_protocolIEs_elem->value.u._e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} = &p_{{choices[0].dad_type_name}}_src->{{ie.field_name}}; //assign primitive
 {% endif %}
 
 {% if ie.alias == -1%} {# ko phải primitive #}
@@ -100,7 +100,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{ie.field_name}}",__FUNCTION__);
                 break;
             }
-            asn1Init_e2ap_{{ie.item_type}}(p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }});
+            asn1Init_e2ap_{{ie.item_type}}(p_e2ap_protocolIEs_elem->value.u._e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }});
             #endif
             //message_name.item_type -> type = {{ie.item_type}}
             if(XNAP_FAILURE == e2ap_compose_{{ie.item_type}}(&asn1_ctx, 

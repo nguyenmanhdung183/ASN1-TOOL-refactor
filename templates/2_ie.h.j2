@@ -31,7 +31,7 @@ typedef struct EXTERN e2ap_{{choices[0].dad_type_name|replace('-', '_')}}_protoc
         *criticality: {{ d.critical }}
         *presence: {{ d.presence }}
         */
-         e2ap_{{d.item_type|replace('-', '_')}} * _e2ap{{ ies_name }}_{{ d.field_name | replace('-', '_') }};
+         e2ap_{{d.item_type|replace('-', '_')}} * _e2ap_{{ ies_name }}_{{ d.field_name | replace('-', '_') }};
       {%endfor%}
 
          ASN1OpenType* extElem1;  /* extension */

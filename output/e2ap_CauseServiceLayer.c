@@ -22,7 +22,7 @@ int asn1PE_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue
    /*encode root elements*/   
    /* encode field serviceLayerCause - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "serviceLayerCause");
-   stat = asn1PE_e2ap_ServiceLayerCause (pctxt, pvalue->serviceLayerCause);
+   stat = asn1PE_e2ap_ServiceLayerCause (pctxt, &pvalue->serviceLayerCause);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
