@@ -1,10 +1,10 @@
 {
-  "name": "E2connectionUpdate",
+  "name": "E2connectionUpdateAcknowledge",
   "kind": "SEQUENCE",
   "is_primitive": false,
   "children": [
     {
-      "name": "E2connectionUpdate-IEs",
+      "name": "E2connectionUpdateAck-IEs",
       "kind": "IE-LIST",
       "is_primitive": false,
       "children": [
@@ -67,63 +67,17 @@
           ]
         },
         {
-          "name": "E2connectionUpdateRemove-List",
+          "name": "E2connectionSetupFailed-List",
           "kind": "SEQUENCE-OF-SINGLECONTAINER",
           "is_primitive": false,
           "children": [
             {
-              "name": "E2connectionUpdateRemove-ItemIEs",
+              "name": "E2connectionSetupFailed-ItemIEs",
               "kind": "IE-LIST",
               "is_primitive": false,
               "children": [
                 {
-                  "name": "E2connectionUpdateRemove-Item",
-                  "kind": "SEQUENCE",
-                  "is_primitive": false,
-                  "children": [
-                    {
-                      "name": "TNLinformation",
-                      "kind": "SEQUENCE",
-                      "is_primitive": false,
-                      "children": [
-                        {
-                          "name": "tnlAddress",
-                          "kind": "PRIMITIVE",
-                          "is_primitive": true,
-                          "children": []
-                        },
-                        {
-                          "name": "...",
-                          "kind": "PRIMITIVE_OR_EXTERNAL",
-                          "is_primitive": true,
-                          "children": []
-                        },
-                        {
-                          "name": "tnlPort",
-                          "kind": "PRIMITIVE",
-                          "is_primitive": true,
-                          "children": []
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "name": "E2connectionUpdate-List",
-          "kind": "SEQUENCE-OF-SINGLECONTAINER",
-          "is_primitive": false,
-          "children": [
-            {
-              "name": "E2connectionUpdate-ItemIEs",
-              "kind": "IE-LIST",
-              "is_primitive": false,
-              "children": [
-                {
-                  "name": "E2connectionUpdate-Item",
+                  "name": "E2connectionSetupFailed-Item",
                   "kind": "SEQUENCE",
                   "is_primitive": false,
                   "children": [
@@ -153,10 +107,60 @@
                       ]
                     },
                     {
-                      "name": "TNLusage",
-                      "kind": "PRIMITIVE_OR_EXTERNAL",
-                      "is_primitive": true,
-                      "children": []
+                      "name": "Cause",
+                      "kind": "CHOICE",
+                      "is_primitive": false,
+                      "children": [
+                        {
+                          "name": "CauseRICrequest",
+                          "kind": "PRIMITIVE_OR_EXTERNAL",
+                          "is_primitive": true,
+                          "children": []
+                        },
+                        {
+                          "name": "CauseRICservice",
+                          "kind": "PRIMITIVE_OR_EXTERNAL",
+                          "is_primitive": true,
+                          "children": []
+                        },
+                        {
+                          "name": "CauseE2node",
+                          "kind": "PRIMITIVE_OR_EXTERNAL",
+                          "is_primitive": true,
+                          "children": []
+                        },
+                        {
+                          "name": "CauseTransport",
+                          "kind": "PRIMITIVE_OR_EXTERNAL",
+                          "is_primitive": true,
+                          "children": []
+                        },
+                        {
+                          "name": "CauseProtocol",
+                          "kind": "PRIMITIVE_OR_EXTERNAL",
+                          "is_primitive": true,
+                          "children": []
+                        },
+                        {
+                          "name": "CauseMisc",
+                          "kind": "PRIMITIVE_OR_EXTERNAL",
+                          "is_primitive": true,
+                          "children": []
+                        },
+                        {
+                          "name": "CauseServiceLayer",
+                          "kind": "SEQUENCE",
+                          "is_primitive": false,
+                          "children": [
+                            {
+                              "name": "ServiceLayerCause",
+                              "kind": "PRIMITIVE",
+                              "is_primitive": true,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }

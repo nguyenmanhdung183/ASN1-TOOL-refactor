@@ -206,185 +206,539 @@ EXTERN int asn1Copy_e2ap_E2connectionUpdate_List (OSCTXT* pctxt, const e2ap_E2co
 EXTERN void asn1Print_e2ap_E2connectionUpdate_List (const char *name, const e2ap_E2connectionUpdate_List* pvalue);
 // --- End of e2ap_E2connectionUpdate_List.h ---
 
-// --- Begin of e2ap_E2connectionUpdateRemove_Item.h ---
+// --- Begin of e2ap_CauseRICrequest.h ---
+/******************************************************/
+/*                                                    */
+/*    CauseRICrequest                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_CauseRICrequest_ran_function_id_invalid = 0,
+    e2ap_CauseRICrequest_action_not_supported = 1,
+    e2ap_CauseRICrequest_excessive_actions = 2,
+    e2ap_CauseRICrequest_duplicate_action = 3,
+    e2ap_CauseRICrequest_duplicate_event_trigger = 4,
+    e2ap_CauseRICrequest_function_resource_limit = 5,
+    e2ap_CauseRICrequest_request_id_unknown = 6,
+    e2ap_CauseRICrequest_inconsistent_action_subsequent_action_sequence = 7,
+    e2ap_CauseRICrequest_control_message_invalid = 8,
+    e2ap_CauseRICrequest_ric_call_process_id_invalid = 9,
+    e2ap_CauseRICrequest_control_timer_expired = 10,
+    e2ap_CauseRICrequest_control_failed_to_execute = 11,
+    e2ap_CauseRICrequest_system_not_ready = 12,
+    e2ap_CauseRICrequest_unspecified = 13,
+    e2ap_CauseRICrequest_ric_subscription_end_time_expired = 14,
+    e2ap_CauseRICrequest_ric_subscription_end_time_invalid = 15,
+    e2ap_CauseRICrequest_duplicate_ric_request_id = 16,
+    e2ap_CauseRICrequest_eventTriggerNotSupported = 17,
+    e2ap_CauseRICrequest_requested_information_unavailable = 18,
+    e2ap_CauseRICrequest_invalid_information_request = 19
+} e2ap_CauseRICrequest_Root;
+
+typedef OSUINT32 e2ap_CauseRICrequest;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseRICrequest (OSCTXT* pctxt, e2ap_CauseRICrequest value);
+EXTERN int asn1PD_e2ap_CauseRICrequest (OSCTXT* pctxt, e2ap_CauseRICrequest* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseRICrequest (const char* name, const e2ap_CauseRICrequest* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseRICrequest (OSCTXT* pctxt, const char* name, const e2ap_CauseRICrequest* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseRICrequest (const char* name,e2ap_CauseRICrequest* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseRICrequest_ENUMTAB[];
+#define e2ap_CauseRICrequest_ENUMTABSIZE 20
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseRICrequest_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseRICrequest_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseRICrequest* pvalue);
+EXTERN int e2ap_CauseRICrequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseRICrequest* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseRICrequest (e2ap_CauseRICrequest* pvalue);
+// --- End of e2ap_CauseRICrequest.h ---
+
+// --- Begin of e2ap_CauseRICservice.h ---
+/******************************************************/
+/*                                                    */
+/*    CauseRICservice                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_CauseRICservice_ran_function_not_supported = 0,
+    e2ap_CauseRICservice_excessive_functions = 1,
+    e2ap_CauseRICservice_ric_resource_limit = 2
+} e2ap_CauseRICservice_Root;
+
+typedef OSUINT32 e2ap_CauseRICservice;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseRICservice (OSCTXT* pctxt, e2ap_CauseRICservice value);
+EXTERN int asn1PD_e2ap_CauseRICservice (OSCTXT* pctxt, e2ap_CauseRICservice* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseRICservice (const char* name, const e2ap_CauseRICservice* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseRICservice (OSCTXT* pctxt, const char* name, const e2ap_CauseRICservice* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseRICservice (const char* name,e2ap_CauseRICservice* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseRICservice_ENUMTAB[];
+#define e2ap_CauseRICservice_ENUMTABSIZE 3
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseRICservice_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseRICservice_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseRICservice* pvalue);
+EXTERN int e2ap_CauseRICservice_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseRICservice* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseRICservice (e2ap_CauseRICservice* pvalue);
+// --- End of e2ap_CauseRICservice.h ---
+
+// --- Begin of e2ap_CauseE2node.h ---
+/******************************************************/
+/*                                                    */
+/*    CauseE2node                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_CauseE2node_e2node_component_unknown = 0
+} e2ap_CauseE2node_Root;
+
+typedef OSUINT32 e2ap_CauseE2node;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node value);
+EXTERN int asn1PD_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseE2node (const char* name, const e2ap_CauseE2node* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseE2node (OSCTXT* pctxt, const char* name, const e2ap_CauseE2node* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseE2node (const char* name,e2ap_CauseE2node* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseE2node_ENUMTAB[];
+#define e2ap_CauseE2node_ENUMTABSIZE 1
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseE2node_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseE2node_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseE2node* pvalue);
+EXTERN int e2ap_CauseE2node_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseE2node* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue);
+// --- End of e2ap_CauseE2node.h ---
+
+// --- Begin of e2ap_CauseTransport.h ---
+/******************************************************/
+/*                                                    */
+/*    CauseTransport                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_CauseTransport_unspecified = 0,
+    e2ap_CauseTransport_transport_resource_unavailable = 1
+} e2ap_CauseTransport_Root;
+
+typedef OSUINT32 e2ap_CauseTransport;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport value);
+EXTERN int asn1PD_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseTransport (const char* name, const e2ap_CauseTransport* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseTransport (OSCTXT* pctxt, const char* name, const e2ap_CauseTransport* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseTransport (const char* name,e2ap_CauseTransport* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseTransport_ENUMTAB[];
+#define e2ap_CauseTransport_ENUMTABSIZE 2
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseTransport_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseTransport_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseTransport* pvalue);
+EXTERN int e2ap_CauseTransport_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseTransport* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseTransport (e2ap_CauseTransport* pvalue);
+// --- End of e2ap_CauseTransport.h ---
+
+// --- Begin of e2ap_CauseProtocol.h ---
+/******************************************************/
+/*                                                    */
+/*    CauseProtocol                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_CauseProtocol_transfer_syntax_error = 0,
+    e2ap_CauseProtocol_abstract_syntax_error_reject = 1,
+    e2ap_CauseProtocol_abstract_syntax_error_ignore_and_notify = 2,
+    e2ap_CauseProtocol_message_not_compatible_with_receiver_state = 3,
+    e2ap_CauseProtocol_semantic_error = 4,
+    e2ap_CauseProtocol_abstract_syntax_error_falsely_constructed_message = 5,
+    e2ap_CauseProtocol_unspecified = 6
+} e2ap_CauseProtocol_Root;
+
+typedef OSUINT32 e2ap_CauseProtocol;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol value);
+EXTERN int asn1PD_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseProtocol (const char* name, const e2ap_CauseProtocol* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseProtocol (OSCTXT* pctxt, const char* name, const e2ap_CauseProtocol* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseProtocol (const char* name,e2ap_CauseProtocol* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseProtocol_ENUMTAB[];
+#define e2ap_CauseProtocol_ENUMTABSIZE 7
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseProtocol_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseProtocol_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseProtocol* pvalue);
+EXTERN int e2ap_CauseProtocol_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseProtocol* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseProtocol (e2ap_CauseProtocol* pvalue);
+// --- End of e2ap_CauseProtocol.h ---
+
+// --- Begin of e2ap_CauseMisc.h ---
+/******************************************************/
+/*                                                    */
+/*    CauseMisc                             */
+/*                                                    */
+/*******************************************************/
+//enumerated
+
+typedef enum {
+    e2ap_CauseMisc_control_processing_overload = 0,
+    e2ap_CauseMisc_hardware_failure = 1,
+    e2ap_CauseMisc_om_intervention = 2,
+    e2ap_CauseMisc_unspecified = 3
+} e2ap_CauseMisc_Root;
+
+typedef OSUINT32 e2ap_CauseMisc;
+
+/* Encode / Decode */
+EXTERN int asn1PE_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc value);
+EXTERN int asn1PD_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc* pvalue);
+
+/* Print helpers */
+EXTERN void asn1Print_e2ap_CauseMisc (const char* name, const e2ap_CauseMisc* pvalue);
+
+/* Convert to stream (pretty print to stream) */
+EXTERN int asn1PrtToStrm_e2ap_CauseMisc (OSCTXT* pctxt, const char* name, const e2ap_CauseMisc* pvalue);
+
+/* Convert to string (write into user buffer) */
+EXTERN int asn1PrtToStr_e2ap_CauseMisc (const char* name,e2ap_CauseMisc* pvalue,  char* buffer,OSSIZE bufSize);
+/* Enumeration table */
+EXTERN extern const OSEnumItem e2ap_CauseMisc_ENUMTAB[];
+#define e2ap_CauseMisc_ENUMTABSIZE 4
+
+/* Enum <-> String conversion */
+EXTERN const OSUTF8CHAR* e2ap_CauseMisc_ToString (OSUINT32 value);
+EXTERN int e2ap_CauseMisc_ToEnum (OSCTXT* pctxt, const OSUTF8CHAR* value,e2ap_CauseMisc* pvalue);
+EXTERN int e2ap_CauseMisc_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueLen,e2ap_CauseMisc* pvalue);
+
+/*Init*/
+EXTERN int asn1Init_e2ap_CauseMisc (e2ap_CauseMisc* pvalue);
+// --- End of e2ap_CauseMisc.h ---
+
+// --- Begin of e2ap_ServiceLayerCause.h ---
 /*****************************************/
-/*           E2connectionUpdateRemove_Item                */
+/*           ServiceLayerCause                */
+/*****************************************/
+//type 9  mau la octet string mau la pdusessioncommonnetworkinstance
+
+typedef OSDynOctStr e2ap_ServiceLayerCause;
+EXTERN int asn1PE_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause value);
+EXTERN int asn1PD_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause* pvalue);
+EXTERN int asn1PrtToStr_e2ap_ServiceLayerCause (const char* name, e2ap_ServiceLayerCause *pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_ServiceLayerCause (OSCTXT* pctxt, const char* name, const e2ap_ServiceLayerCause* pvalue);
+EXTERN int asn1Copy_e2ap_ServiceLayerCause (OSCTXT* pctxt, const e2ap_ServiceLayerCause* pSrcValue, e2ap_ServiceLayerCause* pDstValue);
+EXTERN int asn1Init_e2ap_ServiceLayerCause (e2ap_ServiceLayerCause* pvalue);
+EXTERN void asn1Free_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause* pvalue);
+
+// --- End of e2ap_ServiceLayerCause.h ---
+
+// --- Begin of e2ap_CauseServiceLayer.h ---
+/*****************************************/
+/*           CauseServiceLayer                */
 /*****************************************/
 //seq normal
 // Các nội dung cần thiết cho template seq_normal.h.j2
 
 // Các phần còn lại của template seq_normal.h.j2
-typedef struct EXTERN e2ap_E2connectionUpdateRemove_Item {
+typedef struct EXTERN e2ap_CauseServiceLayer {
       //not primitive
-   e2ap_TNLinformation tnlInformation;
+   e2ap_ServiceLayerCause serviceLayerCause;
 
    OSRTDList extElem1;  /* Extension elements */
-} e2ap_E2connectionUpdateRemove_Item;
+} e2ap_CauseServiceLayer;
 
-EXTERN int asn1PE_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_Item* pvalue);
-EXTERN int asn1PD_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_Item* pvalue);
-EXTERN int asn1Init_e2ap_E2connectionUpdateRemove_Item (e2ap_E2connectionUpdateRemove_Item* pvalue);
-EXTERN void asn1Free_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_Item* pvalue);
-EXTERN void asn1Print_e2ap_E2connectionUpdateRemove_Item (const char* name, const e2ap_E2connectionUpdateRemove_Item* pvalue);
-EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateRemove_Item (const char* name, e2ap_E2connectionUpdateRemove_Item* pvalue, char* buffer, OSSIZE bufSize);
-EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdateRemove_Item* pvalue);
-EXTERN int asn1Copy_e2ap_E2connectionUpdateRemove_Item (OSCTXT* pctxt, const e2ap_E2connectionUpdateRemove_Item* pSrcValue, e2ap_E2connectionUpdateRemove_Item* pDstValue);
-// --- End of e2ap_E2connectionUpdateRemove_Item.h ---
+EXTERN int asn1PE_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1PD_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1Init_e2ap_CauseServiceLayer (e2ap_CauseServiceLayer* pvalue);
+EXTERN void asn1Free_e2ap_CauseServiceLayer (OSCTXT* pctxt, e2ap_CauseServiceLayer* pvalue);
+EXTERN void asn1Print_e2ap_CauseServiceLayer (const char* name, const e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1PrtToStr_e2ap_CauseServiceLayer (const char* name, e2ap_CauseServiceLayer* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_CauseServiceLayer (OSCTXT* pctxt, const char* name, const e2ap_CauseServiceLayer* pvalue);
+EXTERN int asn1Copy_e2ap_CauseServiceLayer (OSCTXT* pctxt, const e2ap_CauseServiceLayer* pSrcValue, e2ap_CauseServiceLayer* pDstValue);
+// --- End of e2ap_CauseServiceLayer.h ---
 
-// --- Begin of e2ap_E2connectionUpdateRemove_ItemIEs.h ---
+// --- Begin of e2ap_Cause.h ---
+
+
 /*****************************************/
-/*           E2connectionUpdateRemove_ItemIEs                */
+/*           Cause                */
+/*****************************************/
+// choice
+// Các nội dung cần thiết cho template choice.h.j2
+
+// Các phần còn lại của template choice.h.j2
+#define T_e2ap_Cause_ricRequest  1
+#define T_e2ap_Cause_ricService  2
+#define T_e2ap_Cause_e2Node  3
+#define T_e2ap_Cause_transport  4
+#define T_e2ap_Cause_protocol  5
+#define T_e2ap_Cause_misc  6
+#define T_e2ap_Cause_serviceLayer  7
+#define T_e2ap_Cause_extElem1 8
+
+typedef struct e2ap_Cause {
+   OSINT32 t;  /* choice tag */
+   union {
+      /* t =  1 */
+      e2ap_CauseRICrequest *ricRequest;
+      /* t =  2 */
+      e2ap_CauseRICservice *ricService;
+      /* t =  3 */
+      e2ap_CauseE2node *e2Node;
+      /* t =  4 */
+      e2ap_CauseTransport *transport;
+      /* t =  5 */
+      e2ap_CauseProtocol *protocol;
+      /* t =  6 */
+      e2ap_CauseMisc *misc;
+      /* t =  7 */
+      e2ap_CauseServiceLayer *serviceLayer;
+      /* t = 8*/
+      ASN1OpenType *extElem1;  /* extension */
+      
+   } u;
+} e2ap_Cause;
+
+EXTERN int asn1PE_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue);
+EXTERN int asn1PD_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue);
+EXTERN void asn1Print_e2ap_Cause (const char* name, const e2ap_Cause* pvalue);
+EXTERN int asn1PrtToStr_e2ap_Cause (const char* name, e2ap_Cause* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_Cause (OSCTXT* pctxt, const char* name, const e2ap_Cause* pvalue);
+EXTERN int asn1Copy_e2ap_Cause (OSCTXT* pctxt, const e2ap_Cause* pSrcValue, e2ap_Cause* pDstValue);
+EXTERN int asn1Init_e2ap_Cause (e2ap_Cause* pvalue);
+EXTERN void asn1Free_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue);
+
+// --- End of e2ap_Cause.h ---
+
+// --- Begin of e2ap_E2connectionSetupFailed_Item.h ---
+/*****************************************/
+/*           E2connectionSetupFailed_Item                */
+/*****************************************/
+//seq normal
+// Các nội dung cần thiết cho template seq_normal.h.j2
+
+// Các phần còn lại của template seq_normal.h.j2
+typedef struct EXTERN e2ap_E2connectionSetupFailed_Item {
+      //not primitive
+   e2ap_TNLinformation tnlInformation;
+      //not primitive
+   e2ap_Cause cause;
+
+   OSRTDList extElem1;  /* Extension elements */
+} e2ap_E2connectionSetupFailed_Item;
+
+EXTERN int asn1PE_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionSetupFailed_Item (e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionSetupFailed_Item (const char* name, const e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionSetupFailed_Item (const char* name, e2ap_E2connectionSetupFailed_Item* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, const char* name, const e2ap_E2connectionSetupFailed_Item* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionSetupFailed_Item (OSCTXT* pctxt, const e2ap_E2connectionSetupFailed_Item* pSrcValue, e2ap_E2connectionSetupFailed_Item* pDstValue);
+// --- End of e2ap_E2connectionSetupFailed_Item.h ---
+
+// --- Begin of e2ap_E2connectionSetupFailed_ItemIEs.h ---
+/*****************************************/
+/*           E2connectionSetupFailed_ItemIEs                */
 /*****************************************/
 /* ie.h.j2 */
 /* ie là con của msg + ie thường*/
 typedef enum {
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateRemove_ItemIEs_UNDEF_,
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateRemove_ItemIEs_id_E2connectionUpdateRemove_Item 
+   T_E2AP_PDU_Contents_e2ap_E2connectionSetupFailed_ItemIEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item 
  
-} e2ap_E2connectionUpdateRemove_ItemIEs_TVALUE;
+} e2ap_E2connectionSetupFailed_ItemIEs_TVALUE;
 
 /* ie thường */
-typedef struct EXTERN e2ap_E2connectionUpdateRemove_ItemIEs {
+typedef struct EXTERN e2ap_E2connectionSetupFailed_ItemIEs {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
-      e2ap_E2connectionUpdateRemove_ItemIEs_TVALUE t;
+      e2ap_E2connectionSetupFailed_ItemIEs_TVALUE t;
       union {
-         e2ap_E2connectionUpdateRemove_Item * _e2apE2connectionUpdateRemove_ItemIEs_id_E2connectionUpdateRemove_Item;
+         e2ap_E2connectionSetupFailed_Item * _e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item;
 
          ASN1OpenType* extElem1;  /* extension */
       } u;
    }value;
-} e2ap_E2connectionUpdateRemove_ItemIEs;
+} e2ap_E2connectionSetupFailed_ItemIEs;
 
-EXTERN int  asn1PE_e2ap_E2connectionUpdateRemove_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
-EXTERN int  asn1PD_e2ap_E2connectionUpdateRemove_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
-EXTERN void asn1Init_e2ap_E2connectionUpdateRemove_ItemIEs (e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
-EXTERN void asn1Free_e2ap_E2connectionUpdateRemove_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue);
-EXTERN int  asn1PrtToStr_e2ap_E2connectionUpdateRemove_ItemIEs (const char * name, e2ap_E2connectionUpdateRemove_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
+EXTERN int  asn1PE_e2ap_E2connectionSetupFailed_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN int  asn1PD_e2ap_E2connectionSetupFailed_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN void asn1Init_e2ap_E2connectionSetupFailed_ItemIEs (e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionSetupFailed_ItemIEs (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_ItemIEs* pvalue);
+EXTERN int  asn1PrtToStr_e2ap_E2connectionSetupFailed_ItemIEs (const char * name, e2ap_E2connectionSetupFailed_ItemIEs* pvalue, char * buffer, OSSIZE bufSize);
  
 
 
-// --- End of e2ap_E2connectionUpdateRemove_ItemIEs.h ---
+// --- End of e2ap_E2connectionSetupFailed_ItemIEs.h ---
 
-// --- Begin of e2ap_E2connectionUpdateRemove_List.h ---
+// --- Begin of e2ap_E2connectionSetupFailed_List.h ---
 /*****************************************/
-/*           E2connectionUpdateRemove_List                */
+/*           E2connectionSetupFailed_List                */
 /*****************************************/
 //seq_of_single_container
 
 
 /*List of ... ITEM*/
-typedef OSRTDList e2ap_E2connectionUpdateRemove_List;
+typedef OSRTDList e2ap_E2connectionSetupFailed_List;
 
-EXTERN int asn1PE_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_List* pvalue);
-EXTERN int asn1PD_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_List* ppvalue);
-EXTERN void asn1Init_e2ap_E2connectionUpdateRemove_List (e2ap_E2connectionUpdateRemove_List* pvalue);
-EXTERN void asn1Free_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, e2ap_E2connectionUpdateRemove_List* pvalue);
-EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateRemove_List (const char* name, e2ap_E2connectionUpdateRemove_List* pvalue, char* buffer, OSSIZE bufSize);
-EXTERN int asn1Copy_e2ap_E2connectionUpdateRemove_List (OSCTXT* pctxt, const e2ap_E2connectionUpdateRemove_List* pSrcValue, e2ap_E2connectionUpdateRemove_List* pDstValue);
-EXTERN void asn1Print_e2ap_E2connectionUpdateRemove_List (const char *name, const e2ap_E2connectionUpdateRemove_List* pvalue);
-// --- End of e2ap_E2connectionUpdateRemove_List.h ---
+EXTERN int asn1PE_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_List* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_List* ppvalue);
+EXTERN void asn1Init_e2ap_E2connectionSetupFailed_List (e2ap_E2connectionSetupFailed_List* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, e2ap_E2connectionSetupFailed_List* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionSetupFailed_List (const char* name, e2ap_E2connectionSetupFailed_List* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1Copy_e2ap_E2connectionSetupFailed_List (OSCTXT* pctxt, const e2ap_E2connectionSetupFailed_List* pSrcValue, e2ap_E2connectionSetupFailed_List* pDstValue);
+EXTERN void asn1Print_e2ap_E2connectionSetupFailed_List (const char *name, const e2ap_E2connectionSetupFailed_List* pvalue);
+// --- End of e2ap_E2connectionSetupFailed_List.h ---
 
-// --- Begin of e2ap_E2connectionUpdate_IEs.h ---
+// --- Begin of e2ap_E2connectionUpdateAck_IEs.h ---
 /*****************************************/
-/*           E2connectionUpdate_IEs                */
+/*           E2connectionUpdateAck_IEs                */
 /*****************************************/
 /* ie.h.j2 */
 /* ie là con của msg + ie thường*/
 typedef enum {
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_UNDEF_,
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_TransactionID,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_UNDEF_,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_TransactionID,
  
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateAdd,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup,
  
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateRemove,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed,
  
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateModify,
+   T_E2AP_PDU_Contents_e2ap_E2connectionUpdateAck_IEs_id_Extended_RANNodeName_
  
-   T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_IEs_id_Extended_RANNodeName_
- 
-} e2ap_E2connectionUpdate_IEs_TVALUE;
+} e2ap_E2connectionUpdateAck_IEs_TVALUE;
 
  /* ie là con của msg*/
-typedef struct EXTERN e2ap_E2connectionUpdate_protocolIEs_element {
+typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge_protocolIEs_element {
    e2ap_ProtocolIE_ID id;
    e2ap_Criticality criticality;
    struct{
-      e2ap_E2connectionUpdate_IEs_TVALUE t;
+      e2ap_E2connectionUpdateAck_IEs_TVALUE t;
       union {
         /*
         *id: id-TransactionID
         *criticality: reject
         *presence: mandatory
         */
-         e2ap_TransactionID * _e2ap_E2connectionUpdate_IEs_id_TransactionID;
+         e2ap_TransactionID * _e2ap_E2connectionUpdateAck_IEs_id_TransactionID;
         /*
         *id: id-E2connectionUpdate_List
         *criticality: reject
         *presence: optional
         */
-         e2ap_E2connectionUpdate_List * _e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateAdd;
+         e2ap_E2connectionUpdate_List * _e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup;
         /*
-        *id: id-E2connectionUpdateRemove_List
+        *id: id-E2connectionSetupFailed_List
         *criticality: reject
         *presence: optional
         */
-         e2ap_E2connectionUpdateRemove_List * _e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateRemove;
-        /*
-        *id: id-E2connectionUpdate_List
-        *criticality: reject
-        *presence: optional
-        */
-         e2ap_E2connectionUpdate_List * _e2ap_E2connectionUpdate_IEs_id_E2connectionUpdateModify;
+         e2ap_E2connectionSetupFailed_List * _e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed;
 
          ASN1OpenType* extElem1;  /* extension */
       } u;
    }value;
-} e2ap_E2connectionUpdate_protocolIEs_element;
+} e2ap_E2connectionUpdateAcknowledge_protocolIEs_element;
 
-EXTERN int asn1PE_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
-EXTERN int asn1PD_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
-EXTERN int asn1Init_e2ap_E2connectionUpdate_protocolIEs_element (e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
-EXTERN void asn1Free_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
-//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs_element* pvalue);
-EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs_element (const char * name, e2ap_E2connectionUpdate_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
+EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs_element (const char * name, e2ap_E2connectionUpdateAcknowledge_protocolIEs_element* pvalue, char * buffer, OSSIZE bufSize);
 
  
 
 
-// --- End of e2ap_E2connectionUpdate_IEs.h ---
+// --- End of e2ap_E2connectionUpdateAck_IEs.h ---
 
-// --- Begin of e2ap_E2connectionUpdate.h ---
+// --- Begin of e2ap_E2connectionUpdateAcknowledge.h ---
 /*****************************************/
-/*           E2connectionUpdate                */
+/*           E2connectionUpdateAcknowledge                */
 /*****************************************/
 //2_container.h
 /* 1. xxx_protocolIE -> mẫu cũ ở ie_big_msg */
-typedef  OSRTDList e2ap_E2connectionUpdate_protocolIEs;
-EXTERN int asn1PE_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
-EXTERN int asn1PD_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
-EXTERN int asn1Init_e2ap_E2connectionUpdate_protocolIEs (e2ap_E2connectionUpdate_protocolIEs* pvalue);
-//EXTERN void asn1Free_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue);
-//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdate_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
-EXTERN int asn1PrtToStrm_e2apE2connectionUpdate_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2connectionUpdate_protocolIEs* pvalue);
-EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate_protocolIEs (const char* name, e2ap_E2connectionUpdate_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
+typedef  OSRTDList e2ap_E2connectionUpdateAcknowledge_protocolIEs;
+EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge_protocolIEs (e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN void asn1Free_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+//EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue, char*buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2apE2connectionUpdateAcknowledge_protocolIEs (OSCTXT* pctxt, const char * name, const e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge_protocolIEs (const char* name, e2ap_E2connectionUpdateAcknowledge_protocolIEs* pvalue, char* buffer, OSSIZE bufSize);
 
-/*2 . E2connectionUpdate -> mẫu cũ ở seq_normal*/
+/*2 . E2connectionUpdateAcknowledge -> mẫu cũ ở seq_normal*/
 
-typedef struct EXTERN e2ap_E2connectionUpdate {
-    e2ap_E2connectionUpdate_protocolIEs protocolIEs;
+typedef struct EXTERN e2ap_E2connectionUpdateAcknowledge {
+    e2ap_E2connectionUpdateAcknowledge_protocolIEs protocolIEs;
     OSRTDList extElem1;  /* Extension elements */
-} e2ap_E2connectionUpdate;
+} e2ap_E2connectionUpdateAcknowledge;
 
-EXTERN int asn1PE_e2ap_E2connectionUpdate (OSCTXT* pctxt, e2ap_E2connectionUpdate* pvalue);
-EXTERN int asn1PD_e2ap_E2connectionUpdate (OSCTXT* pctxt, e2ap_E2connectionUpdate* pvalue);
-EXTERN int asn1Init_e2ap_E2connectionUpdate (e2ap_E2connectionUpdate* pvalue);
-EXTERN void asn1Free_e2ap_E2connectionUpdate (OSCTXT* pctxt, e2ap_E2connectionUpdate* pvalue);
-EXTERN void asn1Print_e2ap_E2connectionUpdate (const char* name, const e2ap_E2connectionUpdate* pvalue);
-EXTERN int asn1PrtToStr_e2ap_E2connectionUpdate (const char* name, e2ap_E2connectionUpdate* pvalue, char* buffer, OSSIZE bufSize);
-EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdate (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdate* pvalue);
-EXTERN int asn1Copy_e2ap_E2connectionUpdate (OSCTXT* pctxt, const e2ap_E2connectionUpdate* pSrcValue, e2ap_E2connectionUpdate* pDstValue);
-// --- End of e2ap_E2connectionUpdate.h ---
+EXTERN int asn1PE_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1PD_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1Init_e2ap_E2connectionUpdateAcknowledge (e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN void asn1Free_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN void asn1Print_e2ap_E2connectionUpdateAcknowledge (const char* name, const e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1PrtToStr_e2ap_E2connectionUpdateAcknowledge (const char* name, e2ap_E2connectionUpdateAcknowledge* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStrm_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, const char* name, const e2ap_E2connectionUpdateAcknowledge* pvalue);
+EXTERN int asn1Copy_e2ap_E2connectionUpdateAcknowledge (OSCTXT* pctxt, const e2ap_E2connectionUpdateAcknowledge* pSrcValue, e2ap_E2connectionUpdateAcknowledge* pDstValue);
+// --- End of e2ap_E2connectionUpdateAcknowledge.h ---
 
 #endif
