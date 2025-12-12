@@ -50,7 +50,6 @@
     return XNAP_SUCCESS;
 }
           
-}
 
 
 /* 2 - compose sequence */

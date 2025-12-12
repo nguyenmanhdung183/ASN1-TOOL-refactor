@@ -12,7 +12,7 @@
 EXTERN int asn1PE_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID value){
     int stat =0;
     OSBOOL extbit = FALSE;
-    RTXCTCXTPUSHTYPENAME (pctxt, "TransactionID");
+    RTXCTXTPUSHTYPENAME (pctxt, "TransactionID");
     if(value>0 && value<=255){
         extbit = 0;
     }
@@ -33,9 +33,9 @@ EXTERN int asn1PE_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID value){
 EXTERN int asn1PD_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID* pvalue){
     int stat =0;
     OSBOOL extbit = FALSE;
-    RTXCTCXTPUSHTYPENAME (pctxt, "TransactionID");
+    RTXCTXTPUSHTYPENAME (pctxt, "TransactionID");
     /*extensiobit*/
-    stat = DECBIT (pctxt, &extbit);
+    stat = DEC_BIT (pctxt, &extbit);
     if (stat != 0) return LOG_RTERR (pctxt, stat);
     if(extbit==0){
         stat = pd_ConsUnsigned (pctxt, pvalue, 0, 255);
@@ -48,7 +48,11 @@ EXTERN int asn1PD_e2ap_TransactionID (OSCTXT* pctxt, e2ap_TransactionID* pvalue)
     return stat;
 }
 //EXTERN int asn1Print_e2ap_TransactionID (const char* name, const e2ap_TransactionID* pvalue);
-//EXTERN int asn1PrtToStr_e2ap_TransactionID (const char* name, e2ap_TransactionID* pvalue, char* buffer, OSSIZE bufSize);
+EXTERN int asn1PrtToStr_e2ap_TransactionID (const char* name, e2ap_TransactionID* pvalue, char* buffer, OSSIZE bufSize){
+    if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+    if(rtPrintToString(name, *pvalue, buffer, bufSize) < 0) return -1;
+    return 0;
+}
 //EXTERN int asn1PrtToStrm_e2ap_TransactionID (OSCTXT* pctxt, const char* name, const e2ap_TransactionID* pvalue);
 EXTERN int asn1Init_e2ap_TransactionID (e2ap_TransactionID* pvalue){
     //if (pvalue == 0) return RTERR_NULLPTR;
@@ -407,7 +411,9 @@ int e2ap_TNLusage_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE valueL
       *pvalue = (e2ap_TNLusage)e2ap_TNLusage_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -471,6 +477,10 @@ EXTERN int asn1Init_e2ap_TNLusage (e2ap_TNLusage* pvalue){
       //if (pvalue == 0) return RTERR_NULLPTR;
       //*pvalue = 0;
       return 0;
+}
+
+EXTERN void asn1Free_e2ap_TNLusage (OSCTXT* pctxt, e2ap_TNLusage* pvalue){
+   return 0;
 }
 // --- End of e2ap_TNLusage.c ---
 
@@ -1108,7 +1118,9 @@ int e2ap_CauseRICrequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE
       *pvalue = (e2ap_CauseRICrequest)e2ap_CauseRICrequest_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -1224,6 +1236,10 @@ EXTERN int asn1Init_e2ap_CauseRICrequest (e2ap_CauseRICrequest* pvalue){
       //*pvalue = 0;
       return 0;
 }
+
+EXTERN void asn1Free_e2ap_CauseRICrequest (OSCTXT* pctxt, e2ap_CauseRICrequest* pvalue){
+   return 0;
+}
 // --- End of e2ap_CauseRICrequest.c ---
 
 // --- Begin of e2ap_CauseRICservice.c ---
@@ -1266,7 +1282,9 @@ int e2ap_CauseRICservice_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE
       *pvalue = (e2ap_CauseRICservice)e2ap_CauseRICservice_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -1331,6 +1349,10 @@ EXTERN int asn1Init_e2ap_CauseRICservice (e2ap_CauseRICservice* pvalue){
       //*pvalue = 0;
       return 0;
 }
+
+EXTERN void asn1Free_e2ap_CauseRICservice (OSCTXT* pctxt, e2ap_CauseRICservice* pvalue){
+   return 0;
+}
 // --- End of e2ap_CauseRICservice.c ---
 
 // --- Begin of e2ap_CauseE2node.c ---
@@ -1371,7 +1393,9 @@ int e2ap_CauseE2node_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE val
       *pvalue = (e2ap_CauseE2node)e2ap_CauseE2node_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -1430,6 +1454,10 @@ EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue){
       //*pvalue = 0;
       return 0;
 }
+
+EXTERN void asn1Free_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node* pvalue){
+   return 0;
+}
 // --- End of e2ap_CauseE2node.c ---
 
 // --- Begin of e2ap_CauseTransport.c ---
@@ -1471,7 +1499,9 @@ int e2ap_CauseTransport_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE 
       *pvalue = (e2ap_CauseTransport)e2ap_CauseTransport_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -1533,6 +1563,10 @@ EXTERN int asn1Init_e2ap_CauseTransport (e2ap_CauseTransport* pvalue){
       //*pvalue = 0;
       return 0;
 }
+
+EXTERN void asn1Free_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport* pvalue){
+   return 0;
+}
 // --- End of e2ap_CauseTransport.c ---
 
 // --- Begin of e2ap_CauseProtocol.c ---
@@ -1579,7 +1613,9 @@ int e2ap_CauseProtocol_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE v
       *pvalue = (e2ap_CauseProtocol)e2ap_CauseProtocol_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -1656,6 +1692,10 @@ EXTERN int asn1Init_e2ap_CauseProtocol (e2ap_CauseProtocol* pvalue){
       //*pvalue = 0;
       return 0;
 }
+
+EXTERN void asn1Free_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol* pvalue){
+   return 0;
+}
 // --- End of e2ap_CauseProtocol.c ---
 
 // --- Begin of e2ap_CauseMisc.c ---
@@ -1699,7 +1739,9 @@ int e2ap_CauseMisc_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE value
       *pvalue = (e2ap_CauseMisc)e2ap_CauseMisc_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -1767,6 +1809,10 @@ EXTERN int asn1Init_e2ap_CauseMisc (e2ap_CauseMisc* pvalue){
       //*pvalue = 0;
       return 0;
 }
+
+EXTERN void asn1Free_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc* pvalue){
+   return 0;
+}
 // --- End of e2ap_CauseMisc.c ---
 
 // --- Begin of e2ap_ServiceLayerCause.c ---
@@ -1777,8 +1823,8 @@ EXTERN int asn1Init_e2ap_CauseMisc (e2ap_CauseMisc* pvalue){
 //type 9  mau la octet string no size mau la pdusessioncommonnetworkinstance
 
 EXTERN int asn1PE_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause value){
-   int stat = 0
-   RTXCTCXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
    stat = pe_OctetString(pctxt, value.numocts, value.data);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
    RTXCTXTPOPTYPENAME (pctxt);
@@ -1786,7 +1832,7 @@ EXTERN int asn1PE_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause 
 }
 EXTERN int asn1PD_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
+   RTXCTXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
    stat = pd_DynOctetString(pctxt, pvalue);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
    RTXCTXTPOPTYPENAME (pctxt);
@@ -1799,10 +1845,8 @@ EXTERN int asn1PrtToStr_e2ap_ServiceLayerCause (const char* name, e2ap_ServiceLa
 }
 EXTERN int asn1PrtToStrm_e2ap_ServiceLayerCause (OSCTXT* pctxt, const char* name, const e2ap_ServiceLayerCause* pvalue){
    int stat =0;
-   stat = rtPrintToStreamIndent(pctxt);
-   if(stat !=0) return LOG_RTERR(pctxt, stat);
-   stat = rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
-   if(stat !=0) return LOG_RTERR(pctxt, stat);
+   rtPrintToStreamIndent(pctxt);
+   rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
    return stat;
 }
 //EXTERN int asn1Copy_e2ap_ServiceLayerCause (OSCTXT* pctxt, const e2ap_ServiceLayerCause* pSrcValue, e2ap_ServiceLayerCause* pDstValue);
@@ -1819,12 +1863,6 @@ EXTERN int asn1PrtToStrm_e2ap_ServiceLayerCause (OSCTXT* pctxt, const char* name
        pvalue->data = 0;
        pvalue->numocts = 0;
    }
-}
-int asn1Init_e2ap_ServiceLayerCause (e2ap_ServiceLayerCause* pvalue){
-   if (pvalue == 0) return RTERR_NULLPTR;
-   pvalue->numocts = 0;
-   pvalue->data = 0;
-   return 0;
 }
 
 // --- End of e2ap_ServiceLayerCause.c ---
@@ -2205,7 +2243,7 @@ int asn1Init_e2ap_Cause (e2ap_Cause* pvalue)
 {
    if (pvalue == 0) return RTERR_NULLPTR;
    pvalue->t = 0;
-   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   OSCRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
    return 0;
 }
 

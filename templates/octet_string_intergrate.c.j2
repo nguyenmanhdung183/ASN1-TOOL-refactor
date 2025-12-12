@@ -25,10 +25,8 @@ EXTERN int asn1PrtToStr_e2ap_{{parent_name}}_{{metadata.field_name}} (const char
 }
 EXTERN int asn1PrtToStrm_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, const char* name, const e2ap_{{parent_name}}_{{metadata.field_name}}* pvalue){
     int stat =0;
-    stat = rtPrintToStreamIndent(pctxt);
-    if(stat !=0) return LOG_RTERR(pctxt, stat);
-    stat = rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
-    if(stat !=0) return LOG_RTERR(pctxt, stat);
+    rtPrintToStreamIndent(pctxt);
+    rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
     return stat;
 }
 EXTERN int asn1Copy_e2ap_{{parent_name}}_{{metadata.field_name}} (OSCTXT* pctxt, const e2ap_{{parent_name}}_{{metadata.field_name}}* pSrcValue, e2ap_{{parent_name}}_{{metadata.field_name}}* pDstValue);

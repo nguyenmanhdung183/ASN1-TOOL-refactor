@@ -6,7 +6,7 @@
 //type 8  mau la octet string size(n) mau la plmn_identity
 EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
+   RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST({{size}}), OSUINTCONST({{size}}), 0, 0);
 
    stat = pe_OctetString(pctxt, pvalue->numocts, pvalue->data);
@@ -16,7 +16,7 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue){
 }
 EXTERN int asn1PD_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
+   RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST({{size}}), OSUINTCONST({{size}}), 0, 0);
 
    stat = pd_OctetString(pctxt, &pvalue->numocts, pvalue->data, sizeof(pvalue->data));
@@ -42,8 +42,8 @@ void asn1Free_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue){
 //type 9  mau la octet string no size mau la pdusessioncommonnetworkinstance
 
 EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}} value){
-   int stat = 0
-   RTXCTCXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
    stat = pe_OctetString(pctxt, value.numocts, value.data);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
    RTXCTXTPOPTYPENAME (pctxt);
@@ -51,7 +51,7 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}} value){
 }
 EXTERN int asn1PD_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
+   RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace('_','-')}}");
    stat = pd_DynOctetString(pctxt, pvalue);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
    RTXCTXTPOPTYPENAME (pctxt);
@@ -64,10 +64,8 @@ EXTERN int asn1PrtToStr_e2ap_{{name}} (const char* name, e2ap_{{name}} *pvalue, 
 }
 EXTERN int asn1PrtToStrm_e2ap_{{name}} (OSCTXT* pctxt, const char* name, const e2ap_{{name}}* pvalue){
    int stat =0;
-   stat = rtPrintToStreamIndent(pctxt);
-   if(stat !=0) return LOG_RTERR(pctxt, stat);
-   stat = rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
-   if(stat !=0) return LOG_RTERR(pctxt, stat);
+   rtPrintToStreamIndent(pctxt);
+   rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
    return stat;
 }
 //EXTERN int asn1Copy_e2ap_{{name}} (OSCTXT* pctxt, const e2ap_{{name}}* pSrcValue, e2ap_{{name}}* pDstValue);
@@ -84,11 +82,5 @@ EXTERN int asn1PrtToStrm_e2ap_{{name}} (OSCTXT* pctxt, const char* name, const e
        pvalue->data = 0;
        pvalue->numocts = 0;
    }
-}
-int asn1Init_e2ap_{{name}} (e2ap_{{name}}* pvalue){
-   if (pvalue == 0) return RTERR_NULLPTR;
-   pvalue->numocts = 0;
-   pvalue->data = 0;
-   return 0;
 }
 {% endif %}

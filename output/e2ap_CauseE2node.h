@@ -34,3 +34,6 @@ EXTERN int e2ap_CauseE2node_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSS
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node* pvalue);

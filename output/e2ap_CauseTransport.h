@@ -35,3 +35,6 @@ EXTERN int e2ap_CauseTransport_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, 
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseTransport (e2ap_CauseTransport* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport* pvalue);

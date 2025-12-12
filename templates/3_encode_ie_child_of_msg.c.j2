@@ -94,9 +94,9 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
 {% if ie.alias == -1%} {# ko phải primitive #}
 
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} 
+            p_e2ap_protocolIEs_elem->value.u._e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }} 
                                 = rtxMemAllocType(&asn1_ctx, e2ap_{{ie.item_type}});
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap{{ ies_name }}_{{ ie.field_name | replace('-', '_') }}){
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_{{ ies_name }}_{{ ie.field_name | replace('-', '_') }}){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{ie.field_name}}",__FUNCTION__);
                 break;
             }

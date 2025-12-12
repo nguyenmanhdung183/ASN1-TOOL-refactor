@@ -122,6 +122,9 @@ EXTERN int e2ap_TNLusage_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE
 
 /*Init*/
 EXTERN int asn1Init_e2ap_TNLusage (e2ap_TNLusage* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_TNLusage (OSCTXT* pctxt, e2ap_TNLusage* pvalue);
 // --- End of e2ap_TNLusage.h ---
 
 // --- Begin of e2ap_E2connectionUpdate_Item.h ---
@@ -262,6 +265,9 @@ EXTERN int e2ap_CauseRICrequest_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value,
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseRICrequest (e2ap_CauseRICrequest* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseRICrequest (OSCTXT* pctxt, e2ap_CauseRICrequest* pvalue);
 // --- End of e2ap_CauseRICrequest.h ---
 
 // --- Begin of e2ap_CauseRICservice.h ---
@@ -303,6 +309,9 @@ EXTERN int e2ap_CauseRICservice_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value,
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseRICservice (e2ap_CauseRICservice* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseRICservice (OSCTXT* pctxt, e2ap_CauseRICservice* pvalue);
 // --- End of e2ap_CauseRICservice.h ---
 
 // --- Begin of e2ap_CauseE2node.h ---
@@ -342,6 +351,9 @@ EXTERN int e2ap_CauseE2node_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSS
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node* pvalue);
 // --- End of e2ap_CauseE2node.h ---
 
 // --- Begin of e2ap_CauseTransport.h ---
@@ -382,6 +394,9 @@ EXTERN int e2ap_CauseTransport_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, 
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseTransport (e2ap_CauseTransport* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseTransport (OSCTXT* pctxt, e2ap_CauseTransport* pvalue);
 // --- End of e2ap_CauseTransport.h ---
 
 // --- Begin of e2ap_CauseProtocol.h ---
@@ -427,6 +442,9 @@ EXTERN int e2ap_CauseProtocol_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, O
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseProtocol (e2ap_CauseProtocol* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol* pvalue);
 // --- End of e2ap_CauseProtocol.h ---
 
 // --- Begin of e2ap_CauseMisc.h ---
@@ -469,6 +487,9 @@ EXTERN int e2ap_CauseMisc_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZ
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseMisc (e2ap_CauseMisc* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc* pvalue);
 // --- End of e2ap_CauseMisc.h ---
 
 // --- Begin of e2ap_ServiceLayerCause.h ---

@@ -3,7 +3,6 @@
 /************************************************************/
 
 /* 1- compose primitive intergrate for sequence fields */
-}
 
 
 /* 2 - compose sequence */

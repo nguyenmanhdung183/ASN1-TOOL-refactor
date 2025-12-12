@@ -166,9 +166,9 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup 
+            p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup 
                                 = rtxMemAllocType(&asn1_ctx, e2ap_E2connectionUpdate_List);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetup){
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetup){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2connectionSetup",__FUNCTION__);
                 break;
             }
@@ -214,9 +214,9 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
 
  
             #if 1 // ko đẩy vào compose nữa
-            p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed 
+            p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed 
                                 = rtxMemAllocType(&asn1_ctx, e2ap_E2connectionSetupFailed_List);
-            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2apE2connectionUpdateAck_IEs_id_E2connectionSetupFailed){
+            if(GNB_PNULL==p_e2ap_protocolIEs_elem->value.u._e2ap_E2connectionUpdateAck_IEs_id_E2connectionSetupFailed){
                 XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_id_E2connectionSetupFailed",__FUNCTION__);
                 break;
             }

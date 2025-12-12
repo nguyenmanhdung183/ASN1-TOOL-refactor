@@ -40,3 +40,6 @@ EXTERN int e2ap_CauseProtocol_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, O
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseProtocol (e2ap_CauseProtocol* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseProtocol (OSCTXT* pctxt, e2ap_CauseProtocol* pvalue);

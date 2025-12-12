@@ -5,8 +5,8 @@
 //type 9  mau la octet string no size mau la pdusessioncommonnetworkinstance
 
 EXTERN int asn1PE_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause value){
-   int stat = 0
-   RTXCTCXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
+   int stat = 0;
+   RTXCTXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
    stat = pe_OctetString(pctxt, value.numocts, value.data);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
    RTXCTXTPOPTYPENAME (pctxt);
@@ -14,7 +14,7 @@ EXTERN int asn1PE_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause 
 }
 EXTERN int asn1PD_e2ap_ServiceLayerCause (OSCTXT* pctxt, e2ap_ServiceLayerCause* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
+   RTXCTXTPUSHTYPENAME (pctxt, "ServiceLayerCause");
    stat = pd_DynOctetString(pctxt, pvalue);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
    RTXCTXTPOPTYPENAME (pctxt);
@@ -27,10 +27,8 @@ EXTERN int asn1PrtToStr_e2ap_ServiceLayerCause (const char* name, e2ap_ServiceLa
 }
 EXTERN int asn1PrtToStrm_e2ap_ServiceLayerCause (OSCTXT* pctxt, const char* name, const e2ap_ServiceLayerCause* pvalue){
    int stat =0;
-   stat = rtPrintToStreamIndent(pctxt);
-   if(stat !=0) return LOG_RTERR(pctxt, stat);
-   stat = rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
-   if(stat !=0) return LOG_RTERR(pctxt, stat);
+   rtPrintToStreamIndent(pctxt);
+   rtPrintToStreamHexStr(pctxt, name, pvalue->numocts, pvalue->data);
    return stat;
 }
 //EXTERN int asn1Copy_e2ap_ServiceLayerCause (OSCTXT* pctxt, const e2ap_ServiceLayerCause* pSrcValue, e2ap_ServiceLayerCause* pDstValue);
@@ -47,10 +45,4 @@ EXTERN int asn1PrtToStrm_e2ap_ServiceLayerCause (OSCTXT* pctxt, const char* name
        pvalue->data = 0;
        pvalue->numocts = 0;
    }
-}
-int asn1Init_e2ap_ServiceLayerCause (e2ap_ServiceLayerCause* pvalue){
-   if (pvalue == 0) return RTERR_NULLPTR;
-   pvalue->numocts = 0;
-   pvalue->data = 0;
-   return 0;
 }

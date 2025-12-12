@@ -36,3 +36,6 @@ EXTERN int e2ap_TNLusage_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE
 
 /*Init*/
 EXTERN int asn1Init_e2ap_TNLusage (e2ap_TNLusage* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_TNLusage (OSCTXT* pctxt, e2ap_TNLusage* pvalue);

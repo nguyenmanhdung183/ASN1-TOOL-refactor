@@ -35,7 +35,9 @@ int e2ap_CauseE2node_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE val
       *pvalue = (e2ap_CauseE2node)e2ap_CauseE2node_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -93,4 +95,8 @@ EXTERN int asn1Init_e2ap_CauseE2node (e2ap_CauseE2node* pvalue){
       //if (pvalue == 0) return RTERR_NULLPTR;
       //*pvalue = 0;
       return 0;
+}
+
+EXTERN void asn1Free_e2ap_CauseE2node (OSCTXT* pctxt, e2ap_CauseE2node* pvalue){
+   return 0;
 }

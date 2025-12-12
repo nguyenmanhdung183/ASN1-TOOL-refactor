@@ -37,3 +37,6 @@ EXTERN int e2ap_CauseMisc_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZ
 
 /*Init*/
 EXTERN int asn1Init_e2ap_CauseMisc (e2ap_CauseMisc* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_CauseMisc (OSCTXT* pctxt, e2ap_CauseMisc* pvalue);

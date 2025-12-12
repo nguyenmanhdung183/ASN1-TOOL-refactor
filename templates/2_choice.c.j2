@@ -78,7 +78,7 @@ EXTERN int asn1PD_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
    ASN1OpenType openType;
    RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace('_', '-')}}");
 
-   stat = DECBIT (pctxt, &extbit);
+   stat = DEC_BIT (pctxt, &extbit);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
 
    if(!extbit){
@@ -317,7 +317,7 @@ int asn1Init_e2ap_{{name}} (e2ap_{{name}}* pvalue)
 {
    if (pvalue == 0) return RTERR_NULLPTR;
    pvalue->t = 0;
-   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   OSCRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
    return 0;
 }
 

@@ -38,3 +38,6 @@ EXTERN int e2ap_{{name}}_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* value, OSSIZE
 
 /*Init*/
 EXTERN int asn1Init_e2ap_{{name}} (e2ap_{{name}}* pvalue);
+
+/* FREE*/
+EXTERN void asn1Free_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue);

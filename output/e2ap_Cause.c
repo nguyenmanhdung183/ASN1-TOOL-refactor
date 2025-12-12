@@ -193,7 +193,7 @@ int asn1Init_e2ap_Cause (e2ap_Cause* pvalue)
 {
    if (pvalue == 0) return RTERR_NULLPTR;
    pvalue->t = 0;
-   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   OSCRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
    return 0;
 }
 
