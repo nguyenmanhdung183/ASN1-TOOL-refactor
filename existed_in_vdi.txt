@@ -1,3 +1,4 @@
+////dungnm23_E2connectionUpdateAcknowledge
 TransactionID
 tnlAddress
 
