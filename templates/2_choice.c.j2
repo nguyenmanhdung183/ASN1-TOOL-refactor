@@ -33,7 +33,7 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
       RTXCTXTPOPELEMNAME (pctxt);
 
       switch (pvalue->t) {
-{% for choice in choices %}
+{% for choice in choices[:extensible_idx] %}
       case {{(choice.tag+1)|int}}:
          RTXCTXTPUSHELEMNAME (pctxt, "{{choice.name|replace('_', '-')}}");
          {% if choice.primitive.isprimitive == False %}
@@ -59,13 +59,46 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
          return LOG_RTERR (pctxt, RTERR_INVOPT);
       }
    }else{
+      OSINT32 pos;
+      void * pPerField;
+
       stat = pe_SmallNonNegWholeNumber (pctxt, pvalue->t - {{extensible_idx+1}});// can xem lai
       if (stat != 0) return LOG_RTERR (pctxt, stat);
 
-      RTXCTXTPUSHELEMNAME (pctxt, "...");
-      stat = pe_OpenType (pctxt, pvalue->u.extElem1->numocts, pvalue->u.extElem1->data);
+      /* encode extension element data value */
+      stat = pe_OpenTypeStart (pctxt, &pos, &pPerField);
       if (stat != 0) return LOG_RTERR (pctxt, stat);
-      RTXCTXTPOPELEMNAME (pctxt);
+
+      switch(pvalue->t){
+      {% for choice in choices[extensible_idx:] %}
+         case {{(choice.tag+1)|int}}:
+            RTXCTXTPUSHELEMNAME (pctxt, "{{choice.name|replace('_', '-')}}");
+            {% if choice.primitive.isprimitive == False %}
+               {% if choice.alias == 5 or choice.alias == 6  or choice.alias == 13 or choice.alias == 2 or choice.alias == 9 or choice.alias == 10 %}{#not primitive but alias not pointer #}
+            stat = asn1PE_e2ap_{{choice.type}} (pctxt, *pvalue->u.{{choice.field|replace("-","_")}}); //not primitive
+               {% else %}
+            stat = asn1PE_e2ap_{{choice.type}} (pctxt, pvalue->u.{{choice.field|replace("-","_")}}); //not primitive
+               {% endif %}
+            {% else %}
+            //primitive {{choice.primitive_meta.type}}
+               {% if choice.primitive_meta.primitive_id == 3 %}
+            stat = asn1PE_e2ap_{{name}}_{{choice.field|replace("-","_")}} (pctxt, &pvalue->u.{{choice.field|replace("-","_")}}); //bit string in choice type 3
+               {% endif %}
+               {% if choice.primitive_meta.primitive_id == 4 %}
+            stat = asn1PE_e2ap_{{name}}_{{choice.field|replace("-","_")}} (pctxt, &pvalue->u.{{choice.field|replace("-","_")}}); //bit string in choice type 4
+               {% endif %}
+            {% endif %}
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            RTXCTXTPOPELEMNAME (pctxt);
+            break;
+      {% endfor %}  
+         default:
+            stat = rtxEncBitsFromByteArray (pctxt, pvalue->u.extElem1->data, pvalue->u.extElem1->numocts * 8);
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            break;
+      }
+      stat = pe_OpenTypeEnd(pctxt, pos, pPerField);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
    }
    RTXCTXTPOPTYPENAME (pctxt);
    return stat;

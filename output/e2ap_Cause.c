@@ -63,23 +63,35 @@ EXTERN int asn1PE_e2ap_Cause (OSCTXT* pctxt, e2ap_Cause* pvalue)
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
-      case 7:
-         RTXCTXTPUSHELEMNAME (pctxt, "serviceLayer");
-         stat = asn1PE_e2ap_CauseServiceLayer (pctxt, pvalue->u.serviceLayer); //not primitive
-         if (stat != 0) return LOG_RTERR (pctxt, stat);
-         RTXCTXTPOPELEMNAME (pctxt);
-         break;
       default:
          return LOG_RTERR (pctxt, RTERR_INVOPT);
       }
    }else{
+      OSINT32 pos;
+      void * pPerField;
+
       stat = pe_SmallNonNegWholeNumber (pctxt, pvalue->t - 7);// can xem lai
       if (stat != 0) return LOG_RTERR (pctxt, stat);
 
-      RTXCTXTPUSHELEMNAME (pctxt, "...");
-      stat = pe_OpenType (pctxt, pvalue->u.extElem1->numocts, pvalue->u.extElem1->data);
+      /* encode extension element data value */
+      stat = pe_OpenTypeStart (pctxt, &pos, &pPerField);
       if (stat != 0) return LOG_RTERR (pctxt, stat);
-      RTXCTXTPOPELEMNAME (pctxt);
+
+      switch(pvalue->t){
+         case 7:
+            RTXCTXTPUSHELEMNAME (pctxt, "serviceLayer");
+            stat = asn1PE_e2ap_CauseServiceLayer (pctxt, pvalue->u.serviceLayer); //not primitive
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            RTXCTXTPOPELEMNAME (pctxt);
+            break;
+  
+         default:
+            stat = rtxEncBitsFromByteArray (pctxt, pvalue->u.extElem1->data, pvalue->u.extElem1->numocts * 8);
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            break;
+      }
+      stat = pe_OpenTypeEnd(pctxt, pos, pPerField);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
    }
    RTXCTXTPOPTYPENAME (pctxt);
    return stat;
