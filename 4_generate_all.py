@@ -552,7 +552,7 @@ def gen_choice_outputs():
             ext_vals = group["Extensible"].dropna()
             if not ext_vals.empty:
                 extensible = str(ext_vals.iloc[0]).strip()
-
+        extensible_idx = -2
         for _, row in group.iterrows():
             if pd.isna(row.get("Field_Name")):
                 continue
@@ -561,6 +561,7 @@ def gen_choice_outputs():
             field = field.replace("_", "_")
             ie_type = row.get("IE_Type")
             ie_type_str = "" if pd.isna(ie_type) else str(ie_type)
+            extensible_idx = row.get("Extensible_Index")
 
             # Parse primitive details
             parsed = parse_ie_type_primitive(ie_type_str)
@@ -634,7 +635,8 @@ def gen_choice_outputs():
             "choices": choices,
             "extensible": extensible,
             "primitive_files_data": primitive_files_data,  # Gửi thông tin file con vào template
-            "fields": choices
+            "fields": choices,
+            "extensible_idx": extensible_idx
         }
         print(f"dungnm23 choice_h_content: {data['primitive_files_data']}")
 

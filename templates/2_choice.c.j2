@@ -11,7 +11,7 @@
 {% endfor %}
 
 // Các phần còn lại của template choice.c.j2
-{% if not extensible %}
+{% if extensible %}
 // choice with extension typefef từ 1 -> mẫu từ PDU
 EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
 {
@@ -20,7 +20,8 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
    RTXCTXTPUSHTYPENAME (pctxt, "{{name|replace('_', '-')}}");
 
    {% set numbits = (choices|length -1).bit_length() %}
-   extbit = (OSBOOL)(pvalue->t > {{choices|length -1}});
+   //extbit = (OSBOOL)(pvalue->t > {{choices|length -1}});
+   extbit = (OSBOOL)(pvalue->t > {{extensible_idx}});
    stat = rtxEncBit (pctxt, extbit);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
 
@@ -58,7 +59,7 @@ EXTERN int asn1PE_e2ap_{{name}} (OSCTXT* pctxt, e2ap_{{name}}* pvalue)
          return LOG_RTERR (pctxt, RTERR_INVOPT);
       }
    }else{
-      stat = pe_SmallNonNegWholeNumber (pctxt, pvalue->t - {{choices|length}});// can xem lai
+      stat = pe_SmallNonNegWholeNumber (pctxt, pvalue->t - {{extensible_idx+1}});// can xem lai
       if (stat != 0) return LOG_RTERR (pctxt, stat);
 
       RTXCTXTPUSHELEMNAME (pctxt, "...");

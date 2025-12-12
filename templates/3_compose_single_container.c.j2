@@ -22,7 +22,7 @@ xnap_return_et e2ap_compose_{{list_name}} (
         p_{{item_type | replace("-","_")}}->criticality = e2ap_{{criticality}};
         p_{{item_type | replace("-","_")}}->value.t =  T_E2AP_PDU_Contents_e2ap_{{ item_ies|replace("-","_") }}_{{ ie_from_type.field_name | replace('-', '_') }};
         p_{{item_type | replace("-","_")}}->value.u._e2ap{{item_ies | replace("-", "_")}}_{{ ie_from_type.field_name | replace('-', '_') }}
-                = rtxMemAllocType(p_asn1_ctx, e2ap_{{item_type | replace("-","_")}});
+                = rtxMemAllocType(p_asn1_ctx, e2ap_{{ie_from_type.ie_type | replace("-","_")}});
         if(GNB_PNULL==p_{{item_type | replace("-","_")}}->value.u._e2ap{{item_ies | replace("-", "_")}}_{{ ie_from_type.field_name | replace('-', '_') }}){
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_{{item_type}}",__FUNCTION__);
             rtFreeContext(p_asn1_ctx);

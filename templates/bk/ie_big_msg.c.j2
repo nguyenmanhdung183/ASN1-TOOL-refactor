@@ -95,7 +95,7 @@ EXTERN int asn1PrtToStr_e2ap_{{ies_name}}_protocolIEs(const char* name, e2ap_{{i
         pdata0 = (e2ap_{{ies_name}}_protocolIEs_element*)pnode0->data;
         rtxUIntToCharStr(xx1, numBuf, sizeof(numBuf), 0);
         rtxStrJoin(nameBuf, sizeof(nameBuf), name, "[", numBuf, "]", 0);
-        #if 0
+        #if 1
         if(asn1PrtToStr_e2ap_{{ies_name}}_protocolIEs_element(nameBuf, pdata0, buffer, bufSize) <0){
             return -1;
         }

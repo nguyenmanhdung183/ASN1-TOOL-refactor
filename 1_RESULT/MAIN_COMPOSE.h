@@ -236,7 +236,7 @@ xnap_return_et e2ap_compose_E2connectionUpdate_List (
         p_E2connectionUpdate_ItemIEs->criticality = e2ap_reject;
         p_E2connectionUpdate_ItemIEs->value.t =  T_E2AP_PDU_Contents_e2ap_E2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item;
         p_E2connectionUpdate_ItemIEs->value.u._e2apE2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item
-                = rtxMemAllocType(p_asn1_ctx, e2ap_E2connectionUpdate_ItemIEs);
+                = rtxMemAllocType(p_asn1_ctx, e2ap_E2connectionUpdate_Item);
         if(GNB_PNULL==p_E2connectionUpdate_ItemIEs->value.u._e2apE2connectionUpdate_ItemIEs_id_E2connectionUpdate_Item){
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionUpdate-ItemIEs",__FUNCTION__);
             rtFreeContext(p_asn1_ctx);
@@ -749,7 +749,7 @@ xnap_return_et e2ap_compose_E2connectionSetupFailed_List (
         p_E2connectionSetupFailed_ItemIEs->criticality = e2ap_reject;
         p_E2connectionSetupFailed_ItemIEs->value.t =  T_E2AP_PDU_Contents_e2ap_E2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item;
         p_E2connectionSetupFailed_ItemIEs->value.u._e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item
-                = rtxMemAllocType(p_asn1_ctx, e2ap_E2connectionSetupFailed_ItemIEs);
+                = rtxMemAllocType(p_asn1_ctx, e2ap_E2connectionSetupFailed_Item);
         if(GNB_PNULL==p_E2connectionSetupFailed_ItemIEs->value.u._e2apE2connectionSetupFailed_ItemIEs_id_E2connectionSetupFailed_Item){
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for e2ap_E2connectionSetupFailed-ItemIEs",__FUNCTION__);
             rtFreeContext(p_asn1_ctx);

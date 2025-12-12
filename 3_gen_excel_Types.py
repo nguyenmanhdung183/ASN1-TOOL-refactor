@@ -276,6 +276,26 @@ def write_skip_primitives(rows):
     print(f"Saved skip_in_scope.txt with primitive fields: {skip_file}")
 
 
+#=========== Ext Index =  =============
+def compute_extensible_index(inner: str) -> int:
+    """
+    inner: nội dung trong {...}
+    return:
+        -1  nếu không có extension '...'
+        >=0 nếu có, là index của phần tử đầu tiên thuộc extension group
+    """
+    parts = [p.strip() for p in inner.split(",")]
+
+    index = 0
+    for p in parts:
+        if p.startswith("..."):
+            return index  # vị trí bắt đầu extension group
+        if p != "":
+            index += 1
+
+    return -1
+
+
 #=============Parse Elementary Procedures========= 
     
 def parse_elementary_procedures(text: str):
@@ -694,6 +714,8 @@ def parse_struct_block(name: str, block: str, detected_single_containers, detect
 
         inner = blk[blk.find("{")+1: blk.rfind("}")]
         items = split_logical_items(inner)
+        extensible_index = compute_extensible_index(inner)
+
 
         child_rows = []
         cnt = 0
@@ -810,6 +832,7 @@ def parse_struct_block(name: str, block: str, detected_single_containers, detect
 
         for cr in child_rows:
             cr["Extensible"] = str(has_ext)
+            cr["Extensible_Index"] = str(extensible_index)
             rows.append(cr)
 
         return rows
@@ -850,7 +873,7 @@ def main():
     headers = ["Type_Name", "ASN1_Type", "Parent_Type", "Tag/ID", "Field_Name",
             "IE_Type", "Criticality", "Optional", "Extensible",
             "Min_Value", "Max_Value", "Enum_Item", "Note","Alias",
-            "Message_Name", "Msg_3_Type", "Msg_Critical", "Msg_Procedure_Code", "Elem_Procedure", "Dad_Name"]
+            "Message_Name", "Msg_3_Type", "Msg_Critical", "Msg_Procedure_Code", "Elem_Procedure", "Dad_Name", "Extensible_Index"]
 
 
     if "Types" in wb.sheetnames:
@@ -906,7 +929,8 @@ def main():
                 enum_cell,
                 "",  # Note
                 "",  # Alias
-                "", "", "", "", "",""  # Message columns
+                "", "", "", "", "","",  # Message columns
+                r.get("Extensible_Index", "-1")
             ])
 
 
