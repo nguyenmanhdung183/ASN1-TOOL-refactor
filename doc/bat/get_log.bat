@@ -1,20 +1,25 @@
 @echo off
-set USER=vht
-set HOST=10.61.248.57
+setlocal
 
-REM File log 1
-set REMOTE_LOG1=/var/log/system/syslog
-set LOCAL_SAVE1=C:\logs\syslog.txt
+REM ===== SSH Info =====
+set STAGE_USER=stage_user
+set STAGE_HOST=192.168.1.100
+set PROD_USER=prod_user
+set PROD_HOST=10.0.0.50
 
-REM File log 2
-set REMOTE_LOG2=/var/app/logs/app.log
+REM ===== Remote files =====
+set REMOTE_LOG1=/var/log/system.log
+set REMOTE_LOG2=/var/app/app.log
+
+REM ===== Local save =====
+set LOCAL_SAVE1=C:\logs\system.log
 set LOCAL_SAVE2=C:\logs\app.log
 
-echo Downloading log 1...
-scp %USER%@%HOST%:%REMOTE_LOG1% "%LOCAL_SAVE1%"
+echo Downloading log 1 via jump host...
+scp -o ProxyJump=%STAGE_USER%@%STAGE_HOST% %PROD_USER%@%PROD_HOST%:%REMOTE_LOG1% "%LOCAL_SAVE1%"
 
-echo Downloading log 2...
-scp %USER%@%HOST%:%REMOTE_LOG2% "%LOCAL_SAVE2%"
+echo Downloading log 2 via jump host...
+scp -o ProxyJump=%STAGE_USER%@%STAGE_HOST% %PROD_USER%@%PROD_HOST%:%REMOTE_LOG2% "%LOCAL_SAVE2%"
 
-echo Done!
+echo All logs downloaded!
 pause

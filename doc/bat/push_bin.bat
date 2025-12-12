@@ -1,25 +1,21 @@
 @echo off
 setlocal
 
-REM ====== THÔNG TIN SERVER ======
-set USER=vht
-set HOST=10.61.248.57
-
-REM ====== FILE GỐC TRÊN WINDOWS ======
+REM Windows file
 set LOCAL_FILE=C:\data\bin\app.bin
-
-REM ====== TÊN FILE MỚI SAU KHI ĐỔI (CHỈ TÊN, KHÔNG ĐƯỜNG DẪN) ======
 set NEW_NAME=app_2025.bin
-
-REM ====== THƯ MỤC ĐÍCH TRÊN SERVER ======
-set REMOTE_DIR=/home/myuser/bin/
-
-REM ====== TẠO FILE TẠM VỚI TÊN MỚI ======
 set TEMP_FILE=%TEMP%\%NEW_NAME%
 copy /y "%LOCAL_FILE%" "%TEMP_FILE%" >nul
 
-echo Uploading "%TEMP_FILE%" as "%NEW_NAME%" ...
-scp "%TEMP_FILE%" %USER%@%HOST%:%REMOTE_DIR%
+REM SSH info
+set STAGE_USER=stage_user
+set STAGE_HOST=192.168.1.100
+set PROD_USER=prod_user
+set PROD_HOST=10.0.0.50
+set PROD_DIR=/home/prod_user/bin/
+
+echo Uploading "%TEMP_FILE%" to production via jump host...
+scp -o ProxyJump=%STAGE_USER%@%STAGE_HOST% "%TEMP_FILE%" %PROD_USER%@%PROD_HOST%:%PROD_DIR%
 
 echo Done!
 pause
