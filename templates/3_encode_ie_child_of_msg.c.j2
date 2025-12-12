@@ -52,7 +52,7 @@ xnap_return_et e2ap_encode_{{choices[0].dad_type_name}}(
         asn1Init_e2ap_{{msg_3_type_alias}}(e2ap_pdu.u.{{parent_full.Msg_3_Type}});
         e2ap_pdu.u.{{parent_full.Msg_3_Type}}->procedureCode = ASN1V_e2ap_{{parent_full.Msg_Procedure_Code|replace("-","_")}};
         e2ap_pdu.u.{{parent_full.Msg_3_Type}}->criticality = e2ap_{{parent_full.Msg_Critical}};
-        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_{{parent_full.Type_Name}};
+        e2ap_pdu.u.{{parent_full.Msg_3_Type}}->value.t = T_E2AP_PDU_Descriptions_e2ap_E2AP_ELEMENTARY_PROCEDURES_{{parent_full.Type_Name}};
         p_{{choices[0].dad_type_name}} = rtxMemAllocType(&asn1_ctx, e2ap_{{choices[0].dad_type_name}});
         if(GNB_PNULL==p_{{choices[0].dad_type_name}}){
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for {{choices[0].dad_type_name}}",__FUNCTION__);

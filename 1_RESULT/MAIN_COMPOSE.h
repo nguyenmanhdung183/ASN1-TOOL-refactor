@@ -885,7 +885,7 @@ xnap_return_et e2ap_encode_E2connectionUpdateAcknowledge(
         asn1Init_e2ap_SuccessfulOutcome(e2ap_pdu.u.successfulOutcome);
         e2ap_pdu.u.successfulOutcome->procedureCode = ASN1V_e2ap_id_E2connectionUpdate;
         e2ap_pdu.u.successfulOutcome->criticality = e2ap_reject;
-        e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Description_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2connectionUpdateAcknowledge;
+        e2ap_pdu.u.successfulOutcome->value.t = T_E2AP_PDU_Descriptions_e2ap_E2AP_ELEMENTARY_PROCEDURES_E2connectionUpdateAcknowledge;
         p_E2connectionUpdateAcknowledge = rtxMemAllocType(&asn1_ctx, e2ap_E2connectionUpdateAcknowledge);
         if(GNB_PNULL==p_E2connectionUpdateAcknowledge){
             XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Memory allocation failed for E2connectionUpdateAcknowledge",__FUNCTION__);
