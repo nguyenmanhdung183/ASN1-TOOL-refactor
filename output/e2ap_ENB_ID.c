@@ -179,70 +179,104 @@ EXTERN void asn1Free_e2ap_ENB_ID_long_Macro_eNB_ID(OSCTXT* pctxt, e2ap_ENB_ID_lo
 
 
 // Các phần còn lại của template choice.c.j2
-// choice without extension
-
+// choice with extension typefef từ 1 -> mẫu từ PDU
 EXTERN int asn1PE_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
 {
    int stat = 0;
+   OSBOOL extbit = FALSE;
    RTXCTXTPUSHTYPENAME (pctxt, "ENB-ID");
-   RTXCTXTPUSHELEMNAME (pctxt, "t");
- 
-   stat = rtxEncBits (pctxt, pvalue->t - 1, 2);// kha nang la numbits
-   if (stat != 0) return LOG_RTERR (pctxt, stat);
-   RTXCTXTPOPELEMNAME (pctxt);
 
-   switch (pvalue->t) {
+   //extbit = (OSBOOL)(pvalue->t > 3);
+   extbit = (OSBOOL)(pvalue->t > 2);
+   stat = rtxEncBit (pctxt, extbit);
+   if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+   if(!extbit){
+      RTXCTXTPUSHELEMNAME (pctxt, "t");
+
+      stat = rtxEncBits (pctxt, pvalue->t - 1, 2);// kha nang la numbits
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+      RTXCTXTPOPELEMNAME (pctxt);
+
+      switch (pvalue->t) {
       case 1:
          RTXCTXTPUSHELEMNAME (pctxt, "macro-eNB-ID");
-         //primitive BIT STRING - id = 3
+         //primitive BIT STRING
          stat = asn1PE_e2ap_ENB_ID_macro_eNB_ID (pctxt, &pvalue->u.macro_eNB_ID); //bit string in choice type 3
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       case 2:
          RTXCTXTPUSHELEMNAME (pctxt, "home-eNB-ID");
-         //primitive BIT STRING - id = 3
+         //primitive BIT STRING
          stat = asn1PE_e2ap_ENB_ID_home_eNB_ID (pctxt, &pvalue->u.home_eNB_ID); //bit string in choice type 3
-         if (stat != 0) return LOG_RTERR (pctxt, stat);
-         RTXCTXTPOPELEMNAME (pctxt);
-         break;
-      case 3:
-         RTXCTXTPUSHELEMNAME (pctxt, "short-Macro-eNB-ID");
-         //primitive BIT STRING - id = 3
-         stat = asn1PE_e2ap_ENB_ID_short_Macro_eNB_ID (pctxt, &pvalue->u.short_Macro_eNB_ID); //bit string in choice type 3
-         if (stat != 0) return LOG_RTERR (pctxt, stat);
-         RTXCTXTPOPELEMNAME (pctxt);
-         break;
-      case 4:
-         RTXCTXTPUSHELEMNAME (pctxt, "long-Macro-eNB-ID");
-         //primitive BIT STRING - id = 3
-         stat = asn1PE_e2ap_ENB_ID_long_Macro_eNB_ID (pctxt, &pvalue->u.long_Macro_eNB_ID); //bit string in choice type 3
          if (stat != 0) return LOG_RTERR (pctxt, stat);
          RTXCTXTPOPELEMNAME (pctxt);
          break;
       default:
          return LOG_RTERR (pctxt, RTERR_INVOPT);
-   }
+      }
+   }else{
+      OSINT32 pos;
+      void * pPerField;
 
+      stat = pe_SmallNonNegWholeNumber (pctxt, pvalue->t - 3);// can xem lai
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+      /* encode extension element data value */
+      stat = pe_OpenTypeStart (pctxt, &pos, &pPerField);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+
+      switch(pvalue->t){
+         case 3:
+            RTXCTXTPUSHELEMNAME (pctxt, "short-Macro-eNB-ID");
+            //primitive BIT STRING
+            stat = asn1PE_e2ap_ENB_ID_short_Macro_eNB_ID (pctxt, &pvalue->u.short_Macro_eNB_ID); //bit string in choice type 3
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            RTXCTXTPOPELEMNAME (pctxt);
+            break;
+         case 4:
+            RTXCTXTPUSHELEMNAME (pctxt, "long-Macro-eNB-ID");
+            //primitive BIT STRING
+            stat = asn1PE_e2ap_ENB_ID_long_Macro_eNB_ID (pctxt, &pvalue->u.long_Macro_eNB_ID); //bit string in choice type 3
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            RTXCTXTPOPELEMNAME (pctxt);
+            break;
+  
+         default:
+            stat = rtxEncBitsFromByteArray (pctxt, pvalue->u.extElem1->data, pvalue->u.extElem1->numocts * 8);
+            if (stat != 0) return LOG_RTERR (pctxt, stat);
+            break;
+      }
+      stat = pe_OpenTypeEnd(pctxt, pos, pPerField);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+   }
    RTXCTXTPOPTYPENAME (pctxt);
-   return (stat);
+   return stat;
 }
 
-int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
+EXTERN int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
 {
    int stat = 0;
    OSUINT32 ui;
+   OSBOOL extbit = FALSE;
+   ASN1OpenType openType;
    RTXCTXTPUSHTYPENAME (pctxt, "ENB-ID");
 
- 
-   stat = rtxDecBits (pctxt, &ui, 2);// kha nang la numbits
+   stat = DEC_BIT (pctxt, &extbit);
    if (stat != 0) return LOG_RTERR (pctxt, stat);
-   else pvalue->t = ui + 1;
-   //RTXCTXTPOPELEMNAME (pctxt);
 
-   switch (ui) {
+   if(!extbit){
+      stat = rtxDecBits (pctxt, &ui, 2);// kha nang la numbits
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+      else pvalue->t = ui + 1;
+
+      switch (ui)
+      {
       case 0:
          RTXCTXTPUSHELEMNAME (pctxt, "macro-eNB-ID");
+
+
          pvalue->u.macro_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_macro_eNB_ID);
          if (pvalue->u.macro_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
          //primitive BIT STRING
@@ -253,6 +287,8 @@ int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
          break;
       case 1:
          RTXCTXTPUSHELEMNAME (pctxt, "home-eNB-ID");
+
+
          pvalue->u.home_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_home_eNB_ID);
          if (pvalue->u.home_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
          //primitive BIT STRING
@@ -263,6 +299,8 @@ int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
          break;
       case 2:
          RTXCTXTPUSHELEMNAME (pctxt, "short-Macro-eNB-ID");
+
+
          pvalue->u.short_Macro_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_short_Macro_eNB_ID);
          if (pvalue->u.short_Macro_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
          //primitive BIT STRING
@@ -273,6 +311,8 @@ int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
          break;
       case 3:
          RTXCTXTPUSHELEMNAME (pctxt, "long-Macro-eNB-ID");
+
+
          pvalue->u.long_Macro_eNB_ID = rtxMemAllocType (pctxt, e2ap_ENB_ID_long_Macro_eNB_ID);
          if (pvalue->u.long_Macro_eNB_ID == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
          //primitive BIT STRING
@@ -283,11 +323,83 @@ int asn1PD_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
          break;
       default:
          return LOG_RTERR (pctxt, RTERR_INVOPT);
+      }
+   }else{
+      stat = pd_SmallNonNegWholeNumber (pctxt, &ui);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+      else pvalue->t = ui + 5;
+      if(pvalue->t < 5){
+         return LOG_RTERR (pctxt, RTERR_INVOPT);
+      }
+      stat = PD_BYTE_ALIGN (pctxt);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+      RTXCTXTPUSHELEMNAME (pctxt, "...");
+      stat = pd_OpenType (pctxt, &openType.data, &openType.numocts);
+      if (stat != 0) return LOG_RTERR (pctxt, stat);
+      pvalue->u.extElem1 = rtxMemAllocType (pctxt, ASN1OpenType);
+      if (pvalue->u.extElem1 == NULL) return LOG_RTERR (pctxt, RTERR_NOMEM);
+      pvalue->u.extElem1->numocts = openType.numocts;
+      pvalue->u.extElem1->data = openType.data;
+      RTXCTXTPOPELEMNAME (pctxt);
    }
-
    RTXCTXTPOPTYPENAME (pctxt);
    return (stat);
 }
+
+int asn1Init_e2ap_ENB_ID (e2ap_ENB_ID* pvalue)
+{
+   if (pvalue == 0) return RTERR_NULLPTR;
+   pvalue->t = 0;
+   OSCRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
+   return 0;
+}
+
+void asn1Free_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
+{
+   if (pvalue == 0) return;
+   switch (pvalue->t) {
+      case 0: //no choice nothing to free
+         break;
+      case 1:
+         if (pvalue->u.macro_eNB_ID) {
+            //primitive BIT STRING
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.macro_eNB_ID);
+            pvalue->u.macro_eNB_ID = 0;
+         }
+         break;
+      case 2:
+         if (pvalue->u.home_eNB_ID) {
+            //primitive BIT STRING
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.home_eNB_ID);
+            pvalue->u.home_eNB_ID = 0;
+         }
+         break;
+      case 3:
+         if (pvalue->u.short_Macro_eNB_ID) {
+            //primitive BIT STRING
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.short_Macro_eNB_ID);
+            pvalue->u.short_Macro_eNB_ID = 0;
+         }
+         break;
+      case 4:
+         if (pvalue->u.long_Macro_eNB_ID) {
+            //primitive BIT STRING
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.long_Macro_eNB_ID);
+            pvalue->u.long_Macro_eNB_ID = 0;
+         }
+         break;
+      default:
+         if(0!=pvalue->u.extElem1){
+            if(!rtxCtxtTestFlag(pctxt, ASN1FASTCOPY)){
+               rtxMemFreePtr(pctxt, (void*)pvalue->u.extElem1->data);
+               pvalue->u.extElem1->data = 0;
+            }
+            rtxMemFreePtr (pctxt, (void*)pvalue->u.extElem1);
+            pvalue->u.extElem1 = 0;
+         }
+   }
+}
+
 
 int asn1PrtToStr_e2ap_ENB_ID (const char* name, e2ap_ENB_ID* pvalue, char* buffer, OSSIZE bufSize)
 {
@@ -311,53 +423,15 @@ int asn1PrtToStr_e2ap_ENB_ID (const char* name, e2ap_ENB_ID* pvalue, char* buffe
          //primitive BIT STRING
          asn1PrtToStr_e2ap_ENB_ID_long_Macro_eNB_ID (pctxt, pvalue->u.long_Macro_eNB_ID);
          break;
-      default:
-         return RTERR_INVOPT;
+      case T_e2ap_ENB_ID_extElem1:
+         if(rtPrintToStringIndent(buffer, bufSize) < 0) return -1;
+         if(rtPrintToStringHexStr("extElem1", pvalue->u.extElem1->numocts, pvalue->u.extElem1->data, buffer, bufSize) < 0) return -1;
+         break;
+      default:;
    }
 
    if(rtPrintToStringCloseBrace(buffer, bufSize) < 0) return -1;
    return 0;
 }
 
-int asn1Init_e2ap_ENB_ID (e2ap_ENB_ID* pvalue)
-{
-   if (pvalue == 0) return RTERR_NULLPTR;
-   pvalue->t = 0;
-   OSRTLMEMSET (&pvalue->u, 0, sizeof(pvalue->u));
-   return 0;
-}
-
-
-void asn1Free_e2ap_ENB_ID (OSCTXT* pctxt, e2ap_ENB_ID* pvalue)
-{
-   if (pvalue == 0) return;
-   switch (pvalue->t) {
-      case 0: //no choice nothing to free
-         break;
-      case 1:
-         if (pvalue->u.macro_eNB_ID) {
-            rtxMemFreePtr (pctxt, (void*)pvalue->u.macro_eNB_ID);
-            pvalue->u.macro_eNB_ID = 0;
-         }
-         break;
-      case 2:
-         if (pvalue->u.home_eNB_ID) {
-            rtxMemFreePtr (pctxt, (void*)pvalue->u.home_eNB_ID);
-            pvalue->u.home_eNB_ID = 0;
-         }
-         break;
-      case 3:
-         if (pvalue->u.short_Macro_eNB_ID) {
-            rtxMemFreePtr (pctxt, (void*)pvalue->u.short_Macro_eNB_ID);
-            pvalue->u.short_Macro_eNB_ID = 0;
-         }
-         break;
-      case 4:
-         if (pvalue->u.long_Macro_eNB_ID) {
-            rtxMemFreePtr (pctxt, (void*)pvalue->u.long_Macro_eNB_ID);
-            pvalue->u.long_Macro_eNB_ID = 0;
-         }
-         break;
-   }
-}
 

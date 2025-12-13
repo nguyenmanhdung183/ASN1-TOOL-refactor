@@ -167,7 +167,7 @@ int asn1PE_e2ap_E2nodeComponentConfigurationAck (OSCTXT* pctxt, e2ap_E2nodeCompo
    /* encode field failureCause - id = -1*/  
    if (pvalue->m_failureCausePresent) {//OPTIONAL FIELD
    RTXCTXTPUSHELEMNAME(pctxt, "failureCause");
-   stat = asn1PE_e2ap_Cause (pctxt, pvalue->failureCause);
+   stat = asn1PE_e2ap_Cause (pctxt, &pvalue->failureCause);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

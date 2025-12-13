@@ -29,14 +29,14 @@ int asn1PE_e2ap_E2nodeComponentConfigAdditionAck_Item (OSCTXT* pctxt, e2ap_E2nod
 
    /* encode field e2nodeComponentID - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentID");
-   stat = asn1PE_e2ap_E2nodeComponentID (pctxt, pvalue->e2nodeComponentID);
+   stat = asn1PE_e2ap_E2nodeComponentID (pctxt, &pvalue->e2nodeComponentID);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
 
    /* encode field e2nodeComponentConfigurationAck - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "e2nodeComponentConfigurationAck");
-   stat = asn1PE_e2ap_E2nodeComponentConfigurationAck (pctxt, pvalue->e2nodeComponentConfigurationAck);
+   stat = asn1PE_e2ap_E2nodeComponentConfigurationAck (pctxt, &pvalue->e2nodeComponentConfigurationAck);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

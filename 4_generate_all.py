@@ -19,6 +19,20 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 generated_files = set()
 
+hardcode_data = []
+
+
+HARDCODE_REGISTRY = {
+    "alias_hc": {},
+    "primitive_hc": {},
+    "choice_hc": {},
+    "singlecontainer_hc": {},
+    "ie_hc": {},
+    "ie_hc_com":{},
+    "sequence_hc": {},
+    "container_hc": {}
+}
+
 def ceil_to_standard_bits(n):
     """Trả về 8/16/32/64 bit cho n"""
     if not isinstance(n, int):
@@ -468,15 +482,16 @@ def gen_primitives_outputs():
 
         # Define templates based on ASN.1 type
         try:
+            data = {}
             if "INTEGER" in asn_type:
                 h_tmpl = env.get_template("integer.h.j2")
                 c_tmpl = env.get_template("integer.c.j2")
                 compose_tmpl = env.get_template("compose_integer_en.c.j2")
                 m = re.search(r"SIZE\((\d+)\)", asn_type)
                 if m:
-                    data = {"name": name, "is_dynamic": False, "size": int(m.group(1)), "metadata": primitive_info}
+                    data = {"name": name, "asn1_type": "PRIMITIVE", "is_dynamic": False, "size": int(m.group(1)), "metadata": primitive_info}
                 else:
-                    data = {"name": name, "is_dynamic": True, "metadata": primitive_info}
+                    data = {"name": name, "asn1_type": "PRIMITIVE", "is_dynamic": True, "metadata": primitive_info}
             elif "ENUMERATED" in asn_type:
                 h_tmpl = env.get_template("enumerated.h.j2")
                 c_tmpl = env.get_template("enumerated.c.j2")
@@ -488,7 +503,7 @@ def gen_primitives_outputs():
                         items = eval(row.get("Enum_Items"))
                     except Exception:
                         items = []
-                data = {"name": name, "items": [{"value": v, "name": n, "string": s} for v, n, s in items], "metadata": primitive_info}
+                data = {"name": name,"asn1_type": "PRIMITIVE", "items": [{"value": v, "name": n, "string": s} for v, n, s in items], "metadata": primitive_info}
             elif "OCTET STRING" in asn_type:
                 print("OCTET STRING DETECT")
                 h_tmpl = env.get_template("octet_string.h.j2")
@@ -497,9 +512,9 @@ def gen_primitives_outputs():
                 
                 m = re.search(r"SIZE\((\d+)\)", asn_type)
                 if m:
-                    data = {"name": name, "is_dynamic": False, "size": int(m.group(1)), "metadata": primitive_info}
+                    data = {"name": name, "asn1_type": "PRIMITIVE", "is_dynamic": False, "size": int(m.group(1)), "metadata": primitive_info}
                 else:
-                    data = {"name": name, "is_dynamic": True, "metadata": primitive_info}
+                    data = {"name": name,"asn1_type": "PRIMITIVE", "is_dynamic": True, "metadata": primitive_info}
             elif "PrintableString" in asn_type:
                 h_tmpl = env.get_template("printable_string.h.j2")
                 c_tmpl = env.get_template("printable_string.c.j2")
@@ -515,14 +530,14 @@ def gen_primitives_outputs():
                 compose_tmpl = env.get_template("compose_bitstring_en.c.j2")
                 m = re.search(r"SIZE\((\d+)\.\.(\d+)", asn_type)
                 if m:
-                    data = {"name": name, "has_constraint": True, "min_size": int(m.group(1)), "max_size": int(m.group(2)), "metadata": primitive_info}
+                    data = {"name": name, "asn1_type": "PRIMITIVE", "has_constraint": True, "min_size": int(m.group(1)), "max_size": int(m.group(2)), "metadata": primitive_info}
                 else:
-                    data = {"name": name, "has_constraint": False, "metadata": primitive_info}
-                
+                    data = {"name": name, "asn1_type": "PRIMITIVE", "has_constraint": False, "metadata": primitive_info}
+
             else:
                 print(f"Skip primitive template generation for: {name} ({asn_type})")
                 continue
-
+            HARDCODE_REGISTRY["alias_hc"][name] = data
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.h"), h_tmpl.render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{name}.c"), c_tmpl.render(data))
             safe_write(os.path.join(COMPOSE_DIR, f"compose_{name}.c"), env.get_template("3_compose_primitive.c.j2").render(data))
@@ -531,7 +546,7 @@ def gen_primitives_outputs():
             print(f"primitive data:\n{json.dumps(data, indent=4)}\n\n")
 
         except Exception as e:
-            print(f"[WARN] template gen failed for {name}: {e}")
+            print(f"//[WARN] template gen failed for {name}: {e}")
         
 
 # -------------------------
@@ -632,12 +647,15 @@ def gen_choice_outputs():
         # Tạo dữ liệu cho file choice
         data = {
             "name": name_clean,
+            "asn1_type": "CHOICE",
             "choices": choices,
             "extensible": extensible,
             "primitive_files_data": primitive_files_data,  # Gửi thông tin file con vào template
             "fields": choices,
             "extensible_idx": extensible_idx
         }
+        HARDCODE_REGISTRY["choice_hc"][name_clean] = data
+        
         print(f"dungnm23 choice_h_content: {data['primitive_files_data']}")
 
         try:
@@ -683,6 +701,7 @@ def gen_single_container_outputs():
 
         data = {
             "list_name": list_name,
+            "asn1_type": "SingleContainer",
             "item_ies": item_ies,
             "item_type": item_type_str,
             "ie_id": ie_id,
@@ -703,7 +722,7 @@ def gen_single_container_outputs():
                 "ie_type": ie_type_from_types
             }
         }
-
+        HARDCODE_REGISTRY["singlecontainer_hc"][list_name] = data
         try:
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}.h"), env.get_template("2_single_container.h.j2").render(data))
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{list_name}.c"), env.get_template("2_single_container.c.j2").render(data))
@@ -806,8 +825,9 @@ def gen_ie_outputs():
             #     print(f"IE (BIG) → {ies_name_cleaned} dùng ie_big_msg.h/c")
             # else:
             if True:
-                data = {"ies_name": ies_name_raw.replace("-", "_"), "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}"}
-
+                data = {"ies_name": ies_name_raw.replace("-", "_"),"asn1_type": "IE", "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}"}
+                HARDCODE_REGISTRY["ie_hc"][ies_name] = data
+                
                 safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{ies_name}.h"), env.get_template("2_ie.h.j2").render(data))
                 safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{ies_name}.c"), env.get_template("2_ie.c.j2").render(data))
                 safe_write(os.path.join(STRUCT_DIR, f"e2ap_{ies_name}.h"), env.get_template("1_main_struct_ie.h.j2").render(data))
@@ -831,7 +851,8 @@ def gen_ie_outputs():
                 else:
                     msg_3_type_alias = child_msg_type
 
-                data = {"ies_name": ies_name_raw.replace("-", "_"), "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}", "bottom_up": load_bottomup(), "tree": load_tree(), "msg_3_type_alias": msg_3_type_alias}
+                data = {"ies_name": ies_name_raw.replace("-", "_"), "asn1_type": "IE_com", "parent_full": parent_full, "choices": choices, "ie_id": ie_id, "criticality": f"e2ap_Criticality_{criticality}", "bottom_up": load_bottomup(), "tree": load_tree(), "msg_3_type_alias": msg_3_type_alias}
+                HARDCODE_REGISTRY["ie_hc_com"][ies_name] = data
                 compose_name = child_msg_parent.replace("-", "_")  # ví dụ: E2connectionUpdate
                 safe_write(os.path.join(COMPOSE_DIR, f"compose_{compose_name}.c"),env.get_template("3_encode_ie_child_of_msg.c.j2").render(data))
             
@@ -877,6 +898,7 @@ def gen_sequence_outputs():
                 "field": field_name,
                 "field_name": field_name,
                 "ie_type": ie_type_str.replace("-", "_"),
+                "item_type": ie_type_str.replace("-", "_"),
                 "presence": presence,
                 "alias": row.get("Alias"),
                 "primitive": primitive_sheet,
@@ -950,6 +972,7 @@ def gen_sequence_outputs():
 
         data = {
             "name": seq_name,
+            "asn1_type": "SEQUENCE",
             "fields": fields,
             "choices" :fields,
             "extensible": extensible,
@@ -958,6 +981,7 @@ def gen_sequence_outputs():
             "maxstr": seq_maxstr,     
             "primitive_files_data": primitive_files_data 
         }
+        HARDCODE_REGISTRY["sequence_hc"][seq_name] = data
 
         try:
             safe_write(os.path.join(OUTPUT_DIR, f"e2ap_{seq_name}.h"), env.get_template("2_sequence.h.j2").render(data))
@@ -1038,6 +1062,7 @@ def gen_container_outputs():
         }
         data = {
             "container_name": container_name,
+            "asn1_type": "Container",
             "ies": ies_list,
             "extensible": extensible,
             "includes": sorted(list(includes)),
@@ -1047,6 +1072,7 @@ def gen_container_outputs():
             "msg_procedure_code": msg_procedure_code,
             "elem_procedure": elem_procedure
         }
+        HARDCODE_REGISTRY["container_hc"][container_name] = data
 
         # Render template
         try:
@@ -1058,7 +1084,395 @@ def gen_container_outputs():
             print(f"[WARN] container template failed for {container_name}: {e}")
         print(f"container data:\n{json.dumps(data, indent=4)}\n\n")
         
+# =========================
+# HARD CODE GENERATOR
+# =========================
+def gen_integer_data(min_value, max_value):
+    # if min_value is None or max_value is None:
+    #     return 183  # default hardcoded value
 
+    return (min_value + max_value) // 2 
+
+
+def gen_inc_hex_array(n, type ="NULL"):
+
+    if type == "BIT STRING":
+        n = (n + 7) // 8  # convert bits to bytes
+            
+    if n <= 0:
+        return "{0x12, 0x34, 0x56, 0xAB}"
+    return "{" + ", ".join(f"0x{i:02X}" for i in range(1, n + 1)) + "}"
+
+def indent(text, spaces=4):
+    pad = " " * spaces
+    return "\n".join(
+        pad + line if line.strip() else line
+        for line in text.splitlines()
+    )
+def resolve_field_name(node):
+    if "field_name" in node and node["field_name"]:
+        return node["field_name"]
+
+    if "name" in node and node["name"]:
+        return node["name"]
+
+    # fallback: item_type hoặc type
+    if "item_type" in node:
+        return node["item_type"]
+
+    if "type" in node:
+        return node["type"]
+
+    return None
+
+def resolve_item_type(node):
+    if "item_type" in node and node["item_type"]:
+        return node["item_type"]
+
+    if "type" in node and node["type"]:
+        return node["type"]
+    if "ie_type" in node and node["ie_type"]:
+        return node["ie_type"]
+
+    return None
+#--------------primitive alias ----------
+def emit_primitive_alias(path, alias_node):
+    alias = alias_node.get("alias")
+    alias_name = path.split('.')[-1]
+    #alias_type = alias_node.get("ie_type")
+    alias_type = resolve_item_type(alias_node)
+    # INTEGER
+    if alias == 6 or alias == 5:
+        alias_data = HARDCODE_REGISTRY["alias_hc"][alias_type]
+        warning_msg = ""
+        return (
+            f"//{warning_msg}hc-{alias_name} - alias primitive - pid = {alias} - INTEGER - min:{alias_data['metadata']['min']} - max:{alias_data['metadata']['max']}\n"
+            f"{path} = {gen_integer_data(alias_data['metadata']['min'], alias_data['metadata']['max'])};// change integer here\n\n")
+
+    # BIT STRING
+    if alias in (2, 3, 4):
+        alias_data = HARDCODE_REGISTRY["alias_hc"][alias_type]
+        size = alias_node.get("min", 8)
+        warning_msg = ""
+        return (
+            f"//{warning_msg}hc-{alias_name} - alias primitive - pid = {alias} - BIT STRING\n"
+            f"OSOCTET temp_buff_for_{path.split('.')[-1]}[] = {gen_inc_hex_array(alias_data.get("metadata", {}).get("min", 0), "BIT STRING")}; // min ={alias_data["metadata"]["min"]} - max = {alias_data["metadata"]["max"]} bits change bitstring data here\n"
+            f"{path}.numbits = 8*sizeof(temp_buff_for_{path.split('.')[-1]});\n"
+            #f"{path}.data = rtxMemAlloc(pctxt, 8);\n"
+            f"XNAP_MEMCPY({path}.data, temp_buff_for_{path.split('.')[-1]}, sizeof(temp_buff_for_{path.split('.')[-1]})); // change bitstring data here\n"
+            f"\n"
+        )
+    # OCTET STRING 
+    if alias == 8 or alias == 9:
+        size = alias_node.get("min", 8)
+        alias_data = HARDCODE_REGISTRY["alias_hc"][alias_type]
+        warning_msg = ""
+        return (
+            f"//{warning_msg}hc-{alias_name} - alias primitive - pid = {alias} - OCTET STRING\n"
+            f"OSOCTET temp_buff_for_{path.split('.')[-1]}[] = {gen_inc_hex_array(alias_data.get("metadata", {}).get("min", 0))}; // min ={alias_data["metadata"]["min"]} - max = {alias_data["metadata"]["max"]} bytes change octetstring data here\n"
+            f"{path}.numocts = sizeof(temp_buff_for_{path.split('.')[-1]});\n"
+            #f"{path}.data = rtxMemAlloc(pctxt, {size});\n"
+            f"XNAP_MEMCPY({path}.data, temp_buff_for_{path.split('.')[-1]}, sizeof(temp_buff_for_{path.split('.')[-1]})); // change octetstring data here\n"
+            f"\n"
+        )    
+    # Printable STRING
+    if alias == 10:
+        return (
+            f"//hc-{alias_name} - alias primitive - pid = {alias} Printable STRING\n"
+            f'XNAP_STRCPY({path}, "hardcoded_string_value"); // change printable string here\n\n'
+        )
+    # ENUM
+    if alias == 13:
+        alias_data = HARDCODE_REGISTRY["alias_hc"][alias_type]
+        alias_items = alias_data["items"][0]
+        alias_item_name = alias_items["name"].replace("-", "_")
+        alias_name = alias_node.get("ie_type")
+        return (
+            f"//hc-{alias_name}\n"
+            f"{path} = E2AP_{camel_to_upper_snake(alias_name)}_{camel_to_upper_snake(alias_item_name)}; // change enum value here\n")
+
+    return f"// [WARN] {path} primitive alias {alias} not handled\n"
+
+# ---------- primitive ----------
+def emit_primitive(path, prim, dad_type_name=None):
+    pid = prim.get("primitive_id")
+
+    prim_name = path.split('.')[-1]
+
+    # INTEGER
+    if pid == 6 or pid == 5:
+        return (
+            f"//hc-{prim_name} - primitive in scope - pid = {pid} - INTEGER\n"
+            f"{path} = {gen_integer_data(prim.get("min"), prim.get("max"))};\n"
+            f"\n"
+        )
+    # BIT STRING
+    if pid in (2, 3, 4):
+        size = prim.get("min", 8)
+        warning_msg = ""
+        return (
+            f"//{warning_msg}hc-{prim_name} - primitive in scope - pid = {pid} - BIT STRING\n"
+            f"OSOCTET temp_buff_for_{path.split('.')[-1]}[] = {gen_inc_hex_array(prim.get("min"), "BIT STRING")}; // min ={prim["min"]} - max = {prim["max"]} bits\n"
+            f"{path}.numbits = 8*sizeof(temp_buff_for_{path.split('.')[-1]});\n"
+            #f"{path}.data = rtxMemAlloc(pctxt, 8);\n"
+            f"XNAP_MEMCPY({path}.data, temp_buff_for_{path.split('.')[-1]}, sizeof(temp_buff_for_{path.split('.')[-1]}));\n"
+            f"\n"
+        )
+    # OCTET STRING
+    if pid == 8 or pid == 9:
+        size = prim.get("min", 8)
+        warning_msg = ""
+        return (
+            f"//{warning_msg}hc-{prim_name} - primitive in scope - pid = {pid} - OCTET STRING\n"
+            f"OSOCTET temp_buff_for_{path.split('.')[-1]}[] = {gen_inc_hex_array(prim.get("min"))}; // min ={prim["min"]} - max = {prim["max"]} bytes\n"
+            f"{path}.numocts = sizeof(temp_buff_for_{path.split('.')[-1]});\n"
+            #f"{path}.data = rtxMemAlloc(pctxt, {size});\n"
+            f"XNAP_MEMCPY({path}.data, temp_buff_for_{path.split('.')[-1]}, sizeof(temp_buff_for_{path.split('.')[-1]}));\n"
+            f"\n"
+        )
+    # Printable STRING
+    if pid == 10:
+        return (
+            f"//hc-{prim_name} - primitive in scope - pid = {pid} Printable STRING\n"
+            f'XNAP_STRCPY({path}, "hardcoded_string_value");\n\n'
+        )    
+    # ENUM
+    if pid == 13:
+        return (
+            f"//hc-{prim_name} - primitive in scope - pid = {pid} ENUMURATE\n"
+            f"{path} = E2AP_{camel_to_upper_snake(dad_type_name)}_{camel_to_upper_snake(prim.get("enum_items")[0].get("name"))};\n"
+            f"\n"
+                )
+    return f"// [WARN] {path} primitive {pid} not handled\n"
+
+
+
+# ---------- IE NODE DISPATCH ----------
+
+
+def emit_ie_node(parent, ie,*, is_list_item=False, dad_type_name=None):
+    #ie_hc
+
+    field = resolve_field_name(ie)
+    ie_type = resolve_item_type(ie)
+    
+    if is_list_item:
+        path = parent
+    else:
+        path = f"{parent}.{field}" if field else parent
+        
+    prim = ie.get("primitive_meta", {})
+    if prim.get("is"):
+        if dad_type_name is None:
+            return emit_primitive(path, prim)
+        else:
+            return emit_primitive(path, prim, dad_type_name)
+
+    if ie.get("alias",{}) != -1:
+        print("dungnm23 emit_primitive_alias called for field:",ie.get("alias",{}))
+        return emit_primitive_alias(path, ie)
+
+    print("dungnm23 emit_ie_node called for ie_type:",ie_type, "field:",field)
+    
+    if ie_type in HARDCODE_REGISTRY["singlecontainer_hc"]:
+        return emit_list(path, ie_type)
+
+    if ie_type in HARDCODE_REGISTRY["sequence_hc"]:
+        return emit_sequence(path, ie_type)
+
+    if ie_type in HARDCODE_REGISTRY["choice_hc"]:
+        return emit_choice(path, ie_type)
+
+    if ie_type in HARDCODE_REGISTRY["ie_hc"]:
+        return emit_ie_container(path, ie_type)
+
+    return f"// [WARN] IE not handled: {ie_type}\n"
+
+# ---------- IE CONTAINER ----------
+def emit_ie_container(parent, ie_type):
+    print("dungnm23 emit_ie_container called for ie_type:",ie_type)
+    ie_def = HARDCODE_REGISTRY["ie_hc"][ie_type]
+    lines = []
+
+    for c in ie_def["choices"]:
+        lines.append(f"{emit_ie_node(parent, c, dad_type_name=c["item_type"])}")
+    return "".join(lines)
+
+
+# ---------- LIST ----------
+def emit_list(parent, list_type):# prt + list_name
+    #singlecontainer_hc
+    lst = HARDCODE_REGISTRY["singlecontainer_hc"][list_type] 
+    item_ie_type = lst["item_ies"]
+
+    lines = []
+    lines.append(f"{parent}.{lst["ie_from_type"]["field_name"]}_count = 1;\n")
+    # lines.append(
+    #     f"{parent}.array = rtxMemAlloc(pctxt, sizeof(*{parent}.array));\n"
+    # )
+    item_ie_type = item_ie_type.replace("-", "_")
+    item_ie = HARDCODE_REGISTRY["ie_hc"][item_ie_type]
+    parent = f"{parent}.{lst['ie_from_type']['field_name']}[0]"
+    for c in item_ie["choices"]:
+        lines.append(
+            emit_ie_node(f"{parent}", c, is_list_item=True)
+        )
+    
+    return "".join(lines)
+
+
+# ---------- SEQUENCE ----------
+def emit_sequence(parent, seq_type):
+    seq = HARDCODE_REGISTRY["sequence_hc"][seq_type]
+    lines = []
+    lines.append(f"/*=== SEQUENCE - {seq_type} ===*/\n")
+    idx =1
+    for  f in seq["fields"]:
+        lines.append(f"//hc-sequence-ELEM {idx}: {seq_type}->{f['field_name']} - alias = {f.get('alias', 'none')}\n")
+        if f.get("presence") == "optional":
+            lines.append(f"{parent}.bitmask |= E2AP_{camel_to_upper_snake(seq_type)}_e2ap_{camel_to_upper_snake(f['field_name'])}_PRESENT;\n")
+        lines.append(emit_ie_node(parent, f, dad_type_name=seq["name"]))
+        idx +=1
+    lines.append(f"/*=== END SEQUENCE - {seq_type} ===*/\n")
+    return "".join(lines)
+
+
+# ---------- CHOICE ----------
+def emit_choice(parent, choice_type):
+    
+    choice = HARDCODE_REGISTRY["choice_hc"][choice_type]
+
+    # hardcode chọn branch đầu tiên để hiện còn chọn các choice sau để #if 0
+    
+    show_lines = ""
+    hidden_lines = ""
+    
+    c = choice["choices"][0]
+
+    lines = []
+    lines.append(f"#if 1 //hc-CHOICE-ELEM 1: {choice["name"]}->{c['field_name']} - alias = {c.get('alias', 'none')}\n")
+    lines.append(f"{parent}.choice_type = E2AP_{camel_to_upper_snake(choice_type)}_e2ap_{camel_to_upper_snake(c['field_name'])};\n")
+    lines.append(
+        emit_ie_node(f"{parent}", c, dad_type_name=choice["name"])
+    )
+    lines.append(f"#endif\n")
+    show_lines = "".join(lines)
+    
+    
+    for c in choice["choices"][1:]:
+        lines = []
+        lines.append(f"#if 0 //hc-choice-ELEM {choice['choices'].index(c) + 1}: {choice["name"]}->{c['field_name']} - alias = {c.get('alias', 'none')}\n")
+        lines.append(f"{parent}.choice_type = E2AP_{camel_to_upper_snake(choice_type)}_e2ap_{camel_to_upper_snake(c['field_name'])};\n")
+        lines.append(
+            emit_ie_node(f"{parent}", c, dad_type_name=choice["name"])
+        )
+        lines.append(f"#endif\n")
+        hidden_lines += "".join(lines)
+    start_comment = f"/*=== CHOICE - {choice_type} ===*/\n"
+    end_comment = f"/*=== END CHOICE - {choice_type} ===*/\n"
+
+    return "".join(start_comment + show_lines + hidden_lines+ end_comment)
+
+
+def emit_ie_root(path, ie):
+    # con của ie_hc_com
+    ie_type = ie["item_type"]
+
+    contain_optional = ie.get("presence") == "optional"
+    op_path =""
+    if contain_optional:
+        op_path  = f"p_{ie.get("dad_type_name")}->bitmask = E2AP_{camel_to_upper_snake(ie.get("dad_type_name"))}_e2ap_{camel_to_upper_snake(ie.get("field_name"))}_PRESENT;\n"
+        print("dungnm23 emit_ie_root called for ie_type:",op_path, ie_type)    
+
+    prim = ie.get("primitive_meta", {})
+    if prim.get("is"):
+        return emit_primitive(path, prim)
+    if ie.get("alias", {}) != -1:
+        return op_path + emit_primitive_alias(path, ie)
+
+    if ie_type in HARDCODE_REGISTRY["singlecontainer_hc"]:
+        return op_path + emit_list(path, ie_type)
+
+    if ie_type in HARDCODE_REGISTRY["sequence_hc"]:
+        return op_path + emit_sequence(path, ie_type)
+
+    if ie_type in HARDCODE_REGISTRY["choice_hc"]:
+        return op_path + emit_choice(path, ie_type)
+
+    if ie_type in HARDCODE_REGISTRY["ie_hc"]:
+        return op_path + emit_ie_container(path, ie_type)
+
+    return f"// [WARN] root IE not handled: {ie_type}\n"
+
+
+# ---------- MSG HARD CODE ----------
+def emit_msg_hardcode(msg_name, ies_val):
+    #ie_hc_com
+    root = f"p_{msg_name}"
+    lines = []
+
+    msg_roots = [ # nhiều tập choices (ví dụ là 4 cái IE e2conn)
+        c for c in ies_val["choices"]
+        if c.get("note") == "child_of_msg"
+    ]
+    
+
+    for ie in msg_roots:
+        field = ie["field_name"]
+        path = f"{root}->{field}"
+        lines.append(f"/*============== Hardcode IE: {field} ==============*/\n")
+        lines.append(
+            emit_ie_root(path, ie)
+        )
+        
+    bottom_ups = ies_val.get("bottom_up", {})
+    body = "".join(lines)
+
+    return f"""
+{bottom_ups}
+void assign_hardcode_value_{msg_name}(e2ap_{msg_name}_t* {root})
+{{    
+{indent(body, 4)}
+}}
+"""
+
+
+
+# ---------- MAIN GEN ----------
+def gen_harcode_outputs():
+    print("Generating Hardcode files...")
+
+    print(json.dumps(HARDCODE_REGISTRY, indent=4, ensure_ascii=False))
+
+    for ies_key, ies_val in HARDCODE_REGISTRY["ie_hc_com"].items():
+        parent = ies_val.get("parent_full")
+        if not parent:
+            continue
+        
+        msg_name = parent["Message_Name"]
+
+        code = []
+        code.append(f"""#ifndef ASSIGN_HARDCODE_{camel_to_upper_snake(msg_name)}_H
+#define ASSIGN_HARDCODE_{camel_to_upper_snake(msg_name)}_H
+#include<stdio.h>
+#include"output_main.h"
+#include "MAIN_STRUCT.h"\n""")
+        hardcode_body = emit_msg_hardcode(msg_name, ies_val)
+
+        if isinstance(hardcode_body, str):
+            code.append(hardcode_body)  # append string vào list
+        elif isinstance(hardcode_body, list):
+            code.extend(hardcode_body)  # nối list vào list
+        else:
+            raise TypeError("emit_msg_hardcode must return str or list of strings")
+                
+        code.append(f"\n#endif // ASSIGN_HARDCODE_{camel_to_upper_snake(msg_name)}_H\n")    
+
+        out = f"1_RESULT/HARDCODE.h"
+        safe_write(out, "".join(code))
+
+    
+#============ END GEN HARDCODE ============    
 # -------------------------
 # Main runner
 # -------------------------
@@ -1075,7 +1489,10 @@ def main():
     gen_sequence_outputs() #ok cần sửa ở template
     print("Generating Containers...")
     gen_container_outputs() # ok
+    print("Generating Hardcode...")
+    gen_harcode_outputs()
     print("=== DONE ===")
+    
 
 
 if __name__ == "__main__":

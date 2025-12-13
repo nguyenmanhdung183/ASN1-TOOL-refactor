@@ -22,7 +22,7 @@ int asn1PE_e2ap_E2nodeComponentInterfaceS1 (OSCTXT* pctxt, e2ap_E2nodeComponentI
    /*encode root elements*/   
    /* encode field mme_name - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "mme-name");
-   stat = asn1PE_e2ap_MMEname (pctxt, pvalue->mme_name);
+   stat = asn1PE_e2ap_MMEname (pctxt, &pvalue->mme_name);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

@@ -1,0 +1,56 @@
+/*
+HARDCODE - E2AP
+
+    harcode_data =[
+        dad_type = "dad_type";
+        dad_name = "dad_name";
+        dad_asn1_type;
+        my_type = "my_type";
+        my_name ="my_name";
+        my_asn1_type = "my_asn1_type";
+        name;
+        son = [
+            son_type;
+            son_name;
+            son_asn1_type;
+            primitive_id; // primitive in scope
+            alias; // alias của primirive trong sheet của primitive
+        ]
+
+    ]
+
+1. HARDCODE CHO MSG - CONTAINER - HARDCODE CHO IE LÀ CON CỦA MSG
+
+    set bismask -> set dữ liệu cho trường con (single contaier/ primitive/ sequence....)
+
+2. HARDCODE CHO SINGLE CONTAINER (List)
+     set count_value -> set dữ liệ cho array (có thể nhiều item -> nhưng làm 1 - 2 cái thôi) (trường con)
+
+3. HARDCODE CHO IE THƯỜNG
+
+
+4. HARDCODE CHO SEQ
+
+    set bitmask (nếu có optional) -> set dữ liệu cho trường con
+
+
+5. HARDCODE CHO CHOCIE
+
+    set choice_type = 1 (thêm comment gán thp define của choice) + gán dữ liệu cho trường con
+
+
+6. HARDCODE CHO PRIMITIVE
+    6.1 INTEGER -> gán = 183 (xxx)
+    6.2 BIT STRING -> tạo 1 mảng xong memcpy vào + gán numbits
+    6.3 OCTET STRING -> tạo 1 mảng xong memcpy vào + gán numoct theo bytes
+    6.4 ENUMERATED -> gán = 0 + thêm comment để sửa các trường trong typedef enum
+    6.5 PrintableString -> gán 1 chuỗi "Hello World"
+
+7. HARDCODE CHO PRIMITIVE NHÚNG TRONG SCOPE -> tương tự cái trên nhưng tên kết hợp từ cha + tên primirive
+    
+NOTE: Trường con cần phải xét 3 trường hợp
+    1. Là alias (alias_id != -1) thì gán theo primitive  
+    2. Là primitive in scope (primitive_id !=-1 && alias ==-1) thì gán theo pritive in scope
+    3. Là construct type (alias ==-1 && primitive_id == -1) thì xét ASN1_Type rồi gán theo mẫu
+
+*/

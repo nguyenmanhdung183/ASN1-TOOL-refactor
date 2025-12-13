@@ -5,7 +5,7 @@
 //type 8  mau la octet string size(n) mau la plmn_identity
 EXTERN int asn1PE_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "PLMN-Identity");
+   RTXCTXTPUSHTYPENAME (pctxt, "PLMN-Identity");
    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(3), OSUINTCONST(3), 0, 0);
 
    stat = pe_OctetString(pctxt, pvalue->numocts, pvalue->data);
@@ -15,7 +15,7 @@ EXTERN int asn1PE_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue)
 }
 EXTERN int asn1PD_e2ap_PLMN_Identity (OSCTXT* pctxt, e2ap_PLMN_Identity* pvalue){
    int stat = 0;
-   RTXCTCXTPUSHTYPENAME (pctxt, "PLMN-Identity");
+   RTXCTXTPUSHTYPENAME (pctxt, "PLMN-Identity");
    PU_SETSIZECONSTRAINT(pctxt, OSUINTCONST(3), OSUINTCONST(3), 0, 0);
 
    stat = pd_OctetString(pctxt, &pvalue->numocts, pvalue->data, sizeof(pvalue->data));

@@ -29,7 +29,7 @@ int asn1PE_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentI
    /* encode field global_eNB_ID - id = -1*/  
    if (pvalue->m_global_eNB_IDPresent) {//OPTIONAL FIELD
    RTXCTXTPUSHELEMNAME(pctxt, "global-eNB-ID");
-   stat = asn1PE_e2ap_GlobalENB_ID (pctxt, pvalue->global_eNB_ID);
+   stat = asn1PE_e2ap_GlobalENB_ID (pctxt, &pvalue->global_eNB_ID);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
@@ -38,7 +38,7 @@ int asn1PE_e2ap_E2nodeComponentInterfaceX2 (OSCTXT* pctxt, e2ap_E2nodeComponentI
    /* encode field global_en_gNB_ID - id = -1*/  
    if (pvalue->m_global_en_gNB_IDPresent) {//OPTIONAL FIELD
    RTXCTXTPUSHELEMNAME(pctxt, "global-en-gNB-ID");
-   stat = asn1PE_e2ap_GlobalenGNB_ID (pctxt, pvalue->global_en_gNB_ID);
+   stat = asn1PE_e2ap_GlobalenGNB_ID (pctxt, &pvalue->global_en_gNB_ID);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

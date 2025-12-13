@@ -39,7 +39,7 @@ typedef struct{
 {% if metadata.primitive_id ==  9%}{# OCTET STRING ?#}
 typedef struct{
     UInt32 numocts;
-    UInt8 data[{{size }}];
+    UInt8 data[{{size }}]; //-> dungnm23 fix lai size
 }_e2ap_{{name}}_t; //OCTET STRING - P  OK
 {% endif %}
 {% if metadata.primitive_id == 10 %}{# Printable String A..B,...  ?#}

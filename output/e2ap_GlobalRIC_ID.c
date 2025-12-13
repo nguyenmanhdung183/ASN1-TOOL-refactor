@@ -65,7 +65,7 @@ int asn1PE_e2ap_GlobalRIC_ID (OSCTXT* pctxt, e2ap_GlobalRIC_ID* pvalue)
    /*encode root elements*/   
    /* encode field pLMN_Identity - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "pLMN-Identity");
-   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->pLMN_Identity);
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, &pvalue->pLMN_Identity);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

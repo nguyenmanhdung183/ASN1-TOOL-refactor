@@ -29,7 +29,7 @@ int asn1PE_e2ap_RANfunctionIDcause_Item (OSCTXT* pctxt, e2ap_RANfunctionIDcause_
 
    /* encode field cause - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "cause");
-   stat = asn1PE_e2ap_Cause (pctxt, pvalue->cause);
+   stat = asn1PE_e2ap_Cause (pctxt, &pvalue->cause);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

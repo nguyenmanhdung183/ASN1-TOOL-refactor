@@ -1,0 +1,81 @@
+/************************************************************/
+/*      SEQUENCE E2nodeComponentConfigurationAck                */
+/************************************************************/
+
+/* 1- compose primitive intergrate for sequence fields */
+     // id = 13 - ENUMERATED - updateOutcome
+      xnap_return_et e2ap_compose_E2nodeComponentConfigurationAck_updateOutcome(
+                OSCTXT                       *p_asn1_ctx,
+                e2ap_E2nodeComponentConfigurationAck_updateOutcome                 *p_dest,//dest
+                _e2ap_E2nodeComponentConfigurationAck_updateOutcome_et              *p_src//src
+)
+{
+    *p_dest = (e2ap_E2nodeComponentConfigurationAck_updateOutcome)*p_src;
+    #ifdef E2AP_COMPOSE_DEBUG_DUNGNM23
+    XNAP_TRACE(XNAP_INFO, "%s:  dungnm23_compose_debug ENUMERATED E2nodeComponentConfigurationAck_updateOutcome value=%u", __FUNCTION__, *p_dest);
+    #endif
+    return XNAP_SUCCESS;
+}
+     
+
+
+/* 2 - compose sequence */
+xnap_return_et e2ap_compose_E2nodeComponentConfigurationAck(
+                OSCTXT                        *p_asn1_ctx,
+                e2ap_E2nodeComponentConfigurationAck                 *p_e2ap_E2nodeComponentConfigurationAck, //dest
+                _e2ap_E2nodeComponentConfigurationAck_t              *p_E2nodeComponentConfigurationAck //src
+)
+{
+
+//cần alloc node
+    XNAP_UT_TRACE_ENTER();
+    if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigurationAck)
+    {
+        XNAP_TRACE(XNAP_ERROR  ,"%s: dungnm23 pointer not avlb for E2nodeComponentConfigurationAck",__FUNCTION__);
+        XNAP_UT_TRACE_EXIT();
+        return XNAP_FAILURE;
+    }
+    /* START COMPOSE SEQ FIELDS */
+    {  /*SEQ_ELEM-1  Encode updateOutcome alias-id = -1 - primitive = True*/
+
+        /*==primitive in scope==*/
+        if(XNAP_FAILURE == e2ap_compose_E2nodeComponentConfigurationAck_updateOutcome(p_asn1_ctx,
+                                                &p_e2ap_E2nodeComponentConfigurationAck->updateOutcome,
+                                                &p_E2nodeComponentConfigurationAck->updateOutcome))
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field updateOutcome",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+    } /* end SEQ_ELEM-1  Encode updateOutcome*/
+
+    if(p_E2nodeComponentConfigurationAck->bitmask & E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_e2ap_FAILURE_CAUSE_PRESENT)
+    {  /*SEQ_ELEM-2  Encode failureCause alias-id = -1 - primitive = False*/
+    p_e2ap_E2nodeComponentConfigurationAck->m_failureCausePresent = TRUE; //dungnm23 add -> check xem chuan ko nhe
+
+        /* == not primitive (SEQ or CHOICE)==*/
+        #if 0 
+            /* 1.alloc mem */
+        p_e2ap_E2nodeComponentConfigurationAck->failureCause = rtxMemAllocType(p_asn1_ctx, e2ap_Cause);
+        if(XNAP_P_NULL == p_e2ap_E2nodeComponentConfigurationAck->failureCause)
+        {
+            XNAP_TRACE(XNAP_ERROR  ,"%s: Memory allocation failed for field failureCause",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+        #endif
+            /* 2.init */
+        asn1Init_e2ap_Cause(&p_e2ap_E2nodeComponentConfigurationAck->failureCause);
+            /* 3.compose */
+        if(XNAP_FAILURE == e2ap_compose_Cause(p_asn1_ctx,
+                                                &p_e2ap_E2nodeComponentConfigurationAck->failureCause,//dest
+                                                &p_E2nodeComponentConfigurationAck->failureCause)) //src
+        {
+            XNAP_TRACE(XNAP_ERROR,"dungnm23 - %s: Encoding failed for field failureCause",__FUNCTION__);
+            return XNAP_FAILURE;
+        }
+    } /* end SEQ_ELEM-2  Encode failureCause*/
+
+
+    // cần appendnode
+    return XNAP_SUCCESS;
+}   
+

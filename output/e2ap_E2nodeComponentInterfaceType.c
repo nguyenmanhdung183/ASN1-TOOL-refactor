@@ -41,7 +41,9 @@ int e2ap_E2nodeComponentInterfaceType_ToEnum2 (OSCTXT* pctxt, const OSUTF8CHAR* 
       *pvalue = (e2ap_E2nodeComponentInterfaceType)e2ap_E2nodeComponentInterfaceType_ENUMTAB[idx].value;
       return 0;
    } else {
-      rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      //rtxErrAddIntParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+      rtxErrAddStrParm (pctxt, (const char*)value);//dungnm23 check xem là Str hay Int
+
       return LOG_RTERR (pctxt, RTERR_INVENUM);
    }
 }
@@ -117,4 +119,8 @@ EXTERN int asn1Init_e2ap_E2nodeComponentInterfaceType (e2ap_E2nodeComponentInter
       //if (pvalue == 0) return RTERR_NULLPTR;
       //*pvalue = 0;
       return 0;
+}
+
+EXTERN void asn1Free_e2ap_E2nodeComponentInterfaceType (OSCTXT* pctxt, e2ap_E2nodeComponentInterfaceType* pvalue){
+   return 0;
 }

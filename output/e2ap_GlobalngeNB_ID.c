@@ -22,14 +22,14 @@ int asn1PE_e2ap_GlobalngeNB_ID (OSCTXT* pctxt, e2ap_GlobalngeNB_ID* pvalue)
    /*encode root elements*/   
    /* encode field plmn_id - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "plmn-id");
-   stat = asn1PE_e2ap_PLMN_Identity (pctxt, pvalue->plmn_id);
+   stat = asn1PE_e2ap_PLMN_Identity (pctxt, &pvalue->plmn_id);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
 
    /* encode field enb_id - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "enb-id");
-   stat = asn1PE_e2ap_ENB_ID_Choice (pctxt, pvalue->enb_id);
+   stat = asn1PE_e2ap_ENB_ID_Choice (pctxt, &pvalue->enb_id);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 

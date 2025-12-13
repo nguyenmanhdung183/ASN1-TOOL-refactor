@@ -3,7 +3,9 @@
 /*********************************************************/
 
 typedef struct{
-#define MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT 256 // dungnm23 change to 1 if needed
+//#define MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT 256 // dungnm23 change to 1 if needed
+#define MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT 1
+
   
     UInt16 id_RANfunctionID_Item_count;
     

@@ -13,72 +13,85 @@ typedef UInt8 _e2ap_TransactionID_t; // INTEGER (A..B,...) - P  OK
  
 
 /************************************************/
-/*       SEQUENCE - TNLinformation        */
+/*        PRIMITIVE - PLMN_Identity               */
 /************************************************/
+
+/* PLMN_Identity- OCTET STRING (SIZE(3))*/
+
 typedef struct{
-    UInt8 numbits;
-    UInt8 data[20];
-} _e2ap_TNLinformation_tnlAddress_t;//BIT STRING SIZE (A..B,...)
+    //#define PLMN_Identity_MAX_BYTES_DNM 3
+    //UInt8 PLMN_Identity[PLMN_Identity_MAX_BYTES_DNM];
+    UInt32 numocts;
+    UInt8 data[3];
+}_e2ap_PLMN_Identity_t; //OCTET STRING SIZE N - P - OK
+ 
+
+/************************************************/
+/*       SEQUENCE - GlobalRIC_ID        */
+/************************************************/
  
  typedef struct{
     UInt8 numbits;
-    UInt8 data[2];
-}_e2ap_TNLinformation_tnlPort_t; //BIT STRING SIZE (N)
- 
-/* main struct for sequence */
-typedef struct{  
-    #define E2AP_TNLINFORMATION_e2ap_TNL_PORT_PRESENT 0x01
-    
-    rrc_bitmask_t bitmask; /* BITMASK ^*/
-  
-    _e2ap_TNLinformation_tnlAddress_t tnlAddress; //BIT STRING (SIZE(1..160,...))
-  
-    _e2ap_TNLinformation_tnlPort_t tnlPort; //BIT STRING (SIZE(16))
- 
-}_e2ap_TNLinformation_t;  //SEQUENCE
-
-/************************************************/
-/*        PRIMITIVE - TNLusage               */
-/************************************************/
-
-/* TNLusage- ENUMERATED*/
-
- 
-typedef enum{
-    
-    E2AP_TNLUSAGE_RIC_SERVICE = 0,    
-    E2AP_TNLUSAGE_SUPPORT_FUNCTION = 1,    
-    E2AP_TNLUSAGE_BOTH = 2  
-
-}_e2ap_TNLusage_et;// ENUMERATED - P  OK
-
-/************************************************/
-/*       SEQUENCE - E2connectionUpdate_Item        */
-/************************************************/
- 
+    UInt8 data[3];
+}_e2ap_GlobalRIC_ID_ric_ID_t; //BIT STRING SIZE (N)
  
 /* main struct for sequence */
 typedef struct{  
   
-     _e2ap_TNLinformation_t tnlInformation; //e2ap_{ie_type} {field_name} alias = -1
+     _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
   
-     _e2ap_TNLusage_et tnlUsage; //e2ap_{ie_type} {field_name}  
-}_e2ap_E2connectionUpdate_Item_t;  //SEQUENCE
+    _e2ap_GlobalRIC_ID_ric_ID_t ric_ID; //BIT STRING (SIZE (20))
+ 
+}_e2ap_GlobalRIC_ID_t;  //SEQUENCE
+
+/************************************************/
+/*        PRIMITIVE - RANfunctionID               */
+/************************************************/
+
+/* RANfunctionID- INTEGER (0..4095)*/
+
+ 
+typedef UInt16 _e2ap_RANfunctionID_t;// INTEGER (A..B) - P  OK
+ 
+
+/************************************************/
+/*        PRIMITIVE - RANfunctionRevision               */
+/************************************************/
+
+/* RANfunctionRevision- INTEGER (0..4095)*/
+
+ 
+typedef UInt16 _e2ap_RANfunctionRevision_t;// INTEGER (A..B) - P  OK
+ 
+
+/************************************************/
+/*       SEQUENCE - RANfunctionID_Item        */
+/************************************************/
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_RANfunctionID_t ranFunctionID; //e2ap_{ie_type} {field_name} alias = 6
+  
+     _e2ap_RANfunctionRevision_t ranFunctionRevision; //e2ap_{ie_type} {field_name} alias = 6
+ 
+}_e2ap_RANfunctionID_Item_t;  //SEQUENCE
 
 /*********************************************************/
-/*        SINGLE CONTAINER - E2connectionUpdate_List     */
+/*        SINGLE CONTAINER - RANfunctionsID_List     */
 /*********************************************************/
 
 typedef struct{
-//#define MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT 32 // dungnm23 change to 1 if needed
-#define MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT 1
+//#define MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT 256 // dungnm23 change to 1 if needed
+#define MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT 1
 
   
-    UInt8 id_E2connectionUpdate_Item_count;
+    UInt16 id_RANfunctionID_Item_count;
     
-    _e2ap_E2connectionUpdate_Item_t id_E2connectionUpdate_Item[MAX_NO_ID_E2CONNECTION_UPDATE_ITEM_COUNT];
+    _e2ap_RANfunctionID_Item_t id_RANfunctionID_Item[MAX_NO_ID_RANFUNCTION_ID_ITEM_COUNT];
 
-}_e2ap_E2connectionUpdate_List_t;  //SINGLE CONTAINER   
+}_e2ap_RANfunctionsID_List_t;  //SINGLE CONTAINER   
 
 /************************************************/
 /*        PRIMITIVE - CauseRICrequest               */
@@ -197,7 +210,7 @@ typedef enum{
 
 typedef struct{
     UInt32 numocts;
-    UInt8 data[];
+    UInt8 data[]; //-> dungnm23 fix lai size
 }_e2ap_ServiceLayerCause_t; //OCTET STRING - P  OK
  
 
@@ -248,51 +261,490 @@ typedef struct{
 }_e2ap_Cause_t;// CHOICE   
 
 /************************************************/
-/*       SEQUENCE - E2connectionSetupFailed_Item        */
+/*       SEQUENCE - RANfunctionIDcause_Item        */
 /************************************************/
  
  
 /* main struct for sequence */
 typedef struct{  
   
-     _e2ap_TNLinformation_t tnlInformation; //e2ap_{ie_type} {field_name} alias = -1
+     _e2ap_RANfunctionID_t ranFunctionID; //e2ap_{ie_type} {field_name} alias = 6
   
      _e2ap_Cause_t cause; //e2ap_{ie_type} {field_name} alias = -1
  
-}_e2ap_E2connectionSetupFailed_Item_t;  //SEQUENCE
+}_e2ap_RANfunctionIDcause_Item_t;  //SEQUENCE
 
 /*********************************************************/
-/*        SINGLE CONTAINER - E2connectionSetupFailed_List     */
+/*        SINGLE CONTAINER - RANfunctionsIDcause_List     */
 /*********************************************************/
 
 typedef struct{
-//#define MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT 32 // dungnm23 change to 1 if needed
-#define MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT 1
+//#define MAX_NO_ID_RANFUNCTION_IECAUSE_ITEM_COUNT 256 // dungnm23 change to 1 if needed
+#define MAX_NO_ID_RANFUNCTION_IECAUSE_ITEM_COUNT 1
 
   
-    UInt8 id_E2connectionSetupFailed_Item_count;
+    UInt16 id_RANfunctionIEcause_Item_count;
     
-    _e2ap_E2connectionSetupFailed_Item_t id_E2connectionSetupFailed_Item[MAX_NO_ID_E2CONNECTION_SETUP_FAILED_ITEM_COUNT];
+    _e2ap_RANfunctionIDcause_Item_t id_RANfunctionIEcause_Item[MAX_NO_ID_RANFUNCTION_IECAUSE_ITEM_COUNT];
 
-}_e2ap_E2connectionSetupFailed_List_t;  //SINGLE CONTAINER   
+}_e2ap_RANfunctionsIDcause_List_t;  //SINGLE CONTAINER   
+
+/************************************************/
+/*        PRIMITIVE - E2nodeComponentInterfaceType               */
+/************************************************/
+
+/* E2nodeComponentInterfaceType- ENUMERATED*/
+
+ 
+typedef enum{
+    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_NG = 0,    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_XN = 1,    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_E1 = 2,    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_F1 = 3,    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_W1 = 4,    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_S1 = 5,    
+    E2AP_E2NODE_COMPONENT_INTERFACE_TYPE_X2 = 6  
+
+}_e2ap_E2nodeComponentInterfaceType_et;// ENUMERATED - P  OK
+
+/************************************************/
+/*        PRIMITIVE - AMFName               */
+/************************************************/
+
+/* AMFName- PrintableString (SIZE(1..150, ...))*/
+
+typedef const char* _e2ap_AMFName_t;//Printable STRING SIZE (A..B,...) - P  OK
+ 
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceNG        */
+/************************************************/
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_AMFName_t amf_name; //e2ap_{ie_type} {field_name} alias = 10
+ 
+}_e2ap_E2nodeComponentInterfaceNG_t;  //SEQUENCE
+
+/************************************************/
+/*        CHOICE - GNB_ID_Choice           */
+/************************************************/
+
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[4];
+}_e2ap_GNB_ID_Choice_gnb_ID_t; //BIT STRING SIZE (A..B)
+ 
+
+/* main struct for choice */
+typedef struct{  
+    #define E2AP_GNB_ID_CHOICE_e2ap_GNB_ID 1 //NAME + field_name
+    #define E2AP_GNB_ID_CHOICE_e2ap_INVALID 0xFF
+
+    UInt32 choice_type;
+
+    _e2ap_GNB_ID_Choice_gnb_ID_t gnb_ID; //BIT STRING (SIZE(22..32)) name + field: field
+
+}_e2ap_GNB_ID_Choice_t;// CHOICE   
+
+/************************************************/
+/*       SEQUENCE - GlobalgNB_ID        */
+/************************************************/
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_PLMN_Identity_t plmn_id; //e2ap_{ie_type} {field_name} alias = 8
+  
+     _e2ap_GNB_ID_Choice_t gnb_id; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_GlobalgNB_ID_t;  //SEQUENCE
+
+/************************************************/
+/*        CHOICE - ENB_ID_Choice           */
+/************************************************/
+
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[3];
+}_e2ap_ENB_ID_Choice_enb_ID_macro_t; //BIT STRING SIZE (N)
+ 
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[3];
+}_e2ap_ENB_ID_Choice_enb_ID_shortmacro_t; //BIT STRING SIZE (N)
+ 
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[3];
+}_e2ap_ENB_ID_Choice_enb_ID_longmacro_t; //BIT STRING SIZE (N)
+ 
+
+/* main struct for choice */
+typedef struct{  
+    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_MACRO 1 //NAME + field_name
+    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_SHORTMACRO 2 //NAME + field_name
+    #define E2AP_ENB_ID_CHOICE_e2ap_ENB_ID_LONGMACRO 3 //NAME + field_name
+    #define E2AP_ENB_ID_CHOICE_e2ap_INVALID 0xFF
+
+    UInt32 choice_type;
+
+    _e2ap_ENB_ID_Choice_enb_ID_macro_t enb_ID_macro; //BIT STRING (SIZE(20)) name + field: field
+    _e2ap_ENB_ID_Choice_enb_ID_shortmacro_t enb_ID_shortmacro; //BIT STRING (SIZE(18)) name + field: field
+    _e2ap_ENB_ID_Choice_enb_ID_longmacro_t enb_ID_longmacro; //BIT STRING (SIZE(21)) name + field: field
+
+}_e2ap_ENB_ID_Choice_t;// CHOICE   
+
+/************************************************/
+/*       SEQUENCE - GlobalngeNB_ID        */
+/************************************************/
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_PLMN_Identity_t plmn_id; //e2ap_{ie_type} {field_name} alias = 8
+  
+     _e2ap_ENB_ID_Choice_t enb_id; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_GlobalngeNB_ID_t;  //SEQUENCE
+
+/************************************************/
+/*        CHOICE - GlobalNG_RANNode_ID           */
+/************************************************/
+
+ 
+ 
+
+/* main struct for choice */
+typedef struct{  
+    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_G_NB 1 //NAME + field_name
+    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_NG_E_NB 2 //NAME + field_name
+    #define E2AP_GLOBAL_NG_RANNODE_ID_e2ap_INVALID 0xFF
+
+    UInt32 choice_type;
+
+    _e2ap_GlobalgNB_ID_t gNB; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_GlobalngeNB_ID_t ng_eNB; //e2ap_{ie_type} {field_name} alias = -1 
+
+}_e2ap_GlobalNG_RANNode_ID_t;// CHOICE   
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceXn        */
+/************************************************/
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_GlobalNG_RANNode_ID_t global_NG_RAN_Node_ID; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_E2nodeComponentInterfaceXn_t;  //SEQUENCE
+
+/************************************************/
+/*        PRIMITIVE - GNB_CU_UP_ID               */
+/************************************************/
+
+/* GNB_CU_UP_ID- INTEGER (0..68719476735)*/
+
+ 
+typedef UInt64 _e2ap_GNB_CU_UP_ID_t;// INTEGER (A..B) - P  OK
+ 
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceE1        */
+/************************************************/
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_GNB_CU_UP_ID_t gNB_CU_UP_ID; //e2ap_{ie_type} {field_name} alias = 6
+ 
+}_e2ap_E2nodeComponentInterfaceE1_t;  //SEQUENCE
+
+/************************************************/
+/*        PRIMITIVE - GNB_DU_ID               */
+/************************************************/
+
+/* GNB_DU_ID- INTEGER (0..68719476735)*/
+
+ 
+typedef UInt64 _e2ap_GNB_DU_ID_t;// INTEGER (A..B) - P  OK
+ 
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceF1        */
+/************************************************/
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_GNB_DU_ID_t gNB_DU_ID; //e2ap_{ie_type} {field_name} alias = 6
+ 
+}_e2ap_E2nodeComponentInterfaceF1_t;  //SEQUENCE
+
+/************************************************/
+/*        PRIMITIVE - NGENB_DU_ID               */
+/************************************************/
+
+/* NGENB_DU_ID- INTEGER (0..68719476735)*/
+
+ 
+typedef UInt64 _e2ap_NGENB_DU_ID_t;// INTEGER (A..B) - P  OK
+ 
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceW1        */
+/************************************************/
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_NGENB_DU_ID_t ng_eNB_DU_ID; //e2ap_{ie_type} {field_name} alias = 6
+ 
+}_e2ap_E2nodeComponentInterfaceW1_t;  //SEQUENCE
+
+/************************************************/
+/*        PRIMITIVE - MMEname               */
+/************************************************/
+
+/* MMEname- PrintableString (SIZE(1..150, ...))*/
+
+typedef const char* _e2ap_MMEname_t;//Printable STRING SIZE (A..B,...) - P  OK
+ 
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceS1        */
+/************************************************/
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_MMEname_t mme_name; //e2ap_{ie_type} {field_name} alias = 10
+ 
+}_e2ap_E2nodeComponentInterfaceS1_t;  //SEQUENCE
+
+/************************************************/
+/*        CHOICE - ENB_ID           */
+/************************************************/
+
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[3];
+}_e2ap_ENB_ID_macro_eNB_ID_t; //BIT STRING SIZE (N)
+ 
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[4];
+}_e2ap_ENB_ID_home_eNB_ID_t; //BIT STRING SIZE (N)
+ 
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[3];
+}_e2ap_ENB_ID_short_Macro_eNB_ID_t; //BIT STRING SIZE (N)
+ 
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[3];
+}_e2ap_ENB_ID_long_Macro_eNB_ID_t; //BIT STRING SIZE (N)
+ 
+
+/* main struct for choice */
+typedef struct{  
+    #define E2AP_ENB_ID_e2ap_MACRO_E_NB_ID 1 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_HOME_E_NB_ID 2 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_SHORT_MACRO_E_NB_ID 3 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_LONG_MACRO_E_NB_ID 4 //NAME + field_name
+    #define E2AP_ENB_ID_e2ap_INVALID 0xFF
+
+    UInt32 choice_type;
+
+    _e2ap_ENB_ID_macro_eNB_ID_t macro_eNB_ID; //BIT STRING (SIZE (20)) name + field: field
+    _e2ap_ENB_ID_home_eNB_ID_t home_eNB_ID; //BIT STRING (SIZE (28)) name + field: field
+    _e2ap_ENB_ID_short_Macro_eNB_ID_t short_Macro_eNB_ID; //BIT STRING (SIZE(18)) name + field: field
+    _e2ap_ENB_ID_long_Macro_eNB_ID_t long_Macro_eNB_ID; //BIT STRING (SIZE(21)) name + field: field
+
+}_e2ap_ENB_ID_t;// CHOICE   
+
+/************************************************/
+/*       SEQUENCE - GlobalENB_ID        */
+/************************************************/
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
+  
+     _e2ap_ENB_ID_t eNB_ID; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_GlobalENB_ID_t;  //SEQUENCE
+
+/************************************************/
+/*        CHOICE - ENGNB_ID           */
+/************************************************/
+
+typedef struct{
+    UInt8 numbits;
+    UInt8 data[4];
+}_e2ap_ENGNB_ID_gNB_ID_t; //BIT STRING SIZE (A..B)
+ 
+
+/* main struct for choice */
+typedef struct{  
+    #define E2AP_ENGNB_ID_e2ap_G_NB_ID 1 //NAME + field_name
+    #define E2AP_ENGNB_ID_e2ap_INVALID 0xFF
+
+    UInt32 choice_type;
+
+    _e2ap_ENGNB_ID_gNB_ID_t gNB_ID; //BIT STRING (SIZE (22..32)) name + field: field
+
+}_e2ap_ENGNB_ID_t;// CHOICE   
+
+/************************************************/
+/*       SEQUENCE - GlobalenGNB_ID        */
+/************************************************/
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_PLMN_Identity_t pLMN_Identity; //e2ap_{ie_type} {field_name} alias = 8
+  
+     _e2ap_ENGNB_ID_t gNB_ID; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_GlobalenGNB_ID_t;  //SEQUENCE
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentInterfaceX2        */
+/************************************************/
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+    #define E2AP_E2NODE_COMPONENT_INTERFACE_X2_e2ap_GLOBAL_E_NB_ID_PRESENT 0x01
+    #define E2AP_E2NODE_COMPONENT_INTERFACE_X2_e2ap_GLOBAL_EN_G_NB_ID_PRESENT 0x02
+    
+    rrc_bitmask_t bitmask; /* BITMASK ^*/
+  
+     _e2ap_GlobalENB_ID_t global_eNB_ID; //e2ap_{ie_type} {field_name} alias = -1
+  
+     _e2ap_GlobalenGNB_ID_t global_en_gNB_ID; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_E2nodeComponentInterfaceX2_t;  //SEQUENCE
+
+/************************************************/
+/*        CHOICE - E2nodeComponentID           */
+/************************************************/
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+/* main struct for choice */
+typedef struct{  
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_NG 1 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_XN 2 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_E1 3 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_F1 4 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_W1 5 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_S1 6 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_E2NODE_COMPONENT_INTERFACE_TYPE_X2 7 //NAME + field_name
+    #define E2AP_E2NODE_COMPONENT_ID_e2ap_INVALID 0xFF
+
+    UInt32 choice_type;
+
+    _e2ap_E2nodeComponentInterfaceNG_t e2nodeComponentInterfaceTypeNG; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_E2nodeComponentInterfaceXn_t e2nodeComponentInterfaceTypeXn; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_E2nodeComponentInterfaceE1_t e2nodeComponentInterfaceTypeE1; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_E2nodeComponentInterfaceF1_t e2nodeComponentInterfaceTypeF1; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_E2nodeComponentInterfaceW1_t e2nodeComponentInterfaceTypeW1; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_E2nodeComponentInterfaceS1_t e2nodeComponentInterfaceTypeS1; //e2ap_{ie_type} {field_name} alias = -1 
+    _e2ap_E2nodeComponentInterfaceX2_t e2nodeComponentInterfaceTypeX2; //e2ap_{ie_type} {field_name} alias = -1 
+
+}_e2ap_E2nodeComponentID_t;// CHOICE   
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentConfigurationAck        */
+/************************************************/
+typedef enum{
+    
+    E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_SUCCESS = 0,    
+    E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_FAILURE = 1
+}_e2ap_E2nodeComponentConfigurationAck_updateOutcome_et;
+
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+    #define E2AP_E2NODE_COMPONENT_CONFIGURATION_ACK_e2ap_FAILURE_CAUSE_PRESENT 0x01
+    
+    rrc_bitmask_t bitmask; /* BITMASK ^*/
+  
+     _e2ap_E2nodeComponentConfigurationAck_updateOutcome_et updateOutcome; //enum ENUMERATED
+  
+     _e2ap_Cause_t failureCause; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_E2nodeComponentConfigurationAck_t;  //SEQUENCE
+
+/************************************************/
+/*       SEQUENCE - E2nodeComponentConfigAdditionAck_Item        */
+/************************************************/
+ 
+ 
+ 
+/* main struct for sequence */
+typedef struct{  
+  
+     _e2ap_E2nodeComponentInterfaceType_et e2nodeComponentInterfaceType; //e2ap_{ie_type} {field_name}   
+     _e2ap_E2nodeComponentID_t e2nodeComponentID; //e2ap_{ie_type} {field_name} alias = -1
+  
+     _e2ap_E2nodeComponentConfigurationAck_t e2nodeComponentConfigurationAck; //e2ap_{ie_type} {field_name} alias = -1
+ 
+}_e2ap_E2nodeComponentConfigAdditionAck_Item_t;  //SEQUENCE
+
+/*********************************************************/
+/*        SINGLE CONTAINER - E2nodeComponentConfigAdditionAck_List     */
+/*********************************************************/
+
+typedef struct{
+//#define MAX_NO_ID_E2NODE_COMPONENT_CONFIG_ADDITION_ACK_ITEM_COUNT 1024 // dungnm23 change to 1 if needed
+#define MAX_NO_ID_E2NODE_COMPONENT_CONFIG_ADDITION_ACK_ITEM_COUNT 1
+
+  
+    UInt16 id_E2nodeComponentConfigAdditionAck_Item_count;
+    
+    _e2ap_E2nodeComponentConfigAdditionAck_Item_t id_E2nodeComponentConfigAdditionAck_Item[MAX_NO_ID_E2NODE_COMPONENT_CONFIG_ADDITION_ACK_ITEM_COUNT];
+
+}_e2ap_E2nodeComponentConfigAdditionAck_List_t;  //SINGLE CONTAINER   
 
 /*******************************************/
-/*       IE - E2connectionUpdateAcknowledge - (IEs)               */
+/*       IE - E2setupResponse - (IEs)               */
 /******************************************/
 typedef struct{
     // thiếu bitmask
 
-    #define E2AP_E2CONNECTION_UPDATE_ACKNOWLEDGE_e2ap_ID_E2CONNECTION_SETUP_PRESENT 0x01
-    #define E2AP_E2CONNECTION_UPDATE_ACKNOWLEDGE_e2ap_ID_E2CONNECTION_SETUP_FAILED_PRESENT 0x02
-    
+
+#define E2AP_E2SETUP_RESPONSE_e2ap_ID_RANFUNCTIONS_ACCEPTED_PRESENT 0x01
+#define E2AP_E2SETUP_RESPONSE_e2ap_ID_RANFUNCTIONS_REJECTED_PRESENT 0x02
+
     rrc_bitmask_t bitmask; /* BITMASK ^*/
 
     _e2ap_TransactionID_t id_TransactionID; //e2ap_{item_type} {field_name} alias = 5
-    _e2ap_E2connectionUpdate_List_t id_E2connectionSetup; //e2ap_{item_type} {field_name} alias = -1
-    _e2ap_E2connectionSetupFailed_List_t id_E2connectionSetupFailed; //e2ap_{item_type} {field_name} alias = -1
-}e2ap_E2connectionUpdateAcknowledge_t;
-/*********************************************************/
-/* File .h missing: e2ap_E2connectionUpdateAcknowledge.h */
-/*********************************************************/
+    _e2ap_GlobalRIC_ID_t id_GlobalRIC_ID; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_RANfunctionsID_List_t id_RANfunctionsAccepted; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_RANfunctionsIDcause_List_t id_RANfunctionsRejected; //e2ap_{item_type} {field_name} alias = -1
+    _e2ap_E2nodeComponentConfigAdditionAck_List_t id_E2nodeComponentConfigAdditionAck; //e2ap_{item_type} {field_name} alias = -1
+}e2ap_E2setupResponse_t;
+
+/*******************************************/
+/* File .h missing: e2ap_E2setupResponse.h */
+/*******************************************/
 
 #endif // MAIN_STRUCT_H

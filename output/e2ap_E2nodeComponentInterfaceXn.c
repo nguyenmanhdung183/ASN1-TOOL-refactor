@@ -22,7 +22,7 @@ int asn1PE_e2ap_E2nodeComponentInterfaceXn (OSCTXT* pctxt, e2ap_E2nodeComponentI
    /*encode root elements*/   
    /* encode field global_NG_RAN_Node_ID - id = -1*/  
    RTXCTXTPUSHELEMNAME(pctxt, "global-NG-RAN-Node-ID");
-   stat = asn1PE_e2ap_GlobalNG_RANNode_ID (pctxt, pvalue->global_NG_RAN_Node_ID);
+   stat = asn1PE_e2ap_GlobalNG_RANNode_ID (pctxt, &pvalue->global_NG_RAN_Node_ID);
    if (stat != 0) return LOG_RTERR(pctxt, stat);
    RTXCTXTPOPELEMNAME(pctxt);
 
